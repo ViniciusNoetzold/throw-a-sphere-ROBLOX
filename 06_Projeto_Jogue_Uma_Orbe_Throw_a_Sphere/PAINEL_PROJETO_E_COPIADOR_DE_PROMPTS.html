@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projeto Jogue uma Orbe / Throw a Sphere — Painel &amp; Copiador de Prompts</title>
+  <style>
+    :root {
+      --bg: #090f1d; --card: #111b30; --elev: #172440; --border: #263659;
+      --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8; --green: #4ade80;
+      --gold: #facc15; --pink: #f472b6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top left, #172554 0%, var(--bg) 42%);
+      color: var(--text); line-height: 1.55;
+    }
+    .nav {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(9, 15, 29, 0.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); padding: 12px 24px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .nav-title { font-weight: 800; font-size: 1.05rem; }
+    .nav-title span { color: var(--gold); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .nav-links a {
+      background: var(--elev); color: var(--text); text-decoration: none;
+      padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border);
+      font-size: 0.85rem; font-weight: 600;
+    }
+    .nav-links a:hover { background: var(--accent); color: #090f1d; }
+    .container { max-width: 1320px; margin: 0 auto; padding: 26px 20px 80px; }
+    .hero {
+      background: linear-gradient(135deg, rgba(250,204,21,0.12), rgba(56,189,248,0.12));
+      border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-bottom: 28px;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(1.5rem, 2.6vw, 2.2rem); }
+    .hero p { margin: 0; color: var(--muted); }
+    .section { margin-top: 40px; scroll-margin-top: 74px; }
+    .section h2 {
+      border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 18px;
+      font-size: 1.45rem;
+    }
+    .diag-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
+    .diag-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+    .diag-card img { width: 100%; display: block; }
+    .diag-cap { padding: 10px 14px; font-size: 0.88rem; color: #cbd5e1; border-top: 1px solid var(--border); }
+    .search-bar {
+      width: 100%; max-width: 520px; padding: 11px 16px; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--elev); color: #fff;
+      font-size: 0.95rem; margin-bottom: 18px; outline: none;
+    }
+    .search-bar:focus { border-color: var(--accent); }
+    .prompt-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .prompt-head {
+      background: var(--elev); padding: 12px 16px; border-bottom: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .sub-tag {
+      display: block; font-size: 0.82rem; color: var(--accent); margin-top: 2px;
+    }
+    .copy-btn {
+      background: var(--green); color: #052e16; border: none; border-radius: 8px;
+      padding: 8px 14px; font-weight: 800; cursor: pointer; font-size: 0.85rem;
+      transition: transform 0.1s ease;
+    }
+    .copy-btn:hover { transform: scale(1.03); }
+    .copy-btn.copied { background: var(--gold); color: #1e1b4b; }
+    pre {
+      margin: 0; padding: 14px 16px; white-space: pre-wrap; word-wrap: break-word;
+      font-family: Consolas, monospace; font-size: 0.84rem; color: #e2e8f0;
+      max-height: 290px; overflow-y: auto; background: #0b1324;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">🔮 Projeto: <span>Jogue uma Orbe! / Throw a Sphere!</span></div>
+  <div class="nav-links">
+    <a href="#diagramas">Diagramas Visuais</a>
+    <a href="#prompt-base">Prompt Base</a>
+    <a href="#prompt-ui">Prompt de UI &amp; Robux</a>
+    <a href="#prompts-orbes">8 Orbes + Estruturas 3D</a>
+    <a href="#prompts-criaturas">30 Criaturas (1 por 1)</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="hero">
+    <h1>Central de Produção — Jogue uma Orbe! / Throw a Sphere!</h1>
+    <p>
+      Use esta página para visualizar os diagramas do projeto e copiar com <strong>1 clique</strong> o
+      <strong>Prompt Mestre do Jogo Base</strong>, os prompts das <strong>8 Orbes &amp; Estruturas</strong> e cada um dos
+      <strong>30 Prompts Individuais de Criaturas ("Pokémons" autorais)</strong> para modelar 1 por 1.
+    </p>
+  </header>
+
+  <section id="diagramas" class="section">
+    <h2>🗺️ Diagramas de Arquitetura, Mecânicas &amp; Progressão</h2>
+    <div class="diag-grid">
+      <div class="diag-card">
+        <img src="diagramas_projeto/mapa_cenario_santuarios_e_biomas.png" alt="Mapa do Cenário" />
+        <div class="diag-cap"><strong>Cenário &amp; Zonas:</strong> Hub Central, Pódio 3D, 6 Santuários Pessoais e 6 Biomas Escalonados.</div>
+      </div>
+      <div class="diag-card">
+        <img src="diagramas_projeto/anatomia_orbes_e_mecanica_3_balancadas.png" alt="Orbes e 3 Balançadas" />
+        <div class="diag-cap"><strong>Orbes &amp; Fórmula:</strong> 8 Orbes originais (IP Safe), Mira Crítica 1.5x e Checagem das 3 Balançadas.</div>
+      </div>
+      <div class="diag-card">
+        <img src="diagramas_projeto/tabela_visual_geracoes_e_progressao.png" alt="Gerações e Recompensas" />
+        <div class="diag-cap"><strong>Gerações &amp; Retenção:</strong> 4 Gerações planejadas, Níveis 1-100, Sinergias e Daily Streak de 7 dias.</div>
+      </div>
+      <div class="diag-card">
+        <img src="diagramas_projeto/mockup_ui_completa_e_numeros_na_tela.png" alt="Mockup UI Completa" />
+        <div class="diag-cap"><strong>UI &amp; Big Numbers:</strong> HUD estilo simulador viral, chuva de números na tela e hotbar com Orbe Mestre.</div>
+      </div>
+      <div class="diag-card">
+        <img src="diagramas_projeto/infografico_monetizacao_servidores_e_ciclo_vicioso.png" alt="Monetização e Servidores" />
+        <div class="diag-cap"><strong>Servidores &amp; Robux:</strong> 6 jogadores/sala, VIP 99 R$, Trading Plaza 30 vagas e escada de preços (49–1.199 R$).</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prompt-base" class="section">
+    <h2>🚀 Prompt Mestre Completo — Jogo Base no Roblox Studio</h2>
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <div>
+          <strong>Prompt Completo: Arquitetura Luau + Sistemas + Balanceamento</strong>
+          <span class="sub-tag">Arquivo: 02_PROMPT_MESTRE_JOGO_BASE_ROBLOX.md • Protótipo funcional incluído em scripts_prototipo_luau/</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('base_prompt_pre', this)">📋 Copiar Prompt Base</button>
+      </div>
+      <pre id="base_prompt_pre">Você é um engenheiro sênior de Roblox Luau e Game Designer especialista em simuladores incrementais virais (estilo Throw a Seed, Steal An Egg, Throw Food For Animals e +1 Ride Pets to Fight). Quero que você crie toda a arquitetura de scripts Luau modulares e prontos para rodar no Roblox Studio para o jogo:
+
+Título EN: &quot;Throw a Sphere! [Catch Critters]&quot;
+Título PT-BR: &quot;Jogue uma Orbe! [Capture Criaturas]&quot;
+
+=== 1. ARQUITETURA DE SERVIDORES &amp; SALAS ===
+- Mundo Principal: Máximo de 6 jogadores por sala (+1 vaga reservada para amigos). Mantém os 6 Santuários pessoais próximos à Praça Central com 60 FPS no mobile.
+- Servidor Privado VIP: 6 jogadores por sala a 99 Robux/mês (focado em farm AFK e caça sem concorrência).
+- Place Secundário (Trading Plaza via TeleportService): 30 jogadores por sala, desbloqueado no Nível 15+ para trocas e leilões de criaturas raras.
+
+=== 2. ARQUITETURA DE PASTAS NO ROBLOX STUDIO ===
+Organize todo o código com Type Checking (`--!strict`) nas seguintes pastas:
+- ReplicatedStorage/Shared/ConfigOrbes.luau (8 Orbes geométricas originais: Comum, Esmeralda, Rubi, Safira, Rúnica, Hextech, Cósmica, Mestre)
+- ReplicatedStorage/Shared/ConfigCriaturas.luau (30 Criaturas Geração 1 com Elemento, Bioma, Raridade, Dificuldade, MoedasPorSegundo, XPBase e Cor)
+- ReplicatedStorage/Shared/ConfigMutacoes.luau (Normal 1x, Grande 1.5x, Enorme 2.5x, Titânica 5x | Dourada 2x, Cristal 3.5x, Abissal 6x, Arco-Íris 12x, Celestial 20x)
+- ReplicatedStorage/Shared/ConfigBiomas.luau (6 Biomas escalonados: Pradaria Solar, Floresta Neon, Cânion Vulcânico, Abismo Glacial, Ruínas Ancestrais, Vazio Cósmico)
+- ReplicatedStorage/Shared/ConfigRecompensas.luau (Daily Rewards de 7 dias, 12 Playtime Rewards 2m-&gt;120m, Missões Diárias, Tabela de Níveis 1-100)
+- ReplicatedStorage/Shared/ConfigMonetizacao.luau (Tabela de Gamepasses e Developer Products com MarketplaceService)
+- ReplicatedStorage/Shared/BigNumberFormatter.luau (Formatação de números até Octodeciliões: K, M, B, T, Qa, Qi, Sx, Sp, Oc, No, Dc... Ocd)
+- ReplicatedStorage/Remotes/ (RequestThrow, ThrowResult, ClaimDailyReward, ClaimPlaytimeReward, FuseCreatures, TrainThrowPower, RebirthRequest, BuyOrb, EquipToSanctuary, ComboUpdate)
+- ServerScriptService/Services/DataService.luau (ProfileService/DataStore seguro com Moedas, Gemas, XP, Nivel, Rebirths, ForcaArremesso, InventarioOrbes, CriaturasCapturadas, Bestiario, DailyStreak, LastLoginTimestamp, PityCounter, ComboStreak)
+- ServerScriptService/Services/SpawnService.luau (Tabelas leves no servidor + Catch Lock de 4.5s durante a captura)
+- ServerScriptService/Services/CaptureService.luau (Validação de alcance, fórmula das 3 balançadas, multiplicadores de Combo Fever, XP de consolação 35% + 5% Pity na falha)
+- ServerScriptService/Services/SanctuaryService.luau (6 Santuários, Sinergia Elemental +25%/+60%/+40%, geração de $/s e renda offline de até 8h)
+- ServerScriptService/Services/ProgressionService.luau (Níveis 1-100, Máquina de Fusão 5-&gt;1, Rebirth no nível 40+ e Missões Diárias)
+- ServerScriptService/Services/MonetizationService.luau (ProcessReceipt + UserOwnsGamePassAsync para os passes e consumíveis)
+- ServerScriptService/Services/LeaderboardPodiumService.luau (Pódio 3D físico com Top 3 avatares + criatura mais forte + 4 placares OrderedDataStore)
+- ServerScriptService/Services/WeatherEventService.luau (Eventos a cada 20 min: Chuva de Meteoros, Eclipse, Tempestade Áurea + Boss Cooperativo)
+- StarterPlayer/StarterPlayerScripts/ClientThrowController.client.luau (Arco de mira parabólica com Beam/Dots, detecção de Crítico na Cabeça 1.5x, voo Bézier + 3 balançadas com áudio crescente)
+- StarterPlayer/StarterPlayerScripts/ClientCreatureRenderer.client.luau (Modelos 3D, auras de raridade, pilares Beam e Rainbow HSV no cliente)
+- StarterGui/UIController.client.luau (HUD completa estilo simulador viral com chuva de números flutuantes, Combo Fever e Loja Robux)
+
+=== 3. REGRAS MATEMÁTICAS, RITMO VICIOSO &amp; BIG NUMBERS ===
+1. Fórmula de Captura (3 balançadas independentes no servidor):
+   P = math.min(1, ((PoderOrbe * BonusMira * SorteJogador) / DificuldadeCriatura) ^ (1 / 3))
+   - BonusMira: 1.0 (Corpo), 1.25 (Longa Distância &gt; 90 studs), 1.5 (Crítico no Topo/Cabeça), 1.85 (Combinado).
+2. Ciclo Vicioso &amp; Progressão Longa:
+   - Começo rápido (0-5 min): Jogador inicia com 25 Orbes Comuns e $150; primeira captura e Nível 2 acontecem em menos de 1 minuto.
+   - Escalonamento exponencial (1h-50h+): Desbloquear Abismo ($1.2M), Ruínas ($45M) e Vazio Cósmico ($2.5B) exige combinar 6 camadas multiplicadoras (Orbe × Precisão × Tamanho × Mutação × Fusão 5-&gt;1 × Sinergia × Rebirth), levando a rendas em Quadrilhões (Qa), Septilhões (Sp) e Octodeciliões (Ocd).
+   - Combo Fever Mode: Capturas seguidas sobem o combo de x1 até x10 FEVER (+50% Sorte e 2x XP).
+3. Sistema de Nível:
+   - XPNecessario(L) = math.floor(100 * (L ^ 1.6)). Cada nível concede +1.5% Sorte Permanente e +2 studs de Alcance.
+
+=== 4. CATÁLOGO DE MONETIZAÇÃO ROBUX (BASEADO NOS 4 JOGOS REAIS) ===
+- Gamepasses: Starter Pack (49 R$), Braços de Titã 2x Força (149 R$), Auto-Arremesso AFK (179 R$), 2x Moedas (199 R$), 2x Sorte (249 R$), Santuário +8 Slots (299 R$), Fusão Rápida &amp; 2x XP (349 R$), VIP Dourado (399 R$), Arremesso Triplo em Leque (599 R$), Orbe Prismática Infinita 10x Sorte (799 R$), Mega Coletor + Auto-Fusão (1.199 R$).
+- Developer Products Recorrentes: 1x Orbe Mestre 100% (79 R$ + botão de emergência ao achar Lendário!), Pacote 3x Orbe Mestre (199 R$), Totem Global 5x Sorte para toda a sala (199 R$), Invocar Boss/Eclipse (249 R$), Combo Poções 3x (99 R$), Slot Extra (69 R$).
+
+=== 5. INTERFACE (UI) ESTILO SIMULADOR VIRAL &amp; IDENTIDADE VISUAL ===
+- Use fontes grossas (`FredokaOne` / `GothamBlack`) com `UIStroke` preto (2.5-3.5px), cantos arredondados, gradientes vibrantes e animação hover/click (`TweenService`).
+- Exiba chuva de números flutuantes na tela (`+$89.4Sp`, `+450 XP`, `CRÍTICO 1.5x!`, `1 in 1,000,000!`), banner de Evento/Combo Fever no topo, botões laterais esquerda/direita com alertas vermelhos `!`, painel de Big Numbers + XP no canto inferior esquerdo, hotbar central da Orbe e Modal completo da Loja Robux.
+- IP SAFE: Nunca use pokébolas clássicas; use Orbes geométricas/rúnicas com núcleo brilhante e estética Voxel Checkered Grid + Square Studs no cenário e criaturas.</pre>
+    </div>
+  </section>
+
+
+  <section id="prompt-ui" class="section">
+    <h2>🎨 Prompt Exclusivo — UI Completa, Big Numbers &amp; Loja Robux</h2>
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <div>
+          <strong>Prompt de Interface HUD + Chuva de Números + Loja MarketplaceService</strong>
+          <span class="sub-tag">Script Luau já pronto em: scripts_prototipo_luau/04_Client_UI_Completa_BigNumbers_e_LojaRobux.luau</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('ui_prompt_pre', this)">📋 Copiar Prompt UI</button>
+      </div>
+      <pre id="ui_prompt_pre">Crie um script Luau (`--!strict`) completo para `StarterGui` / `StarterPlayerScripts` chamado `UIController.client.luau` para o jogo Roblox &quot;Jogue uma Orbe! / Throw a Sphere!&quot;, no estilo visual exato dos maiores simuladores virais (Throw a Seed, Steal An Egg e +1 Ride Pets to Fight):
+
+1. Estética Padrão: Fontes `FredokaOne` e `GothamBold`, `UIStroke` preto (2.5px–3.5px) em todos os textos e bordas, `UICorner`, gradientes `UIGradient`, animações elásticas de hover/clique com `TweenService` e bolinhas vermelhas de alerta `!`.
+2. Formatador de Big Numbers: Função `FormatBigNumber(n)` suportando de `K` ($10^3$) até `Ocd` ($10^{57}$), passando por `M, B, T, Qa, Qi, Sx, Sp, Oc, No, Dc`.
+3. Chuva de Números Flutuantes na Tela: Função `SpawnFloatingNumber(texto, cor, escala)` disparada ao coletar moedas, treinar força, ganhar XP, acertar Crítico (`1.5x!`) ou capturar raridades (`1 in 250,000!`).
+4. Layout Completo da HUD:
+   - Topo Central: Pílula de Evento Climático + Barra de `COMBO FEVER x1..x10`.
+   - Lateral Esquerda (Grid 2 colunas): `Index`, `Shop!`, `Fusão 5-&gt;1`, `Diário/Presentes`, `Rebirth`, `Placar`.
+   - Lateral Direita: `Criaturas`, `Orbes`, `Auto-Arremesso`, `Códigos`.
+   - Canto Inferior Esquerdo: Painel de Big Numbers (`💪 Força/Alcance`, `💰 Moedas + $/s`, `💎 Gemas`, Barra de `Nível/XP`).
+   - Centro Inferior: Hotbar da Orbe Equipada + botão de emergência `[★ ORBE MESTRE 79 R$]`.
+   - Modal da Loja Robux: Janela com `ScrollingFrame` listando todos os 10 Gamepasses (`49 R$` a `1.199 R$`) e botões integrados ao `MarketplaceService`.</pre>
+    </div>
+  </section>
+
+  <section id="prompts-orbes" class="section">
+    <h2>🔮 Prompts das 8 Orbes de Captura &amp; Estruturas 3D (1 por 1)</h2>
+    
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 1 — Orbe Comum (Esfera de Pedra Rúnica)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_0', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_0">Crie um script Python autossuficiente para Blender (bpy) que gere o modelo 3D da &quot;Orbe Comum (Esfera de Pedra Rúnica)&quot; no estilo Low-Poly / Voxel facetado para Roblox, com shading 100% Flat (`bpy.ops.object.shade_flat()`), materiais de cor sólida (`use_nodes = False`, `diffuse_color = rgba`) e modificador Bevel aplicado (`width=0.015, segments=2`).
+Especificação visual (IP Safe, NÃO parecida com Pokébola):
+- Corpo principal: Octaedro/Esfera low-poly facetada (icosphere subdivisions=1 ou octaedro chanfrado) de raio 0.55 em cinza-azulado pedra RGBA (0.45, 0.50, 0.58, 1.0).
+- Faixa equatorial: Anel octogonal (cilindro 8 lados achatado, raio 0.60, altura 0.14) em azul cobalto RGBA (0.18, 0.45, 0.88, 1.0).
+- Núcleo frontal e traseiro: Cristal cúbico rotacionado a 45 graus encaixado no centro da faixa em azul-ciano brilhante RGBA (0.22, 0.85, 0.98, 1.0).
+- Orçamento: 120 a 220 triângulos. Inclua CONFIG, clean_existing_object() e generate_variations().</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 2 — Orbe Esmeralda (Cubo Veloz)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_1', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_1">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Esmeralda (Cubo Veloz)&quot; no estilo Low-Poly / Voxel facetado para Roblox, com `shade_flat()`, materiais `use_nodes = False` e Bevel aplicado (`width=0.02, segments=2`).
+Especificação visual:
+- Corpo: Cubo chanfrado de tamanho (0.95, 0.95, 0.95) em verde esmeralda vibrante RGBA (0.09, 0.72, 0.38, 1.0) dividido por um sulco central escuro RGBA (0.06, 0.22, 0.14, 1.0).
+- Anel orbital inclinado: Aro fino octogonal inclinado a 25° ao redor do cubo em ouro claro RGBA (0.98, 0.82, 0.22, 1.0).
+- Núcleo central: Diamante de 4 lados na face frontal em verde-limão neon RGBA (0.55, 1.0, 0.35, 1.0).
+- Orçamento: 140 a 260 triângulos. Inclua CONFIG, clean_existing_object() e generate_variations().</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 3 — Orbe Rubi (Cristal de Fogo)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_2', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_2">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Rubi (Cristal de Fogo)&quot; no estilo Low-Poly facetado para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Corpo: Prisma hexagonal alongado verticalmente (6 lados, raio 0.52, altura 1.15) com pontas cônicas superior e inferior em vermelho rubi RGBA (0.88, 0.14, 0.18, 1.0).
+- Armadura lateral: 3 placas angulares em formato de chama envolventes em dourado metálico RGBA (0.98, 0.75, 0.12, 1.0).
+- Núcleo interno visível na fenda frontal: Laranja incandescente RGBA (1.0, 0.45, 0.08, 1.0).
+- Orçamento: 150 a 280 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 4 — Orbe Safira (Prisma Glacial)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_3', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_3">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Safira (Prisma Glacial)&quot; no estilo Low-Poly facetado para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Corpo: Dodecaedro ou Icosphere (subdivisions=1) em azul safira profundo RGBA (0.12, 0.38, 0.92, 1.0).
+- Coroa de cristais: 4 pontas prismáticas de gelo saindo na diagonal superior e inferior em azul-gelo translúcido/claro RGBA (0.58, 0.90, 1.0, 1.0).
+- Cinturão prateado: Anel de 8 lados em prata clara RGBA (0.85, 0.90, 0.96, 1.0) com gema frontal branca brilhante.
+- Orçamento: 180 a 320 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 5 — Orbe Rúnica Ancestral</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_4', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_4">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Rúnica Ancestral&quot; no estilo Low-Poly facetado para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Núcleo central: Esfera facetada (8x6 segmentos) em pedra arenito escura RGBA (0.32, 0.25, 0.18, 1.0) com gravações/blocos dourados RGBA (0.96, 0.78, 0.20, 1.0).
+- Dois anéis rúnicos cruzados: Dois aros quadrados/octogonais girados em 45° e -45° ao redor do núcleo em ouro antigo, com 4 pequenos losangos turquesa RGBA (0.18, 0.92, 0.80, 1.0) incrustados nos pontos cardeais.
+- Orçamento: 220 a 380 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 6 — Orbe Hextech Neon</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_5', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_5">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Hextech Neon&quot; no estilo Low-Poly Sci-Fi / Voxel para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Gaiola externa aberta: 6 hastes retangulares formando uma moldura de cubo/octaedro tecnológico em grafite escuro RGBA (0.10, 0.12, 0.18, 1.0) com chanfros em ciano neon RGBA (0.10, 0.92, 1.0, 1.0).
+- Núcleo flutuante suspenso no centro: Octaedro brilhante em ciano-elétrico RGBA (0.45, 0.98, 1.0, 1.0) desconectado da gaiola externa para girar livremente.
+- Orçamento: 200 a 340 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 7 — Orbe Cósmica Estelar</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_6', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_6">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Cósmica Estelar&quot; no estilo Low-Poly facetado para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Corpo: Icosphere facetada (subdivisions=2) em roxo cósmico escuro RGBA (0.18, 0.08, 0.42, 1.0) com placas flutuantes magenta RGBA (0.85, 0.22, 0.88, 1.0).
+- Anel planetário inclinado: Anel octogonal largo estilo Saturno inclinado em 30° em dourado estelar RGBA (1.0, 0.86, 0.35, 1.0) acompanhado de 3 mini-estrelas octaédricas orbitando ao redor.
+- Orçamento: 240 a 420 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Orbe 8 — Orbe Mestre Suprema (100% Captura)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_7', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_7">Crie um script Python autossuficiente para Blender (bpy) que gere a &quot;Orbe Mestre Suprema&quot; no estilo Low-Poly épico para Roblox, com `shade_flat()`, materiais sólidos e Bevel aplicado.
+Especificação visual:
+- Núcleo: Dodecaedro branco-pérola RGBA (0.96, 0.96, 1.0, 1.0) envolto por faixas douradas RGBA (1.0, 0.80, 0.12, 1.0) e gema central arco-íris/magenta RGBA (0.95, 0.25, 0.78, 1.0).
+- Asas geométricas laterais: Par de asas estilizadas em blocos angulares (3 penas prismáticas de cada lado) estendendo-se para cima em ouro e roxo real RGBA (0.48, 0.16, 0.85, 1.0).
+- Coroa superior flutuante de 3 pontas acima da orbe.
+- Orçamento: 300 a 480 triângulos.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Estrutura 1 — Pódio 3D Global (Top 1, 2 e 3)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_8', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_8">Crie um script Python para Blender (bpy) ou construtor modular que gere o &quot;Pódio 3D dos Campeões&quot; no estilo Voxel Studs do Roblox:
+- Base retangular de degraus em mármore branco/cinza claro RGBA (0.90, 0.92, 0.96, 1.0).
+- Degrau 1º Lugar (Centro, altura 3.2, largura 3.0): Dourado RGBA (0.98, 0.78, 0.14, 1.0) com grande placa frontal &quot;1&quot; em relevo e arco luminoso traseiro em colunas quadradas.
+- Degrau 2º Lugar (Esquerda, altura 2.2, largura 2.6): Prateado RGBA (0.78, 0.82, 0.88, 1.0) com placa &quot;2&quot;.
+- Degrau 3º Lugar (Direita, altura 1.5, largura 2.6): Bronze RGBA (0.80, 0.48, 0.22, 1.0) com placa &quot;3&quot;.
+- Inclua espaços planos marcados ao lado de cada posição para posicionar o avatar do jogador + sua criatura mais rara. Use shade_flat() e Bevel aplicado.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Estrutura 2 — Máquina de Fusão (5 → 1)</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_9', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_9">Crie um script Python para Blender (bpy) que gere a &quot;Máquina de Fusão Elemental&quot; no estilo Voxel/Low-Poly para Roblox:
+- Plataforma octogonal metálica cinza-escura RGBA (0.16, 0.18, 0.24, 1.0) com 5 pedestais pequenos em semicírculo na frente (para as 5 criaturas sacrificadas) conectados por faixas luminosas no chão até um grande tubo/cúpula hexagonal central de energia ciano-dourada RGBA (0.20, 0.90, 0.98, 1.0).
+- Dois arcos mecânicos laterais apontando para o centro com engrenagens/blocos dourados no topo. Use shade_flat() e Bevel aplicado.</pre>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-head">
+            <div>
+              <strong>Estrutura 3 — Portal de Bioma Escalonado</strong>
+              <span class="sub-tag">IP Safe • Blender bpy / Studio</span>
+            </div>
+            <button class="copy-btn" onclick="copyById('orb_prompt_10', this)">📋 Copiar Prompt</button>
+          </div>
+          <pre id="orb_prompt_10">Crie um script Python para Blender (bpy) que gere um &quot;Portal de Bioma Modular&quot; no estilo Voxel Studs para Roblox:
+- Dois pilares laterais em blocos empilhados escalonados (altura 9.0) + arco superior chanfrado com placa de cristal central para exibir o nome do bioma e o custo de desbloqueio.
+- Inclua `generate_variations()` gerando variações de cor para os 6 biomas (Floresta Neon ciano, Vulcão vermelho-magma, Abismo azul-gelo, Ruínas ouro-areia, Vazio roxo-cósmico). Use shade_flat() e Bevel aplicado.</pre>
+        </div>
+  </section>
+
+  <section id="prompts-criaturas" class="section">
+    <h2>🐾 30 Prompts Individuais de Criaturas ("Pokémons" Geração 1 — Trabalhe 1 por 1)</h2>
+    <input type="text" class="search-bar" id="searchBox" placeholder="🔍 Filtrar por nome, elemento (Fogo, Água, Cósmico...), bioma ou raridade..." oninput="filterCreatures()" />
+    <div id="creatureList">
+      
+    <div class="prompt-card" data-search="pyrokit raposa de brasa (inicial de fogo - estágio 1) fogo 1. pradaria solar incomum (inicial)">
+      <div class="prompt-head">
+        <div>
+          <strong>01. Pyrokit — Raposa de Brasa (Inicial de Fogo - Estágio 1)</strong>
+          <span class="sub-tag">Fogo • 1. Pradaria Solar • Incomum (Inicial) • Dif: 18 • $12/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_01', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_01">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Pyrokit — Raposa de Brasa (Inicial de Fogo - Estágio 1)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 350 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (01. Pyrokit):
+- Elemento: Fogo | Bioma: 1. Pradaria Solar | Raridade: Incomum (Inicial)
+- Paleta RGBA: Corpo Laranja Brasa (0.98, 0.42, 0.10, 1.0) | Peito Creme (0.98, 0.90, 0.65, 1.0) | Ponta da Cauda e Orelhas Amarelo Fogo (1.0, 0.80, 0.12, 1.0) | Olhos Carvão/Âmbar (0.12, 0.08, 0.06, 1.0)
+- Anatomia Detalhada:
+- Torso compacto e levemente inclinado para frente (cubo chanfrado 1.2 x 1.6 x 1.0) com tufo creme no peito.
+- Cabeça grande e fofa (1.3 x 1.2 x 1.1) com focinho pontudo curto e 2 orelhas triangulares longas feitas com cones de 4 lados.
+- 4 patas curtas em cones facetados (6 vértices, radius1=0.22, radius2=0.15, altura 0.7).
+- Cauda volumosa de chama em 3 segmentos cônicos empilhados apontando para cima com ponta amarelo-sol.
+- Pontos para Animação (Rigging / Studio): Pivô da cauda balançando em arco; cabeça inclina 10° no Idle; orelhas abaixam ao se preparar para correr.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="blazefox raposa chamejante (evolução fogo - estágio 2) fogo 3. cânion vulcânico rara">
+      <div class="prompt-head">
+        <div>
+          <strong>02. Blazefox — Raposa Chamejante (Evolução Fogo - Estágio 2)</strong>
+          <span class="sub-tag">Fogo • 3. Cânion Vulcânico • Rara • Dif: 320 • $280/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_02', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_02">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Blazefox — Raposa Chamejante (Evolução Fogo - Estágio 2)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 500 - 800 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (02. Blazefox):
+- Elemento: Fogo | Bioma: 3. Cânion Vulcânico | Raridade: Rara
+- Paleta RGBA: Pelagem Vermelho Carmesim (0.88, 0.18, 0.12, 1.0) | Juba e Caudas Laranja (1.0, 0.52, 0.08, 1.0) | Garras Obsidiana (0.14, 0.14, 0.18, 1.0) | Olhos Ciano/Branco Brilhante (1.0, 0.92, 0.40, 1.0)
+- Anatomia Detalhada:
+- Corpo atlético bípede ou quadrúpede ágil (1.4 x 2.1 x 1.3) com juba pontiaguda ao redor do pescoço.
+- Cabeça afiada estilo lobo/raposa com focinho alongado e sobrancelhas angulares marcantes.
+- 3 caudas independentes em formato de chamas geométricas facetadas abertas em leque.
+- Pulseiras de brasa/armadura simples nos tornozelos e garras pontudas escuras.
+- Pontos para Animação (Rigging / Studio): 3 caudas oscilam em defasagem de fase; corrida rápida inclinando o corpo 20° para frente.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="ignisovereign kitsune solar (evolução final fogo - estágio 3) fogo 3. cânion vulcânico / fusão mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>03. Ignisovereign — Kitsune Solar (Evolução Final Fogo - Estágio 3)</strong>
+          <span class="sub-tag">Fogo • 3. Cânion Vulcânico / Fusão • Mítica • Dif: 1150 • $1.450/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_03', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_03">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Ignisovereign — Kitsune Solar (Evolução Final Fogo - Estágio 3)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 900 - 1.800 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (03. Ignisovereign):
+- Elemento: Fogo | Bioma: 3. Cânion Vulcânico / Fusão | Raridade: Mítica
+- Paleta RGBA: Corpo Dourado Solar (1.0, 0.78, 0.14, 1.0) | Marcas Sagradas Vermelho Rubi (0.85, 0.10, 0.15, 1.0) | Anel Solar nas Costas Branco/Ouro (1.0, 0.96, 0.75, 1.0)
+- Anatomia Detalhada:
+- Corpo imponente e esguio de Kitsune mítica com colar de esferas de fogo flutuantes ao redor do pescoço.
+- Cabeça adornada com máscara/crista frontal solar em forma de coroa de 3 pontas.
+- 6 a 9 caudas majestosas curvadas em leque radial atrás do corpo usando cones de 6 lados segmentados.
+- Halo/Anel octogonal flutuante atrás dos ombros girando lentamente no jogo.
+- Pontos para Animação (Rigging / Studio): Anel solar gira 360° continuamente; 6+ caudas ondulam como chamas; aura de brasas subindo.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="aquapup lontra cristal (inicial de água - estágio 1) água 1. pradaria solar incomum (inicial)">
+      <div class="prompt-head">
+        <div>
+          <strong>04. Aquapup — Lontra Cristal (Inicial de Água - Estágio 1)</strong>
+          <span class="sub-tag">Água • 1. Pradaria Solar • Incomum (Inicial) • Dif: 18 • $12/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_04', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_04">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Aquapup — Lontra Cristal (Inicial de Água - Estágio 1)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 350 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (04. Aquapup):
+- Elemento: Água | Bioma: 1. Pradaria Solar | Raridade: Incomum (Inicial)
+- Paleta RGBA: Corpo Azul Oceano (0.16, 0.62, 0.96, 1.0) | Barriga Azul Gelo (0.72, 0.92, 1.0, 1.0) | Cristal no Peito e Barbatanas Ciano Neon (0.10, 0.95, 0.95, 1.0)
+- Anatomia Detalhada:
+- Corpo roliço de lontra sentada (1.3 x 1.5 x 1.2) com uma concha/cristal hexagonal encaixado na barriga.
+- Cabeça arredondada low-poly com bochechas largas, nariz azul escuro e barbatanas laterais no lugar de orelhas.
+- Cauda larga de remo achatada horizontalmente em forma de leque facetado.
+- Pontos para Animação (Rigging / Studio): Balança o corpo lateralmente como um pinguim/lontra feliz; cauda bate no chão suavemente.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="tidefang lobo marinho (evolução água - estágio 2) água 4. abismo glacial rara">
+      <div class="prompt-head">
+        <div>
+          <strong>05. Tidefang — Lobo Marinho (Evolução Água - Estágio 2)</strong>
+          <span class="sub-tag">Água • 4. Abismo Glacial • Rara • Dif: 1600 • $1.800/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_05', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_05">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Tidefang — Lobo Marinho (Evolução Água - Estágio 2)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 550 - 800 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (05. Tidefang):
+- Elemento: Água | Bioma: 4. Abismo Glacial | Raridade: Rara
+- Paleta RGBA: Azul Profundo (0.08, 0.30, 0.72, 1.0) | Barbatanas Turquesa (0.14, 0.85, 0.82, 1.0) | Presas e Garras Branco Pérola (0.94, 0.97, 1.0, 1.0)
+- Anatomia Detalhada:
+- Corpo hidrodinâmico alongado com grande barbatana dorsal serrilhada em 3 blocos triangulares.
+- Cabeça feroz com duas presas externas saltando da mandíbula inferior e colar de espuma/cristal no pescoço.
+- Cauda dupla bifurcada em formato de nadadeira de tubarão facetada.
+- Pontos para Animação (Rigging / Studio): Movimento sinuoso de nado mesmo andando na terra; mandíbula abre/fecha ao detectar orbe.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="leviathorn dragão abissal (evolução final água - estágio 3) água 4. abismo glacial / fusão mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>06. Leviathorn — Dragão Abissal (Evolução Final Água - Estágio 3)</strong>
+          <span class="sub-tag">Água • 4. Abismo Glacial / Fusão • Mítica • Dif: 5500 • $6.400/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_06', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_06">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Leviathorn — Dragão Abissal (Evolução Final Água - Estágio 3)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.000 - 2.000 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (06. Leviathorn):
+- Elemento: Água | Bioma: 4. Abismo Glacial / Fusão | Raridade: Mítica
+- Paleta RGBA: Escamas Índigo Abissal (0.06, 0.14, 0.42, 1.0) | Placas Bioluminescentes Ciano (0.12, 0.95, 1.0, 1.0) | Chifres Ouro Antigo (0.90, 0.75, 0.25, 1.0)
+- Anatomia Detalhada:
+- Corpo serpentino segmentado em 5 blocos articulados flutuando em onda S.
+- Cabeça dracônica com 4 chifres curvos para trás e bigodes luminosos em ciano.
+- Asas membranosas em formato de nadadeiras gigantes com nervuras rígidas facetadas.
+- Pontos para Animação (Rigging / Studio): Flutua 1.5 studs acima do chão em movimento serpentino contínuo entre os 5 segmentos.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="sproutling tatuzinho folha (inicial de planta - estágio 1) planta 1. pradaria solar comum (inicial)">
+      <div class="prompt-head">
+        <div>
+          <strong>07. Sproutling — Tatuzinho Folha (Inicial de Planta - Estágio 1)</strong>
+          <span class="sub-tag">Planta • 1. Pradaria Solar • Comum (Inicial) • Dif: 12 • $8/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_07', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_07">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Sproutling — Tatuzinho Folha (Inicial de Planta - Estágio 1)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 300 - 550 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (07. Sproutling):
+- Elemento: Planta | Bioma: 1. Pradaria Solar | Raridade: Comum (Inicial)
+- Paleta RGBA: Corpo Verde Lima (0.35, 0.85, 0.28, 1.0) | Carapaça Musgo (0.14, 0.52, 0.20, 1.0) | Broto no Topo Verde Claro (0.62, 1.0, 0.32, 1.0)
+- Anatomia Detalhada:
+- Corpo oval/cúbico baixo protegido por 3 placas de carapaça verde-musgo nas costas.
+- Grande broto com 2 folhas em formato de hélice nascendo exatamente no topo da cabeça (alvo crítico!).
+- 4 patinhas curtas cilíndricas/cônicas de 6 lados e olhos redondos brilhantes.
+- Pontos para Animação (Rigging / Studio): As 2 folhas do topo giram como hélice quando o monstro dá um pulinho feliz.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="thornback golem florido (evolução planta - estágio 2) planta 2. floresta neon rara">
+      <div class="prompt-head">
+        <div>
+          <strong>08. Thornback — Golem Florido (Evolução Planta - Estágio 2)</strong>
+          <span class="sub-tag">Planta • 2. Floresta Neon • Rara • Dif: 130 • $110/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_08', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_08">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Thornback — Golem Florido (Evolução Planta - Estágio 2)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 500 - 800 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (08. Thornback):
+- Elemento: Planta | Bioma: 2. Floresta Neon | Raridade: Rara
+- Paleta RGBA: Tronco/Corpo Marrom Casca (0.42, 0.26, 0.16, 1.0) | Espinhos e Folhas Verde Escuro (0.10, 0.58, 0.22, 1.0) | Flor Central Rosa Magenta (0.96, 0.28, 0.62, 1.0)
+- Anatomia Detalhada:
+- Tronco largo e robusto de golem quadrúpede/bípede com ombros assimétricos de pedra e madeira.
+- Grande flor prismática de 6 pétalas magenta plantada nas costas com núcleo amarelo.
+- Braços pesados terminando em punhos cúbicos cercados por espinhos cônicos.
+- Pontos para Animação (Rigging / Studio): Caminhada pesada alternando ombros; flor nas costas abre e fecha lentamente.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="gaiahorn titã silvestre (evolução final planta - estágio 3) planta 2. floresta neon / fusão mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>09. Gaiahorn — Titã Silvestre (Evolução Final Planta - Estágio 3)</strong>
+          <span class="sub-tag">Planta • 2. Floresta Neon / Fusão • Mítica • Dif: 750 • $880/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_09', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_09">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Gaiahorn — Titã Silvestre (Evolução Final Planta - Estágio 3)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 900 - 1.700 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (09. Gaiahorn):
+- Elemento: Planta | Bioma: 2. Floresta Neon / Fusão | Raridade: Mítica
+- Paleta RGBA: Corpo Madeira Ancestral (0.34, 0.22, 0.14, 1.0) | Copa/Juba Verde Esmeralda (0.12, 0.76, 0.34, 1.0) | Galhada Dourada (0.96, 0.80, 0.20, 1.0)
+- Anatomia Detalhada:
+- Corpo de cervo/titã majestoso com placa de musgo e mini-árvores crescendo nos ombros.
+- Enormes chifres ramificados em blocos dourados e verdes sustentando esferas de luz.
+- Cascos sólidos cinza-pedra e olhos verde-esmeralda brilhantes.
+- Pontos para Animação (Rigging / Studio): Passo nobre e lento; luz pulsante na galhada dourada a cada 2 segundos.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="voltmouse ratinho raio (pradaria solar) raio 1. pradaria solar rara">
+      <div class="prompt-head">
+        <div>
+          <strong>10. Voltmouse — Ratinho Raio (Pradaria Solar)</strong>
+          <span class="sub-tag">Raio • 1. Pradaria Solar • Rara • Dif: 35 • $28/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_10', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_10">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Voltmouse — Ratinho Raio (Pradaria Solar)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 350 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (10. Voltmouse):
+- Elemento: Raio | Bioma: 1. Pradaria Solar | Raridade: Rara
+- Paleta RGBA: Corpo Amarelo Elétrico (1.0, 0.86, 0.10, 1.0) | Listras e Orelhas Preto Grafite (0.12, 0.12, 0.15, 1.0) | Bochechas Laranja (1.0, 0.40, 0.10, 1.0)
+- Anatomia Detalhada:
+- Corpo pequeno e ágil com 2 listras pretas horizontais nas costas.
+- Orelhas compridas pontudas inclinadas em V com pontas pretas.
+- Cauda construída em zigue-zague com 3 prismas retangulares conectados em formato de raio.
+- Pontos para Animação (Rigging / Studio): Salto rápido constante pelo bioma; cauda de raio vibra com pequenas faíscas.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="fluffhop coelho nuvem (pradaria solar) planta 1. pradaria solar comum">
+      <div class="prompt-head">
+        <div>
+          <strong>11. Fluffhop — Coelho Nuvem (Pradaria Solar)</strong>
+          <span class="sub-tag">Planta • 1. Pradaria Solar • Comum • Dif: 14 • $9/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_11', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_11">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Fluffhop — Coelho Nuvem (Pradaria Solar)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 320 - 580 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (11. Fluffhop):
+- Elemento: Planta | Bioma: 1. Pradaria Solar | Raridade: Comum
+- Paleta RGBA: Corpo Branco Nuvem (0.96, 0.97, 1.0, 1.0) | Colarinho Fofo Azul Céu (0.58, 0.84, 1.0, 1.0) | Interior Orelhas Rosa (1.0, 0.65, 0.78, 1.0)
+- Anatomia Detalhada:
+- Corpo pequeno e macio cercado por 4 cubos/icospheres ao redor do pescoço formando uma nuvem fofa.
+- Duas orelhas longas dobradas ligeiramente para trás no topo.
+- Pés traseiros grandes para saltos altos e rabinho redondo em forma de pompom facetado.
+- Pontos para Animação (Rigging / Studio): Pula a cada 1.5s com squash-and-stretch vertical suave.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="buzzleaf abelha real (pradaria solar) planta 1. pradaria solar incomum">
+      <div class="prompt-head">
+        <div>
+          <strong>12. Buzzleaf — Abelha Real (Pradaria Solar)</strong>
+          <span class="sub-tag">Planta • 1. Pradaria Solar • Incomum • Dif: 24 • $18/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_12', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_12">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Buzzleaf — Abelha Real (Pradaria Solar)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 360 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (12. Buzzleaf):
+- Elemento: Planta | Bioma: 1. Pradaria Solar | Raridade: Incomum
+- Paleta RGBA: Abdômen Amarelo Mel (1.0, 0.78, 0.12, 1.0) | Listras Marrom Escuro (0.24, 0.15, 0.10, 1.0) | Asas Ciano Translúcido (0.70, 0.95, 1.0, 1.0)
+- Anatomia Detalhada:
+- Corpo segmentado em 3 blocos listrados de amarelo e marrom com ferrão cônico atrás.
+- 2 pares de asas em forma de folha chanfrada plana fixadas no topo do tórax.
+- Pequena coroa de folha verde na cabeça e 2 antenas em L.
+- Pontos para Animação (Rigging / Studio): Paira no ar a 2 studs do chão; asas batem em alta velocidade (oscilação de ±35°).
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="glowshroom cogumelo neon (floresta neon) planta 2. floresta neon incomum">
+      <div class="prompt-head">
+        <div>
+          <strong>13. Glowshroom — Cogumelo Neon (Floresta Neon)</strong>
+          <span class="sub-tag">Planta • 2. Floresta Neon • Incomum • Dif: 85 • $75/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_13', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_13">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Glowshroom — Cogumelo Neon (Floresta Neon)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 340 - 600 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (13. Glowshroom):
+- Elemento: Planta | Bioma: 2. Floresta Neon | Raridade: Incomum
+- Paleta RGBA: Caule Creme Lilás (0.88, 0.84, 0.96, 1.0) | Chapéu Roxo Neon (0.58, 0.16, 0.92, 1.0) | Pintas Ciano Brilhante (0.15, 0.95, 0.98, 1.0)
+- Anatomia Detalhada:
+- Corpo cilíndrico/cônico curto com 2 perninhas atarracadas.
+- Chapéu largo de cogumelo formado por cone de 8 lados achatado e base chanfrada.
+- 5 manchas cúbicas/hexagonais em ciano neon salientes sobre o chapéu.
+- Pontos para Animação (Rigging / Studio): Pulsa o chapéu (escala Y entre 0.95 e 1.08) emitindo esporos brilhantes.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="cybermantis louva-deus laser (floresta neon) raio 2. floresta neon épica">
+      <div class="prompt-head">
+        <div>
+          <strong>14. Cybermantis — Louva-Deus Laser (Floresta Neon)</strong>
+          <span class="sub-tag">Raio • 2. Floresta Neon • Épica • Dif: 165 • $165/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_14', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_14">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Cybermantis — Louva-Deus Laser (Floresta Neon)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 500 - 800 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (14. Cybermantis):
+- Elemento: Raio | Bioma: 2. Floresta Neon | Raridade: Épica
+- Paleta RGBA: Exoesqueleto Verde Esmeralda (0.08, 0.78, 0.42, 1.0) | Lâminas Neon Ciano (0.10, 0.98, 0.96, 1.0) | Visor Preto (0.08, 0.09, 0.12, 1.0)
+- Anatomia Detalhada:
+- Tórax esguio erguido com abdômen traseiro segmentado em placa angular.
+- Dois braços articulados terminando em grandes foices prismáticas ciano neon.
+- Cabeça triangular invertida com visor futurista e duas longas antenas finas.
+- Pontos para Animação (Rigging / Studio): Cruza e descruza as lâminas neon em guarda; movimenta-se com passos precisos.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="neonlynx lince holográfico (chefe da floresta neon) raio 2. floresta neon mítica (boss de zona)">
+      <div class="prompt-head">
+        <div>
+          <strong>15. Neonlynx — Lince Holográfico (Chefe da Floresta Neon)</strong>
+          <span class="sub-tag">Raio • 2. Floresta Neon • Mítica (Boss de Zona) • Dif: 220 • $240/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_15', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_15">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Neonlynx — Lince Holográfico (Chefe da Floresta Neon)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 700 - 1.200 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (15. Neonlynx):
+- Elemento: Raio | Bioma: 2. Floresta Neon | Raridade: Mítica (Boss de Zona)
+- Paleta RGBA: Corpo Índigo Escuro (0.12, 0.14, 0.28, 1.0) | Listras Rosa e Ciano Neon (0.96, 0.22, 0.78, 1.0) | Garras Elétricas (0.20, 0.95, 1.0, 1.0)
+- Anatomia Detalhada:
+- Silhueta de felino predador ágil com ombros pontudos e tufos neon nas pontas das orelhas.
+- Listras geométricas salientes nas costas e patas traseiras musculosas.
+- Rabo curto terminado em esfera/losango energético flutuante.
+- Pontos para Animação (Rigging / Studio): Postura de caça agachada; tufos e listras piscam em ciclo neon.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="magmacrab caranguejo obsidiana (cânion vulcânico) fogo 3. cânion vulcânico rara">
+      <div class="prompt-head">
+        <div>
+          <strong>16. Magmacrab — Caranguejo Obsidiana (Cânion Vulcânico)</strong>
+          <span class="sub-tag">Fogo • 3. Cânion Vulcânico • Rara • Dif: 310 • $310/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_16', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_16">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Magmacrab — Caranguejo Obsidiana (Cânion Vulcânico)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 450 - 780 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (16. Magmacrab):
+- Elemento: Fogo | Bioma: 3. Cânion Vulcânico | Raridade: Rara
+- Paleta RGBA: Casco Obsidiana (0.14, 0.12, 0.16, 1.0) | Fissuras de Lava Laranja (1.0, 0.36, 0.05, 1.0) | Pinças Amarelo Incandescente (1.0, 0.75, 0.10, 1.0)
+- Anatomia Detalhada:
+- Carapaça hexagonal larga e baixa de rocha vulcânica com fendas laranja brilhantes no topo.
+- Duas pinças enormes assimétricas (a direita maior que a esquerda) feitas com blocos e cunhas.
+- 6 patas articuladas laterais em cones facetados e dois olhos amarelos brilhantes.
+- Pontos para Animação (Rigging / Studio): Anda de lado (caranguejo); abre e fecha a pinça maior fazendo estalo.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="lavarex tirano de magma (cânion vulcânico) fogo 3. cânion vulcânico épica">
+      <div class="prompt-head">
+        <div>
+          <strong>17. Lavarex — Tirano de Magma (Cânion Vulcânico)</strong>
+          <span class="sub-tag">Fogo • 3. Cânion Vulcânico • Épica • Dif: 420 • $450/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_17', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_17">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Lavarex — Tirano de Magma (Cânion Vulcânico)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 650 - 1.100 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (17. Lavarex):
+- Elemento: Fogo | Bioma: 3. Cânion Vulcânico | Raridade: Épica
+- Paleta RGBA: Pele Carmesim Escura (0.68, 0.10, 0.10, 1.0) | Crista Dorsal Magma (1.0, 0.48, 0.08, 1.0) | Dentes Branco Marfim (0.98, 0.96, 0.90, 1.0)
+- Anatomia Detalhada:
+- Corpo bípede robusto de T-Rex em blocos pesados com mandíbula quadrada grande e fileira de dentes cônicos.
+- Braços curtos com 2 garras pretas e pernas grossas musculosas.
+- Fileira de 5 espinhos dorsais incandescentes descendo da cabeça até a ponta da cauda grossa.
+- Pontos para Animação (Rigging / Studio): Passada pesada que treme suavemente; ruge abrindo a mandíbula e soltando fumaça.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="solarpheonix fênix eterna (chefe do cânion vulcânico) fogo 3. cânion vulcânico lendária (boss de zona)">
+      <div class="prompt-head">
+        <div>
+          <strong>18. Solarpheonix — Fênix Eterna (Chefe do Cânion Vulcânico)</strong>
+          <span class="sub-tag">Fogo • 3. Cânion Vulcânico • Lendária (Boss de Zona) • Dif: 1200 • $1.600/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_18', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_18">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Solarpheonix — Fênix Eterna (Chefe do Cânion Vulcânico)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.000 - 2.100 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (18. Solarpheonix):
+- Elemento: Fogo | Bioma: 3. Cânion Vulcânico | Raridade: Lendária (Boss de Zona)
+- Paleta RGBA: Corpo Laranja Solar (1.0, 0.45, 0.06, 1.0) | Pontas das Asas Amarelo Ouro (1.0, 0.90, 0.22, 1.0) | Crista Rubi (0.92, 0.14, 0.18, 1.0)
+- Anatomia Detalhada:
+- Corpo elegante de ave de rapina com peitoral blindado em placas angulares douradas.
+- Enormes asas abertas compostas por 6 penas prismáticas escalonadas de cada lado.
+- 3 longas fitas/penas de cauda terminando em losangos de fogo e crista flamejante na cabeça.
+- Pontos para Animação (Rigging / Studio): Paira a 4 studs de altura batendo as grandes asas majestosamente e deixando rastro de fogo.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="frostpengu pinguim de cristal (abismo glacial) gelo 4. abismo glacial incomum">
+      <div class="prompt-head">
+        <div>
+          <strong>19. Frostpengu — Pinguim de Cristal (Abismo Glacial)</strong>
+          <span class="sub-tag">Gelo • 4. Abismo Glacial • Incomum • Dif: 1500 • $1.500/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_19', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_19">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Frostpengu — Pinguim de Cristal (Abismo Glacial)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 350 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (19. Frostpengu):
+- Elemento: Gelo | Bioma: 4. Abismo Glacial | Raridade: Incomum
+- Paleta RGBA: Costas Azul Marinho (0.12, 0.24, 0.48, 1.0) | Barriga Branca Neve (0.96, 0.98, 1.0, 1.0) | Bico e Cristais Ciano Gelo (0.45, 0.92, 1.0, 1.0)
+- Anatomia Detalhada:
+- Corpo ovóide/cúbico atarracado com 2 nadadeiras laterais achatadas.
+- Sobrancelhas e crista feitas de 3 cristais pontudos de gelo azul-claro no topo da cabeça.
+- Bico curto amarelo-alaranjado e pés largos em cunha.
+- Pontos para Animação (Rigging / Studio): Anda bamboleando de um lado para o outro e ocasionalmente desliza de barriga no gelo.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="cryoyeti colosso glacial (abismo glacial) gelo 4. abismo glacial mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>20. Cryoyeti — Colosso Glacial (Abismo Glacial)</strong>
+          <span class="sub-tag">Gelo • 4. Abismo Glacial • Mítica • Dif: 2800 • $3.200/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_20', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_20">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Cryoyeti — Colosso Glacial (Abismo Glacial)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 750 - 1.400 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (20. Cryoyeti):
+- Elemento: Gelo | Bioma: 4. Abismo Glacial | Raridade: Mítica
+- Paleta RGBA: Pelagem Branco Glacial (0.92, 0.96, 1.0, 1.0) | Chifres e Garras Preto/Azul Escuro (0.10, 0.15, 0.25, 1.0) | Ombros Cristal Ciano (0.30, 0.88, 1.0, 1.0)
+- Anatomia Detalhada:
+- Torso gigantesco em V (ombros muito largos, cintura estreita) com punhos maciços tocando quase o chão.
+- Cabeça afundada entre os ombros com sobrancelhas vermelhas/azuis furiosas, dentes à mostra e dois chifres curvos.
+- Agregados de cristais de gelo fincados nos dois ombros e nas costas.
+- Pontos para Animação (Rigging / Studio): Bate os dois punhos no peito/chão periodicamente criando onda de gelo.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="abysskraken kraken bioluminescente (chefe do abismo) água 4. abismo glacial lendária (boss de zona)">
+      <div class="prompt-head">
+        <div>
+          <strong>21. Abysskraken — Kraken Bioluminescente (Chefe do Abismo)</strong>
+          <span class="sub-tag">Água • 4. Abismo Glacial • Lendária (Boss de Zona) • Dif: 7200 • $8.500/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_21', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_21">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Abysskraken — Kraken Bioluminescente (Chefe do Abismo)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.100 - 2.200 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (21. Abysskraken):
+- Elemento: Água | Bioma: 4. Abismo Glacial | Raridade: Lendária (Boss de Zona)
+- Paleta RGBA: Corpo Azul Abissal (0.06, 0.18, 0.38, 1.0) | Ventosas e Olhos Neon Turquesa (0.10, 0.98, 0.88, 1.0)
+- Anatomia Detalhada:
+- Cabeça em formato de elmo/domo de lula gigante com duas abas laterais angulares.
+- 6 a 8 tentáculos longos construídos com segmentos cônicos curvados para cima, com blocos brilhantes turquesa (ventosas).
+- Olhos ferozes brilhando sob o manto frontal.
+- Pontos para Animação (Rigging / Studio): Flutua girando lentamente enquanto os tentáculos se mexem em ondas alternadas.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="runegolem sentinela dourado (ruínas ancestrais) terra 5. ruínas ancestrais épica">
+      <div class="prompt-head">
+        <div>
+          <strong>22. Runegolem — Sentinela Dourado (Ruínas Ancestrais)</strong>
+          <span class="sub-tag">Terra • 5. Ruínas Ancestrais • Épica • Dif: 12000 • $14.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_22', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_22">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Runegolem — Sentinela Dourado (Ruínas Ancestrais)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 600 - 1.100 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (22. Runegolem):
+- Elemento: Terra | Bioma: 5. Ruínas Ancestrais | Raridade: Épica
+- Paleta RGBA: Pedra Arenito (0.78, 0.64, 0.42, 1.0) | Armadura Ouro Antigo (0.96, 0.78, 0.22, 1.0) | Núcleo Rúnico Turquesa (0.15, 0.95, 0.85, 1.0)
+- Anatomia Detalhada:
+- Corpo modular desconectado: torso grande com um cristal rúnico turquesa girando no vazio do peito.
+- Braços e ombros flutuando 0.3 unidades separados do tronco por energia rúnica.
+- Cabeça cúbica monolítica com 1 único olho visor horizontal luminoso.
+- Pontos para Animação (Rigging / Studio): Braços e cabeça levitam levemente separados do tronco; núcleo peitoral gira sem parar.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="anubispecter chacal astral (ruínas ancestrais) terra 5. ruínas ancestrais mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>23. Anubispecter — Chacal Astral (Ruínas Ancestrais)</strong>
+          <span class="sub-tag">Terra • 5. Ruínas Ancestrais • Mítica • Dif: 24000 • $28.500/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_23', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_23">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Anubispecter — Chacal Astral (Ruínas Ancestrais)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 750 - 1.350 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (23. Anubispecter):
+- Elemento: Terra | Bioma: 5. Ruínas Ancestrais | Raridade: Mítica
+- Paleta RGBA: Corpo Obsidiana Negra (0.10, 0.10, 0.14, 1.0) | Adornos Ouro Real (0.98, 0.80, 0.18, 1.0) | Olhos e Cajado Roxo Astral (0.68, 0.25, 0.98, 1.0)
+- Anatomia Detalhada:
+- Corpo bípede esguio de guardião com saia/armadura egípcia geométrica em ouro e preto.
+- Cabeça clássica de chacal com focinho longo retangular e duas orelhas verticais muito altas e pontudas.
+- Anel/Colar largo dourado nos ombros e esfera astral flutuando atrás da cabeça.
+- Pontos para Animação (Rigging / Studio): Levita silenciosamente sobre as areias com braços cruzados ou estendidos.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="chronoswyrm serpente do tempo (chefe das ruínas) terra 5. ruínas ancestrais lendária (boss de zona)">
+      <div class="prompt-head">
+        <div>
+          <strong>24. Chronoswyrm — Serpente do Tempo (Chefe das Ruínas)</strong>
+          <span class="sub-tag">Terra • 5. Ruínas Ancestrais • Lendária (Boss de Zona) • Dif: 45000 • $55.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_24', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_24">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Chronoswyrm — Serpente do Tempo (Chefe das Ruínas)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.100 - 2.300 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (24. Chronoswyrm):
+- Elemento: Terra | Bioma: 5. Ruínas Ancestrais | Raridade: Lendária (Boss de Zona)
+- Paleta RGBA: Placas Bronze/Ouro (0.88, 0.68, 0.22, 1.0) | Corpo Mármore Branco (0.92, 0.92, 0.96, 1.0) | Engrenagens Ciano Tempo (0.20, 0.92, 1.0, 1.0)
+- Anatomia Detalhada:
+- Grande serpente alada mecânico-mística em 6 segmentos blindados.
+- Dois anéis de relógio/engrenagem octogonais flutuando ao redor do pescoço.
+- Cabeça coroada com ampulheta luminosa na testa.
+- Pontos para Animação (Rigging / Studio): Anéis temporais giram em sentidos opostos ao redor do corpo ondulante.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="nebulimp diabrete estelar (vazio cósmico) cósmico 6. vazio cósmico épica">
+      <div class="prompt-head">
+        <div>
+          <strong>25. Nebulimp — Diabrete Estelar (Vazio Cósmico)</strong>
+          <span class="sub-tag">Cósmico • 6. Vazio Cósmico • Épica • Dif: 65000 • $82.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_25', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_25">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Nebulimp — Diabrete Estelar (Vazio Cósmico)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 420 - 750 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (25. Nebulimp):
+- Elemento: Cósmico | Bioma: 6. Vazio Cósmico | Raridade: Épica
+- Paleta RGBA: Corpo Roxo Nebulosa (0.38, 0.12, 0.72, 1.0) | Chifres e Cauda Rosa Estelar (0.98, 0.32, 0.78, 1.0) | Olhos Amarelo Estrela (1.0, 0.94, 0.35, 1.0)
+- Anatomia Detalhada:
+- Corpo pequeno travesso com grande cabeça redonda/facetada e sorriso largo em blocos.
+- Chifres curvados para cima, asinhas triangulares nas costas e cauda fina terminando em uma estrela de 4 pontas.
+- Duas mini-luas orbitando o topo da cabeça.
+- Pontos para Animação (Rigging / Studio): Dá piruetas no ar enquanto flutua; mini-luas orbitam rapidamente.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="voidstalker pantera dimensional (vazio cósmico) cósmico 6. vazio cósmico mítica">
+      <div class="prompt-head">
+        <div>
+          <strong>26. Voidstalker — Pantera Dimensional (Vazio Cósmico)</strong>
+          <span class="sub-tag">Cósmico • 6. Vazio Cósmico • Mítica • Dif: 140000 • $185.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_26', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_26">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Voidstalker — Pantera Dimensional (Vazio Cósmico)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 750 - 1.400 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (26. Voidstalker):
+- Elemento: Cósmico | Bioma: 6. Vazio Cósmico | Raridade: Mítica
+- Paleta RGBA: Corpo Negro Vazio (0.06, 0.05, 0.12, 1.0) | Manchas Galácticas Magenta/Ciano (0.85, 0.20, 0.95, 1.0) | Cauda Fenda Brilhante (0.35, 0.90, 1.0, 1.0)
+- Anatomia Detalhada:
+- Pantera esguia com patas afiadas e 2 ombreiras flutuantes em forma de crescente.
+- Cristais estelares saindo ao longo da coluna vertebral.
+- Cauda longa bifurcada na ponta segurando um micro-buraco negro (esfera preta com anel ciano).
+- Pontos para Animação (Rigging / Studio): Caminhada furtiva deixando sombras roxas; micro-buraco negro na cauda pulsa.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="astraldragon dragão galáctico (chefe final do vazio) cósmico 6. vazio cósmico lendária (boss final)">
+      <div class="prompt-head">
+        <div>
+          <strong>27. Astraldragon — Dragão Galáctico (Chefe Final do Vazio)</strong>
+          <span class="sub-tag">Cósmico • 6. Vazio Cósmico • Lendária (Boss Final) • Dif: 320000 • $450.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_27', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_27">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Astraldragon — Dragão Galáctico (Chefe Final do Vazio)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.200 - 2.400 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (27. Astraldragon):
+- Elemento: Cósmico | Bioma: 6. Vazio Cósmico | Raridade: Lendária (Boss Final)
+- Paleta RGBA: Escamas Índigo Estelar (0.10, 0.08, 0.28, 1.0) | Asas Constelação Ouro/Rosa (1.0, 0.78, 0.25, 1.0) | Anéis Cósmicos Neon (0.94, 0.28, 0.88, 1.0)
+- Anatomia Detalhada:
+- Grande dragão quadrúpede/alado com corpo escuro salpicado de blocos brilhantes estilo constelação.
+- Duas asas enormes em armação geométrica dourada com membranas roxas translúcidas.
+- Anéis planetários dourados envolvendo o pescoço e a cauda longa com espinhos magenta.
+- Pontos para Animação (Rigging / Studio): Paira majestosamente com bater lento de asas; emite partículas de estrelas.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="eclipsion lendário do evento eclipse solar cósmico evento global: eclipse (a cada 20 min) lendária (evento)">
+      <div class="prompt-head">
+        <div>
+          <strong>28. Eclipsion — Lendário do Evento Eclipse Solar</strong>
+          <span class="sub-tag">Cósmico • Evento Global: Eclipse (A cada 20 min) • Lendária (Evento) • Dif: 180000 • $260.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_28', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_28">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Eclipsion — Lendário do Evento Eclipse Solar&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 900 - 1.900 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (28. Eclipsion):
+- Elemento: Cósmico | Bioma: Evento Global: Eclipse (A cada 20 min) | Raridade: Lendária (Evento)
+- Paleta RGBA: Núcleo Negro Eclipse (0.04, 0.04, 0.06, 1.0) | Coroa de Luz Laranja/Branca (1.0, 0.65, 0.10, 1.0) | Manto Roxo Real (0.32, 0.10, 0.55, 1.0)
+- Anatomia Detalhada:
+- Ser celestial sem pernas com torso envolto por um manto angular flutuante em camadas.
+- Cabeça formada por um disco preto central cercado por um anel brilhante de eclipse solar e 8 raios prismáticos.
+- 4 braços flutuantes estilizados com mãos em formato de crescentes lunares.
+- Pontos para Animação (Rigging / Studio): Os 8 raios da coroa giram lentamente; mãos orbitam em postura mística.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="meteorgon colosso da chuva de meteoros fogo evento global: chuva de meteoros lendária (evento)">
+      <div class="prompt-head">
+        <div>
+          <strong>29. Meteorgon — Colosso da Chuva de Meteoros</strong>
+          <span class="sub-tag">Fogo • Evento Global: Chuva de Meteoros • Lendária (Evento) • Dif: 210000 • $310.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_29', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_29">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Meteorgon — Colosso da Chuva de Meteoros&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 950 - 2.000 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (29. Meteorgon):
+- Elemento: Fogo | Bioma: Evento Global: Chuva de Meteoros | Raridade: Lendária (Evento)
+- Paleta RGBA: Rocha Espacial Grafite (0.18, 0.16, 0.22, 1.0) | Núcleo Meteoro Magenta/Laranja (1.0, 0.30, 0.45, 1.0) | Cristais Estelares (0.25, 0.90, 1.0, 1.0)
+- Anatomia Detalhada:
+- Golem titânico feito de blocos de asteroide irregulares ligados por veios incandescentes.
+- Cristais cósmicos cravados no peito e nas costas em ângulos variados.
+- Braços massivos com antebraços em formato de cometa pontiagudo.
+- Pontos para Animação (Rigging / Studio): Gira o torso de pedra antes de socar o chão; deixa rastro flamejante ao mover-se.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    <div class="prompt-card" data-search="omnisfera entidade secreta (1 em 1.000.000) cósmico todos os biomas (spawn secreto global) secreta (1 in 1m)">
+      <div class="prompt-head">
+        <div>
+          <strong>30. Omnisfera — Entidade Secreta (1 em 1.000.000)</strong>
+          <span class="sub-tag">Cósmico • Todos os Biomas (Spawn Secreto Global) • Secreta (1 in 1M) • Dif: 500000 • $1.000.000/s</span>
+        </div>
+        <button class="copy-btn" onclick="copyById('poke_prompt_30', this)">📋 Copiar Prompt</button>
+      </div>
+      <pre id="poke_prompt_30">Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura &quot;Omnisfera — Entidade Secreta (1 em 1.000.000)&quot; no estilo Low-Poly / Voxel Blocky para o jogo Roblox &quot;Jogue uma Orbe / Throw a Sphere&quot;.
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method=&#x27;ANGLE&#x27;`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier=&quot;Bevel&quot;)`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -&gt; neck -&gt; head -&gt; limbs -&gt; tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 1.200 - 2.500 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (30. Omnisfera):
+- Elemento: Cósmico | Bioma: Todos os Biomas (Spawn Secreto Global) | Raridade: Secreta (1 in 1M)
+- Paleta RGBA: Núcleo Branco Puro/Arco-Íris (1.0, 1.0, 1.0, 1.0) | Anéis Dourado Celestial (1.0, 0.85, 0.20, 1.0) | Placas Ciano/Magenta (0.20, 0.95, 1.0, 1.0)
+- Anatomia Detalhada:
+- Núcleo central icosaédrico brilhante cercado por 3 anéis giroscópicos concêntricos inclinados em eixos diferentes.
+- 6 asas de luz geométricas desconectadas dispostas em hexágono atrás do núcleo.
+- Coroa tridimensional de cristal flutuando sobre o anel externo + olhos místicos no núcleo central.
+- Pontos para Animação (Rigging / Studio): Os 3 anéis giram simultaneamente nos eixos X, Y e Z; as 6 asas respiram expandindo radialmente.
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.</pre>
+    </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function copyById(id, btn) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerText;
+      btn.innerText = "✅ Copiado!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.innerText = orig;
+        btn.classList.remove("copied");
+      }, 1800);
+    });
+  }
+  function filterCreatures() {
+    const q = document.getElementById("searchBox").value.trim().toLowerCase();
+    const cards = document.querySelectorAll("#creatureList .prompt-card");
+    cards.forEach(card => {
+      const hay = card.getAttribute("data-search") || "";
+      card.style.display = hay.includes(q) ? "block" : "none";
+    });
+  }
+</script>
+</body>
+</html>

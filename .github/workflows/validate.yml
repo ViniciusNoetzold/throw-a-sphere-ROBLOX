@@ -1,0 +1,33 @@
+name: Validate Roblox project
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install pinned official tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .tools/luau .tools/rojo build
+          curl --fail --location --retry 3 https://github.com/luau-lang/luau/releases/download/0.747/luau-ubuntu.zip -o .tools/luau.zip
+          echo '6a740240248e872815865a2cb03b0c327f24939478f1d0081a0540cdfd77fdaa  .tools/luau.zip' | sha256sum --check
+          unzip -q .tools/luau.zip -d .tools/luau
+          curl --fail --location --retry 3 https://github.com/rojo-rbx/rojo/releases/download/v7.7.0/rojo-7.7.0-linux-x86_64.zip -o .tools/rojo.zip
+          echo '22503e5839864f9d7c2171c48b536fc229f2cc4d8774c9cc149f60941d864073  .tools/rojo.zip' | sha256sum --check
+          unzip -q .tools/rojo.zip -d .tools/rojo
+          chmod +x .tools/luau/luau .tools/luau/luau-compile .tools/rojo/rojo
+      - name: Compile all production Luau sources
+        run: find src -type f -name '*.luau' -print0 | xargs -0 .tools/luau/luau-compile --null
+      - name: Test capture rules and server flows
+        run: |
+          .tools/luau/luau tests/CaptureMath.spec.luau
+          python3 tests/run_capture_tests.py --luau .tools/luau/luau
+          python3 tests/run_data_tests.py --luau .tools/luau/luau
+      - name: Build Roblox place
+        run: .tools/rojo/rojo build default.project.json -o build/ThrowASphere.rbxlx

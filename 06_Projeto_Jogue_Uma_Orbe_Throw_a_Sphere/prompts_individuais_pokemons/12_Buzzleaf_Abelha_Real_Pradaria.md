@@ -1,0 +1,38 @@
+# 12. Buzzleaf — Abelha Real (Pradaria Solar)
+
+* **Elemento:** `Planta` | **Bioma:** `1. Pradaria Solar` | **Raridade:** `Incomum`
+* **Dificuldade de Captura:** `24` | **Renda Base:** `$18/s` | **XP Base:** `48 XP`
+* **Orçamento 3D:** `360 - 650 tris`
+
+## 📋 Prompt Completo (Copie e Cole para Gerar este Modelo 3D)
+
+```text
+Crie um script Python completo e autossuficiente para o Blender (`bpy`) que gere o modelo 3D da criatura "Buzzleaf — Abelha Real (Pradaria Solar)" no estilo Low-Poly / Voxel Blocky para o jogo Roblox "Jogue uma Orbe / Throw a Sphere".
+
+REGRAS TÉCNICAS OBRIGATÓRIAS:
+1. Shading sempre Flat: chamar `bpy.ops.object.shade_flat()` em todas as primitivas e no objeto final unido. Nunca usar Smooth Shading.
+2. Materiais em Cor Sólida: criar materiais com `use_nodes = False` e definir `mat.diffuse_color = rgba`.
+3. Geometria Facetada: usar cones (`radius1 != radius2`, 4 a 8 vértices) para partes que afunilam (caudas, orelhas, patas, chifres) e cubos escalonados para corpo e cabeça.
+4. Bevel Final: após unir todas as partes com `bpy.ops.object.join()`, aplicar o modifier Bevel (`width=0.015` a `0.025`, `segments=2`, `limit_method='ANGLE'`) e aplicar imediatamente com `bpy.ops.object.modifier_apply(modifier="Bevel")`.
+5. Estrutura do Código:
+   - `CONFIG = { ... }` no topo com a paleta RGBA, dimensões e parâmetros de bevel.
+   - Função `clean_existing_object(obj_name)` para limpar execuções anteriores.
+   - Funções auxiliares (`create_cone`, `create_cylinder`, `create_cube`, `create_icosphere`).
+   - Função principal de montagem usando posições relativas (ex: `torso -> neck -> head -> limbs -> tail`).
+   - Função `generate_variations()` gerando a versão Normal, Dourada e Enorme (Huge) lado a lado.
+6. Orçamento de Triângulos: 360 - 650 tris.
+
+ESPECIFICAÇÃO DA CRIATURA (12. Buzzleaf):
+- Elemento: Planta | Bioma: 1. Pradaria Solar | Raridade: Incomum
+- Paleta RGBA: Abdômen Amarelo Mel (1.0, 0.78, 0.12, 1.0) | Listras Marrom Escuro (0.24, 0.15, 0.10, 1.0) | Asas Ciano Translúcido (0.70, 0.95, 1.0, 1.0)
+- Anatomia Detalhada:
+- Corpo segmentado em 3 blocos listrados de amarelo e marrom com ferrão cônico atrás.
+- 2 pares de asas em forma de folha chanfrada plana fixadas no topo do tórax.
+- Pequena coroa de folha verde na cabeça e 2 antenas em L.
+- Pontos para Animação (Rigging / Studio): Paira no ar a 2 studs do chão; asas batem em alta velocidade (oscilação de ±35°).
+- Exportação: Garanta que a base dos pés toque Z = 0 no Blender e a frente aponte para -Y para importar limpo em `.fbx` no Roblox Studio.
+```
+
+## 🎬 Notas de Animação no Roblox Studio
+* **Comportamento:** Paira no ar a 2 studs do chão; asas batem em alta velocidade (oscilação de ±35°).
+* **Alvo Crítico (1.5x):** Posicionar a `Part` chamada `Head` no topo do modelo para que arremessos que atingirem a cabeça apliquem automaticamente o multiplicador crítico no servidor.

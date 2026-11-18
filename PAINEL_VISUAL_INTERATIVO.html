@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pesquisa Completa — 4 Jogos Roblox (Mecânicas, Imagens, Texturas & Modelagem 3D)</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --bg-card: #111a2e;
+      --bg-elev: #17233d;
+      --border: #263554;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --green: #4ade80;
+      --gold: #facc15;
+      --pink: #f472b6;
+      --orange: #fb923c;
+      --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top right, #162447 0%, var(--bg) 45%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top Nav */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+    }
+    .navbar-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.3px;
+      color: #fff;
+    }
+    .brand span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav-links a {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .nav-links a:hover {
+      background: var(--accent);
+      color: #0b1120;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, rgba(56,189,248,0.14), rgba(167,139,250,0.10));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 2.8vw, 2.35rem);
+      line-height: 1.2;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+      font-size: 1rem;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .pill {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+    }
+
+    /* Section Headings */
+    .section {
+      margin-top: 44px;
+      scroll-margin-top: 76px;
+    }
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 22px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.55rem;
+    }
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-green { background: rgba(74, 222, 128, 0.16); color: var(--green); border: 1px solid rgba(74,222,128,0.4); }
+    .badge-gold { background: rgba(250, 204, 21, 0.16); color: var(--gold); border: 1px solid rgba(250,204,21,0.4); }
+    .badge-orange { background: rgba(251, 146, 60, 0.16); color: var(--orange); border: 1px solid rgba(251,146,60,0.4); }
+    .badge-purple { background: rgba(167, 139, 250, 0.16); color: var(--purple); border: 1px solid rgba(167,139,250,0.4); }
+    .badge-blue { background: rgba(56, 189, 248, 0.16); color: var(--accent); border: 1px solid rgba(56,189,248,0.4); }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg-card);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+      font-size: 0.92rem;
+    }
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--bg-elev);
+      color: #fff;
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+      color: #fff;
+    }
+    .card ul, .card ol {
+      margin: 8px 0 0;
+      padding-left: 20px;
+      color: #cbd5e1;
+    }
+    .card li { margin-bottom: 6px; }
+    .card p { color: #cbd5e1; margin: 8px 0; }
+
+    /* Metrics Strip */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .metric {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .metric .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .metric .val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* Galleries */
+    .gallery-title {
+      margin: 22px 0 12px;
+      font-size: 1.05rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .img-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .img-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .img-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #090d16;
+    }
+    .img-card.square img {
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      padding: 10px;
+      background: #0d1424;
+    }
+    .img-card.auto img {
+      aspect-ratio: auto;
+      max-height: 360px;
+      object-fit: contain;
+      background: #0d1424;
+    }
+    .img-cap {
+      padding: 10px 14px;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      border-top: 1px solid var(--border);
+    }
+    .img-cap strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    /* Tag */
+    .tag-real {
+      display: inline-block;
+      background: rgba(74, 222, 128, 0.2);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+    .tag-promo {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+    .tag-tex {
+      display: inline-block;
+      background: rgba(250, 204, 21, 0.2);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+
+    /* Loop flow */
+    .loop-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+    .loop-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .loop-arrow { color: var(--accent); font-weight: 800; }
+
+    /* Code box */
+    code {
+      background: #1e293b;
+      color: #7dd3fc;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, monospace;
+      font-size: 0.88em;
+    }
+
+    /* Modal Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 94vw;
+      max-height: 82vh;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+    }
+    .lightbox-cap {
+      color: #e2e8f0;
+      font-size: 0.98rem;
+      text-align: center;
+      max-width: 900px;
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      background: var(--bg-elev);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .pillar-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #0b1120;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="brand">🎮 Pesquisa Roblox <span>— 4 Jogos + Texturas &amp; 3D</span></div>
+    <div class="nav-links">
+      <a href="#comparativo">Comparativo</a>
+      <a href="#jogo1">1. Throw a Seed</a>
+      <a href="#jogo2">2. Steal An Egg</a>
+      <a href="#jogo3">3. Throw Food</a>
+      <a href="#jogo4">4. Ride Pets</a>
+      <a href="#texturas3d">Texturas &amp; Modelos 3D</a>
+      <a href="#comum">O que têm em Comum</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <h1>Dossiê Completo: Mecânicas, Gráficos, Animações, Imagens Reais e Modelagem 3D</h1>
+    <p>
+      Análise detalhada dos jogos <strong>Throw a Seed</strong>, <strong>Steal An Egg</strong>,
+      <strong>Throw Food For Animals</strong> e <strong>+1 Ride Pets to Fight</strong> no Roblox.
+      Clique em qualquer imagem para ampliar em tela cheia. Todos os arquivos, texturas e scripts desta pesquisa estão salvos nesta pasta.
+    </p>
+    <div class="pill-row">
+      <div class="pill">📁 26+ Imagens Reais &amp; Promocionais</div>
+      <div class="pill">🔍 4 Zooms de Análise de Modelos In-Game</div>
+      <div class="pill">🧱 6 Texturas PNG + Normal Map Prontas</div>
+      <div class="pill">💻 Scripts Prontos: Luau (Roblox) &amp; Python (Blender)</div>
+    </div>
+  </header>
+
+  <!-- COMPARATIVO -->
+  <section id="comparativo" class="section">
+    <div class="section-header">
+      <h2>📊 Tabela Comparativa Geral</h2>
+      <span class="badge badge-blue">Dados Oficiais Observados</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Atributo</th>
+            <th>🌱 Throw a Seed</th>
+            <th>🥚 Steal An Egg</th>
+            <th>🍖 Throw Food For Animals</th>
+            <th>🐉 +1 Ride Pets to Fight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Place ID</strong></td>
+            <td><code>129081220403721</code></td>
+            <td><code>107778070777162</code></td>
+            <td><code>120219252362013</code></td>
+            <td><code>127231827405683</code></td>
+          </tr>
+          <tr>
+            <td><strong>Estúdio / Grupo</strong></td>
+            <td>Fish Time Studios</td>
+            <td>and Collect Rare Pets ✓</td>
+            <td>Goofy Chupacabra</td>
+            <td>Hatch to Fight</td>
+          </tr>
+          <tr>
+            <td><strong>Jogadores Ativos</strong></td>
+            <td>13.191</td>
+            <td><strong>701.831</strong></td>
+            <td>275.596</td>
+            <td>1.235</td>
+          </tr>
+          <tr>
+            <td><strong>Visitas / Favoritos</strong></td>
+            <td>4,8M+ / 8.398</td>
+            <td><strong>11,4B+</strong> / 10.047.833</td>
+            <td>319,1M+ / 313.684</td>
+            <td>4,0M+ / 207.778</td>
+          </tr>
+          <tr>
+            <td><strong>Aprovação (Likes)</strong></td>
+            <td>95,46% (5.781 likes)</td>
+            <td>91,31% (4,24M+ likes)</td>
+            <td>94,18% (169K+ likes)</td>
+            <td><strong>99,14%</strong> (93K+ likes)</td>
+          </tr>
+          <tr>
+            <td><strong>Tam. Servidor</strong></td>
+            <td>5 jogadores</td>
+            <td>7 jogadores</td>
+            <td>5 jogadores</td>
+            <td>8 jogadores</td>
+          </tr>
+          <tr>
+            <td><strong>Treino Principal</strong></td>
+            <td>Força (Barras / Pull-ups)</td>
+            <td>Velocidade (Esteiras)</td>
+            <td>Throw Power (Barras)</td>
+            <td>Poder +1 e Nível do Pet</td>
+          </tr>
+          <tr>
+            <td><strong>Ação no Mapa</strong></td>
+            <td>Arremessar semente no cânion (15 zonas)</td>
+            <td>Invadir biomas (13+), roubar ovos e fugir</td>
+            <td>Arremessar comida na pista (17 zonas)</td>
+            <td>Montar no pet e lutar em 60+ estágios</td>
+          </tr>
+          <tr>
+            <td><strong>Economia</strong></td>
+            <td>Plantas no jardim ($/s + offline)</td>
+            <td>Pets nos cercados ($/s + fusão)</td>
+            <td>Animais na base ($/s + offline)</td>
+            <td>Moedas, Chaves, Crates e Rebirth</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- JOGO 1 -->
+  <section id="jogo1" class="section">
+    <div class="section-header">
+      <h2>🌱 1. Throw a Seed (<em>Lançar uma semente</em>)</h2>
+      <span class="badge badge-green">Fish Time Studios • 15 Zonas</span>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="label">Ativos</div><div class="val">13.191</div></div>
+      <div class="metric"><div class="label">Visitas</div><div class="val">4,8M+</div></div>
+      <div class="metric"><div class="label">Aprovação</div><div class="val">95,46%</div></div>
+      <div class="metric"><div class="label">Colecionáveis</div><div class="val">75+ Plantas (10 Raridades)</div></div>
+      <div class="metric"><div class="label">Servidor</div><div class="val">5 Jogadores</div></div>
+    </div>
+
+    <div class="loop-bar">
+      <div class="loop-step">💪 Treinar Barra (Wood → Diamond)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🎯 Timing na Linha Amarela</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🚀 Cruzar até 15 Zonas (+Sorte)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🌸 Brotar Planta (Tamanho × Mutação)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🏡 Plantar no Jardim ($/s Offline)</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>⚙️ Funcionamento &amp; Mecânicas</h3>
+        <ul>
+          <li><strong>Treinamento (Pull-Ups):</strong> Evolua sua barra fixa da madeira até <em>Diamond</em> para ganhar mais Força por repetição e arremessar muito mais longe.</li>
+          <li><strong>Zonas &amp; Sorte Dinâmica:</strong> O cânion possui <strong>15 zonas</strong> (do <em>Meadow</em> até o <em>Starlight Glade</em>, passando por biomas de outono, praia tropical e cristal noturno). Cada zona cruzada no voo multiplica sua Sorte.</li>
+          <li><strong>10 Raridades + Variantes:</strong> De <em>Common</em> a <em>Secret</em> (1 em 1 milhão), além de tamanhos <em>Big / Huge / Titanic</em> e mutações (<em>Gold, Diamond, Candy, Fire, Radioactive</em>).</li>
+          <li><strong>Sementes &amp; Economia Offline:</strong> Sementes compradas na loja aumentam a sorte base (incluindo <em>Rainbow</em> e <em>Enchanted</em>). Plantas no jardim geram dinheiro mesmo com o jogo fechado.</li>
+          <li><strong>Códigos:</strong> <code>RELEASE</code>, <code>HYPE</code>, <code>UPDATE</code>, <code>1KFAVORITES</code>, <code>TIKTOK</code>, <code>CANDY</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎨 Gráficos &amp; 🎬 Animações</h3>
+        <ul>
+          <li><strong>Estética Real (In-Game):</strong> Terreno de grama verde quadriculado com <strong>Square Studs</strong>, paredes marrons quadriculadas, cercas de madeira no jardim e árvores feitas de <code>Parts</code> e <code>WedgeParts</code> simples.</li>
+          <li><strong>Destaques Visuais:</strong> Árvores raras emitem pilares verticais de luz dourada (<code>Beam</code>) e exibem <code>BillboardGuis</code> (ex.: <em>Orange Tree $21/s</em>, <em>Grape Vine $54/s</em>, <em>Baobab $525/s</em>).</li>
+          <li><strong>Animações:</strong> Ciclo vertical de barra fixa; rastro amarelo/branco no voo com câmera acompanhando a semente; germinação elástica (<code>TweenService</code>) ao pousar; pré-visualização verde translúcida ao plantar (<code>Click where it goes • R rotate • Q store</code>).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gallery-title">📸 Capturas Reais de Gameplay &amp; Imagens Promocionais (Throw a Seed)</div>
+    <div class="gallery">
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/01_gameplay_real_plantando_golden_apple_tree.png" alt="Gameplay real plantando Golden Apple Tree" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Plantando Golden Apple Tree</strong>HUD com Index, Shop, Plants, botões AUTO/STORE e pinheiro voxel à esquerda.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/02_gameplay_real_jardim_fiona_e_plantas.png" alt="Gameplay real dos jardins e plantas" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Jardins e Pilares de Luz</strong>Visão aérea mostrando cercas, Baobab ($525/s), Grape Vine ($54/s) e raios de luz.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/03_gameplay_real_canion_noturno_cristais.png" alt="Gameplay real cânion noturno" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Cânion Noturno de Cristais</strong>Piso xadrez roxo/azul escuro com cristais facetados e arco com textura de studs.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/04_promo_silhueta_misteriosa.png" alt="Promo silhueta misteriosa" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Silhueta Misteriosa (? !!)</strong>Bacon Hair lançando semente amarela rumo a uma árvore secreta em silhueta.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/05_promo_arremesso_canion_outono.png" alt="Promo cânion outono" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Arremesso no Cânion</strong>Visão traseira na linha amarela xadrez com arco de trajetória até árvore de outono.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/06_promo_arvore_do_sol.png" alt="Promo árvore do sol" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Árvore do Sol</strong>Arremesso lateral com rastro branco sobre grama xadrez em blocos.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/07_promo_progressao_celestial_oak.png" alt="Promo Celestial Oak" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Escada Celestial Oak ($12,850B/S)</strong>5 degraus de biomas até o alvo dourado sob a árvore coroada.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="01_Throw_a_Seed/pagina_completa_roblox.png" alt="Página Roblox Throw a Seed" />
+        <div class="img-cap"><span class="tag-real">PÁGINA OFICIAL</span><strong>Página no Roblox</strong>Captura original com descrição, botões e evento Atualização 1.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO 2 -->
+  <section id="jogo2" class="section">
+    <div class="section-header">
+      <h2>🥚 2. Steal An Egg (<em>Roube um ovo</em>)</h2>
+      <span class="badge badge-gold">and Collect Rare Pets ✓ • 11,4B+ Visitas</span>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="label">Ativos</div><div class="val">701.831</div></div>
+      <div class="metric"><div class="label">Visitas</div><div class="val">11,4 Bilhões+</div></div>
+      <div class="metric"><div class="label">Favoritos</div><div class="val">10.047.833</div></div>
+      <div class="metric"><div class="label">Aprovação</div><div class="val">91,31%</div></div>
+      <div class="metric"><div class="label">Servidor</div><div class="val">7 Jogadores</div></div>
+    </div>
+
+    <div class="loop-bar">
+      <div class="loop-step">🏃 Treinar na Esteira (+Speed)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🦖 Invadir Biomas &amp; Fugir do Guardião</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🥷 Roubar Ovos (Ninho ou Rivais)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🐣 Chocar &amp; Fundir na Fuse Machine</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🏏 Desbloquear Armas de Knockback</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>⚙️ Biomas, Guardiões &amp; Armas</h3>
+        <ul>
+          <li><strong>Progressão de Biomas (Velocidade + Guardião):</strong>
+            1. Forest (<em>Chicken</em>) → 2. Lake (900 / <em>Swan</em>) → 3. Desert (10K / <em>Scorpion</em>) → 4. Jungle (40K / <em>Tiger</em>) → 5. Snow (170K / <em>Yeti</em>) → 6. Volcano (700K / <em>Cerberus</em>) → 7. Abyss Ocean (2.5M / <em>Moby</em>) → 8. Prehistoric (18M / <em>T-Rex</em>) → 9. Cosmic (700M / <em>Cosmic Skeleton</em>) → 10. Cherry Blossom (2.5B / <em>Oni Tiger</em>) → 11. Titan Temple (7B / <em>Gorilla King</em>) → 12. Angels &amp; Demons → 13. Enchanted Forest (50B / <em>Enchanted Lion</em>).
+          </li>
+          <li><strong>Armas do Índice (8/8 por bioma):</strong> <em>Baseball Bat</em> → <em>Biome Bats (1-9)</em> → <em>Katana</em> → <em>Titan Axe</em> → <em>Angelic Spear</em> → <em>Forest Club &amp; Hammer</em> (alto knockback para PvP).</li>
+          <li><strong>Mutações &amp; Peso (kg):</strong> <em>Silver (1.25x), Bloom (1.5x), Golden (2x), Rainbow (2.5x), Spirit Bloom (3x)</em> + peso em kg e <em>Fuse Machine</em>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎨 Gráficos &amp; 🎬 Animações</h3>
+        <ul>
+          <li><strong>Estilo Visual:</strong> Guardiões gigantes em blocos com olhos neon agressivos, cascas de ovos temáticas (escamas, cristais de gelo, estrelas galácticas) e efeitos de pétalas de sakura.</li>
+          <li><strong>Animações:</strong> Corrida acelerada na esteira com linhas de velocidade; pose com os dois braços levantados segurando o ovo gigante sobre a cabeça; estados do guardião (sono <code>Z Z Z</code>, alerta <code>!!</code> e perseguição); golpes de bastão/martelo com física de repulsão (<em>ragdoll</em>).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gallery-title">📸 Imagens Promocionais Oficiais (Steal An Egg)</div>
+    <div class="gallery">
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="02_Steal_An_Egg/01_promo_fuga_cobra_vibora.png" alt="Fuga da cobra víbora" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Fuga da Víbora (YOU! + !!)</strong>Bacon Hair sorridente foge com ovo listrado enquanto a víbora gigante dá o bote.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="02_Steal_An_Egg/02_promo_roubando_yeti_egg.png" alt="Roubando Yeti Egg" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Yeti Egg ($89,121Sp/s)</strong>Avatar chorando foge com ovo arco-íris do ninho do Yeti furioso no bioma de neve.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="02_Steal_An_Egg/03_promo_dragao_galactico_dormindo.png" alt="Dragão Galáctico Dormindo" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Dragão Galáctico (Z Z Z)</strong>Fuga silenciosa no bioma cósmico com ovo estrelado rosa e azul.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="02_Steal_An_Egg/04_promo_roubando_trex_egg.png" alt="Roubando Trex Egg" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Trex Egg ($89,121Sp/s)</strong>Avatar erguendo ovo espinhoso gigante sobre a cabeça no deserto pré-histórico.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO 3 -->
+  <section id="jogo3" class="section">
+    <div class="section-header">
+      <h2>🍖 3. Throw Food For Animals (<em>Lançar comida para animais</em>)</h2>
+      <span class="badge badge-orange">Goofy Chupacabra • 17 Zonas • 50 Comidas</span>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="label">Ativos</div><div class="val">275.596</div></div>
+      <div class="metric"><div class="label">Visitas</div><div class="val">319,1M+</div></div>
+      <div class="metric"><div class="label">Favoritos</div><div class="val">313.684</div></div>
+      <div class="metric"><div class="label">Aprovação</div><div class="val">94,18%</div></div>
+      <div class="metric"><div class="label">Servidor</div><div class="val">5 Jogadores</div></div>
+    </div>
+
+    <div class="loop-bar">
+      <div class="loop-step">💪 Barra Fixa (+Throw Power)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🍔 Comprar Comida (50 itens / 19 Tiers)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🎯 Lançar na Pista (17 Zonas)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🦁 Atrair &amp; Capturar Animal</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🏠 Renda na Base (Offline Cash)</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>⚙️ Zonas, Comidas &amp; Mutações</h3>
+        <ul>
+          <li><strong>17 Zonas (5 até 6.200+ studs):</strong> Forest, Savanna, Desert, Jungle, Ocean, Mountains, Taiga, Winter, Prehistoric Forest, Deep Waters, Hell, Ancient Ruins, Mythical Paradise, Shadow Realm, Harvest Fields, Phantom Harbor e Nuclear Wasteland.</li>
+          <li><strong>50 Comidas (Uso Ilimitado após comprar):</strong> Da <em>Carrot</em> (Grátis) e <em>Burger</em> ($1.3T) até o <em>Black Sun Soufflé</em> (Tier 19 Sovereign, $31Ocd). Comidas melhores atraem animais mais raros.</li>
+          <li><strong>Mutações &amp; Multiplicadores:</strong> <strong>Gold</strong> (1.5x), <strong>Diamond</strong> (3x), <strong>Emerald</strong> (5x), <strong>Ruby</strong> (10x) e <strong>Rainbow</strong> (20x), acumulando com tamanhos até <em>Infinite</em>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎨 Gráficos Reais &amp; 🎬 Animações</h3>
+        <ul>
+          <li><strong>Visual Gêmeo de Throw a Seed:</strong> Piso verde xadrez com <strong>Square Studs</strong> extremamente evidentes, paredes de terra quadriculadas e árvores construídas com blocos inclinados e copas retangulares coloridas.</li>
+          <li><strong>Animações:</strong> Comida girando em alta velocidade no ar com rastro branco acompanhado pela câmera atravessando divisórias brancas dos biomas (<em>Desert 🌵</em>, <em>Taiga 🌲</em>); badge de probabilidade (<code>1 in 1</code>) e animação do animal caminhando para devorar a comida.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gallery-title">📸 Capturas Reais de Gameplay &amp; Imagens Promocionais (Throw Food For Animals)</div>
+    <div class="gallery">
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/01_gameplay_real_pista_bioma_desert.png" alt="Gameplay real Desert" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Voo pelo Bioma Desert 🌵</strong>Corredor verde/marrom com paredes de studs e câmera seguindo o alimento.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/02_gameplay_real_pista_bioma_taiga.png" alt="Gameplay real Taiga" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Pista do Bioma Taiga 🌲</strong>Bife girando no centro com rastro branco e linha divisória de zona.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/03_gameplay_real_close_terreno_studs_e_arvore.png" alt="Close real studs e árvore" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Close nos Square Studs</strong>Detalhe perfeito do relevo dos pinos quadrados e árvore de blocos coloridos.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/04_gameplay_real_close_studs_e_blocos.png" alt="Segundo close studs" />
+        <div class="img-cap"><span class="tag-real">GAMEPLAY REAL</span><strong>Detalhe dos Blocos e Cenário</strong>Vista lateral com banner "1 in 1" e estruturas geométricas de fundo.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/05_promo_progressao_phoenix.png" alt="Promo Phoenix" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Escada Phoenix ($68,543B/S)</strong>Mesma composição de 5 degraus de Throw a Seed, jogando um hambúrguer para a Fênix.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/06_promo_corredor_dragao.png" alt="Promo Corredor Dragão" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Corredor do Dragão</strong>Lançamento de hambúrguer em arco amarelo na linha de partida quadriculada.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/07_promo_silhueta_dragao_cenoura.png" alt="Promo Silhueta Dragão" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Silhueta Misteriosa (? !!)</strong>Layout idêntico ao de Throw a Seed, mas com cenoura e dragão em silhueta.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="03_Throw_Food_For_Animals/08_promo_trex_bife.png" alt="Promo T-Rex e Bife" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Bife para o T-Rex</strong>Bacon Hair lançando bife com osso para T-Rex em blocos saltando.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO 4 -->
+  <section id="jogo4" class="section">
+    <div class="section-header">
+      <h2>🐉 4. +1 Ride Pets to Fight (<em>+1 animal de estimação para lutar</em>)</h2>
+      <span class="badge badge-purple">Hatch to Fight • 165+ Pets • 99,14% Likes</span>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="label">Ativos</div><div class="val">1.235</div></div>
+      <div class="metric"><div class="label">Visitas</div><div class="val">4,0M+</div></div>
+      <div class="metric"><div class="label">Favoritos</div><div class="val">207.778</div></div>
+      <div class="metric"><div class="label">Aprovação</div><div class="val">99,14%</div></div>
+      <div class="metric"><div class="label">Servidor</div><div class="val">8 Jogadores</div></div>
+    </div>
+
+    <div class="loop-bar">
+      <div class="loop-step">🥚 Chocar &amp; Forjar Ovos (165+ Pets)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">💪 Treinar (+1 Poder) &amp; Evoluir Nível</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🐉 Montar no Pet (= Montaria + Arma)</div><span class="loop-arrow">→</span>
+      <div class="loop-step">⚔️ Lutar em 60+ Estágios &amp; Chefes</div><span class="loop-arrow">→</span>
+      <div class="loop-step">🔄 Rebirth, Raças &amp; Trilhas</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>⚙️ Mecânicas &amp; Sistemas</h3>
+        <ul>
+          <li><strong>Pet = Montaria + Arma:</strong> Você monta fisicamente sobre o pet e aperta <code>[E] TO FIGHT</code> para atacar ondas de monstros e chefes em <strong>60+ estágios</strong> e múltiplos mundos (como o <em>Mundo 2: Mundo do Oceano</em>).</li>
+          <li><strong>The Forge &amp; Evolução Visual:</strong> Combine ovos na Forja e evolua os pets do <em>Level 1</em> ao <em>Level 100</em> com crescimento massivo de escala e detalhes.</li>
+          <li><strong>Meta-Progressão:</strong> <em>Rebirth</em> (multiplicadores permanentes), <em>Races</em> (reroll de atributos), <em>Trails</em> e <em>Crates</em> abertas com chaves.</li>
+          <li><strong>Códigos:</strong> <code>HALLOWEEN</code>, <code>8KCCU</code>, <code>1KCCU</code>, <code>LAUNCH</code>, <code>LUCKY</code>, <code>INFERNO</code>, <code>TRAILS</code>, <code>POWERUP</code>, <code>COINRUSH</code>, <code>HATCHER</code>, <code>RACES</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎨 Gráficos &amp; 🎬 Animações</h3>
+        <ul>
+          <li><strong>Voxel Fantasia/Anime Detalhado:</strong> Mantém o chão com studs e blocos cúbicos, mas com criaturas muito mais elaboradas (Kitsunes de 9 caudas, Wyverns de lava e dragões chineses blindados com anéis de energia neon).</li>
+          <li><strong>Animações:</strong> Pose de montaria acoplada (<code>Motor6D</code>) acompanhando o movimento do pet; ataques diretos da fera; efeitos de poeira, auras roxas/ciano e badges flutuantes de <code>+1</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gallery-title">📸 Imagens Promocionais Oficiais (+1 Ride Pets to Fight)</div>
+    <div class="gallery">
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="04_Ride_Pets_to_Fight/01_promo_wyvern_dourado_lava.png" alt="Wyvern Dourado de Lava" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Wyvern Dourado de Lava</strong>Montaria dracônica gigante com placas vulcânicas, asas luminosas e ícones +1.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="04_Ride_Pets_to_Fight/02_promo_raposa_nove_caudas_laranja.png" alt="Raposa Nove Caudas" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Raposa de Nove Caudas</strong>Estilo Kurama em voxel sobre grama com studs e prompt [E] TO FIGHT.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="04_Ride_Pets_to_Fight/03_promo_fera_listrada_aura_roxa.png" alt="Fera Listrada" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Fera Listrada com Aura Roxa</strong>Criatura com garras negras, boca brilhante e múltiplos badges +1.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="04_Ride_Pets_to_Fight/04_promo_frost_kitsune_ciano.png" alt="Frost Kitsune" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Frost Kitsune Ciano</strong>Nove caudas brancas/azul-gelo, guizo dourado e anéis de energia ciano.</div>
+      </div>
+      <div class="img-card" onclick="openLightbox(this)">
+        <img src="04_Ride_Pets_to_Fight/05_promo_evolucao_level_1_10_100.png" alt="Evolução Level 1 10 100" />
+        <div class="img-cap"><span class="tag-promo">PROMO</span><strong>Evolução Level 1 → 10 → 100</strong>Dragão oriental evoluindo de filhote até colosso dourado ao pôr do sol.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEXTURAS E MODELAGEM 3D -->
+  <section id="texturas3d" class="section">
+    <div class="section-header">
+      <h2>🧱 5. Texturas Reais, Análise de Modelos 3D &amp; Scripts Prontos</h2>
+      <span class="badge badge-blue">Zoom In-Game + Arquivos PNG + Luau &amp; Blender</span>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 22px;">
+      <div class="card">
+        <h3>🔍 Como São as Texturas Reais</h3>
+        <ul>
+          <li><strong>Square Studs (Pinos Quadrados Clássicos):</strong> Diferente dos pinos redondos modernos, todos esses jogos adotam o pino quadrado vazado (2006–2013) com borda iluminada no topo-esquerdo e sombra no canto inferior-direito.</li>
+          <li><strong>Inlets (Encaixes Inferiores):</strong> Visíveis na base branca sob os pinheiros de <em>Throw a Seed</em>, simulando blocos empilháveis reais.</li>
+          <li><strong>Grade Xadrez Bicolor:</strong> O chão e paredes alternam duas cores próximas (ex.: Grama <code>#4CD92B</code> / <code>#3FC022</code> e Terra <code>#96643A</code> / <code>#7E522E</code>), dando noção de distância ao lançar sementes ou comidas.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🛠️ Como os Modelos 3D São Feitos</h3>
+        <ul>
+          <li><strong>Plantas &amp; Cenário (Roblox Studio):</strong> Construídos com <code>Part</code> e <code>WedgePart</code> simples (ex.: tronco de blocos empilhados + galhos rotacionados por <code>CFrame.Angles</code> + frutas cúbicas), escalonados dinamicamente por código via <code>Model:ScaleTo()</code>.</li>
+          <li><strong>Mutações &amp; Destaque:</strong> Aplicam materiais (<code>Foil</code>, <code>Glass</code>, <code>Neon</code>), <code>Highlight</code> para contorno colorido, <code>Color3.fromHSV()</code> para efeito <em>Rainbow</em> e <code>Beam</code> vertical para pilares de luz.</li>
+          <li><strong>Pets &amp; Ovos (Blender / Blockbench):</strong> Feitos em Low-Poly facetado com <em>Flat Shading</em> e cores sólidas, e exportados em <code>.fbx</code> para o Roblox com scripts prontos nesta pasta em <code>05_Texturas_e_Modelagem_3D/scripts_exemplo/</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gallery-title">🔬 Zoom Analítico nos Modelos Reais &amp; Diagramas Explicativos</div>
+    <div class="gallery">
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/zoom_01_modelo_pinheiro_wedges_e_inlets.png" alt="Zoom Pinheiro" />
+        <div class="img-cap"><span class="tag-real">ZOOM REAL 3X</span><strong>Pinheiro (WedgeParts + Inlets)</strong>Camadas verdes/brancas empilhadas e encaixes Inlets na base.</div>
+      </div>
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/zoom_02_modelo_golden_apple_tree_e_ui.png" alt="Zoom Golden Apple Tree" />
+        <div class="img-cap"><span class="tag-real">ZOOM REAL 2X</span><strong>Golden Apple Tree + UI</strong>Galhos inclinados, maçãs cúbicas douradas e botões AUTO / STORE.</div>
+      </div>
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/zoom_03_modelos_baobab_videira_laranjeira_jardim.png" alt="Zoom Jardim" />
+        <div class="img-cap"><span class="tag-real">ZOOM REAL 2X</span><strong>Baobab, Grape Vine &amp; BillboardGui</strong>Tags de renda $/s e pilares de luz amarelos sobre plantas raras.</div>
+      </div>
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/zoom_04_detalhe_chao_square_studs_e_planta_blocos.png" alt="Zoom Square Studs" />
+        <div class="img-cap"><span class="tag-real">ZOOM REAL 2X</span><strong>Detalhe Real dos Square Studs</strong>Relevo dos pinos quadrados clássicos no chão verde xadrez.</div>
+      </div>
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/diagrama_anatomia_modelo_voxel_studs.png" alt="Diagrama Anatomia" />
+        <div class="img-cap"><span class="tag-tex">DIAGRAMA</span><strong>Anatomia de um Modelo Voxel + Studs</strong>As 4 camadas técnicas de geometria, superfície, mutação e UI.</div>
+      </div>
+      <div class="img-card auto" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/analise_visual_modelos_reais/infografico_paleta_cores_e_mutacoes.png" alt="Infográfico Paleta" />
+        <div class="img-cap"><span class="tag-tex">INFOGRÁFICO</span><strong>Paleta de Cores &amp; Mutações</strong>Códigos Hex dos biomas e tabela de multiplicadores (1.25x a 20x).</div>
+      </div>
+    </div>
+
+    <div class="gallery-title">🎨 Texturas Prontas para Download/Uso (Pasta <code>texturas_prontas/</code>)</div>
+    <div class="gallery">
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_stud_quadrado_topo_color.png" alt="Textura Stud Color" />
+        <div class="img-cap"><span class="tag-tex">TEXTURA 512×512</span><strong>Square Studs (Color Overlay)</strong>Pinos quadrados clássicos tileables para ColorMap/Texture.</div>
+      </div>
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_inlet_quadrado_base_color.png" alt="Textura Inlet Color" />
+        <div class="img-cap"><span class="tag-tex">TEXTURA 512×512</span><strong>Square Inlets (Base Inferior)</strong>Cavidades quadradas para base das peças e construções.</div>
+      </div>
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_stud_quadrado_normal_map.png" alt="Textura Stud Normal Map" />
+        <div class="img-cap"><span class="tag-tex">NORMAL MAP 512×512</span><strong>Normal Map de Studs</strong>Gera relevo 3D real no MaterialVariant / SurfaceAppearance.</div>
+      </div>
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_grama_xadrez_com_studs.png" alt="Textura Grama Xadrez" />
+        <div class="img-cap"><span class="tag-tex">TEXTURA 1024×1024</span><strong>Grama Xadrez + Studs</strong>Piso verde bicolor (#4CD92B / #3FC022) pronto para uso.</div>
+      </div>
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_parede_terra_xadrez_com_studs.png" alt="Textura Terra Xadrez" />
+        <div class="img-cap"><span class="tag-tex">TEXTURA 1024×1024</span><strong>Parede do Cânion + Studs</strong>Padrão marrom bicolor (#96643A / #7E522E) das encostas.</div>
+      </div>
+      <div class="img-card square" onclick="openLightbox(this)">
+        <img src="05_Texturas_e_Modelagem_3D/texturas_prontas/textura_canion_noturno_xadrez_com_studs.png" alt="Textura Noturna Xadrez" />
+        <div class="img-cap"><span class="tag-tex">TEXTURA 1024×1024</span><strong>Bioma Noturno + Studs</strong>Padrão roxo/azul escuro (#262460 / #1B1947) para áreas cósmicas.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O QUE TÊM EM COMUM -->
+  <section id="comum" class="section">
+    <div class="section-header">
+      <h2>🔗 6. O Que Esses 4 Jogos Têm em Comum? (7 Pilares)</h2>
+      <span class="badge badge-gold">Síntese de Game Design</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3><span class="pillar-num">1</span> Mesmo Loop Incremental</h3>
+        <p>Todos seguem 4 passos viciantes: <strong>Treino simples/AFK</strong> (barra fixa, esteira ou +1) → <strong>Ação em corredor</strong> → <strong>Coleta RNG</strong> → <strong>Renda passiva na base</strong> para comprar upgrades.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">2</span> Mapa em "Corredor de Biomas"</h3>
+        <p>Pistas lineares progressivas (15 zonas, 13+ biomas, 17 zonas, 60 estágios) que criam o efeito psicológico de <em>"quase lá"</em> ao enxergar a próxima zona logo à frente.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">3</span> RNG em 3 Camadas</h3>
+        <p>Sorteiam <strong>Raridade × Escala Física</strong> (<em>Big, Huge, Titanic, Infinite</em> / kg) × <strong>Mutação Brilhante</strong> (<em>Gold, Diamond, Rainbow</em> etc.), acompanhados de um <em>Index</em> colecionável.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">4</span> Visual Studded Voxel</h3>
+        <p>Misturam nostalgia dos blocos e <strong>Square Studs</strong> clássicos com iluminação moderna (<code>Neon</code>, <code>Highlight</code>, feixes de luz), rodando super leve em celulares.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">5</span> Thumbnails "Padrão Bacon Hair"</h3>
+        <p>Protagonista Bacon Hair com contorno grosso, expressões exageradas, silhuetas com <code>? !!</code>, setas vermelhas, rótulos <code>YOU!</code>, <code>+1</code> e lucros gigantes em verde neon (<code>$89,121Sp/s</code>).</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">6</span> Servidores Pequenos (5–8)</h3>
+        <p>Servidores reduzidos (5, 7 ou 8 jogadores) mantêm todas as bases perto da pista central e evitam travamentos causados por dezenas de modelos gigantes com UI flutuante.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pillar-num">7</span> Retenção &amp; Monetização</h3>
+        <p>Ganhos <strong>offline/AFK</strong>, escalas numéricas até Septilhões (<code>Sp</code>) e Octodeciliões (<code>Ocd</code>), eventos sazonais semanais e gamepasses espelhados (<em>2x Luck, 2x Speed/Power, Auto</em>).</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕ Fechar (ESC)</button>
+  <img id="lb-img" src="" alt="" />
+  <div id="lb-cap" class="lightbox-cap"></div>
+</div>
+
+<script>
+  function openLightbox(card) {
+    const img = card.querySelector("img");
+    const cap = card.querySelector(".img-cap");
+    document.getElementById("lb-img").src = img.src;
+    document.getElementById("lb-cap").innerHTML = cap ? cap.innerHTML : img.alt;
+    document.getElementById("lightbox").classList.add("open");
+  }
+  function closeLightbox() {
+    document.getElementById("lightbox").classList.remove("open");
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
+</script>
+
+</body>
+</html>

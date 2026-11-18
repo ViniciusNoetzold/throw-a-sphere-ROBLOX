@@ -1,0 +1,33 @@
+{
+  "name": "ThrowASphere",
+  "servePort": 34872,
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": { "$path": "src/shared" },
+      "Remotes": {
+        "$className": "Folder",
+        "RequestThrow": { "$className": "RemoteEvent" },
+        "ThrowResult": { "$className": "RemoteEvent" },
+        "RequestState": { "$className": "RemoteEvent" },
+        "StateUpdate": { "$className": "RemoteEvent" },
+        "ActionFeedback": { "$className": "RemoteEvent" },
+        "BuyOrb": { "$className": "RemoteEvent" },
+        "EquipOrb": { "$className": "RemoteEvent" },
+        "EquipToSanctuary": { "$className": "RemoteEvent" },
+        "TrainThrowPower": { "$className": "RemoteEvent" }
+      }
+    },
+    "ServerScriptService": { "$path": "src/server" },
+    "StarterPlayer": {
+      "StarterPlayerScripts": { "$path": "src/client" }
+    },
+    "Workspace": {
+      "$properties": { "Gravity": 196.2, "FallenPartsDestroyHeight": -100 }
+    },
+    "Lighting": {
+      "$properties": { "ClockTime": 14, "Brightness": 2, "Ambient": [0.5, 0.5, 0.5] }
+    },
+    "SoundService": { "$properties": { "RespectFilteringEnabled": true } }
+  }
+}

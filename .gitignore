@@ -1,0 +1,20 @@
+# Local tools and temporary outputs
+.tools/
+build/
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+*.rbxl
+*.rbxl.lock
+*.rbxlx.lock
+*.rbxm
+*.rbxmx
+*.rbxmx.lock
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+
