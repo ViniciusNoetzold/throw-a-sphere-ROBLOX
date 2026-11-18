@@ -4,19 +4,25 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
-**18/11/2026, 16:10 — Brasília (UTC−3). Etapa atual: passo 1, base funcional implementada; validação integrada no Roblox Studio em andamento. Toda a pasta de pesquisa está incluída neste repositório.**
+**18/11/2026, 16:20 — Brasília (UTC−3). Etapa atual: passo 1 concluído para protótipo local e validado no Roblox Studio via MCP. Toda a pasta de pesquisa está incluída neste repositório.**
+
+**Publicação conferida:** o commit [`112c87f`](https://github.com/ViniciusNoetzold/throw-a-sphere-ROBLOX/commit/112c87f) publicou a pasta completa: 123 arquivos, incluindo as 44 imagens da pesquisa. O código, os prompts e as referências já estão disponíveis para clonar no outro PC.
 
 | Etapa | Estado | Entrega |
 | --- | --- | --- |
 | Ambiente / GitHub | Configurado | Rojo 7.7.0, Luau 0.747, instalador local, build, testes e instruções para dois PCs |
-| 1 — Base funcional | Implementada; teste real no Studio pendente | Mira, captura, santuários, renda, XP, inventário e persistência |
+| 1 — Base funcional | Protótipo local validado no Studio | Mira, captura, santuários, renda, XP, inventário e persistência implementada |
 | 2 — Interface completa | Próxima etapa | HUD final, Big Numbers até Ocd, números flutuantes e loja Robux |
 | 3 — Orbes e estruturas 3D | Planejada | Orbes 1/2/8 → pódio/fusão/portal → orbes 3–7 |
 | 4 — Criaturas 3D | Planejada | Lotes A → B → C → D → E dos prompts originais |
 
-**Próximo trabalho:** concluir o teste real do passo 1 no Studio, corrigir erros encontrados e registrar o resultado aqui. Depois iniciar o passo 2, mantendo o mesmo protocolo de teste, README, commit e publicação.
+**Próximo trabalho:** iniciar o passo 2 (HUD final, Big Numbers e loja Robux). Antes de publicar o jogo, validar também dois clientes, emulador móvel/controle e persistência em uma experiência separada de teste. Manter o protocolo de teste, README, commit e publicação a cada etapa.
 
 ## Rodar agora
+
+Para apenas jogar o protótipo, clone ou baixe o repositório e abra **[game/ThrowASphere.rbxlx](game/ThrowASphere.rbxlx)** no Roblox Studio. Aperte **Play**. Esse arquivo pronto acompanha o Git e é regenerado pelo script de build.
+
+Para desenvolver e validar o código:
 
 No Windows x64, com Git, Python 3 e Roblox Studio instalados:
 
@@ -62,10 +68,17 @@ Antes de publicar o jogo, configure o place para **6 jogadores** no Creator Hub.
 - Fórmula de captura e limites de crítico/longa distância, XP e alcance: passou.
 - Testes do servidor com mocks determinísticos de serviços Roblox: **51 cenários aprovados** (26 de captura, 6 de spawn/bloqueio e 19 de dados/santuário/progressão).
 - Build Rojo do place `.rbxlx`: passou.
-- Execução e inspeção visual no Roblox Studio: pendente de conexão MCP.
+- Execução no Roblox Studio via MCP: **passou**. Servidor e cliente carregaram, com seis criaturas, santuário atribuído, HUD e estado inicial de $150/25 orbes.
+- Captura pelo remote real e arremesso por input de mouse: **passaram**; mira crítica dourada, três balançadas, consumo de estoque, inventário, santuário e respawn observados.
+- Economia e progressão reais no Studio: **passaram**; compra de uma orbe por $25, treino +1 força/+5 moedas, quatro capturas, nível 2 com 15 XP e renda de $54/s com sinergia de três criaturas de Planta.
+- GitHub Actions: compilação, 51 cenários e build aprovados no [checkpoint da pasta completa](https://github.com/ViniciusNoetzold/throw-a-sphere-ROBLOX/actions/runs/44377462689).
 - Persistência real entre servidores publicados: pendente de experiência de teste.
 
-Compilação e mocks não substituem o Play no Studio nem validam latência, câmera, dispositivos reais ou disponibilidade do DataStore.
+O Output não apresentou erro dos scripts do projeto. O Studio já emitia um aviso de asset incompatível `203785492` antes do Play, inclusive no place vazio; esse ID não aparece no código do jogo. Dispositivos reais, dois jogadores e disponibilidade do DataStore ainda precisam da validação indicada acima.
+
+![Protótipo do passo 1 em execução no Roblox Studio](docs/evidencias/passo1-studio.png)
+
+O [roteiro do Studio](docs/TESTE_NO_STUDIO.md) e o [guia de conexão MCP](docs/MCP_ROBLOX_STUDIO.md) permitem continuar os testes no outro PC.
 
 ## Organização
 
@@ -76,6 +89,7 @@ src/client/       Mira, efeitos e HUD funcional
 scripts/          Instalação, testes, build e servidor Rojo
 tests/            Casos determinísticos sobre código de produção
 docs/             Ambiente e continuidade entre computadores
+game/             Place pronto para abrir no Studio
 06_Projeto_.../   GDD, prompts base/UI, prompts 3D e protótipos originais
 01_... a 05_.../  Pesquisa visual e referências originais
 ```
@@ -100,4 +114,4 @@ git push origin main
 git status --short --branch
 ```
 
-O `gh` deste PC estava com uma credencial inválida durante a preparação; os primeiros commits foram publicados pela conexão GitHub do Codex. Para usar o terminal normalmente, autentique com `gh auth login -h github.com`. Nenhuma credencial foi adicionada ao repositório.
+O `git push` deste PC foi validado com a sessão já salva no **Git Credential Manager**. O repositório usa esse gerenciador na configuração local do Git; não é necessário refazer o login para publicar pelo Git. O token do comando `gh` continua inválido e só precisa ser renovado caso você queira usar a CLI `gh`. A configuração local não acompanha o clone: no outro PC, use a sessão do Git Credential Manager daquele computador e entre na sua conta quando solicitado. Nenhuma credencial foi adicionada ao repositório.

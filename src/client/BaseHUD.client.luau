@@ -246,6 +246,9 @@ stateUpdate.OnClientEvent:Connect(function(snapshot: any)
     state = snapshot
     coinsLabel.Text = "$" .. number(snapshot.Coins or 0) .. "   |   $" .. number(snapshot.IncomePerSec or 0) .. "/s"
     local required = snapshot.XPRequired or Config.GetXPRequiredForLevel(snapshot.Level or 1)
+    local level = snapshot.Level or 1
+    local slotCapacity = Config.Constants.BaseSanctuarySlots + (if level >= 5 then 1 else 0) + (if level >= 15 then 1 else 0)
+    inventoryHint.Text = string.format("Toque para colocar ou retirar. Até %d criaturas geram $/s.", slotCapacity)
     levelLabel.Text = string.format("Nível %d   ·   %s / %s XP", snapshot.Level or 1, number(snapshot.XP or 0), number(required))
     fill.Size = UDim2.fromScale(math.clamp((snapshot.XP or 0) / math.max(1, required), 0, 1), 1)
     rangeLabel.Text = string.format("Alcance %.0f studs   ·   Combo x%d", snapshot.MaxRange or 47, snapshot.ComboStreak or 0)

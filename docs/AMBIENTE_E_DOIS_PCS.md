@@ -13,7 +13,11 @@ powershell -ExecutionPolicy Bypass -File scripts/Test.ps1
 
 O instalador baixa versões oficiais fixas de Rojo 7.7.0 e Luau 0.747, verifica SHA-256 e guarda os executáveis em `.tools/`. Não exige Node, npm, banco externo ou chaves de API. O parâmetro `-InstallStudioPlugin` instala o plugin local do Rojo; reinicie o Studio se ele estava aberto. Referência: [instalação oficial Rojo](https://rojo.space/docs/v7/getting-started/installation/).
 
+O commit [`112c87f`](https://github.com/ViniciusNoetzold/throw-a-sphere-ROBLOX/commit/112c87f) já publicou a pasta completa, com 123 arquivos e as 44 imagens da pesquisa. O checkpoint registra compilação Luau e build Rojo aprovados, além de **51 cenários do servidor aprovados**: 26 de captura, 6 de spawn/bloqueio e 19 de dados/santuário/progressão. As pendências de validação integrada ficam no `README.md`.
+
 ## Abrir o jogo
+
+O repositório também inclui `game/ThrowASphere.rbxlx`: abra esse arquivo diretamente para jogar sem instalar a ferramenta de build. Para editar o código, use o fluxo abaixo; o build regenera tanto `build/` quanto a cópia versionada em `game/`.
 
 1. Execute `powershell -ExecutionPolicy Bypass -File scripts/Build.ps1`.
 2. No Roblox Studio use **File → Open from File** e abra `build/ThrowASphere.rbxlx`.
@@ -57,5 +61,9 @@ git status --short --branch
 
 Só considere o trabalho sincronizado após confirmar o push. Não use `push --force` nem descarte alterações do outro computador. Se `git pull --ff-only` recusar, compare as branches e resolva o conflito antes de continuar.
 
-Neste PC o `gh auth status` indicou credencial inválida em 18/11/2026. A publicação inicial usa a conexão GitHub do Codex. Para usar `git push` no terminal, restaure a autenticação com `gh auth login -h github.com` ou com o Git Credential Manager. Nenhum token foi gravado no projeto.
+Neste PC, o `git push` foi validado em 18/11/2026 usando a sessão já salva no **Git Credential Manager**. A configuração local deste repositório seleciona esse gerenciador; o uso normal de `git push origin main` não depende de renovar o token do `gh`.
+
+O `gh auth status` ainda indica um token inválido para a CLI GitHub. Execute `gh auth login -h github.com` apenas se precisar usar comandos `gh`. Esse estado é separado da autenticação do Git Credential Manager que já permitiu publicar o projeto.
+
+A configuração local do Git e as sessões de autenticação não são sincronizadas pelo repositório. No outro PC, use o Git Credential Manager instalado com o Git e autentique sua conta quando solicitado. Nenhum token ou outra credencial foi gravado no projeto.
 

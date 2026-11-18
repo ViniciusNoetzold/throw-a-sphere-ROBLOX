@@ -1,0 +1,2136 @@
+<roblox version="4">
+  <Item class="Lighting" referent="0">
+    <Properties>
+      <string name="Name">Lighting</string>
+      <Color3 name="Ambient">
+        <R>0.5</R>
+        <G>0.5</G>
+        <B>0.5</B>
+      </Color3>
+      <float name="Brightness">2</float>
+      <float name="ClockTime">14</float>
+    </Properties>
+  </Item>
+  <Item class="ReplicatedStorage" referent="1">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="2">
+      <Properties>
+        <string name="Name">Remotes</string>
+      </Properties>
+      <Item class="RemoteEvent" referent="3">
+        <Properties>
+          <string name="Name">ActionFeedback</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="4">
+        <Properties>
+          <string name="Name">BuyOrb</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="5">
+        <Properties>
+          <string name="Name">EquipOrb</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="6">
+        <Properties>
+          <string name="Name">EquipToSanctuary</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="7">
+        <Properties>
+          <string name="Name">RequestState</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="8">
+        <Properties>
+          <string name="Name">RequestThrow</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="9">
+        <Properties>
+          <string name="Name">StateUpdate</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="10">
+        <Properties>
+          <string name="Name">ThrowResult</string>
+        </Properties>
+      </Item>
+      <Item class="RemoteEvent" referent="11">
+        <Properties>
+          <string name="Name">TrainThrowPower</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Folder" referent="12">
+      <Properties>
+        <string name="Name">Shared</string>
+      </Properties>
+      <Item class="ModuleScript" referent="13">
+        <Properties>
+          <string name="Name">CaptureMath</string>
+          <string name="Source"><![CDATA[--!strict
+-- Pure rules, runnable in the official Luau CLI without Roblox services.
+local CaptureMath = {}
+
+function CaptureMath.GetXPRequiredForLevel(level: number): number
+	return math.floor(100 * math.clamp(level, 1, 100) ^ 1.6)
+end
+
+function CaptureMath.GetMaxThrowRange(strength: number, level: number): number
+	return 40 + math.max(0, strength) * 0.5 + math.clamp(level, 1, 100) * 2
+end
+
+function CaptureMath.CalculateShakeProbability(power: number, aim: number, luck: number, difficulty: number, master: boolean?): number
+	if master then return 1 end
+	local ratio = math.max(0, power * aim * luck) / math.max(1, difficulty)
+	return math.min(1, ratio ^ (1 / 3))
+end
+
+function CaptureMath.GetAimBonus(critical: boolean, distance: number): number
+	if distance > 90 then return if critical then 1.85 else 1.25 end
+	return if critical then 1.5 else 1
+end
+
+return table.freeze(CaptureMath)
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="14">
+        <Properties>
+          <string name="Name">Config</string>
+          <string name="Source"><![CDATA[--!strict
+local Math = require(script.Parent.CaptureMath)
+local Variants = require(script.Parent.ConfigMutacoes)
+return {
+	Orbs = require(script.Parent.ConfigOrbes),
+	Creatures = require(script.Parent.ConfigCriaturas),
+	Biomes = require(script.Parent.ConfigBiomas),
+	Mutations = Variants.Mutations,
+	Sizes = Variants.Sizes,
+	GetXPRequiredForLevel = Math.GetXPRequiredForLevel,
+	GetMaxThrowRange = Math.GetMaxThrowRange,
+	CalculateShakeProbability = Math.CalculateShakeProbability,
+	GetAimBonus = Math.GetAimBonus,
+	Constants = {
+		MaxLevel = 100, BaseSanctuarySlots = 6, MaxOfflineSeconds = 28800,
+		DataStoreName = "ThrowASphere_v1", StudioPersistence = false,
+		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
+		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
+		CaptureLockSeconds = 4.5, ThrowCooldownSeconds = 4.5,
+		TrainingCoins = 5, TrainingStrength = 1,
+	},
+}
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="15">
+        <Properties>
+          <string name="Name">ConfigBiomas</string>
+          <string name="Source"><![CDATA[--!strict
+-- Catalog only: step 1 opens the Solar Meadow. Later zones come with their content.
+return {
+	PradariaSolar = { Name = "Pradaria Solar", Cost = 0, RequiredBestiary = 0, RequiredLevel = 1, Enabled = true },
+	FlorestaNeon = { Name = "Floresta Neon", Cost = 2500, RequiredBestiary = 4, RequiredLevel = 1, Enabled = false },
+	CanionVulcanico = { Name = "Cânion Vulcânico", Cost = 50000, RequiredBestiary = 10, RequiredLevel = 1, Enabled = false },
+	AbismoGlacial = { Name = "Abismo Glacial", Cost = 1200000, RequiredBestiary = 16, RequiredLevel = 1, Enabled = false },
+	RuinasAncestrais = { Name = "Ruínas Ancestrais", Cost = 45000000, RequiredBestiary = 22, RequiredLevel = 1, Enabled = false },
+	VazioCosmico = { Name = "Vazio Cósmico", Cost = 2500000000, RequiredBestiary = 26, RequiredLevel = 25, Enabled = false },
+}
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="16">
+        <Properties>
+          <string name="Name">ConfigCriaturas</string>
+          <string name="Source"><![CDATA[--!strict
+-- Catalog sourced from the 30 individual creature briefs. Only the first biome spawns in step 1.
+export type CreatureDef = { Id: string, Name: string, Element: string, Rarity: string, Biome: string, Difficulty: number, BaseIncomePerSec: number, BaseXP: number, BodyColor: Color3, HeadOffsetY: number }
+local Creatures: { [string]: CreatureDef } = {
+	Pyrokit = { Id = "Pyrokit", Name = "Pyrokit", Element = "Fogo", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 18, BaseIncomePerSec = 12, BaseXP = 40, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Blazefox = { Id = "Blazefox", Name = "Blazefox", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 320, BaseIncomePerSec = 280, BaseXP = 180, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Ignisovereign = { Id = "Ignisovereign", Name = "Ignisovereign", Element = "Fogo", Rarity = "Mitica", Biome = "CanionVulcanico", Difficulty = 1150, BaseIncomePerSec = 1450, BaseXP = 650, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Aquapup = { Id = "Aquapup", Name = "Aquapup", Element = "Agua", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 18, BaseIncomePerSec = 12, BaseXP = 40, BodyColor = Color3.fromRGB(56,189,248), HeadOffsetY = 2.6 },
+	Tidefang = { Id = "Tidefang", Name = "Tidefang", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1600, BaseIncomePerSec = 1800, BaseXP = 320, BodyColor = Color3.fromRGB(56,189,248), HeadOffsetY = 2.6 },
+	Leviathorn = { Id = "Leviathorn", Name = "Leviathorn", Element = "Agua", Rarity = "Mitica", Biome = "AbismoGlacial", Difficulty = 5500, BaseIncomePerSec = 6400, BaseXP = 950, BodyColor = Color3.fromRGB(56,189,248), HeadOffsetY = 2.6 },
+	Sproutling = { Id = "Sproutling", Name = "Sproutling", Element = "Planta", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 8, BaseXP = 25, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Thornback = { Id = "Thornback", Name = "Thornback", Element = "Planta", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 130, BaseIncomePerSec = 110, BaseXP = 140, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Gaiahorn = { Id = "Gaiahorn", Name = "Gaiahorn", Element = "Planta", Rarity = "Mitica", Biome = "FlorestaNeon", Difficulty = 750, BaseIncomePerSec = 880, BaseXP = 550, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Voltmouse = { Id = "Voltmouse", Name = "Voltmouse", Element = "Raio", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 35, BaseIncomePerSec = 28, BaseXP = 80, BodyColor = Color3.fromRGB(250,204,21), HeadOffsetY = 2.6 },
+	Fluffhop = { Id = "Fluffhop", Name = "Fluffhop", Element = "Planta", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 14, BaseIncomePerSec = 9, BaseXP = 28, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Buzzleaf = { Id = "Buzzleaf", Name = "Buzzleaf", Element = "Planta", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 24, BaseIncomePerSec = 18, BaseXP = 48, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Glowshroom = { Id = "Glowshroom", Name = "Glowshroom", Element = "Planta", Rarity = "Incomum", Biome = "FlorestaNeon", Difficulty = 85, BaseIncomePerSec = 75, BaseXP = 110, BodyColor = Color3.fromRGB(74,222,128), HeadOffsetY = 2.6 },
+	Cybermantis = { Id = "Cybermantis", Name = "Cybermantis", Element = "Raio", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 165, BaseIncomePerSec = 165, BaseXP = 200, BodyColor = Color3.fromRGB(250,204,21), HeadOffsetY = 2.6 },
+	Neonlynx = { Id = "Neonlynx", Name = "Neonlynx", Element = "Raio", Rarity = "Mitica", Biome = "FlorestaNeon", Difficulty = 220, BaseIncomePerSec = 240, BaseXP = 320, BodyColor = Color3.fromRGB(250,204,21), HeadOffsetY = 2.6 },
+	Magmacrab = { Id = "Magmacrab", Name = "Magmacrab", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 310, BaseIncomePerSec = 310, BaseXP = 210, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Lavarex = { Id = "Lavarex", Name = "Lavarex", Element = "Fogo", Rarity = "Epica", Biome = "CanionVulcanico", Difficulty = 420, BaseIncomePerSec = 450, BaseXP = 260, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Solarpheonix = { Id = "Solarpheonix", Name = "Solarpheonix", Element = "Fogo", Rarity = "Lendaria", Biome = "CanionVulcanico", Difficulty = 1200, BaseIncomePerSec = 1600, BaseXP = 720, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Frostpengu = { Id = "Frostpengu", Name = "Frostpengu", Element = "Gelo", Rarity = "Incomum", Biome = "AbismoGlacial", Difficulty = 1500, BaseIncomePerSec = 1500, BaseXP = 290, BodyColor = Color3.fromRGB(186,230,253), HeadOffsetY = 2.6 },
+	Cryoyeti = { Id = "Cryoyeti", Name = "Cryoyeti", Element = "Gelo", Rarity = "Mitica", Biome = "AbismoGlacial", Difficulty = 2800, BaseIncomePerSec = 3200, BaseXP = 700, BodyColor = Color3.fromRGB(186,230,253), HeadOffsetY = 2.6 },
+	Abysskraken = { Id = "Abysskraken", Name = "Abysskraken", Element = "Agua", Rarity = "Lendaria", Biome = "AbismoGlacial", Difficulty = 7200, BaseIncomePerSec = 8500, BaseXP = 1200, BodyColor = Color3.fromRGB(56,189,248), HeadOffsetY = 2.6 },
+	Runegolem = { Id = "Runegolem", Name = "Runegolem", Element = "Terra", Rarity = "Epica", Biome = "RuinasAncestrais", Difficulty = 12000, BaseIncomePerSec = 14000, BaseXP = 1100, BodyColor = Color3.fromRGB(217,169,89), HeadOffsetY = 2.6 },
+	Anubispecter = { Id = "Anubispecter", Name = "Anubispecter", Element = "Terra", Rarity = "Mitica", Biome = "RuinasAncestrais", Difficulty = 24000, BaseIncomePerSec = 28500, BaseXP = 1600, BodyColor = Color3.fromRGB(217,169,89), HeadOffsetY = 2.6 },
+	Chronoswyrm = { Id = "Chronoswyrm", Name = "Chronoswyrm", Element = "Terra", Rarity = "Lendaria", Biome = "RuinasAncestrais", Difficulty = 45000, BaseIncomePerSec = 55000, BaseXP = 2400, BodyColor = Color3.fromRGB(217,169,89), HeadOffsetY = 2.6 },
+	Nebulimp = { Id = "Nebulimp", Name = "Nebulimp", Element = "Cosmico", Rarity = "Epica", Biome = "VazioCosmico", Difficulty = 65000, BaseIncomePerSec = 82000, BaseXP = 1900, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+	Voidstalker = { Id = "Voidstalker", Name = "Voidstalker", Element = "Cosmico", Rarity = "Mitica", Biome = "VazioCosmico", Difficulty = 140000, BaseIncomePerSec = 185000, BaseXP = 2800, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+	Astraldragon = { Id = "Astraldragon", Name = "Astraldragon", Element = "Cosmico", Rarity = "Lendaria", Biome = "VazioCosmico", Difficulty = 320000, BaseIncomePerSec = 450000, BaseXP = 5000, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+	Eclipsion = { Id = "Eclipsion", Name = "Eclipsion", Element = "Cosmico", Rarity = "Lendaria", Biome = "Global", Difficulty = 180000, BaseIncomePerSec = 260000, BaseXP = 4000, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+	Meteorgon = { Id = "Meteorgon", Name = "Meteorgon", Element = "Fogo", Rarity = "Lendaria", Biome = "Global", Difficulty = 210000, BaseIncomePerSec = 310000, BaseXP = 4500, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
+	Omnisfera = { Id = "Omnisfera", Name = "Omnisfera", Element = "Cosmico", Rarity = "Secreta", Biome = "Global", Difficulty = 500000, BaseIncomePerSec = 1000000, BaseXP = 15000, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+}
+return Creatures
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="17">
+        <Properties>
+          <string name="Name">ConfigMutacoes</string>
+          <string name="Source"><![CDATA[--!strict
+return {
+	Mutations = {
+		{ Name = "Normal", Weight = 8200, Multiplier = 1, Color = Color3.fromRGB(255,255,255) },
+		{ Name = "Dourada", Weight = 1100, Multiplier = 2, Color = Color3.fromRGB(250,204,21) },
+		{ Name = "Cristal", Weight = 450, Multiplier = 3.5, Color = Color3.fromRGB(56,189,248) },
+		{ Name = "Abissal", Weight = 180, Multiplier = 6, Color = Color3.fromRGB(126,34,206) },
+		{ Name = "ArcoIris", Weight = 69, Multiplier = 12, Color = Color3.fromRGB(244,114,182) },
+		{ Name = "Celestial", Weight = 1, Multiplier = 20, Color = Color3.fromRGB(255,244,191) },
+	},
+	Sizes = {
+		{ Name = "Normal", Weight = 780, Scale = 1, Multiplier = 1 },
+		{ Name = "Grande", Weight = 150, Scale = 1.35, Multiplier = 1.5 },
+		{ Name = "Enorme", Weight = 55, Scale = 1.85, Multiplier = 2.5 },
+		{ Name = "Titanica", Weight = 15, Scale = 2.6, Multiplier = 5 },
+	},
+}
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="18">
+        <Properties>
+          <string name="Name">ConfigOrbes</string>
+          <string name="Source"><![CDATA[--!strict
+export type OrbDef = { Id: string, Name: string, Power: number, Price: number, Color: Color3, IsMaster: boolean? }
+local Orbs: { [string]: OrbDef } = {
+	Comum = { Id = "Comum", Name = "Orbe Comum", Power = 10, Price = 25, Color = Color3.fromRGB(96,165,250) },
+	Esmeralda = { Id = "Esmeralda", Name = "Orbe Esmeralda", Power = 25, Price = 180, Color = Color3.fromRGB(34,197,94) },
+	Rubi = { Id = "Rubi", Name = "Orbe Rubi", Power = 75, Price = 1500, Color = Color3.fromRGB(239,68,68) },
+	Safira = { Id = "Safira", Name = "Orbe Safira", Power = 220, Price = 15000, Color = Color3.fromRGB(56,189,248) },
+	Runica = { Id = "Runica", Name = "Orbe Rúnica", Power = 800, Price = 200000, Color = Color3.fromRGB(250,204,21) },
+	Hextech = { Id = "Hextech", Name = "Orbe Hextech", Power = 3500, Price = 4000000, Color = Color3.fromRGB(34,211,238) },
+	Cosmica = { Id = "Cosmica", Name = "Orbe Cósmica", Power = 18000, Price = 120000000, Color = Color3.fromRGB(168,85,247) },
+	Mestre = { Id = "Mestre", Name = "Orbe Mestre Suprema", Power = 1e9, Price = 0, Color = Color3.fromRGB(244,114,182), IsMaster = true },
+}
+return Orbs
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="19">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Script" referent="20">
+      <Properties>
+        <string name="Name">Bootstrap</string>
+        <token name="RunContext">0</token>
+        <string name="Source"><![CDATA[--!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Services = script.Parent.Services
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local WorldService = require(Services.WorldService)
+local SpawnService = require(Services.SpawnService)
+local DataService = require(Services.DataService)
+local SanctuaryService = require(Services.SanctuaryService)
+local ProgressionService = require(Services.ProgressionService)
+local CaptureService = require(Services.CaptureService)
+
+WorldService.Init()
+SpawnService.Init(WorldService)
+-- Register profile callbacks before starting the asynchronous load lifecycle.
+SanctuaryService.Init(DataService, WorldService)
+ProgressionService.Init(DataService, SanctuaryService, Remotes)
+CaptureService.Init(DataService, SpawnService, ProgressionService, SanctuaryService, Remotes)
+DataService.Init(Remotes)
+print("[ThrowASphere] Passo 1 iniciado: mira, captura, santuário e progressão.")
+]]></string>
+      </Properties>
+    </Item>
+    <Item class="Folder" referent="21">
+      <Properties>
+        <string name="Name">Services</string>
+      </Properties>
+      <Item class="ModuleScript" referent="22">
+        <Properties>
+          <string name="Name">CaptureService</string>
+          <string name="Source"><![CDATA[--!strict
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local HttpService = game:GetService("HttpService")
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+
+local CaptureService = {}
+local random = Random.new()
+local nextThrowAt: {[Player]: number} = {}
+local nextRequestAt: {[Player]: number} = {}
+
+local function finite(number: number): boolean
+	return number == number and math.abs(number) < 1e6
+end
+
+local function validVector(value: any): boolean
+	return typeof(value) == "Vector3" and finite(value.X) and finite(value.Y) and finite(value.Z)
+end
+
+function CaptureService.Init(dataService: any, spawnService: any, progressionService: any, sanctuaryService: any, remotes: any)
+	local requestThrow = remotes:WaitForChild("RequestThrow") :: RemoteEvent
+	local throwResult = remotes:WaitForChild("ThrowResult") :: RemoteEvent
+	local feedback = remotes:WaitForChild("ActionFeedback") :: RemoteEvent
+	local function reject(player: Player, message: string)
+		feedback:FireClient(player, {Message = message, Kind = "Error", Success = false})
+	end
+	requestThrow.OnServerEvent:Connect(function(player: Player, target: any, hitPosition: any)
+		-- Cheap per-player throttling comes before vector/geometry work.
+		local now = os.clock()
+		if now < (nextRequestAt[player] or 0) then return end
+		nextRequestAt[player] = now + 0.15
+		local profile = dataService.Get(player)
+		if not profile then return end
+		if now < (nextThrowAt[player] or 0) then
+			reject(player, "Espere terminar as balançadas.")
+			return
+		end
+		if typeof(target) ~= "Instance" or not target:IsA("Model") or not validVector(hitPosition) then return end
+		local wild = spawnService.Get(target)
+		if not wild then return end
+		local definition = Config.Creatures[wild.CreatureId]
+		local orb = Config.Orbs[profile.EquippedOrb]
+		if not definition or not orb then return end
+		local count = profile.Orbs[profile.EquippedOrb] or 0
+		if count < 1 then reject(player, "Sem orbes equipadas. Compre mais no painel."); return end
+		if not sanctuaryService.CanCapture(player) then reject(player, "Inventário cheio."); return end
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+		local primary = target.PrimaryPart
+		if not root or not root:IsA("BasePart") or not primary or not humanoid or humanoid.Health <= 0 then return end
+		local distance = (root.Position - primary.Position).Magnitude
+		local range = Config.GetMaxThrowRange(profile.ThrowStrength, profile.Level)
+		if distance > range then reject(player, "Fora de alcance. Aproxime-se ou treine sua força."); return end
+		local boxFrame, boxSize = target:GetBoundingBox()
+		local localHit = boxFrame:PointToObjectSpace(hitPosition)
+		local half = boxSize / 2 + Vector3.new(0.5, 0.5, 0.5)
+		if math.abs(localHit.X) > half.X or math.abs(localHit.Y) > half.Y or math.abs(localHit.Z) > half.Z then return end
+		local startPosition = root.Position + Vector3.new(0, 1.5, 0)
+		local direction = hitPosition - startPosition
+		if direction.Magnitude < 0.1 then return end
+		local params = RaycastParams.new()
+		params.FilterType = Enum.RaycastFilterType.Exclude
+		params.FilterDescendantsInstances = {character :: Model}
+		local result = Workspace:Raycast(startPosition, direction.Unit * (direction.Magnitude + 2), params)
+		if not result or not result.Instance:IsDescendantOf(target) then
+			reject(player, "A criatura está atrás de um obstáculo.")
+			return
+		end
+		-- The server raycast determines the actual impact and critical hit;
+		-- the client never supplies luck, damage, inventory, or a trusted bool.
+		local critical = result.Instance.Name == "Head"
+		local longShot = distance > 90
+		local aimBonus = Config.GetAimBonus(critical, distance)
+		local fever = (profile.ComboStreak or 0) >= 10
+		local luck = (1 + (profile.Level - 1) * 0.015 + profile.PityBonus + profile.Rebirths * 0.5) * (if fever then 1.5 else 1)
+		local chance = Config.CalculateShakeProbability(orb.Power, aimBonus, luck, definition.Difficulty, orb.IsMaster)
+		-- No yielding between stock verification, catch lock and consumption.
+		if not spawnService.Lock(target, player.UserId) then reject(player, "Outro jogador já está capturando esta criatura."); return end
+		profile.Orbs[profile.EquippedOrb] = count - 1
+		nextThrowAt[player] = now + Config.Constants.ThrowCooldownSeconds
+		local passed = 0
+		for shake = 1, 3 do
+			if chance >= 1 or random:NextNumber() < chance then passed = shake else break end
+		end
+		local captured = passed == 3
+		local xp = 0
+		if captured then
+			local record = {
+				Uid = HttpService:GenerateGUID(false), CreatureId = wild.CreatureId,
+				Mutation = wild.Mutation, Size = wild.Size, IncomePerSec = wild.IncomePerSec,
+				CapturedAt = os.time(),
+			}
+			-- CanCapture was checked above and this section does not yield.
+			local added = sanctuaryService.AddCapture(player, record)
+			if not added then
+				profile.Orbs[profile.EquippedOrb] += 1
+				spawnService.Resolve(target, false)
+				dataService.Sync(player)
+				return
+			end
+			profile.PityBonus = 0
+			profile.ComboStreak = math.min(10, (profile.ComboStreak or 0) + 1)
+			xp = math.floor(definition.BaseXP * (if fever then 2 else 1) * (1 + profile.Rebirths * 0.5))
+		else
+			profile.PityBonus = math.min(1, profile.PityBonus + 0.05)
+			profile.ComboStreak = 0
+			xp = math.max(5, math.floor(definition.BaseXP * 0.35)) + (if critical then 15 else 0)
+		end
+		local oldLevel = profile.Level
+		progressionService.GrantXP(player, xp)
+		spawnService.Resolve(target, captured)
+		dataService.MarkDirty(player)
+		dataService.Sync(player)
+		throwResult:FireAllClients({
+			Thrower = player, StartPos = startPosition, TargetModel = target,
+			HitPos = result.Position, OrbColor = orb.Color, ShakesPassed = passed,
+			Captured = captured, MutationName = wild.Mutation, SizeName = wild.Size,
+			CreatureName = definition.Name, CreatureId = wild.CreatureId,
+			IncomePerSec = wild.IncomePerSec, XPGained = xp,
+			LeveledUp = profile.Level > oldLevel, NewLevel = profile.Level,
+			Probability = chance, IsCritical = critical, IsLongShot = longShot,
+		})
+	end)
+	Players.PlayerRemoving:Connect(function(player: Player)
+		nextThrowAt[player] = nil
+		nextRequestAt[player] = nil
+	end)
+end
+
+return CaptureService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="23">
+        <Properties>
+          <string name="Name">DataService</string>
+          <string name="Source"><![CDATA[--!strict
+-- Production profiles use a renewable UpdateAsync session lease. Studio is ephemeral by default.
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local DataStoreService = game:GetService("DataStoreService")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+local Settings = Config.Constants
+
+export type Capture = {
+	Uid: string,
+	CreatureId: string,
+	Mutation: string,
+	Size: string,
+	IncomePerSec: number,
+	CapturedAt: number,
+}
+
+export type Profile = {
+	Coins: number,
+	Gems: number,
+	XP: number,
+	Level: number,
+	Rebirths: number,
+	ThrowStrength: number,
+	PityBonus: number,
+	EquippedOrb: string,
+	Orbs: { [string]: number },
+	CapturedCreatures: { Capture },
+	SanctuarySlots: { string },
+	Bestiary: { [string]: boolean },
+	ComboStreak: number,
+	LastSeen: number,
+	UnlockedBiomes: { [string]: boolean },
+	OfflineReward: number,
+	IncomePerSec: number,
+}
+
+type LoadedCallback = (Player, Profile) -> ()
+local DataService = {}
+local profiles: { [Player]: Profile } = {}
+local leaving: { [Player]: boolean } = {}
+local saving: { [Player]: boolean } = {}
+local removalStarted: { [Player]: boolean } = {}
+local loading: { [Player]: boolean } = {}
+local leaseExpires: { [Player]: number } = {}
+local loadedCallbacks: { LoadedCallback } = {}
+local removingCallbacks: { LoadedCallback } = {}
+local remotes: Folder
+local store: GlobalDataStore?
+local initialized = false
+local shuttingDown = false
+local persistent = false
+local sessionId = if game.JobId ~= "" then game.JobId else HttpService:GenerateGUID(false)
+local SCHEMA_VERSION = 1
+
+local function copy(value: any): any
+	if type(value) ~= "table" then
+		return value
+	end
+	local result = {}
+	for key, child in pairs(value) do
+		result[key] = copy(child)
+	end
+	return result
+end
+
+local function finite(value: any): boolean
+	return type(value) == "number" and value == value and math.abs(value) < math.huge
+end
+
+local function newProfile(): Profile
+	return {
+		Coins = Settings.InitialCoins,
+		Gems = 0,
+		XP = 0,
+		Level = 1,
+		Rebirths = 0,
+		ThrowStrength = Settings.InitialThrowStrength,
+		PityBonus = 0,
+		EquippedOrb = "Comum",
+		Orbs = { Comum = Settings.InitialOrbs },
+		CapturedCreatures = {},
+		SanctuarySlots = {},
+		Bestiary = {},
+		ComboStreak = 0,
+		LastSeen = os.time(),
+		UnlockedBiomes = { PradariaSolar = true },
+		OfflineReward = 0,
+		IncomePerSec = 0,
+	}
+end
+
+-- Reject incompatible/corrupt saves rather than replacing them with a fresh profile.
+local function decode(envelope: any): Profile
+	assert(type(envelope) == "table", "Invalid saved profile envelope")
+	assert(envelope.SchemaVersion == SCHEMA_VERSION, "Unsupported saved profile version")
+	if envelope.Session ~= nil then
+		assert(type(envelope.Session) == "table" and type(envelope.Session.Id) == "string" and finite(envelope.Session.ExpiresAt), "Invalid saved session lease")
+	end
+	local data = envelope.Data
+	assert(type(data) == "table", "Missing saved profile data")
+	for _, key in ipairs({ "Coins", "XP", "Level", "Orbs", "CapturedCreatures", "SanctuarySlots", "LastSeen" }) do
+		assert(data[key] ~= nil, "Missing essential saved field: " .. key)
+	end
+	local result = newProfile() :: any
+	for key, default in pairs(result) do
+		local value = data[key]
+		if value ~= nil then
+			assert(type(value) == type(default), "Invalid saved field: " .. key)
+			if type(default) == "number" then
+				assert(finite(value) and value >= 0, "Invalid saved number: " .. key)
+			end
+			result[key] = copy(value)
+		end
+	end
+	assert(result.Level >= 1 and result.Level <= Settings.MaxLevel, "Invalid saved level")
+	assert(result.Level % 1 == 0, "Non-integral saved level")
+	assert(type(Config.Orbs[result.EquippedOrb]) == "table", "Unknown equipped orb")
+	for orbId, quantity in pairs(result.Orbs) do
+		assert(type(orbId) == "string" and Config.Orbs[orbId] ~= nil, "Unknown saved orb")
+		assert(finite(quantity) and quantity >= 0 and quantity % 1 == 0, "Invalid orb quantity")
+	end
+	local captureIds = {}
+	for _, record in ipairs(result.CapturedCreatures) do
+		assert(type(record) == "table" and type(record.Uid) == "string", "Invalid captured record")
+		assert(not captureIds[record.Uid], "Duplicate captured record")
+		assert(Config.Creatures[record.CreatureId] ~= nil, "Unknown saved creature")
+		assert(type(record.Mutation) == "string" and type(record.Size) == "string", "Invalid variant")
+		assert(finite(record.IncomePerSec) and record.IncomePerSec >= 0, "Invalid saved income")
+		assert(finite(record.CapturedAt), "Invalid capture timestamp")
+		captureIds[record.Uid] = true
+	end
+	local equippedIds = {}
+	for _, uid in ipairs(result.SanctuarySlots) do
+		assert(type(uid) == "string" and captureIds[uid] and not equippedIds[uid], "Invalid sanctuary slot")
+		equippedIds[uid] = true
+	end
+	for key, value in pairs(result.Bestiary) do
+		assert(type(key) == "string" and type(value) == "boolean", "Invalid bestiary")
+	end
+	for key, value in pairs(result.UnlockedBiomes) do
+		assert(type(key) == "string" and type(value) == "boolean", "Invalid biome unlock")
+	end
+	result.OfflineReward = 0
+	result.IncomePerSec = 0 -- Recomputed from equipped records by SanctuaryService.
+	return result :: Profile
+end
+
+local function runCallbacks(callbacks: { LoadedCallback }, player: Player, profile: Profile): boolean
+	for _, callback in ipairs(callbacks) do
+		local ok, err = pcall(callback, player, profile)
+		if not ok then
+			warn("[DataService] Profile callback failed:", err)
+			return false
+		end
+	end
+	return true
+end
+
+function DataService.Get(player: Player): Profile?
+	if leaving[player] then
+		return nil
+	end
+	return profiles[player]
+end
+
+function DataService.IsLoaded(player: Player): boolean
+	return profiles[player] ~= nil and not leaving[player]
+end
+
+function DataService.MarkDirty(_player: Player)
+	-- Every loaded session is saved periodically, even when idle, to renew its lease.
+end
+
+function DataService.Sync(player: Player)
+	local profile = DataService.Get(player)
+	if not profile or not player.Parent then
+		return
+	end
+	local snapshot = copy(profile)
+	snapshot.MaxRange = Config.GetMaxThrowRange(profile.ThrowStrength, profile.Level)
+	snapshot.XPRequired = Config.GetXPRequiredForLevel(profile.Level)
+	snapshot.DataMode = if persistent then "DataStore" else "StudioMemory"
+	local stats = player:FindFirstChild("leaderstats")
+	if stats then
+		local coins = stats:FindFirstChild("Moedas") :: NumberValue
+		local level = stats:FindFirstChild("Nivel") :: IntValue
+		local captures = stats:FindFirstChild("Capturas") :: IntValue
+		coins.Value = profile.Coins
+		level.Value = profile.Level
+		captures.Value = #profile.CapturedCreatures
+	end
+	local stateUpdate = remotes:WaitForChild("StateUpdate") :: RemoteEvent
+	stateUpdate:FireClient(player, snapshot)
+end
+
+function DataService.OnLoaded(callback: LoadedCallback)
+	table.insert(loadedCallbacks, callback)
+	for player, profile in pairs(profiles) do
+		if not leaving[player] then
+			callback(player, profile)
+		end
+	end
+end
+
+function DataService.OnRemoving(callback: LoadedCallback)
+	table.insert(removingCallbacks, callback)
+end
+
+local function save(player: Player, release: boolean, preserveLastSeen: boolean?): boolean
+	if not persistent then
+		return true
+	end
+	local start = os.clock()
+	while saving[player] do
+		if os.clock() - start > 20 then
+			return false
+		end
+		task.wait(0.1)
+	end
+	local profile = profiles[player]
+	if not profile then
+		return true
+	end
+	saving[player] = true
+	local snapshot = copy(profile)
+	if not preserveLastSeen then
+		snapshot.LastSeen = os.time()
+	end
+	local success = false
+	local lockLost = false
+	for attempt = 1, 3 do
+		local written = false
+		local expiry = os.time() + Settings.SessionLeaseSeconds
+		local ok, err = pcall(function()
+			(store :: GlobalDataStore):UpdateAsync("Player_" .. player.UserId, function(previous: any)
+				written = false -- UpdateAsync may invoke this callback more than once.
+				if type(previous) ~= "table" or type(previous.Session) ~= "table" or previous.Session.Id ~= sessionId then
+					lockLost = true
+					return nil
+				end
+				written = true
+				return {
+					SchemaVersion = SCHEMA_VERSION,
+					Data = snapshot,
+					Session = if release then nil else { Id = sessionId, ExpiresAt = expiry },
+				}
+			end)
+		end)
+		if ok and written then
+			success = true
+			leaseExpires[player] = if release then nil else expiry
+			break
+		end
+		if lockLost then
+			warn("[DataService] Session lease lost for", player.UserId)
+			break
+		end
+		warn("[DataService] Save attempt failed for", player.UserId, err)
+		if attempt < 3 then
+			task.wait(attempt)
+		end
+	end
+	saving[player] = nil
+	if not success and not release and (lockLost or os.time() >= (leaseExpires[player] or 0) - 15) then
+		leaving[player] = true -- Freeze mutations immediately when ownership is uncertain.
+		player:Kick("Sua sessão de dados perdeu a conexão. Entre novamente para proteger o progresso salvo.")
+	end
+	return success
+end
+
+local function load(player: Player)
+	if loading[player] or profiles[player] then
+		return
+	end
+	loading[player] = true
+	local profile: Profile?
+	if persistent then
+		for attempt = 1, 3 do
+			local acquired = false
+			local loadedProfile: Profile? = nil
+			local busy = false
+			local expiry = os.time() + Settings.SessionLeaseSeconds
+			local ok, err = pcall(function()
+				(store :: GlobalDataStore):UpdateAsync("Player_" .. player.UserId, function(previous: any)
+					acquired = false
+					loadedProfile = nil
+					if previous ~= nil then
+						loadedProfile = decode(previous)
+						local lease = previous.Session
+						if type(lease) == "table" and lease.Id ~= sessionId and finite(lease.ExpiresAt) and lease.ExpiresAt > os.time() then
+							busy = true
+							return nil
+						end
+					else
+						loadedProfile = newProfile()
+					end
+					acquired = true
+					return {
+						SchemaVersion = SCHEMA_VERSION,
+						Data = loadedProfile,
+						Session = { Id = sessionId, ExpiresAt = expiry },
+					}
+				end)
+			end)
+			if ok and acquired and loadedProfile then
+				profile = loadedProfile
+				leaseExpires[player] = expiry
+				break
+			end
+			warn("[DataService] Load blocked for", player.UserId, if busy then "another session owns the lease" else tostring(err))
+			if attempt < 3 then
+				task.wait(attempt * 2)
+			end
+		end
+	else
+		profile = newProfile()
+	end
+	if not profile then
+		loading[player] = nil
+		if player.Parent then
+			player:Kick("Não foi possível carregar seus dados com segurança. Feche outra sessão e tente novamente em instantes.")
+		end
+		return
+	end
+	profiles[player] = profile
+	if not player.Parent or shuttingDown then
+		save(player, true)
+		profiles[player] = nil
+		loading[player] = nil
+		return
+	end
+	local stats = Instance.new("Folder")
+	stats.Name = "leaderstats"
+	for name, kind in pairs({ Moedas = "NumberValue", Nivel = "IntValue", Capturas = "IntValue" }) do
+		local value = Instance.new(kind)
+		value.Name = name
+		value.Parent = stats
+	end
+	stats.Parent = player
+	player:SetAttribute("DataMode", if persistent then "DataStore" else "StudioMemory")
+	local beforeCallbacks = copy(profile)
+	if not runCallbacks(loadedCallbacks, player, profile) then
+		-- A partially initialized session must not save partially awarded rewards.
+		leaving[player] = true
+		runCallbacks(removingCallbacks, player, profile)
+		profiles[player] = beforeCallbacks
+		save(player, true, true)
+		profiles[player] = nil
+		leaseExpires[player] = nil
+		loading[player] = nil
+		leaving[player] = nil
+		player:Kick("Não foi possível iniciar sua sessão. Seu progresso anterior foi preservado; tente novamente.")
+		return
+	end
+	player:SetAttribute("DataLoaded", true)
+	DataService.Sync(player)
+	loading[player] = nil
+end
+
+local function remove(player: Player)
+	if removalStarted[player] then
+		while profiles[player] do
+			task.wait(0.1)
+		end
+		return
+	end
+	local profile = profiles[player]
+	if not profile then
+		return
+	end
+	removalStarted[player] = true
+	leaving[player] = true
+	runCallbacks(removingCallbacks, player, profile)
+	if not save(player, true) then
+		warn("[DataService] Could not save on departure:", player.UserId, "The last successful autosave is preserved.")
+	end
+	profiles[player] = nil
+	leaving[player] = nil
+	leaseExpires[player] = nil
+	removalStarted[player] = nil
+end
+
+function DataService.Init(remoteFolder: Folder)
+	assert(not initialized, "DataService.Init must only run once")
+	initialized = true
+	remotes = remoteFolder
+	persistent = not RunService:IsStudio() or Settings.StudioPersistence == true
+	if persistent then
+		store = DataStoreService:GetDataStore(Settings.DataStoreName)
+	else
+		warn("[Throw a Sphere] StudioMemory: progress resets when Play stops. Production always uses DataStore.")
+	end
+	local lastRequest: { [Player]: number } = {}
+	(remotes:WaitForChild("RequestState") :: RemoteEvent).OnServerEvent:Connect(function(player: Player)
+		local now = os.clock()
+		if now - (lastRequest[player] or -math.huge) >= 1 then
+			lastRequest[player] = now
+			DataService.Sync(player)
+		end
+	end)
+	Players.PlayerAdded:Connect(function(player)
+		task.spawn(load, player)
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		lastRequest[player] = nil
+		remove(player)
+	end)
+	for _, player in ipairs(Players:GetPlayers()) do
+		task.spawn(load, player)
+	end
+	task.spawn(function()
+		while not shuttingDown do
+			task.wait(Settings.AutoSaveSeconds)
+			for player in pairs(profiles) do
+				if not leaving[player] then
+					task.spawn(save, player, false)
+				end
+			end
+		end
+	end)
+	if persistent then
+		task.spawn(function()
+			while not shuttingDown do
+				task.wait(5)
+				for player, expiry in pairs(leaseExpires) do
+					if not leaving[player] and os.time() >= expiry - 15 then
+						-- Freeze before expiration even if a DataStore request is stalled.
+						leaving[player] = true
+						player:Kick("Não foi possível renovar sua sessão de dados. Entre novamente para proteger o progresso salvo.")
+					end
+				end
+			end
+		end)
+	end
+	game:BindToClose(function()
+		shuttingDown = true
+		local pending = 0
+		for player in pairs(profiles) do
+			pending += 1
+			task.spawn(function()
+				remove(player)
+				pending -= 1
+			end)
+		end
+		local deadline = os.clock() + 25
+		while (pending > 0 or next(loading) ~= nil) and os.clock() < deadline do
+			task.wait(0.1)
+		end
+	end)
+end
+
+return DataService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="24">
+        <Properties>
+          <string name="Name">ProgressionService</string>
+          <string name="Source"><![CDATA[--!strict
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+
+local ProgressionService = {}
+local dataService: any
+local sanctuaryService: any
+local lastActions: { [Player]: { [string]: number } } = {}
+local remotes: Folder
+
+local function allowed(player: Player, action: string, cooldown: number): boolean
+	local actions = lastActions[player]
+	if not actions then
+		actions = {}
+		lastActions[player] = actions
+	end
+	local now = os.clock()
+	if now - (actions[action] or -math.huge) < cooldown then
+		return false
+	end
+	actions[action] = now
+	return dataService.IsLoaded(player)
+end
+
+local function feedback(player: Player, message: string, kind: string?)
+	local remote = remotes:WaitForChild("ActionFeedback") :: RemoteEvent
+	remote:FireClient(player, { Message = message, Kind = kind or "Error" })
+end
+
+function ProgressionService.GrantXP(player: Player, amount: number): boolean
+	local profile = dataService.Get(player)
+	if not profile or amount ~= amount or amount <= 0 or amount == math.huge then
+		return false
+	end
+	if profile.Level >= Config.Constants.MaxLevel then
+		profile.XP = 0
+		return false
+	end
+	profile.XP += math.floor(amount)
+	local leveledUp = false
+	while profile.Level < Config.Constants.MaxLevel and profile.XP >= Config.GetXPRequiredForLevel(profile.Level) do
+		profile.XP -= Config.GetXPRequiredForLevel(profile.Level)
+		profile.Level += 1
+		profile.Coins += profile.Level * 25
+		leveledUp = true
+	end
+	if profile.Level == Config.Constants.MaxLevel then
+		profile.XP = 0
+	end
+	if leveledUp then
+		sanctuaryService.Refresh(player)
+	end
+	dataService.MarkDirty(player)
+	return leveledUp
+end
+
+function ProgressionService.Init(service: any, sanctuary: any, remoteFolder: Folder)
+	dataService = service
+	sanctuaryService = sanctuary
+	remotes = remoteFolder
+	local buyOrb = remotes:WaitForChild("BuyOrb") :: RemoteEvent
+	buyOrb.OnServerEvent:Connect(function(player: Player, orbId: any, quantity: any)
+		if typeof(orbId) ~= "string" or typeof(quantity) ~= "number" or quantity ~= quantity or quantity % 1 ~= 0 or quantity < 1 or quantity > 100 then
+			return
+		end
+		if not allowed(player, "BuyOrb", 0.25) then
+			return
+		end
+		local profile = dataService.Get(player)
+		local orb = Config.Orbs[orbId]
+		if not profile or not orb or orb.IsMaster or orb.Price <= 0 then
+			feedback(player, "Esta orbe não está disponível por moedas.")
+			return
+		end
+		local price = orb.Price * quantity
+		if profile.Coins < price then
+			feedback(player, "Moedas insuficientes. Capture criaturas ou treine para ganhar moedas.")
+			return
+		end
+		profile.Coins -= price
+		profile.Orbs[orbId] = (profile.Orbs[orbId] or 0) + quantity
+		dataService.MarkDirty(player)
+		dataService.Sync(player)
+		feedback(player, string.format("Comprou %dx %s!", quantity, orb.Name), "Success")
+	end)
+	local equipOrb = remotes:WaitForChild("EquipOrb") :: RemoteEvent
+	equipOrb.OnServerEvent:Connect(function(player: Player, orbId: any)
+		if typeof(orbId) ~= "string" or not allowed(player, "EquipOrb", 0.2) then
+			return
+		end
+		local profile = dataService.Get(player)
+		if not profile or not Config.Orbs[orbId] or (profile.Orbs[orbId] or 0) < 1 then
+			feedback(player, "Você precisa ter essa orbe no inventário.")
+			return
+		end
+		profile.EquippedOrb = orbId
+		dataService.MarkDirty(player)
+		dataService.Sync(player)
+	end)
+	local train = remotes:WaitForChild("TrainThrowPower") :: RemoteEvent
+	train.OnServerEvent:Connect(function(player: Player)
+		if not allowed(player, "TrainThrowPower", 0.5) then
+			return
+		end
+		local profile = dataService.Get(player)
+		if not profile then
+			return
+		end
+		profile.ThrowStrength = math.min(10000, profile.ThrowStrength + (Config.Constants.TrainingStrength or 1))
+		profile.Coins += Config.Constants.TrainingCoins or 5
+		dataService.MarkDirty(player)
+		dataService.Sync(player)
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		lastActions[player] = nil
+	end)
+end
+
+return ProgressionService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="25">
+        <Properties>
+          <string name="Name">SanctuaryService</string>
+          <string name="Source"><![CDATA[--!strict
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+
+local SanctuaryService = {}
+local dataService: any
+local worldService: any
+
+function SanctuaryService.GetSlotCapacity(profile: any): number
+	return Config.Constants.BaseSanctuarySlots + (if profile.Level >= 5 then 1 else 0) + (if profile.Level >= 15 then 1 else 0)
+end
+
+function SanctuaryService.CalculateIncome(profile: any): number
+	local records: { [string]: any } = {}
+	for _, record in ipairs(profile.CapturedCreatures) do
+		records[record.Uid] = record
+	end
+	local elementCounts: { [string]: number } = {}
+	local equipped = {}
+	local seen = {}
+	for index, uid in ipairs(profile.SanctuarySlots) do
+		if index > SanctuaryService.GetSlotCapacity(profile) then
+			break
+		end
+		local record = records[uid]
+		local definition = record and Config.Creatures[record.CreatureId]
+		if definition and not seen[uid] then
+			seen[uid] = true
+			table.insert(equipped, record)
+			elementCounts[definition.Element] = (elementCounts[definition.Element] or 0) + 1
+		end
+	end
+	local starterTrio = false
+	local starters = { Pyrokit = false, Aquapup = false, Sproutling = false }
+	for _, record in ipairs(equipped) do
+		if starters[record.CreatureId] ~= nil then
+			starters[record.CreatureId] = true
+		end
+	end
+	starterTrio = starters.Pyrokit and starters.Aquapup and starters.Sproutling
+	local income = 0
+	for _, record in ipairs(equipped) do
+		local count = elementCounts[Config.Creatures[record.CreatureId].Element]
+		local groupBonus = if count >= 6 then 1.6 elseif count >= 3 then 1.25 else 1
+		income += record.IncomePerSec * groupBonus
+	end
+	return income * (if starterTrio then 1.4 else 1) * (1 + profile.Rebirths)
+end
+
+function SanctuaryService.Refresh(player: Player)
+	local profile = dataService.Get(player)
+	if profile then
+		profile.IncomePerSec = SanctuaryService.CalculateIncome(profile)
+		worldService.UpdateSanctuary(player, profile)
+	end
+end
+
+function SanctuaryService.CanCapture(player: Player): boolean
+	local profile = dataService.Get(player)
+	return profile ~= nil and #profile.CapturedCreatures < (Config.Constants.MaxInventoryCreatures or 500)
+end
+
+function SanctuaryService.AddCapture(player: Player, record: any): boolean
+	local profile = dataService.Get(player)
+	if not profile or not SanctuaryService.CanCapture(player) then
+		return false
+	end
+	table.insert(profile.CapturedCreatures, record)
+	profile.Bestiary[record.CreatureId] = true
+	if #profile.SanctuarySlots < SanctuaryService.GetSlotCapacity(profile) then
+		table.insert(profile.SanctuarySlots, record.Uid)
+	end
+	SanctuaryService.Refresh(player)
+	dataService.MarkDirty(player)
+	return true
+end
+
+function SanctuaryService.Init(service: any, world: any)
+	dataService = service
+	worldService = world
+	dataService.OnLoaded(function(player: Player, profile: any)
+		worldService.AssignSanctuary(player)
+		profile.IncomePerSec = SanctuaryService.CalculateIncome(profile)
+		local elapsed = math.clamp(os.time() - profile.LastSeen, 0, Config.Constants.MaxOfflineSeconds)
+		-- No offline grant in ephemeral Studio sessions (LastSeen is initialized at join).
+		profile.OfflineReward = math.floor(elapsed * profile.IncomePerSec)
+		profile.Coins += profile.OfflineReward
+		profile.LastSeen = os.time()
+		worldService.UpdateSanctuary(player, profile)
+	end)
+	dataService.OnRemoving(function(player: Player)
+		worldService.ReleaseSanctuary(player)
+	end)
+	local remoteFolder = ReplicatedStorage:WaitForChild("Remotes")
+	local lastEquip: { [Player]: number } = {}
+	(remoteFolder:WaitForChild("EquipToSanctuary") :: RemoteEvent).OnServerEvent:Connect(function(player: Player, uid: any)
+		if typeof(uid) ~= "string" or #uid > 80 then
+			return
+		end
+		local now = os.clock()
+		if now - (lastEquip[player] or -math.huge) < 0.25 then
+			return
+		end
+		lastEquip[player] = now
+		local profile = dataService.Get(player)
+		if not profile then
+			return
+		end
+		local exists = false
+		for _, record in ipairs(profile.CapturedCreatures) do
+			if record.Uid == uid then
+				exists = true
+				break
+			end
+		end
+		if not exists then
+			return
+		end
+		local slot = table.find(profile.SanctuarySlots, uid)
+		if slot then
+			table.remove(profile.SanctuarySlots, slot)
+		elseif #profile.SanctuarySlots < SanctuaryService.GetSlotCapacity(profile) then
+			table.insert(profile.SanctuarySlots, uid)
+		else
+			(remoteFolder:WaitForChild("ActionFeedback") :: RemoteEvent):FireClient(player, { Message = "Seu Santuário está cheio. Desequipe uma criatura primeiro.", Kind = "Error" })
+			return
+		end
+		SanctuaryService.Refresh(player)
+		dataService.MarkDirty(player)
+		dataService.Sync(player)
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		lastEquip[player] = nil
+	end)
+	task.spawn(function()
+		while true do
+			task.wait(1)
+			for _, player in ipairs(Players:GetPlayers()) do
+				local profile = dataService.Get(player)
+				if profile then
+					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile)
+					profile.Coins += profile.IncomePerSec
+					dataService.Sync(player)
+				end
+			end
+		end
+	end)
+end
+
+return SanctuaryService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="26">
+        <Properties>
+          <string name="Name">SpawnService</string>
+          <string name="Source"><![CDATA[--!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+
+export type WildRecord = {
+	CreatureId: string,
+	Mutation: string,
+	Size: string,
+	IncomePerSec: number,
+	Scale: number,
+	SpawnPosition: Vector3,
+	LockedUntil: number,
+	LockedBy: number?,
+	LockVersion: number,
+	PendingCaptured: boolean,
+}
+
+local SpawnService = {}
+local random = Random.new()
+local registry: {[Model]: WildRecord} = {}
+local wildFolder: Folder? = nil
+
+local function rollWeighted(items: {any}): any
+	local total = 0
+	for _, item in ipairs(items) do total += item.Weight end
+	local roll = random:NextNumber(0, total)
+	local accumulated = 0
+	for _, item in ipairs(items) do
+		accumulated += item.Weight
+		if roll < accumulated then return item end
+	end
+	return items[#items]
+end
+
+local function createPart(model: Model, name: string, size: Vector3, position: Vector3, color: Color3): Part
+	local item = Instance.new("Part")
+	item.Name = name
+	item.Anchored = true
+	item.CanCollide = false
+	item.Size = size
+	item.Position = position
+	item.Color = color
+	item.TopSurface = Enum.SurfaceType.Studs
+	item.BottomSurface = Enum.SurfaceType.Smooth
+	item.Parent = model
+	return item
+end
+
+function SpawnService.Spawn(creatureId: string, position: Vector3): Model
+	local definition = Config.Creatures[creatureId]
+	assert(definition, "Unknown creature: " .. creatureId)
+	local mutation = rollWeighted(Config.Mutations)
+	local size = rollWeighted(Config.Sizes)
+	local scale = size.Scale
+	local model = Instance.new("Model")
+	model.Name = creatureId
+	local color = definition.BodyColor
+	if mutation.Name ~= "Normal" and mutation.Color then color = color:Lerp(mutation.Color, 0.6) end
+	local body = createPart(model, "Body", Vector3.new(3, 2, 2.5) * scale, position + Vector3.new(0, 1.1 * scale, 0), color)
+	local head = createPart(model, "Head", Vector3.new(1.8, 1.5, 1.8) * scale, position + Vector3.new(0, 2.7 * scale, -0.4 * scale), color:Lerp(Color3.new(1, 1, 1), 0.18))
+	for _, side in ipairs({-1, 1}) do
+		local eye = createPart(model, "Eye", Vector3.new(0.22, 0.28, 0.12) * scale, head.Position + Vector3.new(side * 0.45 * scale, 0.12 * scale, -0.92 * scale), Color3.fromRGB(15, 23, 42))
+		eye.CanQuery = false
+	end
+	model.PrimaryPart = body
+	local income = math.floor(definition.BaseIncomePerSec * mutation.Multiplier * size.Multiplier)
+	registry[model] = {
+		CreatureId = creatureId, Mutation = mutation.Name, Size = size.Name,
+		IncomePerSec = income, Scale = scale, SpawnPosition = position,
+		LockedUntil = 0, LockedBy = nil, LockVersion = 0, PendingCaptured = false,
+	}
+	model:SetAttribute("CreatureId", creatureId)
+	model:SetAttribute("Mutation", mutation.Name)
+	model:SetAttribute("Size", size.Name)
+	model:SetAttribute("IncomePerSec", income)
+	model:SetAttribute("LockedUntil", 0)
+	model:SetAttribute("CaptureOwner", 0)
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name = "CreatureLabel"
+	billboard.Adornee = head
+	billboard.Size = UDim2.fromOffset(230, 76)
+	billboard.StudsOffset = Vector3.new(0, 2 * scale, 0)
+	billboard.MaxDistance = 100
+	billboard.Parent = head
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.fromScale(1, 1)
+	textLabel.BackgroundTransparency = 1
+	textLabel.TextColor3 = Color3.new(1, 1, 1)
+	textLabel.TextStrokeTransparency = 0.1
+	textLabel.Font = Enum.Font.GothamBold
+	textLabel.TextSize = 15
+	textLabel.Text = string.format("%s [%s]\n%s • %s\n$%d/s", definition.Name, definition.Rarity, mutation.Name, size.Name, income)
+	textLabel.Parent = billboard
+	model.Parent = wildFolder
+	return model
+end
+
+function SpawnService.Init(_world: any)
+	if wildFolder then return end
+	local folder = Instance.new("Folder")
+	folder.Name = "CriaturasSelvagens"
+	folder.Parent = Workspace
+	wildFolder = folder
+	local initial = {
+		{"Sproutling", Vector3.new(-18, 0.15, -2)},
+		{"Pyrokit", Vector3.new(0, 0.15, -9)},
+		{"Aquapup", Vector3.new(18, 0.15, -2)},
+		{"Voltmouse", Vector3.new(-27, 0.15, -15)},
+		{"Fluffhop", Vector3.new(0, 0.15, -23)},
+		{"Buzzleaf", Vector3.new(27, 0.15, -15)},
+	}
+	for _, entry in ipairs(initial) do
+		SpawnService.Spawn(entry[1] :: string, entry[2] :: Vector3)
+	end
+end
+
+function SpawnService.Get(model: Model): WildRecord?
+	local record = registry[model]
+	if not record or not model.Parent or record.PendingCaptured then return nil end
+	return record
+end
+
+function SpawnService.Lock(model: Model, userId: number): boolean
+	local record = SpawnService.Get(model)
+	local now = Workspace:GetServerTimeNow()
+	if not record or record.LockedUntil > now then return false end
+	record.LockedUntil = now + Config.Constants.CaptureLockSeconds
+	record.LockedBy = userId
+	record.LockVersion += 1
+	model:SetAttribute("LockedUntil", record.LockedUntil)
+	model:SetAttribute("CaptureOwner", userId)
+	return true
+end
+
+function SpawnService.Resolve(model: Model, captured: boolean)
+	local record = registry[model]
+	if not record then return end
+	local lockVersion = record.LockVersion
+	-- Retain visual model during the animation, but make successful captures
+	-- unavailable to every future request immediately.
+	record.PendingCaptured = captured
+	task.delay(Config.Constants.CaptureLockSeconds, function()
+		-- A delayed unlock from a failed attempt must not release a newer lock
+		-- acquired after this attempt's timeout.
+		if registry[model] ~= record or record.LockVersion ~= lockVersion then return end
+		if captured then
+			registry[model] = nil
+			model:Destroy()
+			task.delay(2, function()
+				if wildFolder and wildFolder.Parent then SpawnService.Spawn(record.CreatureId, record.SpawnPosition) end
+			end)
+		else
+			record.LockedUntil = 0
+			record.LockedBy = nil
+			if model.Parent then
+				model:SetAttribute("LockedUntil", 0)
+				model:SetAttribute("CaptureOwner", 0)
+			end
+		end
+	end)
+end
+
+return SpawnService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="27">
+        <Properties>
+          <string name="Name">WorldService</string>
+          <string name="Source"><![CDATA[--!strict
+-- Disposable blockout. Replace the generated models with the art from steps 3/4.
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+
+local WorldService = {}
+local worldFolder: Folder? = nil
+local lots: {Model} = {}
+local owners: {[Player]: number} = {}
+local displaySignatures: {[Player]: string} = {}
+
+local function part(parent: Instance, name: string, size: Vector3, position: Vector3, color: Color3): Part
+	local item = Instance.new("Part")
+	item.Name = name
+	item.Anchored = true
+	item.Size = size
+	item.Position = position
+	item.Color = color
+	item.TopSurface = Enum.SurfaceType.Studs
+	item.BottomSurface = Enum.SurfaceType.Smooth
+	item.Parent = parent
+	return item
+end
+
+local function label(parent: BasePart, text: string, offset: Vector3): TextLabel
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name = "Label"
+	billboard.Adornee = parent
+	billboard.Size = UDim2.fromOffset(280, 78)
+	billboard.StudsOffset = offset
+	billboard.AlwaysOnTop = false
+	billboard.MaxDistance = 130
+	billboard.Parent = parent
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.fromScale(1, 1)
+	textLabel.BackgroundTransparency = 1
+	textLabel.Font = Enum.Font.GothamBold
+	textLabel.TextSize = 18
+	textLabel.TextColor3 = Color3.new(1, 1, 1)
+	textLabel.TextStrokeTransparency = 0.15
+	textLabel.TextWrapped = true
+	textLabel.Text = text
+	textLabel.Parent = billboard
+	return textLabel
+end
+
+function WorldService.Init()
+	if worldFolder then return end
+	local folder = Instance.new("Folder")
+	folder.Name = "ThrowASphereWorld"
+	folder:SetAttribute("GeneratedBlockout", true)
+	folder.Parent = Workspace
+	worldFolder = folder
+	part(folder, "Foundation", Vector3.new(260, 1, 260), Vector3.new(0, -0.6, 0), Color3.fromRGB(63, 192, 34))
+	for x = -6, 5 do
+		for z = -6, 5 do
+			local color = if (x + z) % 2 == 0 then Color3.fromRGB(76, 217, 43) else Color3.fromRGB(63, 192, 34)
+			part(folder, "GrassTile", Vector3.new(16, 0.2, 16), Vector3.new(x * 16 + 8, 0, z * 16 + 8), color)
+		end
+	end
+	local spawn = Instance.new("SpawnLocation")
+	spawn.Name = "PradariaSpawn"
+	spawn.Anchored = true
+	spawn.Neutral = true
+	spawn.Duration = 0
+	spawn.Size = Vector3.new(10, 0.5, 10)
+	spawn.Position = Vector3.new(0, 0.4, 20)
+	spawn.Color = Color3.fromRGB(125, 211, 252)
+	spawn.Parent = folder
+	label(spawn, "PRADARIA SOLAR\nSegure para mirar; solte para lançar", Vector3.new(0, 5, 0))
+
+	local lotPositions = {
+		Vector3.new(-68, 0, -55), Vector3.new(-74, 0, -17), Vector3.new(-64, 0, 30),
+		Vector3.new(64, 0, 30), Vector3.new(74, 0, -17), Vector3.new(68, 0, -55),
+	}
+	for index, position in ipairs(lotPositions) do
+		local lot = Instance.new("Model")
+		lot.Name = "Sanctuary_" .. index
+		lot:SetAttribute("OwnerUserId", 0)
+		lot.Parent = folder
+		local platform = part(lot, "Platform", Vector3.new(26, 0.6, 24), position + Vector3.new(0, 0.4, 0), Color3.fromRGB(65, 86, 113))
+		lot.PrimaryPart = platform
+		local sign = part(lot, "Sign", Vector3.new(12, 3, 0.5), position + Vector3.new(0, 4, 11), Color3.fromRGB(25, 37, 62))
+		label(sign, "SANTUÁRIO LIVRE", Vector3.new(0, 2, 0))
+		local display = Instance.new("Folder")
+		display.Name = "Creatures"
+		display.Parent = lot
+		for slot = 1, 8 do
+			local column = (slot - 1) % 4
+			local row = math.floor((slot - 1) / 4)
+			local pedestal = part(lot, "Slot_" .. slot, Vector3.new(5, 0.6, 6), position + Vector3.new((column - 1.5) * 6, 1, row * 8 - 5), Color3.fromRGB(148, 163, 184))
+			pedestal:SetAttribute("SlotIndex", slot)
+			pedestal.Transparency = if slot <= 6 then 0 else 0.7
+		end
+		table.insert(lots, lot)
+	end
+	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 48), Color3.fromRGB(27, 40, 72))
+	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nCompre orbes e treine no painel", Vector3.new(0, 1, 0))
+end
+
+function WorldService.AssignSanctuary(player: Player): Model?
+	local existing = owners[player]
+	if existing then return lots[existing] end
+	for index, lot in ipairs(lots) do
+		if lot:GetAttribute("OwnerUserId") == 0 then
+			owners[player] = index
+			lot:SetAttribute("OwnerUserId", player.UserId)
+			player:SetAttribute("SanctuaryIndex", index)
+			return lot
+		end
+	end
+	return nil
+end
+
+function WorldService.ReleaseSanctuary(player: Player)
+	local index = owners[player]
+	if not index then return end
+	local lot = lots[index]
+	lot:SetAttribute("OwnerUserId", 0)
+	local display = lot:FindFirstChild("Creatures")
+	if display then display:ClearAllChildren() end
+	local sign = lot:FindFirstChild("Sign")
+	local billboard = sign and sign:FindFirstChild("Label")
+	local textLabel = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
+	if textLabel then textLabel.Text = "SANTUÁRIO LIVRE" end
+	owners[player] = nil
+	displaySignatures[player] = nil
+end
+
+function WorldService.UpdateSanctuary(player: Player, profile: any)
+	local index = owners[player]
+	if not index then return end
+	local lot = lots[index]
+	local sign = lot:FindFirstChild("Sign")
+	local billboard = sign and sign:FindFirstChild("Label")
+	local textLabel = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
+	local capacity = Config.Constants.BaseSanctuarySlots + (if profile.Level >= 5 then 1 else 0) + (if profile.Level >= 15 then 1 else 0)
+	if textLabel then
+		textLabel.Text = string.format("%s\n$%.1f/s • %d/%d slots", player.DisplayName, profile.IncomePerSec or 0, #profile.SanctuarySlots, capacity)
+	end
+	for slot = 1, 8 do
+		local pedestal = lot:FindFirstChild("Slot_" .. slot)
+		if pedestal and pedestal:IsA("BasePart") then pedestal.Transparency = if slot <= capacity then 0 else 0.7 end
+	end
+	local signature = table.concat(profile.SanctuarySlots, ":")
+	if displaySignatures[player] == signature then return end
+	displaySignatures[player] = signature
+	local display = lot:FindFirstChild("Creatures")
+	if not display then return end
+	display:ClearAllChildren()
+	local inventory: {[string]: any} = {}
+	for _, record in ipairs(profile.CapturedCreatures) do inventory[record.Uid] = record end
+	for slot, uid in ipairs(profile.SanctuarySlots) do
+		local record = inventory[uid]
+		local pedestal = lot:FindFirstChild("Slot_" .. slot)
+		local definition = record and Config.Creatures[record.CreatureId]
+		if record and definition and pedestal and pedestal:IsA("BasePart") then
+			local model = Instance.new("Model")
+			model.Name = record.CreatureId
+			model.Parent = display
+			local body = part(model, "Body", Vector3.new(2.7, 2, 2.5), pedestal.Position + Vector3.new(0, 1.4, 0), definition.BodyColor)
+			body.CanCollide = false
+			local head = part(model, "Head", Vector3.new(1.7, 1.4, 1.7), body.Position + Vector3.new(0, 1.5, -0.3), definition.BodyColor:Lerp(Color3.new(1, 1, 1), 0.2))
+			head.CanCollide = false
+			model.PrimaryPart = body
+			label(head, string.format("%s\n%s • %s\n$%.1f/s", definition.Name, record.Mutation, record.Size, record.IncomePerSec), Vector3.new(0, 2.6, 0))
+		end
+	end
+end
+
+return WorldService
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="SoundService" referent="28">
+    <Properties>
+      <string name="Name">SoundService</string>
+      <bool name="RespectFilteringEnabled">true</bool>
+    </Properties>
+  </Item>
+  <Item class="StarterPlayer" referent="29">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="30">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="LocalScript" referent="31">
+        <Properties>
+          <string name="Name">BaseHUD</string>
+          <string name="Source"><![CDATA[--!strict
+-- HUD funcional do passo 1. Interface final e monetização ficam para o passo 2.
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+local remotes = ReplicatedStorage:WaitForChild("Remotes")
+local stateUpdate = remotes:WaitForChild("StateUpdate") :: RemoteEvent
+local requestState = remotes:WaitForChild("RequestState") :: RemoteEvent
+local feedback = remotes:WaitForChild("ActionFeedback") :: RemoteEvent
+local throwResult = remotes:WaitForChild("ThrowResult") :: RemoteEvent
+local buyOrb = remotes:WaitForChild("BuyOrb") :: RemoteEvent
+local equipOrb = remotes:WaitForChild("EquipOrb") :: RemoteEvent
+local train = remotes:WaitForChild("TrainThrowPower") :: RemoteEvent
+local equipSanctuary = remotes:WaitForChild("EquipToSanctuary") :: RemoteEvent
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ThrowASphere_BaseHUD"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 10
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local dark = Color3.fromRGB(20, 29, 43)
+local ink = Color3.fromRGB(239, 246, 255)
+local muted = Color3.fromRGB(172, 195, 215)
+local accent = Color3.fromRGB(107, 237, 162)
+
+local function corner(parent: GuiObject, radius: number)
+    local round = Instance.new("UICorner")
+    round.CornerRadius = UDim.new(0, radius)
+    round.Parent = parent
+end
+
+local function text(parent: Instance, name: string, content: string, position: UDim2, size: UDim2, fontSize: number): TextLabel
+    local label = Instance.new("TextLabel")
+    label.Name = name
+    label.BackgroundTransparency = 1
+    label.Position = position
+    label.Size = size
+    label.Text = content
+    label.TextSize = fontSize
+    label.Font = Enum.Font.GothamMedium
+    label.TextColor3 = ink
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = parent
+    return label
+end
+
+local function button(parent: Instance, name: string, content: string, position: UDim2, size: UDim2): TextButton
+    local item = Instance.new("TextButton")
+    item.Name = name
+    item.Position = position
+    item.Size = size
+    item.BackgroundColor3 = Color3.fromRGB(41, 60, 79)
+    item.BorderSizePixel = 0
+    item.Text = content
+    item.TextSize = 13
+    item.Font = Enum.Font.GothamBold
+    item.TextColor3 = ink
+    item.AutoButtonColor = true
+    item.Parent = parent
+    corner(item, 8)
+    return item
+end
+
+local panel = Instance.new("Frame")
+panel.Name = "StatsAndControls"
+panel.Position = UDim2.fromOffset(12, 12)
+panel.Size = UDim2.fromOffset(330, 258)
+panel.BackgroundColor3 = dark
+panel.BackgroundTransparency = 0.08
+panel.BorderSizePixel = 0
+panel.Active = true
+panel.Parent = gui
+corner(panel, 12)
+local scale = Instance.new("UIScale")
+scale.Parent = panel
+
+local title = text(panel, "Title", "JOGUE UMA ORBE!", UDim2.fromOffset(14, 12), UDim2.fromOffset(290, 22), 18)
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = accent
+local modeLabel = text(panel, "Mode", "Carregando seus dados...", UDim2.fromOffset(14, 38), UDim2.fromOffset(302, 18), 11)
+modeLabel.TextColor3 = muted
+local coinsLabel = text(panel, "Coins", "$150   |   $0/s", UDim2.fromOffset(14, 64), UDim2.fromOffset(302, 24), 21)
+local levelLabel = text(panel, "Level", "Nível 1   ·   0 / 100 XP", UDim2.fromOffset(14, 96), UDim2.fromOffset(302, 19), 14)
+local bar = Instance.new("Frame")
+bar.Name = "XPBar"
+bar.Position = UDim2.fromOffset(14, 121)
+bar.Size = UDim2.fromOffset(302, 6)
+bar.BackgroundColor3 = Color3.fromRGB(48, 63, 79)
+bar.BorderSizePixel = 0
+bar.Parent = panel
+corner(bar, 3)
+local fill = Instance.new("Frame")
+fill.Name = "XPFill"
+fill.Size = UDim2.fromScale(0, 1)
+fill.BackgroundColor3 = accent
+fill.BorderSizePixel = 0
+fill.Parent = bar
+corner(fill, 3)
+local rangeLabel = text(panel, "Range", "Alcance 47 studs   ·   Combo x0", UDim2.fromOffset(14, 135), UDim2.fromOffset(302, 18), 12)
+rangeLabel.TextColor3 = muted
+local orbLabel = text(panel, "Orb", "Orbe Comum  ×25", UDim2.fromOffset(14, 161), UDim2.fromOffset(250, 20), 14)
+local cycleButton = button(panel, "NextOrb", ">", UDim2.fromOffset(277, 155), UDim2.fromOffset(39, 31))
+local equipButton = button(panel, "EquipOrb", "Equipar", UDim2.fromOffset(14, 193), UDim2.fromOffset(88, 29))
+local buyButton = button(panel, "BuyOrb", "+1  $25", UDim2.fromOffset(110, 193), UDim2.fromOffset(96, 29))
+local trainButton = button(panel, "Train", "Treinar +1", UDim2.fromOffset(214, 193), UDim2.fromOffset(102, 29))
+local inventoryButton = button(panel, "Inventory", "Santuário / criaturas", UDim2.fromOffset(14, 230), UDim2.fromOffset(302, 20))
+inventoryButton.BackgroundTransparency = 1
+inventoryButton.TextColor3 = muted
+
+local notice = text(gui, "Feedback", "Segure e solte sobre uma criatura para arremessar.", UDim2.new(0.5, 0, 1, -74), UDim2.new(0.92, 0, 0, 55), 14)
+notice.AnchorPoint = Vector2.new(0.5, 0)
+notice.TextXAlignment = Enum.TextXAlignment.Center
+notice.TextWrapped = true
+notice.TextStrokeTransparency = 0.35
+notice.TextStrokeColor3 = Color3.fromRGB(12, 20, 30)
+
+local inventory = Instance.new("Frame")
+inventory.Name = "SanctuaryInventory"
+inventory.AnchorPoint = Vector2.new(0.5, 0.5)
+inventory.Position = UDim2.fromScale(0.5, 0.5)
+inventory.Size = UDim2.new(0.9, 0, 0.72, 0)
+inventory.BackgroundColor3 = dark
+inventory.BorderSizePixel = 0
+inventory.Visible = false
+inventory.Active = true
+inventory.ZIndex = 20
+inventory.Parent = gui
+corner(inventory, 12)
+local maxSize = Instance.new("UISizeConstraint")
+maxSize.MaxSize = Vector2.new(560, 440)
+maxSize.Parent = inventory
+local inventoryTitle = text(inventory, "Title", "CRIATURAS DO SANTUÁRIO", UDim2.fromOffset(16, 12), UDim2.new(1, -66, 0, 25), 16)
+inventoryTitle.ZIndex = 21
+inventoryTitle.Font = Enum.Font.GothamBold
+local closeButton = button(inventory, "Close", "X", UDim2.new(1, -44, 0, 10), UDim2.fromOffset(30, 30))
+closeButton.ZIndex = 21
+local inventoryHint = text(inventory, "Hint", "Toque para colocar ou retirar. Até 6 criaturas geram $/s.", UDim2.fromOffset(16, 45), UDim2.new(1, -32, 0, 30), 12)
+inventoryHint.TextColor3 = muted
+inventoryHint.TextWrapped = true
+inventoryHint.ZIndex = 21
+local list = Instance.new("ScrollingFrame")
+list.Name = "CreatureList"
+list.Position = UDim2.fromOffset(12, 83)
+list.Size = UDim2.new(1, -24, 1, -95)
+list.BackgroundTransparency = 1
+list.BorderSizePixel = 0
+list.ScrollBarThickness = 5
+list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+list.CanvasSize = UDim2.new()
+list.ZIndex = 21
+list.Parent = inventory
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 7)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = list
+
+local orbOrder = {"Comum", "Esmeralda", "Rubi", "Safira", "Runica", "Hextech", "Cosmica", "Mestre"}
+local selectedIndex = 1
+local state: any = nil
+local noticeVersion = 0
+local offlineShown = false
+local inventorySignature = ""
+
+local function number(value: number): string
+    local suffixes = {"", "K", "M", "B", "T", "Qa", "Qi"}
+    local tier = 1
+    local amount = math.max(0, value)
+    while amount >= 1000 and tier < #suffixes do
+        amount /= 1000
+        tier += 1
+    end
+    return if tier == 1 then string.format("%.0f", amount) else string.format("%.1f%s", amount, suffixes[tier])
+end
+
+local function showNotice(message: string, isError: boolean?)
+    noticeVersion += 1
+    local version = noticeVersion
+    notice.Text = message
+    notice.TextColor3 = if isError then Color3.fromRGB(255, 151, 140) else ink
+    task.delay(5, function()
+        if version ~= noticeVersion then return end
+        notice.Text = "Mira verde: corpo · Dourada: cabeça · Vermelha: fora de alcance"
+        notice.TextColor3 = ink
+    end)
+end
+
+local function renderOrb()
+    local id = orbOrder[selectedIndex]
+    local definition = Config.Orbs[id]
+    local quantity = if state and state.Orbs then state.Orbs[id] or 0 else 0
+    local equipped = state and state.EquippedOrb == id
+    orbLabel.Text = string.format("%s  ×%d", definition.Name, quantity)
+    equipButton.Text = if equipped then "Equipada" else "Equipar"
+    equipButton.TextColor3 = if equipped then accent else ink
+    buyButton.Text = if definition.IsMaster then "Drop raro" else "+1  $" .. number(definition.Price)
+    buyButton.Active = not definition.IsMaster
+    buyButton.AutoButtonColor = not definition.IsMaster
+    buyButton.TextColor3 = if definition.IsMaster then muted else ink
+end
+
+local function renderInventory()
+    if not state then return end
+    local signatureParts: {string} = {}
+    for _, creature in state.CapturedCreatures or {} do table.insert(signatureParts, creature.Uid) end
+    table.insert(signatureParts, "slots")
+    for _, uid in state.SanctuarySlots or {} do table.insert(signatureParts, uid) end
+    local signature = table.concat(signatureParts, ":")
+    if signature == inventorySignature and #list:GetChildren() > 1 then return end
+    inventorySignature = signature
+    for _, child in list:GetChildren() do
+        if child:IsA("TextButton") or child:IsA("TextLabel") then child:Destroy() end
+    end
+    local slots: {[string]: boolean} = {}
+    for _, uid in state.SanctuarySlots or {} do slots[uid] = true end
+    local creatures = state.CapturedCreatures or {}
+    if #creatures == 0 then
+        local empty = text(list, "Empty", "Capture sua primeira criatura na pradaria!", UDim2.new(), UDim2.new(1, -6, 0, 50), 13)
+        empty.TextWrapped = true
+        empty.ZIndex = 22
+        return
+    end
+    for index, creature in creatures do
+        local definition = Config.Creatures[creature.CreatureId]
+        local creatureName = if definition then definition.Name else creature.CreatureId
+        local item = button(list, "Creature_" .. index,
+            string.format("%s %s · %s / %s · $%s/s", if slots[creature.Uid] then "[NA BASE]" else "[GUARDADA]",
+                creatureName, creature.Mutation, creature.Size, number(creature.IncomePerSec)),
+            UDim2.new(), UDim2.new(1, -6, 0, 55))
+        item.TextWrapped = true
+        item.TextSize = 12
+        item.LayoutOrder = index
+        item.ZIndex = 22
+        item.TextColor3 = if slots[creature.Uid] then accent else ink
+        local uid = creature.Uid
+        item.Activated:Connect(function() equipSanctuary:FireServer(uid) end)
+    end
+end
+
+stateUpdate.OnClientEvent:Connect(function(snapshot: any)
+    if typeof(snapshot) ~= "table" then return end
+    state = snapshot
+    coinsLabel.Text = "$" .. number(snapshot.Coins or 0) .. "   |   $" .. number(snapshot.IncomePerSec or 0) .. "/s"
+    local required = snapshot.XPRequired or Config.GetXPRequiredForLevel(snapshot.Level or 1)
+    local level = snapshot.Level or 1
+    local slotCapacity = Config.Constants.BaseSanctuarySlots + (if level >= 5 then 1 else 0) + (if level >= 15 then 1 else 0)
+    inventoryHint.Text = string.format("Toque para colocar ou retirar. Até %d criaturas geram $/s.", slotCapacity)
+    levelLabel.Text = string.format("Nível %d   ·   %s / %s XP", snapshot.Level or 1, number(snapshot.XP or 0), number(required))
+    fill.Size = UDim2.fromScale(math.clamp((snapshot.XP or 0) / math.max(1, required), 0, 1), 1)
+    rangeLabel.Text = string.format("Alcance %.0f studs   ·   Combo x%d", snapshot.MaxRange or 47, snapshot.ComboStreak or 0)
+    modeLabel.Text = if snapshot.DataMode == "StudioMemory" then "TESTE LOCAL · dados não são salvos" else "Dados persistentes · salvamento automático"
+    renderOrb()
+    if inventory.Visible then renderInventory() end
+    if not offlineShown and (snapshot.OfflineReward or 0) > 0 then
+        offlineShown = true
+        showNotice("Bem-vindo de volta! Seu santuário gerou $" .. number(snapshot.OfflineReward) .. " offline.")
+    end
+end)
+
+feedback.OnClientEvent:Connect(function(message: any)
+    if typeof(message) == "string" then showNotice(message)
+    elseif typeof(message) == "table" and typeof(message.Message) == "string" then
+        showNotice(message.Message, message.Kind == "Error")
+    end
+end)
+
+throwResult.OnClientEvent:Connect(function(data: any)
+    if typeof(data) ~= "table" or data.Thrower ~= player then return end
+    local prefix = if data.IsCritical then "CRÍTICO! " else ""
+    showNotice(prefix .. "Orbe lançada... aguardando as balançadas.")
+    task.delay(3, function()
+        if data.Captured then
+            showNotice(string.format("CAPTURADO! %s / %s · +%s XP", data.MutationName or "Normal", data.SizeName or "Normal", number(data.XPGained or 0)))
+        else
+            showNotice("Escapou! +" .. number(data.XPGained or 0) .. " XP e +5% de sorte acumulada.")
+        end
+    end)
+end)
+
+cycleButton.Activated:Connect(function()
+    selectedIndex = selectedIndex % #orbOrder + 1
+    renderOrb()
+end)
+equipButton.Activated:Connect(function() equipOrb:FireServer(orbOrder[selectedIndex]) end)
+buyButton.Activated:Connect(function()
+    local id = orbOrder[selectedIndex]
+    if not Config.Orbs[id].IsMaster then buyOrb:FireServer(id, 1) end
+end)
+trainButton.Activated:Connect(function() train:FireServer() end)
+inventoryButton.Activated:Connect(function()
+    inventory.Visible = not inventory.Visible
+    if inventory.Visible then renderInventory() end
+end)
+closeButton.Activated:Connect(function() inventory.Visible = false end)
+
+local function resize()
+    local camera = Workspace.CurrentCamera
+    if not camera then return end
+    scale.Scale = math.clamp(math.min(camera.ViewportSize.X / 800, camera.ViewportSize.Y / 650), 0.67, 1)
+end
+local cameraConnection: RBXScriptConnection? = nil
+local function bindCamera()
+    if cameraConnection then cameraConnection:Disconnect() end
+    local camera = Workspace.CurrentCamera
+    if camera then cameraConnection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(resize) end
+    resize()
+end
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(bindCamera)
+bindCamera()
+renderOrb()
+requestState:FireServer()
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="LocalScript" referent="32">
+        <Properties>
+          <string name="Name">ClientThrowController</string>
+          <string name="Source"><![CDATA[--!strict
+-- Passo 1: mira local; acerto, estoque, sorte e captura pertencem ao servidor.
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local Debris = game:GetService("Debris")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+local remotes = ReplicatedStorage:WaitForChild("Remotes")
+local requestThrow = remotes:WaitForChild("RequestThrow") :: RemoteEvent
+local throwResult = remotes:WaitForChild("ThrowResult") :: RemoteEvent
+local stateUpdate = remotes:WaitForChild("StateUpdate") :: RemoteEvent
+
+local maxRange = Config.GetMaxThrowRange(10, 1)
+stateUpdate.OnClientEvent:Connect(function(state: any)
+    if typeof(state) == "table" and typeof(state.MaxRange) == "number" then
+        maxRange = state.MaxRange
+    end
+end)
+
+local visuals = Instance.new("Folder")
+visuals.Name = "ThrowASphere_ClientVisuals"
+visuals.Parent = Workspace
+
+local function makeVisual(name: string, size: Vector3): Part
+    local part = Instance.new("Part")
+    part.Name = name
+    part.Anchored = true
+    part.CanCollide = false
+    part.CanTouch = false
+    part.CanQuery = false
+    part.CastShadow = false
+    part.Material = Enum.Material.Neon
+    part.Size = size
+    part.Parent = visuals
+    return part
+end
+
+local dots: {Part} = {}
+for index = 1, 18 do
+    local dot = makeVisual("Aim_" .. index, Vector3.new(0.35, 0.35, 0.35))
+    dot.Shape = Enum.PartType.Ball
+    dot.Transparency = 1
+    table.insert(dots, dot)
+end
+local marker = makeVisual("AimTarget", Vector3.new(0.12, 2.5, 2.5))
+marker.Shape = Enum.PartType.Cylinder
+marker.Transparency = 1
+
+local function hideAim()
+    for _, dot in dots do
+        dot.Transparency = 1
+    end
+    marker.Transparency = 1
+end
+
+local function bezier(startPos: Vector3, control: Vector3, finish: Vector3, alpha: number): Vector3
+    local inverse = 1 - alpha
+    return inverse * inverse * startPos + 2 * inverse * alpha * control + alpha * alpha * finish
+end
+
+local function controlPoint(startPos: Vector3, finish: Vector3): Vector3
+    return (startPos + finish) / 2 + Vector3.new(0, math.clamp((finish - startPos).Magnitude * 0.35, 6, 40), 0)
+end
+
+local activeInput: InputObject? = nil
+local inputMode = "Mouse"
+local lastThrow = -math.huge
+
+local function getRoot(): BasePart?
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    return if root and root:IsA("BasePart") then root else nil
+end
+
+local function aimTarget(): (Vector3?, Model?, boolean)
+    local camera = Workspace.CurrentCamera
+    if not camera then return nil, nil, false end
+    local ray: Ray
+    if inputMode == "Gamepad" then
+        ray = camera:ViewportPointToRay(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    else
+        local pointer = UserInputService:GetMouseLocation()
+        if inputMode == "Touch" and activeInput then
+            pointer = Vector2.new(activeInput.Position.X, activeInput.Position.Y)
+        end
+        -- ScreenPointToRay accounts for the Studio/Roblox top-bar inset.
+        ray = camera:ScreenPointToRay(pointer.X, pointer.Y)
+    end
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    local excluded: {Instance} = {visuals}
+    if player.Character then table.insert(excluded, player.Character :: Model) end
+    params.FilterDescendantsInstances = excluded
+    local result = Workspace:Raycast(ray.Origin, ray.Direction * 500, params)
+    if not result then return nil, nil, false end
+    local model = result.Instance:FindFirstAncestorOfClass("Model")
+    local wildFolder = Workspace:FindFirstChild("CriaturasSelvagens")
+    if model and wildFolder and model:IsDescendantOf(wildFolder) then
+        return result.Position, model, result.Instance.Name == "Head"
+    end
+    return result.Position, nil, false
+end
+
+local function pointerOverControls(input: InputObject): boolean
+    if input.KeyCode == Enum.KeyCode.ButtonR2 then return false end
+    local position = UserInputService:GetMouseLocation()
+    if input.UserInputType == Enum.UserInputType.Touch then
+        position = Vector2.new(input.Position.X, input.Position.Y)
+    end
+    local playerGui = player:FindFirstChildOfClass("PlayerGui")
+    if not playerGui then return false end
+    for _, object in playerGui:GetGuiObjectsAtPosition(position.X, position.Y) do
+        local current: Instance? = object
+        while current and current ~= playerGui do
+            if current:IsA("GuiButton") or (current:IsA("GuiObject") and current.Active) then
+                return true
+            end
+            current = current.Parent
+        end
+    end
+    return false
+end
+
+RunService.RenderStepped:Connect(function()
+    if not activeInput then return end
+    local root = getRoot()
+    local position, target, critical = aimTarget()
+    if not root or not position then hideAim(); return end
+    local targetPosition = if target and target.PrimaryPart then target.PrimaryPart.Position else position
+    local inRange = (root.Position - targetPosition).Magnitude <= maxRange
+    local color = if not inRange then Color3.fromRGB(255, 85, 85)
+        elseif target and critical then Color3.fromRGB(255, 207, 76)
+        elseif target then Color3.fromRGB(87, 235, 145)
+        else Color3.fromRGB(109, 199, 255)
+    local startPos = root.Position + Vector3.new(1.2, 1.8, 0)
+    local control = controlPoint(startPos, position)
+    for index, dot in dots do
+        dot.Position = bezier(startPos, control, position, index / #dots)
+        dot.Color = color
+        dot.Transparency = 0.2
+    end
+    marker.Color = color
+    marker.CFrame = CFrame.new(position + Vector3.new(0, 0.08, 0)) * CFrame.Angles(0, 0, math.pi / 2)
+    marker.Transparency = 0.35
+end)
+
+local function isThrowInput(input: InputObject): boolean
+    return input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch
+        or input.KeyCode == Enum.KeyCode.ButtonR2
+end
+
+UserInputService.InputBegan:Connect(function(input: InputObject, processed: boolean)
+    if processed or activeInput or not isThrowInput(input) or UserInputService:GetFocusedTextBox() then return end
+    if pointerOverControls(input) then return end
+    activeInput = input
+    inputMode = if input.UserInputType == Enum.UserInputType.Touch then "Touch"
+        elseif input.KeyCode == Enum.KeyCode.ButtonR2 then "Gamepad" else "Mouse"
+end)
+
+UserInputService.InputEnded:Connect(function(input: InputObject)
+    if input ~= activeInput then return end
+    if pointerOverControls(input) then
+        activeInput = nil
+        hideAim()
+        return
+    end
+    -- Keep the originating touch available until its final ray has been calculated.
+    local hitPos, target = aimTarget()
+    activeInput = nil
+    hideAim()
+    local root = getRoot()
+    if not root or not hitPos or not target or not target.PrimaryPart then return end
+    if (root.Position - target.PrimaryPart.Position).Magnitude > maxRange then return end
+    if os.clock() - lastThrow < Config.Constants.ThrowCooldownSeconds then return end
+    lastThrow = os.clock()
+    requestThrow:FireServer(target, hitPos)
+end)
+
+local function cancelAim()
+    activeInput = nil
+    hideAim()
+end
+UserInputService.WindowFocusReleased:Connect(cancelAim)
+player.CharacterRemoving:Connect(cancelAim)
+
+local function animateThrow(data: any)
+    if typeof(data) ~= "table" or typeof(data.StartPos) ~= "Vector3" or typeof(data.HitPos) ~= "Vector3" then return end
+    local orb = makeVisual("CaptureOrb", Vector3.new(1.2, 1.2, 1.2))
+    local animationStarted = os.clock()
+    orb.Shape = Enum.PartType.Ball
+    orb.Color = if typeof(data.OrbColor) == "Color3" then data.OrbColor else Color3.fromRGB(109, 199, 255)
+    orb.Position = data.StartPos
+    Debris:AddItem(orb, 5)
+    local attachment0 = Instance.new("Attachment")
+    attachment0.Position = Vector3.new(0, 0.35, 0)
+    attachment0.Parent = orb
+    local attachment1 = Instance.new("Attachment")
+    attachment1.Position = Vector3.new(0, -0.35, 0)
+    attachment1.Parent = orb
+    local trail = Instance.new("Trail")
+    trail.Attachment0 = attachment0
+    trail.Attachment1 = attachment1
+    trail.Color = ColorSequence.new(orb.Color)
+    trail.Lifetime = 0.25
+    trail.Parent = orb
+
+    local hiddenParts: {[BasePart]: number} = {}
+    local hiddenLabels: {[BillboardGui]: boolean} = {}
+    local function restoreCreature()
+        for part, original in hiddenParts do
+            if part.Parent then part.LocalTransparencyModifier = original end
+        end
+        for label, original in hiddenLabels do
+            if label.Parent then label.Enabled = original end
+        end
+    end
+    local ok, failure = pcall(function()
+        local startPos: Vector3 = data.StartPos
+        local finish: Vector3 = data.HitPos
+        local control = controlPoint(startPos, finish)
+        local duration = math.clamp((finish - startPos).Magnitude / 140, 0.32, 0.75)
+        local elapsed = 0
+        while elapsed < duration and orb.Parent do
+            elapsed += RunService.Heartbeat:Wait()
+            local alpha = math.min(1, elapsed / duration)
+            orb.CFrame = CFrame.new(bezier(startPos, control, finish, alpha)) * CFrame.Angles(alpha * 8, 0, alpha * 4)
+        end
+        local target = data.TargetModel
+        if typeof(target) == "Instance" and target:IsA("Model") and target.Parent then
+            for _, descendant in target:GetDescendants() do
+                if descendant:IsA("BasePart") then
+                    hiddenParts[descendant] = descendant.LocalTransparencyModifier
+                    descendant.LocalTransparencyModifier = 1
+                elseif descendant:IsA("BillboardGui") then
+                    hiddenLabels[descendant] = descendant.Enabled
+                    descendant.Enabled = false
+                end
+            end
+        end
+        local rest = CFrame.new(finish + Vector3.new(0, 0.7, 0))
+        orb.CFrame = rest
+        trail.Enabled = false
+        local passed = if typeof(data.ShakesPassed) == "number" then math.clamp(data.ShakesPassed, 0, 3) else 0
+        local shakes = if data.Captured then 3 else math.min(3, passed + 1)
+        for _ = 1, shakes do
+            task.wait(0.22)
+            for _, angle in {28, -28, 0} do
+                if not orb.Parent then return end
+                local tween = TweenService:Create(orb, TweenInfo.new(0.11, Enum.EasingStyle.Quad), {
+                    CFrame = rest * CFrame.Angles(0, 0, math.rad(angle)),
+                })
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end
+        if data.Captured then
+            orb.Color = Color3.fromRGB(255, 213, 74)
+            local tween = TweenService:Create(orb, TweenInfo.new(0.45), {Size = Vector3.new(2.2, 2.2, 2.2), Transparency = 1})
+            tween:Play()
+            tween.Completed:Wait()
+        else
+            restoreCreature()
+            orb.Color = Color3.fromRGB(150, 160, 180)
+            task.wait(0.3)
+        end
+    end)
+    if ok and data.Captured then
+        -- Keep the captured model hidden until the server removes it after its lock.
+        -- A delayed fallback also restores models if a server-side despawn is interrupted.
+        task.delay(math.max(0, 4.6 - (os.clock() - animationStarted)), restoreCreature)
+    else
+        restoreCreature()
+    end
+    orb:Destroy()
+    if not ok then warn("[ThrowASphere] Falha no efeito de captura: " .. tostring(failure)) end
+end
+
+throwResult.OnClientEvent:Connect(function(data: any)
+    task.spawn(animateThrow, data)
+end)
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="Workspace" referent="33">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <float name="FallenPartsDestroyHeight">-100</float>
+      <float name="Gravity">196.2</float>
+      <bool name="NeedsPivotMigration">false</bool>
+    </Properties>
+  </Item>
+</roblox>
