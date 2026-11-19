@@ -32,10 +32,11 @@ export type Profile = {
 	PityBonus: number,
 	EquippedOrb: string,
 	Orbs: { [string]: number },
+	OrbTier: number,
+	TrainingMachine: number,
 	CapturedCreatures: { Capture },
 	SanctuarySlots: { string },
 	Bestiary: { [string]: boolean },
-	ComboStreak: number,
 	LastSeen: number,
 	UnlockedBiomes: { [string]: boolean },
 	OfflineReward: number,
@@ -117,10 +118,11 @@ local function newProfile(): Profile
 		PityBonus = 0,
 		EquippedOrb = "Comum",
 		Orbs = { Comum = Settings.InitialOrbs },
+		OrbTier = 1,
+		TrainingMachine = 1,
 		CapturedCreatures = {},
 		SanctuarySlots = {},
 		Bestiary = {},
-		ComboStreak = 0,
 		LastSeen = os.time(),
 		UnlockedBiomes = { PradariaSolar = true },
 		OfflineReward = 0,
@@ -226,6 +228,14 @@ local function decode(envelope: any): Profile
 	for orbId, quantity in pairs(result.Orbs) do
 		assert(type(orbId) == "string" and Config.Orbs[orbId] ~= nil, "Unknown saved orb")
 		assert(finite(quantity) and quantity >= 0 and quantity % 1 == 0, "Invalid orb quantity")
+	end
+	assert(result.OrbTier >= 1 and result.OrbTier <= 7 and result.OrbTier % 1 == 0, "Invalid orb evolution")
+	assert(result.TrainingMachine >= 1 and result.TrainingMachine <= 5 and result.TrainingMachine % 1 == 0, "Invalid training machine")
+	if data.OrbTier == nil then
+		for orbId, quantity in result.Orbs do
+			local tier = Config.Orbs[orbId].Tier
+			if tier and quantity > 0 then result.OrbTier = math.max(result.OrbTier, tier) end
+		end
 	end
 	validateArray(result.CapturedCreatures, "CapturedCreatures", Settings.MaxInventoryCreatures or 500)
 	local captureIds = {}
@@ -378,8 +388,8 @@ end
 
 local PUBLIC_FIELDS = {
 	"Coins", "Gems", "XP", "Level", "Rebirths", "ThrowStrength", "PityBonus", "EquippedOrb", "Orbs",
-	"TrainingLevel", "TrainingXP",
-	"CapturedCreatures", "SanctuarySlots", "Bestiary", "ComboStreak", "UnlockedBiomes", "OfflineReward", "IncomePerSec",
+	"TrainingLevel", "TrainingXP", "TrainingMachine", "OrbTier",
+	"CapturedCreatures", "SanctuarySlots", "Bestiary", "UnlockedBiomes", "OfflineReward", "IncomePerSec",
 	"TotalCoinsEarned", "TotalCaptures", "ExtraSanctuarySlots", "DailyStreak", "LastDailyClaim", "PlaytimeDay",
 	"OnlineSecondsToday", "PlaytimeClaimed", "MissionDay", "MissionCounters", "MissionClaimed", "BestiaryRewardClaimed",
 	"Consumables", "Boosts", "Titles", "WeeklyPets", "FusionReadyAt", "OrbFragments", "VIPLastClaim", "AutomationSettings",

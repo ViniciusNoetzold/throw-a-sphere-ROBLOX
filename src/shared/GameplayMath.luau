@@ -38,7 +38,7 @@ function GameplayMath.GetLuck(profile: any, benefits: any, globalLuck: number?, 
 	local base = 1 + (math.clamp(nonnegative(profile.Level, 1), 1, 100) - 1) * 0.015
 		+ math.clamp(nonnegative(profile.PityBonus), 0, 1) + nonnegative(profile.Rebirths) * 0.5
 		+ completed * 0.1 + (if has(benefits, "GroupMember") then 0.1 else 0)
-	return base * (if nonnegative(profile.ComboStreak) >= 10 then 1.5 else 1)
+	return base
 		* (if has(benefits, "DoubleLuck") then 2 else 1) * boost(profile, "Luck", now or os.time())
 		* math.max(1, nonnegative(globalLuck, 1))
 		* (if profile.EquippedOrb == "Prismatica" and has(benefits, "EternalPrism") then 10 else 1)
@@ -50,7 +50,6 @@ function GameplayMath.GetIncomeMultiplier(profile: any, benefits: any, now: numb
 end
 
 function GameplayMath.GetXPMultiplier(profile: any, benefits: any, now: number?): number
-	-- CaptureService owns Fever's extra 2x; applying it here would count it twice.
 	return (1 + nonnegative(profile.Rebirths) * 0.5) * (if has(benefits, "FusionXP") then 2 else 1)
 		* (if has(benefits, "GoldenVIP") then 1.25 else 1) * boost(profile, "XP", now or os.time())
 end
@@ -68,6 +67,11 @@ function GameplayMath.GetOfflineIncome(profile: any, baseSynergyIncome: number, 
 	local permanent = (1 + nonnegative(profile.Rebirths)) * (if has(benefits, "DoubleCoins") then 2 else 1)
 		* (if has(benefits, "GoldenVIP") then 1.25 else 1)
 	return math.floor(nonnegative(baseSynergyIncome) * permanent * (seconds + boostedSeconds * (multiplier - 1)))
+end
+
+function GameplayMath.GetOrbEvolutionPrice(base: number, fragments: number): (number, number)
+    local used = math.min(math.floor(base / 10), math.max(0, math.floor(fragments)))
+    return base - used * 5, used
 end
 
 return table.freeze(GameplayMath)

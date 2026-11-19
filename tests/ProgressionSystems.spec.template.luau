@@ -25,7 +25,7 @@ local function fixture(options)
     local Shared = setmetatable({}, {__index = function(_, name) return {Name = name} end})
     function Shared:WaitForChild(name) return {Name = name} end
     local remotes = {}
-    for _, name in {"BuyOrb", "EquipOrb", "EquipToSanctuary", "TrainThrowPower", "ActionFeedback", "RebirthRequest", "BuySanctuarySlot", "FuseCreatures", "ClaimDailyReward", "ClaimPlaytimeReward", "ClaimMissionReward", "ClaimBestiaryReward", "RedeemCode", "UseConsumable", "ClaimGroupReward", "SetAutoMode"} do
+    for _, name in {"EvolveOrb", "EquipOrb", "EquipToSanctuary", "TrainThrowPower", "ActionFeedback", "RebirthRequest", "BuySanctuarySlot", "FuseCreatures", "ClaimDailyReward", "ClaimPlaytimeReward", "ClaimMissionReward", "ClaimBestiaryReward", "RedeemCode", "UseConsumable", "ClaimGroupReward", "SetAutoMode"} do
         remotes[name] = {Name = name, OnServerEvent = signal(), FireClient = function() end}
     end
     function remotes:WaitForChild(name) assert(self[name], "missing remote " .. name); return self[name] end

@@ -96,7 +96,7 @@ function ProgressionService.Rebirth(player: Player): (boolean, string)
         profile.Rebirths += 1
         profile.Gems += Rules.RebirthGems
         profile.Level, profile.XP, profile.Coins = 1, 0, Rules.RebirthStartingCoins
-        profile.PityBonus, profile.ComboStreak = 0, 0
+        profile.PityBonus = 0
         profile.UnlockedBiomes = {PradariaSolar = true}
         local capacity = sanctuaryService.GetSlotCapacity(profile, benefits(player))
         while #profile.SanctuarySlots > capacity do table.remove(profile.SanctuarySlots) end
@@ -121,39 +121,46 @@ function ProgressionService.BuySlot(player: Player): (boolean, string)
     end)
 end
 
+function ProgressionService.EvolveOrb(player: Player, expectedTier: any): (boolean, string)
+    if type(expectedTier) ~= "number" or not allowed(player, "EvolveOrb", 0.4) then
+        return false, "Aguarde para evoluir a orbe."
+    end
+    return commit(player, "EvolveOrb", function(profile)
+        if not profile or expectedTier ~= profile.OrbTier + 1 then return false, "Confira a próxima evolução." end
+        for id, orb in Config.Orbs do
+            if orb.Tier == expectedTier then
+                local price, fragments = GameplayMath.GetOrbEvolutionPrice(orb.Price, profile.OrbFragments or 0)
+                if profile.Coins < price then return false, "Moedas insuficientes para evoluir." end
+                profile.Coins -= price
+                profile.OrbFragments = (profile.OrbFragments or 0) - fragments
+                profile.OrbTier, profile.EquippedOrb = expectedTier, id
+                return true, orb.Name .. " evoluída e equipada!"
+            end
+        end
+        return false, "Sua orbe já chegou à última evolução."
+    end)
+end
+
 function ProgressionService.Init(service: any, sanctuary: any, remoteFolder: any, ctx: any?)
     dataService, sanctuaryService, remotes, context = service, sanctuary, remoteFolder, ctx
-    local buyRemote = remotes:WaitForChild("BuyOrb") :: RemoteEvent
     local equipRemote = remotes:WaitForChild("EquipOrb") :: RemoteEvent
     local trainRemote = remotes:WaitForChild("TrainThrowPower") :: RemoteEvent
-    buyRemote.OnServerEvent:Connect(function(player: Player, id: any, quantity: any)
-        if typeof(id) ~= "string" or typeof(quantity) ~= "number" or quantity ~= quantity or quantity % 1 ~= 0 or quantity < 1 or quantity > 100 then return end
-        if not allowed(player, "BuyOrb", 0.25) then return end
-        local profile, orb = dataService.Get(player), Config.Orbs[id]
-        if not profile or not orb or orb.IsMaster or orb.Price <= 0 then feedback(player, "Esta orbe não está disponível por moedas."); return end
-        local price = orb.Price * quantity
-        if profile.Coins < price then feedback(player, "Moedas insuficientes. Capture criaturas ou treine para ganhar moedas."); return end
-        profile.Coins -= price
-        profile.Orbs[id] = (profile.Orbs[id] or 0) + quantity
-        dataService.MarkDirty(player)
-        dataService.Sync(player)
-        feedback(player, string.format("Comprou %dx %s!", quantity, orb.Name), "Success")
-    end)
     equipRemote.OnServerEvent:Connect(function(player: Player, id: any)
         if typeof(id) ~= "string" or not allowed(player, "EquipOrb", 0.2) then return end
         local profile = dataService.Get(player)
         local orb = Config.Orbs[id]
         local infinite = orb and orb.IsPrismatic and benefits(player).EternalPrism == true
-        if not profile or not orb or ((profile.Orbs[id] or 0) < 1 and not infinite) then feedback(player, "Você precisa ter essa orbe no inventário."); return end
+        local evolved = profile and orb and orb.Tier and orb.Tier <= (profile.OrbTier or 0)
+        if not profile or not orb or ((profile.Orbs[id] or 0) < 1 and not infinite and not evolved) then feedback(player, "Você precisa ter essa orbe no inventário."); return end
         profile.EquippedOrb = id
         dataService.MarkDirty(player)
         dataService.Sync(player)
     end)
     trainRemote.OnServerEvent:Connect(function(player: Player) ProgressionService.Train(player) end)
-    for name, action in {RebirthRequest = ProgressionService.Rebirth, BuySanctuarySlot = ProgressionService.BuySlot} do
+    for name, action in {RebirthRequest = ProgressionService.Rebirth, BuySanctuarySlot = ProgressionService.BuySlot, EvolveOrb = ProgressionService.EvolveOrb} do
         local remote = remotes:FindFirstChild(name)
-        if remote then remote.OnServerEvent:Connect(function(player: Player)
-            local success, message = action(player)
+        if remote then remote.OnServerEvent:Connect(function(player: Player, argument: any)
+            local success, message = action(player, argument)
             feedback(player, message, if success then "Success" else "Error")
         end) end
     end

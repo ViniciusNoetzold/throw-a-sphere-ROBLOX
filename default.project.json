@@ -24,7 +24,7 @@
         "ActionFeedback": {
           "$className": "RemoteEvent"
         },
-        "BuyOrb": {
+        "EvolveOrb": {
           "$className": "RemoteEvent"
         },
         "EquipOrb": {
@@ -93,9 +93,6 @@
         "AuctionAction": {
           "$className": "RemoteEvent"
         },
-        "CraftOrbFragments": {
-          "$className": "RemoteEvent"
-        },
         "CollectDrop": {
           "$className": "RemoteEvent"
         },
@@ -121,6 +118,9 @@
           "$className": "RemoteEvent"
         },
         "TrainingQTE": {
+          "$className": "RemoteEvent"
+        },
+        "UpgradeTrainingMachine": {
           "$className": "RemoteEvent"
         },
         "TrainingUpdate": {

@@ -31,182 +31,182 @@
       </Item>
       <Item class="RemoteEvent" referent="5">
         <Properties>
-          <string name="Name">BuyOrb</string>
+          <string name="Name">BuySanctuarySlot</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="6">
         <Properties>
-          <string name="Name">BuySanctuarySlot</string>
+          <string name="Name">CancelThrow</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="7">
         <Properties>
-          <string name="Name">CancelThrow</string>
+          <string name="Name">ClaimBestiaryReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="8">
         <Properties>
-          <string name="Name">ClaimBestiaryReward</string>
+          <string name="Name">ClaimDailyReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="9">
         <Properties>
-          <string name="Name">ClaimDailyReward</string>
+          <string name="Name">ClaimGroupReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="10">
         <Properties>
-          <string name="Name">ClaimGroupReward</string>
+          <string name="Name">ClaimMissionReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="11">
         <Properties>
-          <string name="Name">ClaimMissionReward</string>
+          <string name="Name">ClaimPlaytimeReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="12">
         <Properties>
-          <string name="Name">ClaimPlaytimeReward</string>
+          <string name="Name">ClaimVIPReward</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="13">
         <Properties>
-          <string name="Name">ClaimVIPReward</string>
+          <string name="Name">CollectDrop</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="14">
         <Properties>
-          <string name="Name">CollectDrop</string>
+          <string name="Name">EquipOrb</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="15">
         <Properties>
-          <string name="Name">CraftOrbFragments</string>
+          <string name="Name">EquipToSanctuary</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="16">
         <Properties>
-          <string name="Name">EquipOrb</string>
+          <string name="Name">EvolveOrb</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="17">
         <Properties>
-          <string name="Name">EquipToSanctuary</string>
+          <string name="Name">FlightUpdate</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="18">
         <Properties>
-          <string name="Name">FlightUpdate</string>
+          <string name="Name">FuseCreatures</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="19">
         <Properties>
-          <string name="Name">FuseCreatures</string>
+          <string name="Name">LaunchThrow</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="20">
         <Properties>
-          <string name="Name">LaunchThrow</string>
+          <string name="Name">OpenPanel</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="21">
         <Properties>
-          <string name="Name">OpenPanel</string>
+          <string name="Name">PrepareThrow</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="22">
         <Properties>
-          <string name="Name">PrepareThrow</string>
+          <string name="Name">RebirthRequest</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="23">
         <Properties>
-          <string name="Name">RebirthRequest</string>
+          <string name="Name">RedeemCode</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="24">
         <Properties>
-          <string name="Name">RedeemCode</string>
+          <string name="Name">RequestState</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="25">
         <Properties>
-          <string name="Name">RequestState</string>
+          <string name="Name">RequestThrow</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="26">
         <Properties>
-          <string name="Name">RequestThrow</string>
+          <string name="Name">RequestWorldState</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="27">
         <Properties>
-          <string name="Name">RequestWorldState</string>
+          <string name="Name">SetAutoMode</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="28">
         <Properties>
-          <string name="Name">SetAutoMode</string>
+          <string name="Name">StartTraining</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="29">
         <Properties>
-          <string name="Name">StartTraining</string>
+          <string name="Name">StateUpdate</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="30">
         <Properties>
-          <string name="Name">StateUpdate</string>
+          <string name="Name">StopTraining</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="31">
         <Properties>
-          <string name="Name">StopTraining</string>
+          <string name="Name">ThrowResult</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="32">
         <Properties>
-          <string name="Name">ThrowResult</string>
+          <string name="Name">ThrowWindup</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="33">
         <Properties>
-          <string name="Name">ThrowWindup</string>
+          <string name="Name">TradeAction</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="34">
         <Properties>
-          <string name="Name">TradeAction</string>
+          <string name="Name">TrainThrowPower</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="35">
         <Properties>
-          <string name="Name">TrainThrowPower</string>
+          <string name="Name">TrainingPose</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="36">
         <Properties>
-          <string name="Name">TrainingPose</string>
+          <string name="Name">TrainingQTE</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="37">
         <Properties>
-          <string name="Name">TrainingQTE</string>
+          <string name="Name">TrainingUpdate</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="38">
         <Properties>
-          <string name="Name">TrainingUpdate</string>
+          <string name="Name">TravelToBiome</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="39">
         <Properties>
-          <string name="Name">TravelToBiome</string>
+          <string name="Name">UnlockBiome</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="40">
         <Properties>
-          <string name="Name">UnlockBiome</string>
+          <string name="Name">UpgradeTrainingMachine</string>
         </Properties>
       </Item>
       <Item class="RemoteEvent" referent="41">
@@ -346,7 +346,7 @@ return Creatures
         <Properties>
           <string name="Name">ConfigDrops</string>
           <string name="Source"><![CDATA[--!strict
-return {Lifetime = 60, MaxActivePerPlayer = 20, PickupRange = 12, CraftCost = 10, FailureFragmentsMin = 1, FailureFragmentsMax = 3,
+return {Lifetime = 60, MenuLifetime = 1800, MaxActivePerPlayer = 20, PickupRange = 12, CraftCost = 10, FailureFragmentsMin = 1, FailureFragmentsMax = 3,
     MasterChance = 0.001, CaptureCoinSeconds = 2, BossCoinSeconds = 5, MaxCoinsPerDrop = 1e60}
 ]]></string>
         </Properties>
@@ -376,10 +376,10 @@ return {
           <string name="Name">ConfigFlight</string>
           <string name="Source"><![CDATA[--!strict
 return {
-    MeterPeriod = 1.6, ChargeTimeout = 12, PerfectThreshold = 0.94,
+    MeterPeriod = 3.8, ChargeTimeout = 30, PerfectThreshold = 0.94,
     ZoneLength = 300, MaxDistance = 1800, MinFlightSeconds = 3.5, MaxFlightSeconds = 7,
     LaunchOrigin = Vector3.new(0, 2, -130), Direction = Vector3.new(0, 0, -1),
-    LinePosition = Vector3.new(0, 2, -124), LineWidth = 42, LineDepth = 7,
+    LinePosition = Vector3.new(0, 2, -120), LineWidth = 58, LineDepth = 22,
     WindupSeconds = 0.55,
 }
 ]]></string>
@@ -474,15 +474,15 @@ return {
         <Properties>
           <string name="Name">ConfigOrbes</string>
           <string name="Source"><![CDATA[--!strict
-export type OrbDef = { Id: string, Name: string, Power: number, Price: number, Color: Color3, IsMaster: boolean?, IsPrismatic: boolean? }
+export type OrbDef = { Id: string, Name: string, Power: number, Price: number, Tier: number?, Color: Color3, IsMaster: boolean?, IsPrismatic: boolean? }
 local Orbs: { [string]: OrbDef } = {
-	Comum = { Id = "Comum", Name = "Orbe Comum", Power = 10, Price = 25, Color = Color3.fromRGB(96,165,250) },
-	Esmeralda = { Id = "Esmeralda", Name = "Orbe Esmeralda", Power = 25, Price = 180, Color = Color3.fromRGB(34,197,94) },
-	Rubi = { Id = "Rubi", Name = "Orbe Rubi", Power = 75, Price = 1500, Color = Color3.fromRGB(239,68,68) },
-	Safira = { Id = "Safira", Name = "Orbe Safira", Power = 220, Price = 15000, Color = Color3.fromRGB(56,189,248) },
-	Runica = { Id = "Runica", Name = "Orbe Rúnica", Power = 800, Price = 200000, Color = Color3.fromRGB(250,204,21) },
-	Hextech = { Id = "Hextech", Name = "Orbe Hextech", Power = 3500, Price = 4000000, Color = Color3.fromRGB(34,211,238) },
-	Cosmica = { Id = "Cosmica", Name = "Orbe Cósmica", Power = 18000, Price = 120000000, Color = Color3.fromRGB(168,85,247) },
+	Comum = { Id = "Comum", Tier = 1, Name = "Orbe Comum", Power = 10, Price = 25, Color = Color3.fromRGB(96,165,250) },
+	Esmeralda = { Id = "Esmeralda", Tier = 2, Name = "Orbe Esmeralda", Power = 25, Price = 180, Color = Color3.fromRGB(34,197,94) },
+	Rubi = { Id = "Rubi", Tier = 3, Name = "Orbe Rubi", Power = 75, Price = 1500, Color = Color3.fromRGB(239,68,68) },
+	Safira = { Id = "Safira", Tier = 4, Name = "Orbe Safira", Power = 220, Price = 15000, Color = Color3.fromRGB(56,189,248) },
+	Runica = { Id = "Runica", Tier = 5, Name = "Orbe Rúnica", Power = 800, Price = 200000, Color = Color3.fromRGB(250,204,21) },
+	Hextech = { Id = "Hextech", Tier = 6, Name = "Orbe Hextech", Power = 3500, Price = 4000000, Color = Color3.fromRGB(34,211,238) },
+	Cosmica = { Id = "Cosmica", Tier = 7, Name = "Orbe Cósmica", Power = 18000, Price = 120000000, Color = Color3.fromRGB(168,85,247) },
 	Mestre = { Id = "Mestre", Name = "Orbe Mestre Suprema", Power = 1e9, Price = 0, Color = Color3.fromRGB(244,114,182), IsMaster = true },
 	Prismatica = { Id = "Prismatica", Name = "Orbe Prismática Eterna", Power = 25, Price = 0, Color = Color3.fromRGB(197,116,255), IsPrismatic = true },
 }
@@ -603,6 +603,13 @@ return {
           <string name="Source"><![CDATA[--!strict
 -- Playable placeholder values. Rebalance together after final gym/creature art arrives.
 return {Provisional=true,RepSeconds=1.8,QTEEvery=3,QTESeconds=2,XPPerRep=10,PlayerXPPerRep=1,
+    Machines = {
+        {Name = "Barra de treino", Cost = 0, Level = 1, Force = 0, XP = 10},
+        {Name = "Barra reforçada", Cost = 400, Level = 2, Force = 1, XP = 13},
+        {Name = "Estação turbo", Cost = 2000, Level = 4, Force = 3, XP = 17},
+        {Name = "Estação cristal", Cost = 9000, Level = 7, Force = 6, XP = 22},
+        {Name = "Estação cósmica", Cost = 45000, Level = 12, Force = 10, XP = 28},
+    },
     XPBase=60,XPExponent=1.4,MaxLevel=100,LevelsPerGain=5,MaxStrength=10000,RequestCooldown=0.5}
 ]]></string>
         </Properties>
@@ -613,10 +620,10 @@ return {Provisional=true,RepSeconds=1.8,QTEEvery=3,QTESeconds=2,XPPerRep=10,Play
           <string name="Source"><![CDATA[--!strict
 -- Functional blockout coordinates. Final imported art must keep these interaction anchors.
 return {
-    HubPosition = Vector3.new(0, 0, 35), HubRadius = 110,
-    TradingPosition = Vector3.new(-190, 0, 35),
+    HubPosition = Vector3.new(0, 0, 35), HubRadius = 155, PlayerCapacity = 8,
+    TradingPosition = Vector3.new(-225, 0, 35),
     EventPosition = Vector3.new(0, 0.15, -65), BossPosition = Vector3.new(45, 0.15, -65),
-    ZoneSize = 200, TileSize = 25, SanctuaryRadius = 23, InteractionDistance = 14,
+    ZoneSize = 200, TileSize = 25, SanctuaryRadius = 34, InteractionDistance = 14,
     BiomeOrder = {"PradariaSolar", "FlorestaNeon", "CanionVulcanico", "AbismoGlacial", "RuinasAncestrais", "VazioCosmico"},
     Biomes = {
         PradariaSolar = {Position = Vector3.new(0, 0, -20), Colors = {Color3.fromRGB(76,217,43), Color3.fromRGB(63,192,34)}},
@@ -726,7 +733,7 @@ function GameplayMath.GetLuck(profile: any, benefits: any, globalLuck: number?, 
 	local base = 1 + (math.clamp(nonnegative(profile.Level, 1), 1, 100) - 1) * 0.015
 		+ math.clamp(nonnegative(profile.PityBonus), 0, 1) + nonnegative(profile.Rebirths) * 0.5
 		+ completed * 0.1 + (if has(benefits, "GroupMember") then 0.1 else 0)
-	return base * (if nonnegative(profile.ComboStreak) >= 10 then 1.5 else 1)
+	return base
 		* (if has(benefits, "DoubleLuck") then 2 else 1) * boost(profile, "Luck", now or os.time())
 		* math.max(1, nonnegative(globalLuck, 1))
 		* (if profile.EquippedOrb == "Prismatica" and has(benefits, "EternalPrism") then 10 else 1)
@@ -738,7 +745,6 @@ function GameplayMath.GetIncomeMultiplier(profile: any, benefits: any, now: numb
 end
 
 function GameplayMath.GetXPMultiplier(profile: any, benefits: any, now: number?): number
-	-- CaptureService owns Fever's extra 2x; applying it here would count it twice.
 	return (1 + nonnegative(profile.Rebirths) * 0.5) * (if has(benefits, "FusionXP") then 2 else 1)
 		* (if has(benefits, "GoldenVIP") then 1.25 else 1) * boost(profile, "XP", now or os.time())
 end
@@ -756,6 +762,11 @@ function GameplayMath.GetOfflineIncome(profile: any, baseSynergyIncome: number, 
 	local permanent = (1 + nonnegative(profile.Rebirths)) * (if has(benefits, "DoubleCoins") then 2 else 1)
 		* (if has(benefits, "GoldenVIP") then 1.25 else 1)
 	return math.floor(nonnegative(baseSynergyIncome) * permanent * (seconds + boostedSeconds * (multiplier - 1)))
+end
+
+function GameplayMath.GetOrbEvolutionPrice(base: number, fragments: number): (number, number)
+    local used = math.min(math.floor(base / 10), math.max(0, math.floor(fragments)))
+    return base - used * 5, used
 end
 
 return table.freeze(GameplayMath)
@@ -833,8 +844,8 @@ local Training={}
 function Training.RequiredXP(level:number,rules:any):number
     return math.floor(rules.XPBase*math.clamp(level,1,rules.MaxLevel)^rules.XPExponent)
 end
-function Training.Gain(level:number,titan:boolean,rules:any):number
-    return (1+math.floor((math.clamp(level,1,rules.MaxLevel)-1)/rules.LevelsPerGain))*(if titan then 2 else 1)
+function Training.Gain(level: number, titan: boolean, rules: any, machine: any?): number
+    return (1+math.floor((math.clamp(level,1,rules.MaxLevel)-1)/rules.LevelsPerGain) + (if machine then machine.Force else 0))*(if titan then 2 else 1)
 end
 function Training.AddXP(profile:any,amount:number,rules:any):boolean
     if profile.TrainingLevel>=rules.MaxLevel then profile.TrainingXP=0;return false end
@@ -1666,8 +1677,7 @@ function CaptureService.Init(dataService: any, spawnService: any?, progressionSe
 			throwResult:FireAllClients({Thrower = player, StartPos = startPosition, TargetModel = target, HitPos = result.Position, OrbColor = orb.Color, ShakesPassed = 0, Captured = false, IsBossHit = true, BossDefeated = defeated, CreatureName = definition.Name, CreatureId = wild.CreatureId, XPGained = 0, IsCritical = critical, IsLongShot = longShot})
 			return true
 		end
-		local fever = (profile.ComboStreak or 0) >= 10
-		local luck = if gameplay then gameplay.GetLuck(profile, benefits, if ctx.Weather then ctx.Weather.GetLuckMultiplier() else 1, os.time()) else (1 + (profile.Level - 1) * 0.015 + profile.PityBonus + profile.Rebirths * 0.5) * (if fever then 1.5 else 1)
+		local luck = if gameplay then gameplay.GetLuck(profile, benefits, if ctx.Weather then ctx.Weather.GetLuckMultiplier() else 1, os.time()) else (1 + (profile.Level - 1) * 0.015 + profile.PityBonus + profile.Rebirths * 0.5)
 		local chance = Config.CalculateShakeProbability(orb.Power * elementBonus, aimBonus, luck, definition.Difficulty, orb.IsMaster)
 		-- No yielding between stock verification, catch lock and consumption.
 		if not spawnService.Lock(target, player.UserId) then reject(player, "Outro jogador já está capturando esta criatura."); return end
@@ -1698,14 +1708,12 @@ function CaptureService.Init(dataService: any, spawnService: any?, progressionSe
 				return
 			end
 			profile.PityBonus = 0
-			profile.ComboStreak = math.min(10, (profile.ComboStreak or 0) + 1)
 			profile.TotalCaptures = (profile.TotalCaptures or 0) + 1
-			xp = math.floor(definition.BaseXP * (if fever then 2 else 1) * (if gameplay then 1 else 1 + profile.Rebirths * 0.5))
+			xp = math.floor(definition.BaseXP * (if gameplay then 1 else 1 + profile.Rebirths * 0.5))
 			if ctx and ctx.Rewards then ctx.Rewards.OnProgress(player, "Captures", 1) end
 			if ctx and ctx.Drops then ctx.Drops.OnCapture(player, record, result.Position) end
 		else
 			profile.PityBonus = math.min(1, profile.PityBonus + 0.05)
-			profile.ComboStreak = 0
 			xp = math.max(5, math.floor(definition.BaseXP * 0.35)) + (if critical then 15 else 0)
 			if ctx and ctx.Drops then fragments = ctx.Drops.AwardFailureFragments(player) end
 		end
@@ -1804,10 +1812,11 @@ export type Profile = {
 	PityBonus: number,
 	EquippedOrb: string,
 	Orbs: { [string]: number },
+	OrbTier: number,
+	TrainingMachine: number,
 	CapturedCreatures: { Capture },
 	SanctuarySlots: { string },
 	Bestiary: { [string]: boolean },
-	ComboStreak: number,
 	LastSeen: number,
 	UnlockedBiomes: { [string]: boolean },
 	OfflineReward: number,
@@ -1889,10 +1898,11 @@ local function newProfile(): Profile
 		PityBonus = 0,
 		EquippedOrb = "Comum",
 		Orbs = { Comum = Settings.InitialOrbs },
+		OrbTier = 1,
+		TrainingMachine = 1,
 		CapturedCreatures = {},
 		SanctuarySlots = {},
 		Bestiary = {},
-		ComboStreak = 0,
 		LastSeen = os.time(),
 		UnlockedBiomes = { PradariaSolar = true },
 		OfflineReward = 0,
@@ -1998,6 +2008,14 @@ local function decode(envelope: any): Profile
 	for orbId, quantity in pairs(result.Orbs) do
 		assert(type(orbId) == "string" and Config.Orbs[orbId] ~= nil, "Unknown saved orb")
 		assert(finite(quantity) and quantity >= 0 and quantity % 1 == 0, "Invalid orb quantity")
+	end
+	assert(result.OrbTier >= 1 and result.OrbTier <= 7 and result.OrbTier % 1 == 0, "Invalid orb evolution")
+	assert(result.TrainingMachine >= 1 and result.TrainingMachine <= 5 and result.TrainingMachine % 1 == 0, "Invalid training machine")
+	if data.OrbTier == nil then
+		for orbId, quantity in result.Orbs do
+			local tier = Config.Orbs[orbId].Tier
+			if tier and quantity > 0 then result.OrbTier = math.max(result.OrbTier, tier) end
+		end
 	end
 	validateArray(result.CapturedCreatures, "CapturedCreatures", Settings.MaxInventoryCreatures or 500)
 	local captureIds = {}
@@ -2150,8 +2168,8 @@ end
 
 local PUBLIC_FIELDS = {
 	"Coins", "Gems", "XP", "Level", "Rebirths", "ThrowStrength", "PityBonus", "EquippedOrb", "Orbs",
-	"TrainingLevel", "TrainingXP",
-	"CapturedCreatures", "SanctuarySlots", "Bestiary", "ComboStreak", "UnlockedBiomes", "OfflineReward", "IncomePerSec",
+	"TrainingLevel", "TrainingXP", "TrainingMachine", "OrbTier",
+	"CapturedCreatures", "SanctuarySlots", "Bestiary", "UnlockedBiomes", "OfflineReward", "IncomePerSec",
 	"TotalCoinsEarned", "TotalCaptures", "ExtraSanctuarySlots", "DailyStreak", "LastDailyClaim", "PlaytimeDay",
 	"OnlineSecondsToday", "PlaytimeClaimed", "MissionDay", "MissionCounters", "MissionClaimed", "BestiaryRewardClaimed",
 	"Consumables", "Boosts", "Titles", "WeeklyPets", "FusionReadyAt", "OrbFragments", "VIPLastClaim", "AutomationSettings",
@@ -2510,7 +2528,7 @@ function Drops.Spawn(player: Player, position: Vector3, reward: any): string?
     for _, record in active do
         if record.Owner == player then count += 1; if not oldest or record.ExpiresAt < oldest.ExpiresAt then oldest = record end end
     end
-    local expires = Workspace:GetServerTimeNow() + rules.Lifetime
+    local expires = Workspace:GetServerTimeNow() + (if ctx.Flight then rules.MenuLifetime else rules.Lifetime)
     if count >= rules.MaxActivePerPlayer and oldest then
         oldest.Coins = math.min(rules.MaxCoinsPerDrop, oldest.Coins + coins)
         oldest.MasterOrbs += masters
@@ -2520,7 +2538,7 @@ function Drops.Spawn(player: Player, position: Vector3, reward: any): string?
     local id = HttpService:GenerateGUID(false)
     local record = {Id = id, Owner = player, Position = position, Coins = coins, MasterOrbs = masters, ExpiresAt = expires}
     active[id] = record
-    if not ctx.DisableVisuals then
+    if not ctx.DisableVisuals and not ctx.Flight then
         local part = Instance.new("Part")
         part.Name, part.Shape, part.Size = "Loot", Enum.PartType.Ball, Vector3.new(1.4,1.4,1.4)
         part.Anchored, part.CanCollide, part.CanTouch, part.CanQuery = true, false, false, false
@@ -2542,7 +2560,7 @@ local function collect(player: Player, id: string, automatic: boolean): boolean
     if not record or record.Owner ~= player or record.ExpiresAt <= Workspace:GetServerTimeNow() or ctx.Data.IsBusy(player) then return false end
     local profile = ctx.Data.Get(player)
     if not profile then return false end
-    if not automatic then
+    if not automatic and not ctx.Flight then
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
         if not root or not humanoid or humanoid.Health <= 0 or (root.Position - record.Position).Magnitude > rules.PickupRange then return false end
@@ -2599,19 +2617,19 @@ function Drops.Tick()
         local profile = ctx.Data.Get(record.Owner)
         if not profile then continue end
         local benefits = ctx.Monetization.GetBenefits(record.Owner)
-        local automatic = benefits.MegaCollector == true or (profile.Level >= 3 and ctx.World.IsAtSanctuary(record.Owner))
+        local automatic = benefits.MegaCollector == true or (not ctx.Flight and profile.Level >= 3 and ctx.World.IsAtSanctuary(record.Owner))
         if automatic then collect(record.Owner, id, true) end
     end
 end
 function Drops.GetSnapshot(player: Player, profile: any): any
     local list = {}
     for id, record in active do if record.Owner == player and record.ExpiresAt > Workspace:GetServerTimeNow() then table.insert(list, {Id = id, Coins = record.Coins, MasterOrbs = record.MasterOrbs, ExpiresAt = record.ExpiresAt, Position = record.Position}) end end
-    return {OrbFragments = profile.OrbFragments or 0, DropInfo = {ActiveCount = #list, Drops = list, CraftCost = rules.CraftCost, MasterChance = rules.MasterChance, AutoUnlocked = profile.Level >= 3, MegaCollector = ctx.Monetization.GetBenefits(player).MegaCollector == true}}
+    return {OrbFragments = profile.OrbFragments or 0, DropInfo = {ActiveCount = #list, Drops = list, CraftCost = rules.CraftCost, MasterChance = rules.MasterChance, AutoUnlocked = not ctx.Flight and profile.Level >= 3, MegaCollector = ctx.Monetization.GetBenefits(player).MegaCollector == true}}
 end
 function Drops.Init(context: any)
     ctx = context
     rules = ctx.DropConfig or require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigDrops"))
-    if not ctx.DisableVisuals then folder = Instance.new("Folder"); folder.Name, folder.Parent = "ThrowASphereDrops", Workspace end
+    if not ctx.DisableVisuals and not ctx.Flight then folder = Instance.new("Folder"); folder.Name, folder.Parent = "ThrowASphereDrops", Workspace end
     for name, action in {CraftOrbFragments = Drops.CraftOrbFragments, CollectDrop = Drops.Collect} do
         local remote = ctx.Remotes:FindFirstChild(name)
         if remote then remote.OnServerEvent:Connect(function(player, id)
@@ -2661,25 +2679,32 @@ local function ready(player: Player): (any, BasePart?)
     if not profile or not ctx.Data.IsLoaded(player) or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then return nil, nil end
     return profile, root
 end
-local function reject(player: Player, text: string)
-    ctx.Remotes.ActionFeedback:FireClient(player, {Message = text, Kind = "Error"})
+local function isReusable(profile: any, orb: any, benefits: any): boolean
+    return (orb.IsPrismatic and benefits.EternalPrism == true)
+        or (orb.Tier ~= nil and orb.Tier <= (profile.OrbTier or 0))
 end
 local function eligible(player: Player, profile: any): (boolean, any)
     local orb = Config.Orbs[profile.EquippedOrb]
     local benefits = ctx.Monetization.GetBenefits(player)
     if not orb or (orb.IsPrismatic and not benefits.EternalPrism) then return false, benefits end
-    if not (orb.IsPrismatic and benefits.EternalPrism) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
+    if not isReusable(profile, orb, benefits) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
     return ctx.Sanctuary.CanCapture(player), benefits
 end
-function Flight.Prepare(player: Player): boolean
+function Flight.Prepare(player: Player, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     if now < (requests[player] or 0) then return false end
-    requests[player] = now + 0.25
+    requests[player] = now + 0.15
     if sessions[player] or ctx.Data.IsBusy(player) or (ctx.Training and ctx.Training.IsTraining(player)) then return false end
     local profile, root = ready(player)
     if not profile or not root then return false end
-    if not Math.AtLine(root.Position,Rules.LinePosition,Rules.LineWidth,Rules.LineDepth) then reject(player, "Encoste na linha amarela antes do túnel para arremessar."); return false end
-    if not eligible(player, profile) then reject(player, "Confira suas orbes e o espaço no inventário."); return false end
+    if not Math.AtLine(root.Position, Rules.LinePosition, Rules.LineWidth, Rules.LineDepth) then return false end
+    if not eligible(player, profile) then
+        requests[player] = now + 1
+        send(player, {State = "Blocked", Message = "Confira a orbe equipada e o espaço na coleção."})
+        return false
+    end
+    if not automatic and profile.AutomationSettings and profile.AutomationSettings.Throw
+        and ctx.Monetization.GetBenefits(player).AutoThrow then return false end
     local entry = {Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now, Character = player.Character}
     sessions[player] = entry
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
@@ -2729,18 +2754,17 @@ local function finish(player: Player, entry: any)
             local mutation = Variants.FromQuantile(Config.Mutations, luck, rng:NextNumber())
             local size = Variants.FromQuantile(Config.Sizes, luck, rng:NextNumber())
             local income = math.floor(definition.BaseIncomePerSec * mutation.Multiplier * size.Multiplier)
-            local fever = profile.ComboStreak >= 10
-            local xp = if captured then definition.BaseXP * (if fever then 2 else 1) else math.max(5, math.floor(definition.BaseXP * 0.35)) + (if entry.Perfect then 15 else 0)
+            local xp = if captured then definition.BaseXP else math.max(5, math.floor(definition.BaseXP * 0.35)) + (if entry.Perfect then 15 else 0)
             local fragments = 0
             if captured then
                 local record = {Uid = HttpService:GenerateGUID(false), CreatureId = id, Mutation = mutation.Name, Size = size.Name, IncomePerSec = income, CapturedAt = os.time(), FusionStage = 0}
                 assert(ctx.Sanctuary.AddCapture(player, record), "Reserved inventory capacity was lost")
                 table.insert(drops, record)
                 profile.TotalCaptures += 1
-                profile.PityBonus, profile.ComboStreak = 0, math.min(10, profile.ComboStreak + 1)
+                profile.PityBonus = 0
                 ctx.Rewards.OnProgress(player, "Captures", 1)
             else
-                profile.PityBonus, profile.ComboStreak = math.min(1, profile.PityBonus + 0.05), 0
+                profile.PityBonus = math.min(1, profile.PityBonus + 0.05)
                 fragments = ctx.Drops.AwardFailureFragments(player)
             end
             if entry.Perfect then ctx.Rewards.OnProgress(player, "Criticals", 1) end
@@ -2772,7 +2796,12 @@ local function finish(player: Player, entry: any)
     end
     ctx.Data.MarkDirty(player)
     local saved = ctx.Data.SaveNow(player)
-    if not saved then sessions[player] = nil; ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso."); return end
+    if not saved then
+        sessions[player] = nil
+        ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso.")
+        send(player, {State = "Cancelled", Id = entry.Id})
+        return
+    end
     ctx.Data.Unlock(player, entry.Owner)
     entry.State = "Revealing"
     for _, record in drops do
@@ -2792,15 +2821,15 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     local elapsed = now - entry.StartedAt
     if elapsed < 0.1 then send(player, {State = "Charging", Id = entry.Id, StartedAt = entry.StartedAt, Period = Rules.MeterPeriod}); return false end
-    if elapsed > Rules.ChargeTimeout or ctx.Data.IsBusy(player) then return false end
+    if elapsed > Rules.ChargeTimeout or ctx.Data.IsBusy(player) then Flight.Cancel(player, id); return false end
     local profile, root = ready(player)
     if not profile or not root or entry.Character ~= player.Character or not Math.AtLine(root.Position,Rules.LinePosition,Rules.LineWidth,Rules.LineDepth) then Flight.Cancel(player, id); return false end
     local valid, benefits = eligible(player, profile)
     if not valid then Flight.Cancel(player, id); return false end
     local owner = "Flight:" .. entry.Id
-    if not ctx.Data.TryLock(player, owner) then return false end
+    if not ctx.Data.TryLock(player, owner) then Flight.Cancel(player, id); return false end
     local orbId, orb = profile.EquippedOrb, Config.Orbs[profile.EquippedOrb]
-    local infinite = orb.IsPrismatic and benefits.EternalPrism
+    local infinite = isReusable(profile, orb, benefits)
     local capacity = Config.Constants.MaxInventoryCreatures - ctx.Data.GetInventoryCount(profile)
     local count = math.min(if benefits.TripleThrow then 3 else 1, capacity, if infinite then 3 else profile.Orbs[orbId])
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
@@ -2823,7 +2852,7 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
 end
 function Flight.AutoThrow(player: Player): boolean
     if not ctx.Monetization.GetBenefits(player).AutoThrow then return false end
-    if not Flight.Prepare(player) then return false end
+    if not Flight.Prepare(player, true) then return false end
     local entry = sessions[player]
     task.delay(0.2, function() if sessions[player] == entry then Flight.Launch(player, entry.Id, true) end end)
     return true
@@ -2871,15 +2900,39 @@ function World.Init(ctx: any)
         local p = Instance.new("Part")
         p.Name, p.Size, p.Position, p.Color = name, size, position, color
         p.Anchored, p.TopSurface = true, Enum.SurfaceType.Studs
-        if neon then p.Material = Enum.Material.Neon; p.CanCollide = false end
+        if neon then
+            p.Material = Enum.Material.Neon
+            p.CanCollide, p.CanTouch, p.CanQuery = false, false, false
+        end
         p.Parent = folder
         return p
     end
-    part("LaunchApron",Vector3.new(48,1,25),Rules.LinePosition+Vector3.new(0,-2.5,9),Color3.fromRGB(45,56,70))
-    local pad = part("YellowLaunchLine",Vector3.new(44,0.3,2),Rules.LinePosition+Vector3.new(0,-1.7,0),Color3.fromRGB(255,215,35),true)
-    ctx.World.Label(pad,"LINHA DE LANÇAMENTO\nPare a barra no centro verde",Vector3.new(0,6,0))
-    local barrier=part("PlayerBarrier",Vector3.new(54,80,3),Rules.LaunchOrigin+Vector3.new(0,36,-2),Color3.new(1,1,1))
-    barrier.Transparency,barrier.CanQuery=1,false
+    local charcoal = Color3.fromRGB(44, 56, 86)
+    local cream = Color3.fromRGB(255, 247, 202)
+    local yellow = Color3.fromRGB(255, 199, 52)
+    local line = Rules.LinePosition
+    local pad = part("YellowLaunchLine", Vector3.new(Rules.LineWidth, .4, Rules.LineDepth), line + Vector3.new(0, -1.75, 0), yellow)
+    pad.TopSurface = Enum.SurfaceType.Smooth
+    part("LaunchApron", Vector3.new(74, 1, 30), line + Vector3.new(0, -2.5, 12), charcoal)
+    for _, side in {-1, 1} do
+        part("StripeEdge", Vector3.new(Rules.LineWidth, .07, 1.1), pad.Position + Vector3.new(0, .22, side * (Rules.LineDepth / 2 - 1)), cream, true)
+        part("ArchFoot", Vector3.new(6, 1, 7), line + Vector3.new(side * 33, -1.25, -6), charcoal)
+        part("ArchTower", Vector3.new(4.5, 16, 4.5), line + Vector3.new(side * 33, 6, -6), Color3.fromRGB(252, 144, 64))
+        part("ArchLight", Vector3.new(1.5, 11, .55), line + Vector3.new(side * 33, 6, -3.4), cream, true)
+    end
+    local arch = part("LaunchArch", Vector3.new(70, 3.3, 4.5), line + Vector3.new(0, 14.5, -6), charcoal)
+    local sign = ctx.World.Label(arch, "PISTA DE ORBES", Vector3.new(0, .6, 2.5))
+    local archLabel = sign.Parent :: BillboardGui
+    archLabel.MaxDistance = 80
+    for _, x in {-20, 0, 20} do
+        for _, side in {-1, 1} do
+            local arrow = part("LaunchChevron", Vector3.new(.65, .06, 4), pad.Position + Vector3.new(x + side * 1.25, .24, 4), charcoal, true)
+            arrow.Material = Enum.Material.SmoothPlastic
+            arrow.CFrame *= CFrame.Angles(0, math.rad(side * 48), 0)
+        end
+    end
+    local barrier = part("PlayerBarrier", Vector3.new(68, 80, 3), Rules.LaunchOrigin + Vector3.new(0, 36, -2), Color3.new(1, 1, 1))
+    barrier.Transparency, barrier.CanQuery = 1, false
     -- Physical barrier plus server correction: the track is reserved for the orb.
     if not ctx.DisableLoops then task.spawn(function()
         while folder.Parent do
@@ -2888,7 +2941,7 @@ function World.Init(ctx: any)
                 local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
                 if root and root:IsA("BasePart") then
                     local p=root.Position
-                    if math.abs(p.X)<30 and p.Z<Rules.LaunchOrigin.Z-1 and p.Z>Rules.LaunchOrigin.Z-Rules.MaxDistance-30 then
+                    if p.Y >= -7 and math.abs(p.X)<36 and p.Z<Rules.LaunchOrigin.Z-1 and p.Z>Rules.LaunchOrigin.Z-Rules.MaxDistance-30 then
                         player.Character:PivotTo(CFrame.lookAt(Rules.LinePosition+Vector3.new(0,2,3),Rules.LinePosition+Vector3.new(0,2,-20)))
                         root.AssemblyLinearVelocity=Vector3.zero
                     end
@@ -2899,25 +2952,61 @@ function World.Init(ctx: any)
     for index, id in Layout.BiomeOrder do
         local palette = Layout.Biomes[id].Colors
         local origin = Rules.LaunchOrigin + Rules.Direction * ((index - 1) * Rules.ZoneLength)
+        local colors = {
+            Color3.fromRGB(118, 234, 142), Color3.fromRGB(95, 248, 215),
+            Color3.fromRGB(255, 150, 64), Color3.fromRGB(159, 229, 255),
+            Color3.fromRGB(255, 213, 108), Color3.fromRGB(194, 135, 255),
+        }
+        local accent = colors[index]
+        local floorColor = palette[2]:Lerp(charcoal, .62)
         for segment = 0, 11 do
-            for side = -1, 1, 2 do
-                local position = origin + Vector3.new(side * 12, -2.5, -segment * 25 - 12.5)
-                part("Runway_" .. id, Vector3.new(24, 1, 25), position, palette[(segment + (if side == 1 then 1 else 0)) % 2 + 1])
-            end
+            local center = origin + Vector3.new(0, -2.5, -segment * 25 - 12.5)
+            local tile = part("Runway_" .. id, Vector3.new(66, 1, 25), center, floorColor:Lerp(charcoal, (segment % 2) * .22))
+            tile.TopSurface = Enum.SurfaceType.Smooth
+            part("CenterDash", Vector3.new(.8, .05, 11), center + Vector3.new(0, .52, 0), accent, true)
         end
         for _, side in {-1, 1} do
-            part("Wall_" .. id, Vector3.new(4, 10, 300), origin + Vector3.new(side * 27, 2, -150), palette[2])
-            part("Rail_" .. id, Vector3.new(1, 0.5, 300), origin + Vector3.new(side * 27, 7.5, -150), palette[1]:Lerp(Color3.new(1,1,1), 0.5), true)
+            local wall = part("TunnelWall_" .. id, Vector3.new(3, 16, Rules.ZoneLength),
+                origin + Vector3.new(side * 34, 5.5, -Rules.ZoneLength / 2), floorColor)
+            wall.Material, wall.TopSurface = Enum.Material.SmoothPlastic, Enum.SurfaceType.Smooth
+            part("WallInset", Vector3.new(.2, .55, Rules.ZoneLength),
+                origin + Vector3.new(side * 32.45, 1.2, -Rules.ZoneLength / 2), accent, true)
+            part("WallCap", Vector3.new(3.5, .6, Rules.ZoneLength),
+                origin + Vector3.new(side * 34, 13.7, -Rules.ZoneLength / 2), accent)
+            for segment = 1, 6 do
+                part("WallPillar", Vector3.new(1.7, 15.8, 1.5),
+                    origin + Vector3.new(side * 33, 5.55, -segment * Rules.ZoneLength / 6 + 1), charcoal)
+            end
             for n = 1, 5 do
-                local pillar = part("Landmark_" .. id, Vector3.new(5, 8 + index * 2, 5), origin + Vector3.new(side * 34, 3 + index, -n * 50), palette[1], index > 1)
-                if index == 1 then part("TreeCrown", Vector3.new(13, 10, 13), pillar.Position + Vector3.new(0, 8, 0), Color3.fromRGB(60,175,55))
-                else pillar.CFrame *= CFrame.Angles(0, 0, side * 0.2) end
+                local position = origin + Vector3.new(side * (40 + n % 2 * 3), 1, -n * 47)
+                local base = part("SceneryBase", Vector3.new(11, 6, 15), position - Vector3.new(0, 3, 0), palette[2])
+                base.CanCollide = false
+                if index == 1 then
+                    part("TreeTrunk", Vector3.new(2.4, 8, 2.4), position + Vector3.new(0, 3, 0), Color3.fromRGB(147, 95, 68), true).Material = Enum.Material.SmoothPlastic
+                    local crown = part("TreeCrown", Vector3.new(11, 9, 11), position + Vector3.new(0, 9, 0), accent, true)
+                    crown.Shape, crown.Material = Enum.PartType.Ball, Enum.Material.SmoothPlastic
+                elseif index == 5 then
+                    for step = 1, 3 do
+                        local size = 11 - step * 2
+                        part("RuinStep", Vector3.new(size, 2, size), position + Vector3.new(0, step * 2 - 1, 0), palette[1], true).Material = Enum.Material.Sandstone
+                    end
+                else
+                    local shard = part("Crystal", Vector3.new(4, 9 + n % 3 * 3, 4), position + Vector3.new(0, 4, 0), accent, true)
+                    shard.CFrame *= CFrame.Angles(math.rad(n * 11), math.rad(n * 32), side * .32)
+                    part("CrystalGlow", Vector3.new(2, 6, 2), position + Vector3.new(side * 4, 2.8, -4), accent, true).Shape = Enum.PartType.Ball
+                end
             end
         end
-        local banner = part("Gate_" .. id, Vector3.new(52, 2, 2), origin + Vector3.new(0, 16, -3), palette[1], true)
-        ctx.World.Label(banner, Config.Biomes[id].Name .. "\n" .. ((index - 1) * 300) .. " STUDS", Vector3.new(0, 3, 0))
-        local gateLabel=banner:FindFirstChild("Label")
-        if gateLabel and gateLabel:IsA("BillboardGui") then gateLabel.MaxDistance=140 end
+        if index > 1 then
+            local gate = part("Gate_" .. id, Vector3.new(72, 2.6, 3), origin + Vector3.new(0, 13, -8), floorColor, true)
+            gate.Material = Enum.Material.SmoothPlastic
+            for _, side in {-1, 1} do
+                part("GatePost", Vector3.new(3, 14, 3), origin + Vector3.new(34 * side, 5, -8), accent, true)
+            end
+            local caption = ctx.World.Label(gate, Config.Biomes[id].Name, Vector3.new(0, 1.2, 0))
+            local gateLabel = caption.Parent :: BillboardGui
+            gateLabel.MaxDistance = 95
+        end
         task.wait()
     end
 end
@@ -3508,7 +3597,7 @@ function ProgressionService.Rebirth(player: Player): (boolean, string)
         profile.Rebirths += 1
         profile.Gems += Rules.RebirthGems
         profile.Level, profile.XP, profile.Coins = 1, 0, Rules.RebirthStartingCoins
-        profile.PityBonus, profile.ComboStreak = 0, 0
+        profile.PityBonus = 0
         profile.UnlockedBiomes = {PradariaSolar = true}
         local capacity = sanctuaryService.GetSlotCapacity(profile, benefits(player))
         while #profile.SanctuarySlots > capacity do table.remove(profile.SanctuarySlots) end
@@ -3533,39 +3622,46 @@ function ProgressionService.BuySlot(player: Player): (boolean, string)
     end)
 end
 
+function ProgressionService.EvolveOrb(player: Player, expectedTier: any): (boolean, string)
+    if type(expectedTier) ~= "number" or not allowed(player, "EvolveOrb", 0.4) then
+        return false, "Aguarde para evoluir a orbe."
+    end
+    return commit(player, "EvolveOrb", function(profile)
+        if not profile or expectedTier ~= profile.OrbTier + 1 then return false, "Confira a próxima evolução." end
+        for id, orb in Config.Orbs do
+            if orb.Tier == expectedTier then
+                local price, fragments = GameplayMath.GetOrbEvolutionPrice(orb.Price, profile.OrbFragments or 0)
+                if profile.Coins < price then return false, "Moedas insuficientes para evoluir." end
+                profile.Coins -= price
+                profile.OrbFragments = (profile.OrbFragments or 0) - fragments
+                profile.OrbTier, profile.EquippedOrb = expectedTier, id
+                return true, orb.Name .. " evoluída e equipada!"
+            end
+        end
+        return false, "Sua orbe já chegou à última evolução."
+    end)
+end
+
 function ProgressionService.Init(service: any, sanctuary: any, remoteFolder: any, ctx: any?)
     dataService, sanctuaryService, remotes, context = service, sanctuary, remoteFolder, ctx
-    local buyRemote = remotes:WaitForChild("BuyOrb") :: RemoteEvent
     local equipRemote = remotes:WaitForChild("EquipOrb") :: RemoteEvent
     local trainRemote = remotes:WaitForChild("TrainThrowPower") :: RemoteEvent
-    buyRemote.OnServerEvent:Connect(function(player: Player, id: any, quantity: any)
-        if typeof(id) ~= "string" or typeof(quantity) ~= "number" or quantity ~= quantity or quantity % 1 ~= 0 or quantity < 1 or quantity > 100 then return end
-        if not allowed(player, "BuyOrb", 0.25) then return end
-        local profile, orb = dataService.Get(player), Config.Orbs[id]
-        if not profile or not orb or orb.IsMaster or orb.Price <= 0 then feedback(player, "Esta orbe não está disponível por moedas."); return end
-        local price = orb.Price * quantity
-        if profile.Coins < price then feedback(player, "Moedas insuficientes. Capture criaturas ou treine para ganhar moedas."); return end
-        profile.Coins -= price
-        profile.Orbs[id] = (profile.Orbs[id] or 0) + quantity
-        dataService.MarkDirty(player)
-        dataService.Sync(player)
-        feedback(player, string.format("Comprou %dx %s!", quantity, orb.Name), "Success")
-    end)
     equipRemote.OnServerEvent:Connect(function(player: Player, id: any)
         if typeof(id) ~= "string" or not allowed(player, "EquipOrb", 0.2) then return end
         local profile = dataService.Get(player)
         local orb = Config.Orbs[id]
         local infinite = orb and orb.IsPrismatic and benefits(player).EternalPrism == true
-        if not profile or not orb or ((profile.Orbs[id] or 0) < 1 and not infinite) then feedback(player, "Você precisa ter essa orbe no inventário."); return end
+        local evolved = profile and orb and orb.Tier and orb.Tier <= (profile.OrbTier or 0)
+        if not profile or not orb or ((profile.Orbs[id] or 0) < 1 and not infinite and not evolved) then feedback(player, "Você precisa ter essa orbe no inventário."); return end
         profile.EquippedOrb = id
         dataService.MarkDirty(player)
         dataService.Sync(player)
     end)
     trainRemote.OnServerEvent:Connect(function(player: Player) ProgressionService.Train(player) end)
-    for name, action in {RebirthRequest = ProgressionService.Rebirth, BuySanctuarySlot = ProgressionService.BuySlot} do
+    for name, action in {RebirthRequest = ProgressionService.Rebirth, BuySanctuarySlot = ProgressionService.BuySlot, EvolveOrb = ProgressionService.EvolveOrb} do
         local remote = remotes:FindFirstChild(name)
-        if remote then remote.OnServerEvent:Connect(function(player: Player)
-            local success, message = action(player)
+        if remote then remote.OnServerEvent:Connect(function(player: Player, argument: any)
+            local success, message = action(player, argument)
             feedback(player, message, if success then "Success" else "Error")
         end) end
     end
@@ -3950,7 +4046,7 @@ function SanctuaryService.GetSlotCapacity(profile: any, playerBenefits: any?): n
 	return Config.Constants.BaseSanctuarySlots + (if profile.Level >= 5 then 1 else 0) + (if profile.Level >= 15 then 1 else 0)
 end
 
-function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?): number
+function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?, shares: {[string]: number}?): number
 	local records: { [string]: any } = {}
 	for _, record in ipairs(profile.CapturedCreatures) do
 		records[record.Uid] = record
@@ -3982,14 +4078,18 @@ function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?
 	for _, record in ipairs(equipped) do
 		local count = elementCounts[Config.Creatures[record.CreatureId].Element]
 		local groupBonus = if count >= 6 then 1.6 elseif count >= 3 then 1.25 else 1
-		income += record.IncomePerSec * groupBonus
+		local share = record.IncomePerSec * groupBonus
+		income += share
+		if shares then shares[record.Uid] = share * (if starterTrio then 1.4 else 1) end
 	end
 	return income * (if starterTrio then 1.4 else 1)
 end
 
-function SanctuaryService.CalculateIncome(profile: any, playerBenefits: any?, now: number?): number
+function SanctuaryService.CalculateIncome(profile: any, playerBenefits: any?, now: number?, shares: {[string]: number}?): number
 	local multiplier = if GameplayMath.GetIncomeMultiplier then GameplayMath.GetIncomeMultiplier(profile, playerBenefits or {}, now or os.time()) else 1 + profile.Rebirths
-	return SanctuaryService.CalculateBaseIncome(profile, playerBenefits) * multiplier
+	local income = SanctuaryService.CalculateBaseIncome(profile, playerBenefits, shares) * multiplier
+	if shares then for uid, share in shares do shares[uid] = share * multiplier end end
+	return income
 end
 
 function SanctuaryService.Refresh(player: Player)
@@ -4091,7 +4191,9 @@ function SanctuaryService.Init(service: any, world: any, ctx: any?)
 			for _, player in ipairs(Players:GetPlayers()) do
 				local profile = dataService.Get(player)
 				if profile and (not (service.IsBusy and service.IsBusy(player)) or (player.GetAttribute and player:GetAttribute("FlightInProgress") == true)) then
-					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, benefits(player))
+					local shares = if worldService.UpdateSanctuaryIncome then {} else nil
+					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, benefits(player), nil, shares)
+					if shares then worldService.UpdateSanctuaryIncome(player, shares) end
 					if service.AddCoins then service.AddCoins(player, profile.IncomePerSec) else profile.Coins += profile.IncomePerSec end
 					dataService.Sync(player)
 				end
@@ -4823,13 +4925,22 @@ local Training={}
 local ctx:any
 local sessions:{[Player]:any}={}
 local requests:{[Player]:number}={}
+local upgradeRequests: {[Player]: number} = {}
+
+local function machine(profile: any): any
+    return Rules.Machines[profile.TrainingMachine or 1]
+end
+local function gain(player: Player, profile: any): number
+    return Math.Gain(profile.TrainingLevel, ctx.Monetization.GetBenefits(player).TitanArms == true, Rules, machine(profile))
+end
 function Training.IsTraining(player:Player):boolean return sessions[player]~=nil end
 local function snapshot(player:Player):any
     local p=ctx.Data.Get(player)
     if not p then return {} end
     local s=sessions[player]
     return {Active=s~=nil,Level=p.TrainingLevel,XP=p.TrainingXP,RequiredXP=Math.RequiredXP(p.TrainingLevel,Rules),
-        Gain=Math.Gain(p.TrainingLevel,ctx.Monetization.GetBenefits(player).TitanArms==true,Rules),Reps=if s then s.Reps else 0,Interval=Rules.RepSeconds}
+        Gain=gain(player, p), Reps=if s then s.Reps else 0, Interval=Rules.RepSeconds, NextRepAt=if s then s.NextAt else nil,
+        MachineTier=p.TrainingMachine or 1, MachineName=machine(p).Name, XPPerRep=machine(p).XP}
 end
 local function send(player:Player,state:string,extra:any?)
     local data=snapshot(player)
@@ -4888,13 +4999,13 @@ function Training.Tick()
         if now>=s.NextAt then
             -- Never catch up a paused server with a large burst of rewards.
             s.NextAt=now+Rules.RepSeconds;s.Reps+=1
-            local gain=Math.Gain(p.TrainingLevel,ctx.Monetization.GetBenefits(player).TitanArms==true,Rules)
-            award(player,gain,Rules.XPPerRep)
-            send(player,"Rep",{GainAwarded=gain})
+            local strength, xp = gain(player, p), machine(p).XP
+            award(player, strength, xp)
+            send(player, "Rep", {GainAwarded = strength})
             if s.Reps%Rules.QTEEvery==0 then
                 local locations={{.23,.3},{.73,.45},{.29,.64},{.71,.27}}
                 local point=locations[(math.floor(s.Reps/Rules.QTEEvery)-1)%#locations+1]
-                s.QTE={Id=Http:GenerateGUID(false),ExpiresAt=now+Rules.QTESeconds,Gain=gain}
+                s.QTE={Id=Http:GenerateGUID(false),ExpiresAt=now+Rules.QTESeconds,Gain=strength,XP=xp}
                 send(player,"QTE",{Id=s.QTE.Id,ExpiresAt=s.QTE.ExpiresAt,X=point[1],Y=point[2]})
             end
         end
@@ -4905,22 +5016,56 @@ function Training.HitQTE(player:Player,id:any):boolean
     local s=sessions[player]
     local now=Workspace:GetServerTimeNow()
     if not s or player.Character~=s.Character or not s.QTE or s.QTE.Id~=id or now>s.QTE.ExpiresAt or not s.Root.Parent or (s.Root.Position-s.Anchor.Position).Magnitude>10 or s.Humanoid.Health<=0 then return false end
-    local gain=s.QTE.Gain
+    local strength, xp = s.QTE.Gain, s.QTE.XP
     s.QTE=nil -- Consume before any callback: one bonus per three repetitions.
-    award(player,gain,Rules.XPPerRep)
-    send(player,"Perfect",{GainAwarded=gain})
+    award(player, strength, xp)
+    send(player, "Perfect", {GainAwarded = strength})
     return true
 end
+function Training.Upgrade(player: Player, expectedTier: any): (boolean, string)
+    local now = Workspace:GetServerTimeNow()
+    if type(expectedTier) ~= "number" or now < (upgradeRequests[player] or 0) or ctx.Data.IsBusy(player)
+        or (ctx.Flight and ctx.Flight.IsActive(player)) or sessions[player] then
+        return false, "Pare o treino e conclua sua ação antes de evoluir."
+    end
+    upgradeRequests[player] = now + 0.4
+    local profile = ctx.Data.Get(player)
+    if not profile or not ctx.World.GetSanctuary(player) then return false, "Santuário indisponível." end
+    local target = Rules.Machines[(profile.TrainingMachine or 1) + 1]
+    if not target or expectedTier ~= (profile.TrainingMachine or 1) + 1 then return false, "Confira a próxima máquina." end
+    if profile.TrainingLevel < target.Level then return false, "Alcance o nível " .. target.Level .. " na academia." end
+    if profile.Coins < target.Cost then return false, "Moedas insuficientes para evoluir a máquina." end
+    local lock = "TrainingMachine"
+    if not ctx.Data.TryLock(player, lock) then return false, "Aguarde a ação atual." end
+    profile.Coins -= target.Cost
+    profile.TrainingMachine = expectedTier
+    ctx.Data.MarkDirty(player)
+    local saved = ctx.Data.SaveNow(player)
+    ctx.Data.Unlock(player, lock)
+    if not saved then
+        ctx.Data.Freeze(player, "Salvamento da máquina indisponível.")
+        return false, "Não foi possível salvar sua evolução."
+    end
+    ctx.World.UpdateTrainingMachine(player, expectedTier, target.Name)
+    ctx.Data.Sync(player)
+    return true, target.Name .. " liberada!"
+end
+
 function Training.Init(context:any)
     ctx=context
     ctx.Remotes.StartTraining.OnServerEvent:Connect(function(player) Training.Start(player,true) end)
     ctx.Remotes.StopTraining.OnServerEvent:Connect(Training.Stop)
     ctx.Remotes.TrainingQTE.OnServerEvent:Connect(Training.HitQTE)
+    local upgrade = ctx.Remotes.UpgradeTrainingMachine
+    if upgrade then upgrade.OnServerEvent:Connect(function(player, tier)
+        local success, message = Training.Upgrade(player, tier)
+        ctx.Remotes.ActionFeedback:FireClient(player, {Message = message, Kind = if success then "Success" else "Error"})
+    end) end
     ctx.Data.AddSnapshotProvider(function(player)return {Training=snapshot(player)}end)
     local function bind(player:Player)player.CharacterRemoving:Connect(function()Training.Stop(player)end)end
     Players.PlayerAdded:Connect(bind)
     for _,player in Players:GetPlayers() do bind(player) end
-    Players.PlayerRemoving:Connect(function(player)Training.Stop(player);requests[player]=nil end)
+    Players.PlayerRemoving:Connect(function(player)Training.Stop(player);requests[player]=nil;upgradeRequests[player]=nil end)
     if not ctx.DisableLoops then task.spawn(function()while true do task.wait(.1);Training.Tick()end end)end
 end
 return Training
@@ -5030,11 +5175,15 @@ return Weather
           <string name="Name">WorldService</string>
           <string name="Source"><![CDATA[--!strict
 -- Disposable blockout. Replace the generated models with the art from steps 3/4.
+local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 local NumberFormatter = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("NumberFormatter"))
 local Layout = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
+
+local TrainingRules = require(ReplicatedStorage.Shared.ConfigTraining)
 
 local WorldService = {}
 local worldFolder: Folder? = nil
@@ -5042,6 +5191,9 @@ local lots: {Model} = {}
 local owners: {[Player]: number} = {}
 local displaySignatures: {[Player]: string} = {}
 local ctx: any
+
+type SafeArea = {Center: Vector3, Size: Vector3, ReturnAt: Vector3}
+local safeAreas: {SafeArea} = {}
 
 local function part(parent: Instance, name: string, size: Vector3, position: Vector3, color: Color3): Part
 	local item = Instance.new("Part")
@@ -5054,6 +5206,63 @@ local function part(parent: Instance, name: string, size: Vector3, position: Vec
 	item.BottomSurface = Enum.SurfaceType.Smooth
 	item.Parent = parent
 	return item
+end
+
+local function protectArea(parent: Instance, center: Vector3, size: Vector3, returnAt: Vector3)
+    table.insert(safeAreas, {Center = center, Size = size, ReturnAt = returnAt})
+    local guards = Instance.new("Folder")
+    guards.Name, guards.Parent = "EdgeGuards", parent
+    local trim = Color3.fromRGB(189, 221, 156)
+    local tall = 24
+    for _, side in {-1, 1} do
+        local x = center.X + side * (size.X / 2 - .65)
+        local z = center.Z + side * (size.Z / 2 - .65)
+        for _, edge in {
+            {Position = Vector3.new(x, 0, center.Z), Size = Vector3.new(1.3, tall, size.Z)},
+            {Position = Vector3.new(center.X, 0, z), Size = Vector3.new(size.X, tall, 1.3)},
+        } do
+            local guard = part(guards, "BoundaryWall", edge.Size, edge.Position + Vector3.new(0, tall / 2, 0), trim)
+            guard.Transparency, guard.CanQuery, guard.CanTouch, guard.CastShadow = 1, false, false, false
+            local curb = part(guards, "BoundaryTrim", Vector3.new(edge.Size.X, 1.15, edge.Size.Z), edge.Position + Vector3.new(0, .55, 0), trim)
+            curb.CanCollide, curb.CanTouch, curb.CanQuery = false, false, false
+            curb.TopSurface = Enum.SurfaceType.Smooth
+        end
+    end
+end
+
+local function startFallProtection()
+    local returnPoints: {[Player]: {Character: Model, Point: Vector3}} = {}
+    Players.PlayerRemoving:Connect(function(player) returnPoints[player] = nil end)
+    task.spawn(function()
+        while worldFolder and worldFolder.Parent do
+            task.wait(.12)
+            for _, player in Players:GetPlayers() do
+                local character = player.Character
+                local root = character and character:FindFirstChild("HumanoidRootPart")
+                local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+                if not character or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then continue end
+                local position = root.Position
+                if position.Y < -7 then
+                    local saved = returnPoints[player]
+                    local destination = if saved and saved.Character == character then saved.Point else WorldService.GetHubPosition()
+                    character:PivotTo(CFrame.new(destination))
+                    root.AssemblyLinearVelocity = Vector3.zero
+                    root.AssemblyAngularVelocity = Vector3.zero
+                elseif position.Y < 12 then
+                    for _, area in safeAreas do
+                        if math.abs(position.X - area.Center.X) < area.Size.X / 2 - 2
+                            and math.abs(position.Z - area.Center.Z) < area.Size.Z / 2 - 2 then
+                            local saved = returnPoints[player]
+                            if not saved or saved.Character ~= character or saved.Point ~= area.ReturnAt then
+                                returnPoints[player] = {Character = character, Point = area.ReturnAt}
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end)
 end
 
 local function label(parent: BasePart, text: string, offset: Vector3): TextLabel
@@ -5102,9 +5311,10 @@ function WorldService.Init(context: any?)
 	folder:SetAttribute("GeneratedBlockout", true)
 	folder.Parent = Workspace
 	worldFolder = folder
-	part(folder, "Foundation", Vector3.new(260, 1, 260), Vector3.new(0, -0.6, 0), Color3.fromRGB(63, 192, 34))
-	for x = -6, 5 do
-		for z = -6, 5 do
+	local hubFloor = part(folder, "Foundation", Vector3.new(290, 1, 330), Vector3.new(0, -0.6, 20), Color3.fromRGB(63, 192, 34))
+	protectArea(folder, hubFloor.Position, hubFloor.Size, Layout.HubPosition + Vector3.new(0, 4, 0))
+	for x = -7, 6 do
+		for z = -5, 7 do
 			local color = if (x + z) % 2 == 0 then Color3.fromRGB(76, 217, 43) else Color3.fromRGB(63, 192, 34)
 			part(folder, "GrassTile", Vector3.new(16, 0.2, 16), Vector3.new(x * 16 + 8, 0, z * 16 + 8), color)
 		end
@@ -5118,46 +5328,58 @@ function WorldService.Init(context: any?)
 	spawn.Position = Vector3.new(0, 0.4, 20)
 	spawn.Color = Color3.fromRGB(125, 211, 252)
 	spawn.Parent = folder
-	label(spawn, "PRADARIA SOLAR\nPrepare o lançamento e pare a barra de força", Vector3.new(0, 5, 0))
+	label(spawn, "PRADARIA SOLAR", Vector3.new(0, 5, 0))
 
-	local lotPositions = {
-		Vector3.new(-68, 0, -55), Vector3.new(-74, 0, -17), Vector3.new(-64, 0, 30),
-		Vector3.new(64, 0, 30), Vector3.new(74, 0, -17), Vector3.new(68, 0, -55),
-	}
-	for index, position in ipairs(lotPositions) do
+	for index = 1, Layout.PlayerCapacity do
+		local side = if index % 2 == 1 then -1 else 1
+		local position = Vector3.new(side * 91, 0, -68 + math.floor((index - 1) / 2) * 52)
 		local lot = Instance.new("Model")
 		lot.Name = "Sanctuary_" .. index
 		lot:SetAttribute("OwnerUserId", 0)
 		lot.Parent = folder
-		local platform = part(lot, "Platform", Vector3.new(30, 0.6, 30), position + Vector3.new(0, 0.4, 0), Color3.fromRGB(65, 86, 113))
+		local platform = part(lot, "Platform", Vector3.new(44, 0.8, 49), position + Vector3.new(0, 0.35, 0), Color3.fromRGB(93, 189, 101))
 		lot.PrimaryPart = platform
-		local sign = part(lot, "Sign", Vector3.new(12, 3, 0.5), position + Vector3.new(0, 4, 11), Color3.fromRGB(25, 37, 62))
+		local sign = part(lot, "Sign", Vector3.new(12, 3, 0.5), position + Vector3.new(9, 2.4, 22), Color3.fromRGB(25, 37, 62))
+		sign.CanCollide = false
 		label(sign, "SANTUÁRIO LIVRE", Vector3.new(0, 2, 0))
 		local display = Instance.new("Folder")
 		display.Name = "Creatures"
 		display.Parent = lot
-		for slot = 1, 24 do
-			local column = (slot - 1) % 6
-			local row = math.floor((slot - 1) / 6)
-			local pedestal = part(lot, "Slot_" .. slot, Vector3.new(4.1, 0.6, 4.5), position + Vector3.new((column - 2.5) * 4.8, 1, row * 5.5 - 8), Color3.fromRGB(148, 163, 184))
-			pedestal:SetAttribute("SlotIndex", slot)
-			pedestal.Transparency = if slot <= 6 then 0 else 0.7
+		local pen = Instance.new("Model")
+		pen.Name, pen.Parent = "CreaturePen", lot
+		local wool = Color3.fromRGB(255, 231, 177)
+		local wood = Color3.fromRGB(159, 104, 66)
+		local grass = part(pen, "Grass", Vector3.new(39, 0.3, 31), position + Vector3.new(0, 0.85, 5), Color3.fromRGB(125, 210, 104))
+		grass.TopSurface = Enum.SurfaceType.Smooth
+		for _, direction in {-1, 1} do
+			for _, y in {1.7, 3.2} do
+				part(pen, "SideRail", Vector3.new(.55, .65, 31), position + Vector3.new(direction * 19.5, y, 5), wool)
+			end
+			for _, z in {-10.5, 0, 10, 20.5} do
+				part(pen, "FencePost", Vector3.new(1.1, 3.6, 1.1), position + Vector3.new(direction * 19.5, 2.5, z), wood)
+			end
+		end
+		for _, y in {1.7, 3.2} do
+			part(pen, "BackRail", Vector3.new(39, .65, .55), position + Vector3.new(0, y, -10.5), wool)
+			for _, sideOfGate in {-1, 1} do
+				part(pen, "FrontRail", Vector3.new(16, .65, .55), position + Vector3.new(sideOfGate * 11.5, y, 20.5), wool)
+			end
 		end
 		table.insert(lots, lot)
-		station(lot, "PersonalTraining", position + Vector3.new(0, 1, -14), Color3.fromRGB(255,158,65), "TREINO PESSOAL", function(player)
-			if ctx and ctx.Training then ctx.Training.Start(player,false)
+		station(lot, "PersonalTraining", position + Vector3.new(0, 1, -18), Color3.fromRGB(255,158,65), "ACADEMIA", function(player)
+			if ctx and ctx.Training and WorldService.GetSanctuary(player) == lot then ctx.Remotes.OpenPanel:FireClient(player, "Academia")
 			elseif ctx and ctx.Progression and WorldService.IsAtSanctuary(player) then ctx.Progression.Train(player) end
 		end)
 		-- Functional gym blockout. The user will replace these parts with final equipment.
 		for _,side in {-1,1} do
-			local post=part(lot,"GymPost",Vector3.new(.5,6,.5),position+Vector3.new(side*3,4,-14),Color3.fromRGB(90,110,140))
+			local post=part(lot,"GymPost",Vector3.new(.5,6,.5),position+Vector3.new(side*3,4,-18),Color3.fromRGB(90,110,140))
 			post.CanCollide=false
 		end
-		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-14),Color3.fromRGB(255,200,70))
+		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-18),Color3.fromRGB(255,200,70))
 		bar.CanCollide=false
 	end
-	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 114), Color3.fromRGB(27, 40, 72))
-	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nCompre orbes e treine no painel", Vector3.new(0, 1, 0))
+	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 173), Color3.fromRGB(27, 40, 72))
+	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nEvolua sua orbe e treine na academia", Vector3.new(0, 1, 0))
 	for index, id in Layout.BiomeOrder do
 		local center, colors = Layout.Biomes[id].Position, Layout.Biomes[id].Colors
 		local zone = Instance.new("Folder")
@@ -5166,9 +5388,10 @@ function WorldService.Init(context: any?)
 			for x = -4, 3 do for z = -4, 3 do
 				part(zone, "Tile", Vector3.new(25, 1, 25), center + Vector3.new(x * 25 + 12.5, -0.5, z * 25 + 12.5), colors[(x + z) % 2 + 1])
 			end end
+			protectArea(zone, center, Vector3.new(Layout.ZoneSize, 1, Layout.ZoneSize), center + Vector3.new(0, 4, 35))
 		end
 		local destination = id
-		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 80), colors[2], Config.Biomes[id].Name .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
+		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
 			if not ctx or not ctx.Biomes then return end
 			if ctx.Biomes.CanAccess(player, destination) or ctx.Biomes.Unlock(player, destination) then ctx.Biomes.Travel(player, destination) end
 		end)
@@ -5177,18 +5400,20 @@ function WorldService.Init(context: any?)
 	end
 	for _, info in {{"Orbes", -75}, {"Fusao", -45}, {"Diario", -15}, {"Rebirth", 15}, {"Loja", 45}, {"Bestiario", 75}} do
 		local panelId = info[1] :: string
-		station(folder, "Station_" .. panelId, Vector3.new(info[2] :: number, 0.8, 105), Color3.fromRGB(175,119,255), string.upper(panelId), function(player)
+		station(folder, "Station_" .. panelId, Vector3.new(info[2] :: number, 0.8, 148), Color3.fromRGB(175,119,255), string.upper(panelId), function(player)
 			local remote = ctx and ctx.Remotes:FindFirstChild("OpenPanel")
 			if remote then remote:FireClient(player, panelId) end
 		end)
 	end
-	station(folder, "TradingPortal", Vector3.new(-100, 0.8, 65), Color3.fromRGB(74,193,255), "PRAÇA DE TROCAS\nNÍVEL 15", function(player) if ctx and ctx.Biomes then ctx.Biomes.Travel(player, "TradingPlaza") end end)
-	part(folder, "TradingFloor", Vector3.new(85, 1, 85), Layout.TradingPosition + Vector3.new(0, -0.5, 0), Color3.fromRGB(43,117,154))
+	station(folder, "TradingPortal", Vector3.new(-134, 0.8, 122), Color3.fromRGB(74,193,255), "PRAÇA DE TROCAS\nNÍVEL 15", function(player) if ctx and ctx.Biomes then ctx.Biomes.Travel(player, "TradingPlaza") end end)
+	local tradingFloor = part(folder, "TradingFloor", Vector3.new(85, 1, 85), Layout.TradingPosition + Vector3.new(0, -0.5, 0), Color3.fromRGB(43,117,154))
+	protectArea(tradingFloor, tradingFloor.Position, tradingFloor.Size, Layout.TradingPosition + Vector3.new(0, 4, 13))
 	station(folder, "TradingDesk", Layout.TradingPosition, Color3.fromRGB(255,212,63), "TROCAS E LEILÕES", function(player)
 		local remote = ctx and ctx.Remotes:FindFirstChild("OpenPanel")
 		if remote then remote:FireClient(player, "Trocas") end
 	end)
 	station(folder, "TradingReturn", Layout.TradingPosition + Vector3.new(0, 0.8, 30), Color3.fromRGB(74,193,255), "VOLTAR AO HUB", function(player) if ctx and ctx.Biomes then ctx.Biomes.Travel(player, "Hub") end end)
+	if not ctx or not ctx.DisableLoops then startFallProtection() end
 end
 
 function WorldService.GetSanctuary(player: Player): Model? return if owners[player] then lots[owners[player]] else nil end
@@ -5252,8 +5477,44 @@ function WorldService.ReleaseSanctuary(player: Player)
 	local billboard = sign and sign:FindFirstChild("Label")
 	local textLabel = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
 	if textLabel then textLabel.Text = "SANTUÁRIO LIVRE" end
+	WorldService.UpdateTrainingMachine(player, 1, TrainingRules.Machines[1].Name)
 	owners[player] = nil
 	displaySignatures[player] = nil
+end
+
+local machineColors = {
+    Color3.fromRGB(255, 193, 85), Color3.fromRGB(255, 121, 82), Color3.fromRGB(89, 204, 235),
+    Color3.fromRGB(161, 106, 255), Color3.fromRGB(240, 114, 224),
+}
+
+function WorldService.UpdateTrainingMachine(player: Player, tier: number, name: string)
+    local lot = WorldService.GetSanctuary(player)
+    if not lot then return end
+    local bar = lot:FindFirstChild("GymBar")
+    if bar and bar:IsA("BasePart") then
+        bar.Color = machineColors[tier]
+        bar.Material = if tier >= 4 then Enum.Material.Neon else Enum.Material.SmoothPlastic
+    end
+    local anchor = lot:FindFirstChild("PersonalTraining")
+    local billboard = anchor and anchor:FindFirstChild("Label")
+    local caption = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
+    if caption then caption.Text = name .. " • Nv. " .. tier end
+end
+
+function WorldService.UpdateSanctuaryIncome(player: Player, shares: {[string]: number})
+    local lot = WorldService.GetSanctuary(player)
+    local display = lot and lot:FindFirstChild("Creatures")
+    if not display then return end
+    for _, model in display:GetChildren() do
+        local uid = model:GetAttribute("CaptureUID")
+        local head = model:FindFirstChild("Head")
+        local billboard = head and head:FindFirstChild("Label")
+        local caption = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
+        if uid and caption then
+            local value = "+$" .. NumberFormatter.Format(shares[uid] or 0) .. "/s"
+            if caption.Text ~= value then caption.Text = value end
+        end
+    end
 end
 
 function WorldService.UpdateSanctuary(player: Player, profile: any)
@@ -5268,10 +5529,8 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 	if textLabel then
 		textLabel.Text = string.format("%s\n$%s/s • %d/%d slots", player.DisplayName, NumberFormatter.Format(profile.IncomePerSec or 0), #profile.SanctuarySlots, capacity)
 	end
-	for slot = 1, 24 do
-		local pedestal = lot:FindFirstChild("Slot_" .. slot)
-		if pedestal and pedestal:IsA("BasePart") then pedestal.Transparency = if slot <= capacity then 0 else 0.7 end
-	end
+	local machineTier = profile.TrainingMachine or 1
+	WorldService.UpdateTrainingMachine(player, machineTier, TrainingRules.Machines[machineTier].Name)
 	local signature = table.concat(profile.SanctuarySlots, ":")
 	if displaySignatures[player] == signature then return end
 	displaySignatures[player] = signature
@@ -5280,21 +5539,39 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 	display:ClearAllChildren()
 	local inventory: {[string]: any} = {}
 	for _, record in ipairs(profile.CapturedCreatures) do inventory[record.Uid] = record end
+	local platform = lot.PrimaryPart
+	if not platform then return end
 	for slot, uid in ipairs(profile.SanctuarySlots) do
 		local record = inventory[uid]
-		local pedestal = lot:FindFirstChild("Slot_" .. slot)
 		local definition = record and Config.Creatures[record.CreatureId]
-		if record and definition and pedestal and pedestal:IsA("BasePart") then
-			local model = Instance.new("Model")
-			model.Name = record.CreatureId
-			model.Parent = display
-			local body = part(model, "Body", Vector3.new(2.7, 2, 2.5), pedestal.Position + Vector3.new(0, 1.4, 0), definition.BodyColor)
-			body.CanCollide = false
-			local head = part(model, "Head", Vector3.new(1.7, 1.4, 1.7), body.Position + Vector3.new(0, 1.5, -0.3), definition.BodyColor:Lerp(Color3.new(1, 1, 1), 0.2))
-			head.CanCollide = false
-			model.PrimaryPart = body
-			label(head, string.format("%s\n%s • %s\n$%s/s", definition.Name, record.Mutation, record.Size, NumberFormatter.Format(record.IncomePerSec)), Vector3.new(0, 2.6, 0))
+		if not definition or slot > capacity then continue end
+		local column, row = (slot - 1) % 6, math.floor((slot - 1) / 6)
+		local home = platform.Position + Vector3.new((column - 2.5) * 5.8, 1.65, (row - 1.5) * 6.8 + 5)
+		local model = Instance.new("Model")
+		model.Name = record.CreatureId
+		model:SetAttribute("CaptureUID", uid)
+		model:SetAttribute("PenHome", home)
+		model:SetAttribute("WalkPhase", (slot * 2.399963) % (2 * math.pi))
+		local function shape(name: string, size: Vector3, offset: Vector3, color: Color3): Part
+			local piece = part(model, name, size, home + offset, color)
+			piece.Shape = Enum.PartType.Ball
+			piece.CanCollide, piece.CanTouch, piece.CanQuery = false, false, false
+			return piece
 		end
+		model.PrimaryPart = shape("Body", Vector3.new(2.6, 1.8, 2.5), Vector3.zero, definition.BodyColor)
+		local head = shape("Head", Vector3.new(1.75, 1.4, 1.55), Vector3.new(0, .6, -.9), definition.BodyColor:Lerp(Color3.new(1, 1, 1), .18))
+		for _, side in {-1, 1} do
+			shape("Eye", Vector3.new(.2, .24, .13), Vector3.new(side * .44, .76, -1.56), Color3.fromRGB(27, 25, 46))
+			shape("Ear", Vector3.new(.36, .7, .4), Vector3.new(side * .56, 1.34, -.8), definition.BodyColor)
+			shape(if side < 0 then "LeftFoot" else "RightFoot", Vector3.new(.67, .49, .85), Vector3.new(side * .62, -.72, -.45), definition.BodyColor)
+		end
+		local caption = label(head, "+$" .. NumberFormatter.Format(record.IncomePerSec) .. "/s", Vector3.new(0, 1.55, 0))
+		caption.TextColor3 = Color3.fromRGB(151, 255, 113)
+		caption.TextSize = 16
+		local billboard = caption.Parent :: BillboardGui
+		billboard.Size, billboard.MaxDistance = UDim2.fromOffset(95, 24), 33
+		model.Parent = display
+		CollectionService:AddTag(model, "SanctuaryWalker")
 	end
 end
 
@@ -5335,6 +5612,7 @@ local Debris = game:GetService("Debris")
 local player = Players.LocalPlayer
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local UI = script.Parent:WaitForChild("UI")
 local W = require(UI:WaitForChild("HUDWidgets"))
@@ -5349,9 +5627,7 @@ local stateUpdate = remotes:WaitForChild("StateUpdate") :: RemoteEvent
 local requestState = remotes:WaitForChild("RequestState") :: RemoteEvent
 local feedback = remotes:WaitForChild("ActionFeedback") :: RemoteEvent
 local throwResult = remotes:WaitForChild("ThrowResult") :: RemoteEvent
-local buyOrb = remotes:WaitForChild("BuyOrb") :: RemoteEvent
 local equipOrb = remotes:WaitForChild("EquipOrb") :: RemoteEvent
-local train = remotes:WaitForChild("StartTraining") :: RemoteEvent
 local equipSanctuary = remotes:WaitForChild("EquipToSanctuary") :: RemoteEvent
 
 local gui = Instance.new("ScreenGui")
@@ -5389,12 +5665,12 @@ local worldWeather: any = nil
 
 local heading = W.Label(root, "GameTitle", "THROW A SPHERE!", UDim2.fromOffset(14, 6), UDim2.fromOffset(260, 28), 25, C.Gold)
 local dataMode = W.Label(root, "DataMode", "CARREGANDO SEU SANTUÁRIO...", UDim2.fromOffset(15, 36), UDim2.fromOffset(280, 18), 10, C.Muted, true)
-local event = W.Frame(root, "Event", UDim2.new(0.5, 0, 0, 8), UDim2.fromOffset(370, 34), C.Panel)
+local event = W.Frame(root, "Event", UDim2.new(0.5, 0, 0, 8), UDim2.fromOffset(180, 24), C.Panel)
 event.AnchorPoint = Vector2.new(0.5, 0)
 W.Outline(event, 1.5, C.Gold)
-local eventTitle = W.Label(event, "EventTitle", "PRADARIA SOLAR  •  SEM EVENTO ATIVO", UDim2.fromOffset(8, 0), UDim2.new(1, -16, 1, 0), 15, C.Gold)
+local eventTitle = W.Label(event, "EventTitle", "", UDim2.fromOffset(8, 0), UDim2.new(1, -16, 1, 0), 15, C.Gold)
 eventTitle.TextXAlignment = Enum.TextXAlignment.Center
-eventTitle.TextWrapped = true
+eventTitle.TextTruncate = Enum.TextTruncate.AtEnd
 local eventProgress = Instance.new("Frame")
 eventProgress.Name = "EventProgress"
 eventProgress.Position = UDim2.new(0, 7, 1, -4)
@@ -5406,46 +5682,17 @@ local function updateEvent()
     local weather = worldWeather or (state and state.Weather)
     local timestamp = Workspace:GetServerTimeNow()
     local active = weather and (weather.EndsAt or 0) > timestamp
+    event.Visible = root.AbsoluteSize.X >= 580 and (active == true or (weather and (weather.TotemEndsAt or 0) > timestamp) == true)
     if active then
-        eventTitle.Text = weather.Name .. " • " .. string.format("%.1f", weather.LuckMultiplier or 1) .. "× SORTE • " .. Gameplay.Time(weather.EndsAt - timestamp)
-        if weather.Boss and weather.Boss.Active then
-            eventTitle.Text ..= "\nCHEFE: " .. Numbers.Format(weather.Boss.Stability or 0) .. "/" .. Numbers.Format(weather.Boss.MaxStability or 100) .. " ESTABILIDADE"
-        end
+        eventTitle.Text = (weather.Name or "Evento") .. " · " .. Gameplay.Time(weather.EndsAt - timestamp)
         local fraction = math.clamp((weather.EndsAt - timestamp) / math.max(1, weather.EndsAt - (weather.StartedAt or timestamp)), 0, 1)
         eventProgress.Size = UDim2.new(fraction, -14 * fraction, 0, 2)
     else
-        local biomeId = state and state.CurrentBiome or "PradariaSolar"
-        local biome = if Config.Biomes[biomeId] then Config.Biomes[biomeId].Name elseif biomeId == "TradingPlaza" then "PRAÇA DE TROCAS" else "PRAÇA CENTRAL"
-        local nextEvent = weather and (weather.NextAt or 0) > timestamp
-        eventTitle.Text = string.upper(biome) .. (if nextEvent then " • EVENTO EM " .. Gameplay.Time(weather.NextAt - timestamp) else " • SEM EVENTO ATIVO")
-        if weather and (weather.TotemEndsAt or 0) > timestamp then eventTitle.Text ..= "\nTOTEM " .. tostring(weather.LuckMultiplier or 1) .. "× SORTE • " .. Gameplay.Time(weather.TotemEndsAt - timestamp) end
+        eventTitle.Text = if weather and (weather.TotemEndsAt or 0) > timestamp
+            then "Totem · " .. Gameplay.Time(weather.TotemEndsAt - timestamp) else ""
         eventProgress.Size = UDim2.fromOffset(0, 2)
     end
 end
-local combo = W.Frame(root, "Combo", UDim2.new(0.5, 0, 0, 50), UDim2.fromOffset(308, 28), C.Panel)
-combo.AnchorPoint = Vector2.new(0.5, 0)
-combo.ClipsDescendants = true
-local comboFill = Instance.new("Frame")
-comboFill.Name = "ComboFill"
-comboFill.Size = UDim2.fromScale(0, 1)
-comboFill.BackgroundColor3 = C.Orange
-comboFill.BorderSizePixel = 0
-comboFill.Parent = combo
-W.Gradient(comboFill, C.Orange, C.Pink)
-W.Pattern(comboFill, C.Gold, 10, 1)
-local comboLabel = W.Label(combo, "ComboLabel", "COMBO 0 / 10  •  CAPTURE SEM ERRAR!", UDim2.fromOffset(4, 0), UDim2.new(1, -8, 1, 0), 12)
-comboLabel.TextXAlignment = Enum.TextXAlignment.Center
-
-local feverBorder = Instance.new("Frame")
-feverBorder.Name = "FeverBorder"
-feverBorder.Position = UDim2.fromOffset(4, 4)
-feverBorder.Size = UDim2.new(1, -8, 1, -8)
-feverBorder.BackgroundTransparency = 1
-feverBorder.Visible = false
-feverBorder.Parent = root
-local feverStroke = W.Outline(feverBorder, 4, C.Gold)
-TweenService:Create(feverStroke, TweenInfo.new(0.65, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {Transparency = 0.65}):Play()
-
 local leftMenu = Instance.new("Frame")
 leftMenu.Name = "LeftMenu"
 leftMenu.BackgroundTransparency = 1
@@ -5514,6 +5761,8 @@ navigationIcon.Parent = navigation
 Icons.Draw(navigationIcon, "Menu", C.Purple)
 navigation.Visible = false
 navigation.Activated:Connect(function() openPanel("Menu") end)
+local rewardsButton = W.Button(root, "Rewards", "RESGATES", UDim2.fromOffset(96, 4), UDim2.fromOffset(100, 44), C.Green, 12)
+rewardsButton.Activated:Connect(function() openPanel("Resgates") end)
 
 local stats = W.Frame(root, "Stats", UDim2.new(0, 12, 1, -12), UDim2.fromOffset(238, 160), C.Panel)
 stats.AnchorPoint = Vector2.new(0, 1)
@@ -5545,7 +5794,7 @@ strengthIconHost.BackgroundTransparency = 1
 strengthIconHost.Active = false
 strengthIconHost.Parent = stats
 Icons.Draw(strengthIconHost, "Bolt", C.Orange)
-local strengthLabel = W.Label(stats, "Strength", "FORÇA 10  •  47 STUDS", UDim2.fromOffset(37, 6), UDim2.fromOffset(189, 24), 14, C.Orange)
+local strengthLabel = W.Label(stats, "Strength", "FORÇA 10", UDim2.fromOffset(37, 6), UDim2.fromOffset(189, 24), 14, C.Orange)
 local coinsLabel = W.Label(stats, "Coins", "$150", UDim2.fromOffset(12, 29), UDim2.fromOffset(214, 36), 32, C.Gold)
 local incomeLabel = W.Label(stats, "Income", "+$0 /s NO SANTUÁRIO", UDim2.fromOffset(12, 66), UDim2.fromOffset(214, 19), 13, C.Green)
 local gemsLabel = W.Label(stats, "Gems", "0 GEMAS  •  0 REBIRTHS", UDim2.fromOffset(12, 88), UDim2.fromOffset(214, 18), 11, C.Purple, true)
@@ -5577,30 +5826,24 @@ orbIcon.BackgroundTransparency = 1
 orbIcon.Active = false
 orbIcon.Parent = hotbar
 local orbArtwork = Icons.Draw(orbIcon, "Orb", C.Blue)
-local orbLabel = W.Label(hotbar, "EquippedOrb", "ORBE COMUM ×25", UDim2.fromOffset(64, 8), UDim2.fromOffset(174, 24), 16, C.Blue)
+local orbLabel = W.Label(hotbar, "EquippedOrb", "ORBE COMUM", UDim2.fromOffset(64, 8), UDim2.fromOffset(174, 24), 16, C.Blue)
 orbLabel.TextTruncate = Enum.TextTruncate.AtEnd
 local orbPower = W.Label(hotbar, "OrbPower", "PODER 10", UDim2.fromOffset(64, 32), UDim2.fromOffset(174, 20), 11, C.Muted, true)
 local trainButton = W.Button(hotbar, "Train", "ACADEMIA", UDim2.fromOffset(246, 10), UDim2.fromOffset(92, 36), C.Orange, 12)
-trainButton.Activated:Connect(function() train:FireServer() end)
-local swapButton = W.Button(hotbar, "SwapOrb", "TROCAR ORBE", UDim2.fromOffset(346, 10), UDim2.fromOffset(104, 36), C.Blue, 11)
+trainButton.Activated:Connect(function() openPanel("Academia") end)
+local swapButton = W.Button(hotbar, "SwapOrb", "EVOLUIR ORBE", UDim2.fromOffset(346, 10), UDim2.fromOffset(104, 36), C.Blue, 11)
 swapButton.Activated:Connect(function() openPanel("Orbes") end)
-local autoButton = W.Button(hotbar, "Auto", "AUTO", UDim2.fromOffset(10, 58), UDim2.fromOffset(82, 20), C.Gold, 9)
-autoButton.Activated:Connect(function() openPanel("Auto") end)
-local masterButton = W.Button(hotbar, "MasterOrb", "ORBE MESTRE • VER LOJA", UDim2.fromOffset(102, 58), UDim2.fromOffset(162, 20), C.Pink, 9)
-masterButton.Activated:Connect(function() openPanel("Loja") end)
-local aimingHint = W.Label(hotbar, "AimHint", "SEGURE → MIRE → SOLTE", UDim2.fromOffset(275, 56), UDim2.fromOffset(175, 24), 10, C.Muted, true)
-aimingHint.TextXAlignment = Enum.TextXAlignment.Center
 local room = W.Frame(root, "Room", UDim2.new(1, -12, 1, -12), UDim2.fromOffset(172, 49), C.Panel)
 room.AnchorPoint = Vector2.new(1, 1)
 local roomLabel = W.Label(room, "Players", "SALA • 1 JOGADOR", UDim2.fromOffset(10, 4), UDim2.fromOffset(152, 22), 12, C.Green)
 W.Label(room, "Biome", "Pradaria Solar", UDim2.fromOffset(10, 26), UDim2.fromOffset(152, 17), 11, C.Muted, true)
 
-local notice = W.Label(root, "Feedback", "Segure e solte sobre uma criatura para arremessar.", UDim2.new(0.5, 0, 1, -112), UDim2.new(0.66, 0, 0, 42), 15)
-local DEFAULT_HINT = "Mira verde: corpo  •  Dourada: cabeça  •  Vermelha: fora de alcance"
+local notice = W.Label(root, "Feedback", "", UDim2.new(0.5, 0, 1, -112), UDim2.new(0.66, 0, 0, 42), 15)
 notice.AnchorPoint = Vector2.new(0.5, 1)
 notice.TextXAlignment = Enum.TextXAlignment.Center
 notice.TextWrapped = true
 notice.ZIndex = 55
+notice.Visible = false
 local function showNotice(message: string, isError: boolean?)
     noticeVersion += 1
     local version = noticeVersion
@@ -5609,9 +5852,9 @@ local function showNotice(message: string, isError: boolean?)
     notice.Visible = true
     task.delay(4.5, function()
         if version ~= noticeVersion then return end
-        notice.Text = DEFAULT_HINT
+        notice.Text = ""
         notice.TextColor3 = C.Muted
-        notice.Visible = currentPanel == nil
+        notice.Visible = false
     end)
 end
 
@@ -5624,10 +5867,9 @@ floatingLayer.Parent = root
 local function spawnFloatingNumber(value: string, color: Color3, size: number?)
     if floatingCount >= 14 then return end
     floatingCount += 1
-    local fever = state and (state.ComboStreak or 0) >= 10
     local x = random:NextNumber(0.38, 0.62)
     local y = random:NextNumber(0.47, 0.59)
-    local label = W.Label(floatingLayer, "Popup", value, UDim2.fromScale(x, y), UDim2.fromOffset(340, 44), (size or 24) * (if fever then 1.5 else 1), color)
+    local label = W.Label(floatingLayer, "Popup", value, UDim2.fromScale(x, y), UDim2.fromOffset(340, 44), size or 24, color)
     label.AnchorPoint = Vector2.new(0.5, 0.5)
     label.TextXAlignment = Enum.TextXAlignment.Center
     label.Rotation = random:NextInteger(-6, 6)
@@ -5714,9 +5956,9 @@ local function closePanel()
     gui:SetAttribute("ModalOpen", false)
     backdrop.Visible = false
     noticeVersion += 1
-    notice.Text = DEFAULT_HINT
+    notice.Text = ""
     notice.TextColor3 = C.Muted
-    notice.Visible = true
+    notice.Visible = false
     ContextActionService:UnbindAction("ThrowASphereCloseModal")
     renderedPanel = nil
     clearPanel()
@@ -5728,9 +5970,9 @@ closeButton.Activated:Connect(closePanel)
 local actions = {
     Notify = function(message: string) showNotice(message) end,
     Open = function(kind: string) openPanel(kind) end,
-    BuyOrb = function(id: string, quantity: number) buyOrb:FireServer(id, quantity) end,
     EquipOrb = function(id: string) equipOrb:FireServer(id) end,
     EquipSanctuary = function(uid: string) equipSanctuary:FireServer(uid) end,
+    Close = closePanel,
     Send = function(name: string, ...: any)
         local remote = remotes:FindFirstChild(name)
         if remote and remote:IsA("RemoteEvent") then remote:FireServer(...) else showNotice("Esta ação está carregando. Tente novamente em instantes.", true) end
@@ -5763,6 +6005,14 @@ renderPanel = function()
     local listName = if previousList then previousList.Name else nil
     clearPanel()
     local generation = panelGeneration
+    if currentPanel == "Resgates" then
+        local count = state and (state.DropInfo or {}).ActiveCount or 0
+        modalConstraint.MaxSize = Vector2.new(388, math.clamp(95 + 76 * count, 155, 350))
+    elseif currentPanel == "Academia" then
+        modalConstraint.MaxSize = Vector2.new(416, 356)
+    else
+        modalConstraint.MaxSize = Vector2.new(860, 620)
+    end
     modalTitle.Text = Panels.Titles[currentPanel] or currentPanel
     if currentPanel == "Loja" then panelCleanup = ShopView.Render(content, actions.Notify)
     elseif Gameplay.Handles(currentPanel) then panelCleanup = Gameplay.Render(content, currentPanel, state, actions)
@@ -5822,10 +6072,25 @@ getPanelSignature = function(snapshot: any): string
         return Gameplay.Stable({Captures = snapshot.CapturedCreatures, Slots = snapshot.SanctuarySlots, SlotCapacity = snapshot.SlotCapacity, Progression = snapshot.Progression, Reserved = snapshot.InventoryReservedSlots})
     elseif currentPanel == "Bestiario" then
         return Gameplay.Stable({Bestiary = snapshot.Bestiary, Claimed = snapshot.BestiaryRewardClaimed})
+    elseif currentPanel == "Resgates" then
+        return Gameplay.Stable((snapshot.DropInfo or {}).Drops)
+    elseif currentPanel == "Academia" then
+        local training = snapshot.Training or {}
+        local rules = Panels.Machines
+        local nextMachine = rules[(training.MachineTier or 1) + 1]
+        return Gameplay.Stable({Training = training, CanAfford = nextMachine and snapshot.Coins >= nextMachine.Cost})
     elseif currentPanel == "Orbes" then
+        table.insert(parts, tostring(snapshot.OrbTier))
+        table.insert(parts, tostring(snapshot.OrbFragments or 0))
+        local affordable = false
+        for _, orb in Config.Orbs do
+            if orb.Tier == (snapshot.OrbTier or 1) + 1 then
+                affordable = snapshot.Coins >= GameplayMath.GetOrbEvolutionPrice(orb.Price, snapshot.OrbFragments or 0)
+            end
+        end
+        table.insert(parts, tostring(affordable))
         table.insert(parts, tostring(snapshot.EquippedOrb))
         for _, id in Panels.OrbOrder do table.insert(parts, tostring((snapshot.Orbs or {})[id] or 0)) end
-        table.insert(parts, tostring(snapshot.OrbFragments or 0))
         table.insert(parts, tostring(snapshot.Benefits and snapshot.Benefits.EternalPrism))
     elseif currentPanel == "Loja" then
         return Gameplay.Stable({Benefits = snapshot.Benefits, SalesEnabled = snapshot.SalesEnabled})
@@ -5845,21 +6110,17 @@ stateUpdate.OnClientEvent:Connect(function(snapshot: any)
     if level >= Config.Constants.MaxLevel then percent = 1 end
     coinsLabel.Text = "$" .. Numbers.Format(snapshot.Coins or 0)
     incomeLabel.Text = "+$" .. Numbers.Format(snapshot.IncomePerSec or 0) .. " /s NO SANTUÁRIO"
-    strengthLabel.Text = "FORÇA " .. Numbers.Format(snapshot.ThrowStrength or 10) .. "  •  " .. Numbers.Format(snapshot.MaxRange or 47) .. " STUDS"
+    strengthLabel.Text = "FORÇA " .. Numbers.Format(snapshot.ThrowStrength or 10)
     gemsLabel.Text = Numbers.Format(snapshot.Gems or 0) .. " GEMAS  •  " .. Numbers.Format(snapshot.Rebirths or 0) .. " REBIRTHS"
     xpLabel.Text = "NV. " .. Numbers.Format(level) .. (if level >= Config.Constants.MaxLevel then "  •  NÍVEL MÁXIMO" else "  •  " .. math.floor(percent * 100) .. "% XP")
     TweenService:Create(xpFill, TweenInfo.new(0.2), {Size = UDim2.fromScale(percent, 1)}):Play()
-    local streak = math.clamp(snapshot.ComboStreak or 0, 0, 10)
-    local fever = streak >= 10
-    comboLabel.Text = if fever then "FEVER ×10  •  +50% SORTE & 2× XP!" else "COMBO " .. streak .. " / 10  •  CAPTURE SEM ERRAR!"
-    TweenService:Create(comboFill, TweenInfo.new(0.25), {Size = UDim2.fromScale(streak / 10, 1)}):Play()
-    feverBorder.Visible = fever
     local luck = snapshot.EffectiveLuck or 1
     luckLabel.Text = string.format("SORTE ×%.2f", luck)
     dataMode.Text = if snapshot.DataMode == "StudioMemory" then "TESTE LOCAL • DADOS NÃO SÃO SALVOS" else "SALVAMENTO AUTOMÁTICO ATIVO"
     local orb = Config.Orbs[snapshot.EquippedOrb or "Comum"]
     if orb then
-        orbLabel.Text = string.upper(orb.Name) .. (if orb.IsPrismatic and snapshot.Benefits and snapshot.Benefits.EternalPrism then " ∞" else " ×" .. Numbers.Format((snapshot.Orbs or {})[orb.Id] or 0))
+        local reusable = orb.Tier and orb.Tier <= (snapshot.OrbTier or 1)
+        orbLabel.Text = string.upper(orb.Name) .. (if reusable then "" elseif orb.IsPrismatic and snapshot.Benefits and snapshot.Benefits.EternalPrism then " ∞" else " ×" .. Numbers.Format((snapshot.Orbs or {})[orb.Id] or 0))
         orbLabel.TextColor3 = orb.Color
         if not previous or previous.EquippedOrb ~= snapshot.EquippedOrb then
             orbArtwork:Destroy()
@@ -5868,16 +6129,13 @@ stateUpdate.OnClientEvent:Connect(function(snapshot: any)
         orbPower.Text = "PODER " .. Numbers.Format(orb.Power)
     end
     if previous then
-        local moneyDelta = (snapshot.Coins or 0) - (previous.Coins or 0)
-        local forceDelta = (snapshot.ThrowStrength or 0) - (previous.ThrowStrength or 0)
-        if moneyDelta > 0 then spawnFloatingNumber("+$" .. Numbers.Format(moneyDelta), C.Green) end
-        if forceDelta > 0 then spawnFloatingNumber("+" .. Numbers.Format(forceDelta) .. " FORÇA!", C.Orange, 25) end
         for id, discovered in snapshot.Bestiary or {} do
             if discovered and not (previous.Bestiary or {})[id] and newDiscoveryBadge and currentPanel ~= "Bestiario" then newDiscoveryBadge.Visible = true end
         end
     end
-    local autoCaption = autoButton:FindFirstChild("Caption") :: TextLabel
-    autoCaption.Text = if snapshot.Automation and (snapshot.Automation.Throw or snapshot.Automation.Train) then "AUTO ATIVO" else "AUTO"
+    local rewardCount = (snapshot.DropInfo or {}).ActiveCount or 0
+    local rewardCaption = rewardsButton:FindFirstChild("Caption") :: TextLabel
+    rewardCaption.Text = if rewardCount > 0 then "RESGATES (" .. rewardCount .. ")" else "RESGATES"
     local accessPill = menuButtons.Auto:FindFirstChild("Planned") :: TextLabel
     accessPill.Text = if snapshot.Automation and (snapshot.Automation.CanThrow or snapshot.Automation.CanTrain) then "LIBERADO" else "TRANCADO"
     local currentBiomeLabel = room:FindFirstChild("Biome") :: TextLabel
@@ -5925,16 +6183,17 @@ end)
 
 local function updateRoom()
     local count = #Players:GetPlayers()
-    roomLabel.Text = "SALA • " .. count .. (if count == 1 then " JOGADOR" else " JOGADORES")
+    roomLabel.Text = "SALA · " .. count .. "/8"
 end
 Players.PlayerAdded:Connect(updateRoom)
 Players.PlayerRemoving:Connect(function() task.defer(updateRoom) end)
 updateRoom()
 UserInputService.InputBegan:Connect(function(input: InputObject, processed: boolean)
     if currentPanel and (input.KeyCode == Enum.KeyCode.ButtonB or input.KeyCode == Enum.KeyCode.Escape) then closePanel(); return end
-    if processed or UserInputService:GetFocusedTextBox() then return end
+    if not gui.Enabled or processed or UserInputService:GetFocusedTextBox() then return end
     if input.KeyCode == Enum.KeyCode.C then openPanel("Criaturas")
     elseif input.KeyCode == Enum.KeyCode.V then openPanel("Orbes")
+    elseif input.KeyCode == Enum.KeyCode.G then openPanel("Resgates")
     elseif input.KeyCode == Enum.KeyCode.B then openPanel("Bestiario")
     elseif input.KeyCode == Enum.KeyCode.M or input.KeyCode == Enum.KeyCode.ButtonY then openPanel("Menu") end
 end)
@@ -5945,11 +6204,11 @@ local function resize()
     compact = width < 980 or height < 430
     portrait = width < height
     local standardScale = if height < 620 then 0.86 else 1
-    heading.Visible = not compact and width > 1060
-    dataMode.Visible = not compact
-    leftMenu.Visible = not compact
+    heading.Visible = false
+    dataMode.Visible = false
+    leftMenu.Visible = false
     navigation.Visible = true
-    navigation.Position = if compact then UDim2.fromOffset(10, 4) else UDim2.new(1, -94, 0, 8)
+    navigation.Position = UDim2.fromOffset(10, 4)
     leftScale.Scale = standardScale
     rightScale.Scale = if compact then 0.78 else standardScale
     rightMenu.Size = if compact then UDim2.fromOffset(176, 68) else UDim2.fromOffset(82, 308)
@@ -5958,26 +6217,22 @@ local function resize()
         menuButtons[id].Visible = not compact or index <= 2
         menuButtons[id].Position = if compact then UDim2.fromOffset((index - 1) * 94, 0) else UDim2.fromOffset(0, (index - 1) * 78)
     end
-    statsScale.Scale = if compact then 0.72 else standardScale
+    statsScale.Scale = if compact then 0.59 else 0.76
     stats.AnchorPoint = if compact then Vector2.new(0, 0) else Vector2.new(0, 1)
-    stats.Position = if compact then UDim2.fromOffset(10, 84) else UDim2.new(0, 12, 1, -12)
+    stats.Position = if compact then UDim2.fromOffset(10, 58) else UDim2.new(0, 12, 1, -12)
     local targetWidth = if compact then math.min(430, width - 32) else 460 * standardScale
     hotbarScale.Scale = targetWidth / 460
-    hotbar.Size = UDim2.fromOffset(460, if compact then 78 else 86)
+    hotbar.Size = UDim2.fromOffset(460, if compact then 72 else 58)
     trainButton.Size = UDim2.fromOffset(92, if compact then 44 / hotbarScale.Scale else 36)
     swapButton.Size = UDim2.fromOffset(104, if compact then 44 / hotbarScale.Scale else 36)
-    autoButton.Visible = not compact
-    masterButton.Visible = not compact
-    aimingHint.Visible = not compact
     local bottom = if compact and portrait then 160 else 12
     hotbar.Position = UDim2.new(0.5, 0, 1, -bottom)
     notice.Position = UDim2.new(0.5, 0, 1, -bottom - 94 * hotbarScale.Scale)
     notice.Size = UDim2.new(if compact then 0.9 else 0.65, 0, 0, if compact then 35 else 42)
     notice.TextSize = if compact then 12 else 15
-    event.Size = UDim2.fromOffset(if compact then math.min(370, width - 192) else 370, 34)
+    event.Size = UDim2.fromOffset(176, 24)
     eventTitle.TextSize = if compact and portrait then 10 else 13
     updateEvent()
-    combo.Size = UDim2.fromOffset(math.min(308, width - 30), 28)
     room.Visible = not compact and width > 1000
     modal.Size = if compact then UDim2.new(1, -16, 1, -16) else UDim2.fromScale(0.9, 0.86)
     modalTitle.TextSize = if compact then 20 else 25
@@ -6004,7 +6259,7 @@ end) end
 local openPanelRemote = remotes:WaitForChild("OpenPanel") :: RemoteEvent
 local allowedPanels = {Menu = true, Bestiario = true, Loja = true, Fusao = true, Diario = true, Rebirth = true,
     Ranking = true, Criaturas = true, Orbes = true, Auto = true, Codigos = true, Biomas = true,
-    Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true}
+    Academia = true, Resgates = true, Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true}
 openPanelRemote.OnClientEvent:Connect(function(panelId: any)
     if typeof(panelId) ~= "string" or not allowedPanels[panelId] then return end
     -- A station prompt requests an open panel, rather than toggling it closed.
@@ -6016,6 +6271,73 @@ requestState:FireServer()
         </Properties>
       </Item>
       <Item class="LocalScript" referent="92">
+        <Properties>
+          <string name="Name">ClientSanctuaryController</string>
+          <string name="Source"><![CDATA[--!strict
+local CollectionService = game:GetService("CollectionService")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+type Walker = {
+    Home: Vector3,
+    Phase: number,
+    Caption: TextLabel,
+    Left: BasePart?,
+    Right: BasePart?,
+}
+local walkers: {[Model]: Walker} = {}
+
+local function observe(instance: Instance)
+    if not instance:IsA("Model") then return end
+    local home, phase = instance:GetAttribute("PenHome"), instance:GetAttribute("WalkPhase")
+    local head = instance:FindFirstChild("Head")
+    local board = head and head:FindFirstChild("Label")
+    local caption = board and board:FindFirstChildWhichIsA("TextLabel")
+    if typeof(home) ~= "Vector3" or typeof(phase) ~= "number" or not caption or not instance.PrimaryPart then return end
+    local left, right = instance:FindFirstChild("LeftFoot"), instance:FindFirstChild("RightFoot")
+    walkers[instance] = {
+        Home = home,
+        Phase = phase,
+        Caption = caption,
+        Left = if left and left:IsA("BasePart") then left else nil,
+        Right = if right and right:IsA("BasePart") then right else nil,
+    }
+end
+
+for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model) end
+CollectionService:GetInstanceAddedSignal("SanctuaryWalker"):Connect(function(model) task.defer(observe, model) end)
+CollectionService:GetInstanceRemovedSignal("SanctuaryWalker"):Connect(function(model)
+    if model:IsA("Model") then walkers[model] = nil end
+end)
+
+local elapsed = 0
+RunService.RenderStepped:Connect(function(delta)
+    elapsed += delta
+    if elapsed < 1 / 30 then return end
+    elapsed %= 1 / 30
+    local camera = Workspace.CurrentCamera
+    if not camera then return end
+    local time = Workspace:GetServerTimeNow()
+    local eye = camera.CFrame.Position
+    for model, walker in walkers do
+        if not model.Parent or (eye - walker.Home).Magnitude > 95 then continue end
+        local angle = time * .78 + walker.Phase
+        local step = math.sin(time * 8 + walker.Phase)
+        local position = walker.Home + Vector3.new(math.sin(angle) * 1.35, math.abs(step) * .09, math.cos(angle) * 1.65)
+        local direction = Vector3.new(math.cos(angle) * 1.35, 0, -math.sin(angle) * 1.65)
+        local pose = CFrame.lookAt(position, position + direction)
+        model:PivotTo(pose)
+        if walker.Left then walker.Left.CFrame = pose * CFrame.new(-.62, -.72 + math.max(0, step) * .22, -.45 + step * .22) end
+        if walker.Right then walker.Right.CFrame = pose * CFrame.new(.62, -.72 + math.max(0, -step) * .22, -.45 - step * .22) end
+        local pulse = (1 + math.sin(time * math.pi * 2 + walker.Phase)) * .5
+        walker.Caption.TextColor3 = Color3.fromRGB(94, 215, 119):Lerp(Color3.fromRGB(185, 255, 126), pulse)
+        walker.Caption.TextTransparency = .22 * (1 - pulse)
+    end
+end)
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="LocalScript" referent="93">
         <Properties>
           <string name="Name">ClientThrowController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6047,48 +6369,57 @@ local function label(parent:Instance,name:string,value:string,pos:UDim2,size:UDi
  l.TextStrokeTransparency,l.Parent=0.4,parent
  return l
 end
-local panel=Instance.new("Frame")
-panel.Name,panel.AnchorPoint,panel.Position="ForcePanel",Vector2.new(0.5,1),UDim2.new(0.5,0,1,-100)
-panel.Size,panel.BackgroundColor3,panel.BackgroundTransparency=UDim2.new(0.46,0,0,94),Color3.fromRGB(12,22,42),0.08
-panel.Visible=false;panel.Parent=gui;round(panel)
-local limits=Instance.new("UISizeConstraint")
-limits.MinSize,limits.MaxSize,limits.Parent=Vector2.new(260,94),Vector2.new(430,94),panel
-local title=label(panel,"PowerLabel","PREPARE SUA ORBE",UDim2.fromOffset(8,5),UDim2.new(1,-16,0,26),18)
-local meter=Instance.new("Frame")
-meter.Name,meter.Position,meter.Size="PowerMeter",UDim2.fromOffset(18,33),UDim2.new(1,-36,0,24)
-meter.BackgroundColor3,meter.ClipsDescendants,meter.Parent=Color3.new(1,1,1),true,panel;round(meter)
-local gradient=Instance.new("UIGradient")
-gradient.Color,gradient.Parent=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(245,65,65)),ColorSequenceKeypoint.new(.25,Color3.fromRGB(255,180,55)),ColorSequenceKeypoint.new(.5,Color3.fromRGB(50,240,110)),ColorSequenceKeypoint.new(.75,Color3.fromRGB(255,180,55)),ColorSequenceKeypoint.new(1,Color3.fromRGB(245,65,65))}),meter
-local perfect=Instance.new("Frame")
-perfect.Position,perfect.Size,perfect.BackgroundColor3,perfect.BackgroundTransparency=UDim2.fromScale(0.47,0),UDim2.fromScale(0.06,1),Color3.new(1,1,1),0.75
-perfect.Parent=meter
-local pointer=Instance.new("Frame")
-pointer.Name,pointer.Size,pointer.AnchorPoint="PowerPointer",UDim2.new(0,6,1,0),Vector2.new(0.5,0)
-pointer.BackgroundColor3,pointer.BorderSizePixel,pointer.Parent=Color3.new(1,1,1),0,meter
-local button=Instance.new("TextButton")
-button.Name,button.Position,button.Size="LaunchButton",UDim2.fromOffset(18,62),UDim2.new(1,-36,0,24)
-button.Text,button.TextSize,button.Font="CLIQUE EM QUALQUER LUGAR",12,Enum.Font.GothamBlack
-button.BackgroundTransparency=1
-button.TextColor3,button.BackgroundColor3,button.Parent=Color3.fromRGB(220,245,230),Color3.fromRGB(105,240,145),panel;round(button)
+local ink = Color3.fromRGB(34, 39, 66)
+local panel = Instance.new("Frame")
+panel.Name, panel.AnchorPoint, panel.Position = "ForcePanel", Vector2.new(.5, 1), UDim2.new(.5, 0, 1, -76)
+panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 76), Color3.fromRGB(49, 57, 89)
+panel.Visible, panel.Parent = false, gui
+round(panel)
+local edge = Instance.new("UIStroke")
+edge.Color, edge.Thickness, edge.Parent = Color3.fromRGB(255, 225, 126), 2, panel
+local limits = Instance.new("UISizeConstraint")
+limits.MaxSize, limits.Parent = Vector2.new(288, 76), panel
+local title = label(panel, "PowerLabel", "FORÇA", UDim2.fromOffset(7, 2), UDim2.new(1, -14, 0, 22), 15)
+local meter = Instance.new("Frame")
+meter.Name, meter.Position, meter.Size = "PowerMeter", UDim2.fromOffset(15, 28), UDim2.new(1, -30, 0, 19)
+meter.BackgroundColor3, meter.BorderSizePixel, meter.Parent = Color3.new(1, 1, 1), 0, panel
+round(meter)
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 105)),
+    ColorSequenceKeypoint.new(.23, Color3.fromRGB(255, 198, 70)),
+    ColorSequenceKeypoint.new(.5, Color3.fromRGB(94, 245, 133)),
+    ColorSequenceKeypoint.new(.77, Color3.fromRGB(255, 198, 70)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 105)),
+})
+gradient.Parent = meter
+local perfect = Instance.new("Frame")
+perfect.Position, perfect.Size = UDim2.fromScale(.465, 0), UDim2.fromScale(.07, 1)
+perfect.BackgroundColor3, perfect.BackgroundTransparency, perfect.BorderSizePixel = Color3.new(1, 1, 1), .5, 0
+perfect.Parent = meter
+round(perfect)
+local pointer = Instance.new("Frame")
+pointer.Name, pointer.Size, pointer.AnchorPoint = "PowerPointer", UDim2.fromOffset(15, 23), Vector2.new(.5, .5)
+pointer.BackgroundColor3, pointer.BorderSizePixel, pointer.Parent = Color3.fromRGB(255, 249, 227), 0, meter
+round(pointer)
+local rim = Instance.new("UIStroke")
+rim.Color, rim.Thickness, rim.Parent = ink, 2, pointer
+local button = Instance.new("TextButton")
+button.Name, button.Position, button.Size = "LaunchButton", UDim2.fromOffset(6, 50), UDim2.new(1, -12, 0, 24)
+button.Text, button.TextSize, button.Font = "CLIQUE OU TOQUE  ·  R2", 11, Enum.Font.GothamBold
+button.BackgroundTransparency, button.TextColor3, button.Parent = 1, Color3.fromRGB(255, 242, 213), panel
 local top=label(gui,"Distance","",UDim2.new(0.5,0,0,70),UDim2.new(0.6,0,0,60),32)
 top.AnchorPoint=Vector2.new(0.5,0)
 local zone=label(gui,"Biome","",UDim2.new(0.5,0,0,130),UDim2.new(0.6,0,0,36),23)
 zone.AnchorPoint=Vector2.new(0.5,0)
-local motion=Instance.new("TextButton")
-motion.Name,motion.AnchorPoint,motion.Position,motion.Size="ReducedMotion",Vector2.new(1,1),UDim2.new(1,-14,1,-20),UDim2.fromOffset(156,30)
-motion.Text,motion.TextSize,motion.BackgroundColor3,motion.TextColor3="MOVIMENTO: COMPLETO",10,Color3.fromRGB(20,30,45),Color3.new(1,1,1)
-motion.Visible=false;motion.Parent=gui;round(motion)
-motion.Activated:Connect(function()
- local value=gui:GetAttribute("ReducedMotion")~=true;gui:SetAttribute("ReducedMotion",value)
- motion.Text=if value then "MOVIMENTO: REDUZIDO" else "MOVIMENTO: COMPLETO"
-end)
 local session:any=nil
-local waiting=false
 local generation=0
 local cleanup:(()->())?=nil
 local chargeHidden:{[ScreenGui]:boolean}={}
 local retryAt=0
-local hint=label(gui,"LaunchHint","Encoste na linha amarela à frente para arremessar",UDim2.new(.5,0,1,-115),UDim2.new(.8,0,0,22),13)
+local suppressUntilExit = false
+local blockingMessage: string? = nil
+local hint=label(gui,"LaunchHint","Encoste na linha amarela à frente para arremessar",UDim2.new(.5,0,1,-107),UDim2.new(.8,0,0,22),13)
 hint.AnchorPoint=Vector2.new(.5,0)
 local function atLine():boolean
  local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -6114,57 +6445,66 @@ local function restore()
  panel.Visible=false;top.Text,zone.Text="",""
 end
 local function idle()
- session,waiting=nil,false;restore()
- retryAt=os.clock()+0.6
- title.Text,button.Text="PARE NO CENTRO VERDE","CLIQUE OU TOQUE EM QUALQUER LUGAR"
+    session = nil
+    blockingMessage = nil
+    restore()
+    retryAt = os.clock() + .18
 end
-local function activate()
- if waiting or modal() or not atLine() then return end
- if not session then
-  waiting=true;remotes.PrepareThrow:FireServer()
-  task.delay(2,function() if not session then waiting=false end end)
- elseif session.State=="Charging" then
-  session.State="Submitting";button.Text="TRAVANDO FORÇA...";remotes.LaunchThrow:FireServer(session.Id)
- end
+local function confirm()
+    if not session or session.State ~= "Charging" or not atLine() then return end
+    session.State = "Submitting"
+    button.Text = "ARREMESSANDO…"
+    remotes.LaunchThrow:FireServer(session.Id)
 end
-button.Activated:Connect(activate)
-local function overUI(input:InputObject):boolean
- if input.KeyCode==Enum.KeyCode.ButtonR2 then return false end
- local point=if input.UserInputType==Enum.UserInputType.Touch then Vector2.new(input.Position.X,input.Position.Y) else Input:GetMouseLocation()
- for _,object in player.PlayerGui:GetGuiObjectsAtPosition(point.X,point.Y) do
-  local current:Instance?=object
-  while current and current~=player.PlayerGui do
-   if current:IsA("GuiButton") or (current:IsA("GuiObject") and current.Active) then return true end
-   current=current.Parent
-  end
- end
- return false
-end
-Input.InputBegan:Connect(function(input,processed)
- local confirm=input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.ButtonR2
- if session and session.State=="Charging" and confirm then activate();return end
- if processed or Input:GetFocusedTextBox() then return end
- if input.KeyCode==Enum.KeyCode.Escape or input.KeyCode==Enum.KeyCode.ButtonB then
-  if session and session.State=="Charging" then remotes.CancelThrow:FireServer(session.Id);idle() end
-  return
- end
- if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.ButtonR2 then
-  if not overUI(input) then activate() end
- end
+button.Activated:Connect(confirm)
+
+Input.InputBegan:Connect(function(input)
+    if not session or session.State ~= "Charging" or Input:GetFocusedTextBox() then return end
+    if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.ButtonB then
+        suppressUntilExit = true
+        remotes.CancelThrow:FireServer(session.Id)
+        idle()
+    elseif input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
+        or input.KeyCode == Enum.KeyCode.ButtonR2 then
+        confirm()
+    end
 end)
+
 Run.RenderStepped:Connect(function()
- local near=atLine()
- hint.Visible=not session and not near and not modal() and player:GetAttribute("TrainingActive")~=true
- if not session and near and not waiting and os.clock()>=retryAt and player:GetAttribute("DataLoaded")==true and not modal() then
-  retryAt=os.clock()+2
-  activate()
- end
- if session and session.State=="Charging" then
-  if modal() or not near then remotes.CancelThrow:FireServer(session.Id);idle();return end
-  local power=Math.Power(Workspace:GetServerTimeNow()-session.StartedAt,session.Period)
-  pointer.Position=UDim2.fromScale(Math.MeterPosition(Workspace:GetServerTimeNow()-session.StartedAt,session.Period),0)
-  title.Text=string.format("FORÇA %d%%  %s",math.floor(power*100),if power>=Rules.PerfectThreshold then "• PERFEITO!" else "")
- end
+    local near = atLine()
+    local inModal = modal()
+    local training = player:GetAttribute("TrainingActive") == true
+    if not near then
+        suppressUntilExit = false
+        if not session and panel.Visible then idle() end
+    end
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    hint.Visible = not near and not session and not inModal and not training and root ~= nil
+        and (root.Position - Rules.LinePosition).Magnitude < 50
+    if not session and near and not suppressUntilExit and not inModal and not training
+        and player:GetAttribute("DataLoaded") == true then
+        panel.Visible = true
+        pointer.Visible = false
+        title.Text = if blockingMessage then "ORBE INDISPONÍVEL" else "PREPARE SUA ORBE"
+        button.Text = blockingMessage or "PREPARANDO…"
+        if os.clock() >= retryAt then
+            retryAt = os.clock() + .18
+            remotes.PrepareThrow:FireServer()
+        end
+    elseif not session then
+        panel.Visible = false
+    end
+    if session and session.State == "Charging" then
+        if inModal or not near then
+            remotes.CancelThrow:FireServer(session.Id)
+            idle()
+            return
+        end
+        local elapsed = Workspace:GetServerTimeNow() - session.StartedAt
+        local power = Math.Power(elapsed, session.Period)
+        pointer.Position = UDim2.fromScale(Math.MeterPosition(elapsed, session.Period), .5)
+        title.Text = if power >= Rules.PerfectThreshold then "PERFEITO!" else "FORÇA " .. math.floor(power * 100) .. "%"
+    end
 end)
 local function flight(data:any)
  restore()
@@ -6235,11 +6575,17 @@ local function flight(data:any)
 end
 (remotes:WaitForChild("FlightUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
- waiting=false
  if data.State=="Charging" then
-  session=data;panel.Visible=true;hint.Visible=false
+  if not atLine() or modal() or suppressUntilExit then
+   remotes.CancelThrow:FireServer(data.Id)
+   return
+  end
+  session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
-  title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE / TOQUE EM QUALQUER LUGAR • R2"
+  title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
+ elseif data.State=="Blocked" then
+  blockingMessage="CONFIRA SUA ORBE E A COLEÇÃO"
+  retryAt=os.clock()+1
  elseif data.State=="Flying" then
   session=data
   title.Text=string.format("FORÇA CONFIRMADA: %d%%",math.floor(data.Power*100))
@@ -6253,13 +6599,10 @@ end)
  end
 end)
 player.CharacterRemoving:Connect(idle)
-Input.WindowFocusReleased:Connect(function()
- if session and session.State=="Charging" then remotes.CancelThrow:FireServer(session.Id);idle() end
-end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="93">
+      <Item class="LocalScript" referent="94">
         <Properties>
           <string name="Name">ClientTrainingController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6269,33 +6612,47 @@ local Run=game:GetService("RunService")
 local Input=game:GetService("UserInputService")
 local Workspace=game:GetService("Workspace")
 local Debris=game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
 local player=Players.LocalPlayer
 local remotes=RS:WaitForChild("Remotes")
 local gui=Instance.new("ScreenGui")
 gui.Name,gui.ResetOnSpawn,gui.DisplayOrder,gui.Parent="AcademyHUD",false,75,player:WaitForChild("PlayerGui")
 local card=Instance.new("Frame")
-card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-25),UDim2.new(.65,0,0,155)
-card.BackgroundColor3,card.Visible,card.Parent=Color3.fromRGB(15,25,43),false,gui
+card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-25),UDim2.new(.85,0,0,144)
+card.BackgroundColor3,card.Visible,card.Parent=Color3.fromRGB(45,43,71),false,gui
 local max=Instance.new("UISizeConstraint")
-max.MinSize,max.MaxSize,max.Parent=Vector2.new(280,155),Vector2.new(440,155),card
+max.MinSize,max.MaxSize,max.Parent=Vector2.new(0,144),Vector2.new(355,144),card
 local round=Instance.new("UICorner");round.CornerRadius,round.Parent=UDim.new(0,14),card
+local accent = Instance.new("UIStroke")
+accent.Color, accent.Thickness, accent.Parent = Color3.fromRGB(255, 194, 103), 2, card
 local function text(name:string,y:number,h:number,size:number):TextLabel
  local label=Instance.new("TextLabel")
  label.Name,label.Position,label.Size=name,UDim2.fromOffset(12,y),UDim2.new(1,-24,0,h)
  label.BackgroundTransparency,label.TextColor3,label.TextSize,label.Font=1,Color3.new(1,1,1),size,Enum.Font.GothamBold
  label.Parent=card;return label
 end
-local title=text("AcademyLevel",8,25,19)
-local xp=text("AcademyXP",37,20,13)
+local title=text("AcademyLevel",5,24,16)
+local xp=text("AcademyXP",29,17,12)
 local track=Instance.new("Frame")
-track.Name,track.Position,track.Size,track.BackgroundColor3,track.Parent="XPTrack",UDim2.fromOffset(16,62),UDim2.new(1,-32,0,12),Color3.fromRGB(38,54,72),card
+track.Name,track.Position,track.Size,track.BackgroundColor3,track.Parent="XPTrack",UDim2.fromOffset(16,48),UDim2.new(1,-32,0,12),Color3.fromRGB(38,54,72),card
 local fill=Instance.new("Frame")
 fill.Name,fill.Size,fill.BackgroundColor3,fill.BorderSizePixel,fill.Parent="XPFill",UDim2.fromScale(0,1),Color3.fromRGB(70,220,255),0,track
-local reps=text("RepInfo",81,22,14)
+local reps=text("RepInfo",69,19,12)
+local cadence = Instance.new("Frame")
+cadence.Name, cadence.Size, cadence.Position = "RepProgress", UDim2.new(1, -32, 0, 4), UDim2.fromOffset(16, 63)
+cadence.BackgroundColor3, cadence.BorderSizePixel, cadence.Parent = Color3.fromRGB(73, 70, 102), 0, card
+local progress = Instance.new("Frame")
+progress.Size, progress.BackgroundColor3, progress.BorderSizePixel, progress.Parent = UDim2.fromScale(0, 1), Color3.fromRGB(255, 194, 103), 0, cadence
+local nextRepAt, interval = 0, 1.8
+local xpTween: Tween?
+
 local stop=Instance.new("TextButton")
-stop.Name,stop.Position,stop.Size="StopTraining",UDim2.new(.5,-90,1,-40),UDim2.fromOffset(180,30)
-stop.Text,stop.TextSize,stop.TextColor3,stop.BackgroundColor3="PARAR TREINO  [B / ESC]",12,Color3.new(1,1,1),Color3.fromRGB(65,80,105)
+stop.Name,stop.Position,stop.Size="StopTraining",UDim2.new(.5,-90,1,-48),UDim2.fromOffset(180,42)
+stop.Text,stop.TextSize,stop.TextColor3,stop.BackgroundColor3="PARAR TREINO",12,Color3.new(1,1,1),Color3.fromRGB(65,80,105)
 stop.Parent=card
+local stopCorner = Instance.new("UICorner")
+stopCorner.CornerRadius, stopCorner.Parent = UDim.new(0, 11), stop
+stop.Font = Enum.Font.GothamBold
 stop.Activated:Connect(function()remotes.StopTraining:FireServer()end)
 local qte=Instance.new("TextButton")
 qte.Name,qte.AnchorPoint,qte.Size="DoubleTrainingQTE",Vector2.new(.5,.5),UDim2.fromOffset(90,90)
@@ -6330,23 +6687,34 @@ Input.InputBegan:Connect(function(input,processed)
  elseif input.KeyCode==Enum.KeyCode.Escape or input.KeyCode==Enum.KeyCode.ButtonB then remotes.StopTraining:FireServer() end
 end)
 local function render(data:any)
- title.Text="ACADEMIA • NÍVEL "..tostring(data.Level or 1)
- xp.Text=tostring(data.XP or 0).." / "..tostring(data.RequiredXP or 60).." XP"
- fill.Size=UDim2.fromScale(math.clamp((data.XP or 0)/math.max(1,data.RequiredXP or 1),0,1),1)
- reps.Text=tostring(data.Reps or 0).." repetições  •  +"..tostring(data.Gain or 1).." força por ciclo"
+ title.Text = (data.MachineName or "Academia") .. "  ·  Nv. " .. tostring(data.Level or 1)
+ xp.Text = if data.Level >= 100 then "Nível máximo" else data.XP .. " / " .. data.RequiredXP .. " XP"
+ if xpTween then xpTween:Cancel() end
+ local fillAmount = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(1, data.RequiredXP), 0, 1)
+ xpTween = TweenService:Create(fill, TweenInfo.new(.18), {Size = UDim2.fromScale(fillAmount, 1)})
+ xpTween:Play()
+ nextRepAt, interval = data.NextRepAt or 0, data.Interval or 1.8
+ reps.Text = data.Reps .. " reps  ·  +" .. data.Gain .. " força  ·  +" .. data.XPPerRep .. " XP"
+
 end
 (remotes:WaitForChild("TrainingUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
- show(data.Active==true);render(data)
+ show(data.Active==true)
+ if not data.Active then return end
+ render(data)
  if data.State=="QTE" then current=data;qte.Position=UDim2.fromScale(data.X,data.Y);qte.Visible=true
  elseif data.State=="Perfect" then
-  current=nil;qte.Visible=false;reps.Text="PERFEITO! 2× FORÇA E XP NESTA REPETIÇÃO"
+  current=nil;qte.Visible=false;reps.Text="PERFEITO! 2× FORÇA E XP"
   local sound=Instance.new("Sound")
   sound.SoundId,sound.Volume,sound.PlaybackSpeed,sound.Parent="rbxasset://sounds/volume_slider.ogg",.15,1.5,game:GetService("SoundService")
   sound:Play();Debris:AddItem(sound,3)
  elseif data.State=="Missed" then current=nil;qte.Visible=false end
 end)
 Run.RenderStepped:Connect(function()
+ if active and nextRepAt > 0 then
+  local fraction = 1 - math.clamp((nextRepAt - Workspace:GetServerTimeNow()) / interval, 0, 1)
+  progress.Size = UDim2.fromScale(fraction, 1)
+ end
  if current then
   local remaining=current.ExpiresAt-Workspace:GetServerTimeNow()
   if remaining<=0 then current=nil;qte.Visible=false;return end
@@ -6394,7 +6762,7 @@ Players.PlayerRemoving:Connect(stopPose)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="94">
+      <Item class="LocalScript" referent="95">
         <Properties>
           <string name="Name">ClientWorldController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6407,7 +6775,6 @@ local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Co
 local Events = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigEvents"))
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
 local player = Players.LocalPlayer
-local folder = Workspace:WaitForChild("CriaturasSelvagens")
 local tracked: {[Model]: {Peak: Part?, Beam: Beam?, Glow: Highlight?, Sparkles: Sparkles?}} = {}
 local state: any = nil
 local correction = Instance.new("ColorCorrectionEffect")
@@ -6446,8 +6813,21 @@ local function observe(model: Instance)
     end
     tracked[model] = item
 end
-for _, model in folder:GetChildren() do observe(model) end
-folder.ChildAdded:Connect(observe)
+local function observeWildFolder(folder: Instance)
+    folder.ChildAdded:Connect(observe)
+    for _, model in folder:GetChildren() do observe(model) end
+end
+local wildFolder = Workspace:FindFirstChild("CriaturasSelvagens")
+if wildFolder then
+    observeWildFolder(wildFolder)
+else
+    local connection: RBXScriptConnection
+    connection = Workspace.ChildAdded:Connect(function(child)
+        if child.Name ~= "CriaturasSelvagens" then return end
+        connection:Disconnect()
+        observeWildFolder(child)
+    end)
+end
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value
@@ -6483,11 +6863,11 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="Folder" referent="95">
+      <Item class="Folder" referent="96">
         <Properties>
           <string name="Name">Throw</string>
         </Properties>
-        <Item class="ModuleScript" referent="96">
+        <Item class="ModuleScript" referent="97">
           <Properties>
             <string name="Name">RevealDirector</string>
             <string name="Source"><![CDATA[--!strict
@@ -6665,7 +7045,7 @@ return Director
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="97">
+        <Item class="ModuleScript" referent="98">
           <Properties>
             <string name="Name">ThrowPose</string>
             <string name="Source"><![CDATA[--!strict
@@ -6718,11 +7098,11 @@ return Pose
           </Properties>
         </Item>
       </Item>
-      <Item class="Folder" referent="98">
+      <Item class="Folder" referent="99">
         <Properties>
           <string name="Name">UI</string>
         </Properties>
-        <Item class="ModuleScript" referent="99">
+        <Item class="ModuleScript" referent="100">
           <Properties>
             <string name="Name">CommercePanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -7060,7 +7440,7 @@ return Commerce
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="100">
+        <Item class="ModuleScript" referent="101">
           <Properties>
             <string name="Name">GameplayPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -7487,7 +7867,7 @@ return View
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="101">
+        <Item class="ModuleScript" referent="102">
           <Properties>
             <string name="Name">HUDIcons</string>
             <string name="Source"><![CDATA[--!strict
@@ -7677,7 +8057,7 @@ return Icons
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="102">
+        <Item class="ModuleScript" referent="103">
           <Properties>
             <string name="Name">HUDPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -7685,6 +8065,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local W = require(script.Parent:WaitForChild("HUDWidgets"))
 local Icons = require(script.Parent:WaitForChild("HUDIcons"))
@@ -7692,6 +8073,7 @@ local Gameplay = require(script.Parent:WaitForChild("GameplayPanels"))
 local C = W.Colors
 
 local Panels = {}
+Panels.Machines = require(Shared:WaitForChild("ConfigTraining")).Machines
 Panels.OrbOrder = {"Comum", "Esmeralda", "Rubi", "Safira", "Runica", "Hextech", "Cosmica", "Mestre"}
 Panels.MenuItems = {
     {Id = "Bestiario", Icon = "Book", Name = "Bestiário", Color = C.Blue},
@@ -7707,10 +8089,10 @@ Panels.MenuItems = {
 }
 Panels.Titles = {
     Bestiario = "BESTIÁRIO", Loja = "LOJA ROBUX", Fusao = "FUSÃO 5 → 1", Diario = "DIÁRIO & PRESENTES",
-    Rebirth = "REBIRTH", Ranking = "PLACARES", Criaturas = "MINHAS CRIATURAS", Orbes = "COLEÇÃO DE ORBES",
+    Rebirth = "REBIRTH", Ranking = "PLACARES", Criaturas = "MINHAS CRIATURAS", Orbes = "EVOLUÇÃO DE ORBES",
     Auto = "AUTO-ARREMESSO", Codigos = "CÓDIGOS", Menu = "EXPLORE SEU SANTUÁRIO",
     Biomas = "BIOMAS & PRAÇA DE TROCAS", GrupoVIP = "GRUPO & VIP", Trocas = "TROCAS SEGURAS", Leiloes = "LEILÕES POR MOEDAS",
-    Consumiveis = "CONSUMÍVEIS & POÇÕES",
+    Consumiveis = "CONSUMÍVEIS & POÇÕES", Academia = "ACADEMIA", Resgates = "RESGATES DA PISTA",
 }
 
 local function hint(parent: Instance, content: string, color: Color3?): TextLabel
@@ -7861,7 +8243,7 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             local row = card(list, "EmptyCollection", 190, C.Green)
             local icon = badge(row, C.Green, "Paw")
             icon.Position = UDim2.new(0.5, -29, 0, 12)
-            local empty = W.Label(row, "Empty", "SUA COLEÇÃO COMEÇA AQUI\n\nMire em uma criatura da Pradaria e solte a orbe. As primeiras capturas entram na base automaticamente.", UDim2.fromOffset(12, 76), UDim2.new(1, -24, 0, 102), 14, C.White)
+            local empty = W.Label(row, "Empty", "SUA COLEÇÃO COMEÇA AQUI\n\nVá até a faixa amarela e arremesse sua orbe. As primeiras capturas entram na base automaticamente.", UDim2.fromOffset(12, 76), UDim2.new(1, -24, 0, 102), 14, C.White)
             empty.TextWrapped = true
             empty.TextXAlignment = Enum.TextXAlignment.Center
             return
@@ -7888,34 +8270,92 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         return
     end
 
+    if kind == "Resgates" then
+        local list = W.List(parent, "RewardList", UDim2.new(), UDim2.fromScale(1, 1))
+        local rewards = (state and state.DropInfo or {}).Drops or {}
+        if #rewards == 0 then
+            hint(list, "As recompensas das capturas aparecem aqui.", C.Muted)
+        end
+        for index, reward in rewards do
+            local row = card(list, "Drop_" .. index, 66, C.Green)
+            row.LayoutOrder = index
+            local value = "+$" .. Numbers.Format(reward.Coins)
+            if reward.MasterOrbs > 0 then value ..= " · Mestre ×" .. Numbers.Format(reward.MasterOrbs) end
+            local label = W.Label(row, "Value", value, UDim2.fromOffset(16, 9), UDim2.new(.59, -12, 1, -18), 15, C.Green)
+            label.TextWrapped = true
+            local claim = W.Button(row, "Claim", "PEGAR", UDim2.new(.62, 0, 0, 11), UDim2.new(.38, -9, 0, 44), C.Green, 12)
+            claim.Activated:Connect(function() actions.Send("CollectDrop", reward.Id) end)
+        end
+        return
+    end
+
+    if kind == "Academia" then
+        local data = state and state.Training
+        if not data then hint(parent, "Carregando seu treino…"); return end
+        local list = W.List(parent, "Academy", UDim2.new(), UDim2.fromScale(1, 1))
+        local tier = data.MachineTier or 1
+        local current = card(list, "CurrentMachine", 112, C.Orange)
+        current.LayoutOrder = 1
+        W.Label(current, "Name", data.MachineName, UDim2.fromOffset(14, 6), UDim2.new(1, -28, 0, 28), 19)
+        W.Label(current, "Gain", "Máquina " .. tier .. " · +" .. data.Gain .. " força e +" .. data.XPPerRep .. " XP / repetição", UDim2.fromOffset(14, 35), UDim2.new(1, -28, 0, 23), 12, C.Green)
+        local start = W.Button(current, "Start", "COMEÇAR TREINO", UDim2.fromOffset(12, 61), UDim2.new(1, -24, 0, 43), C.Orange, 13)
+        start.Activated:Connect(function() actions.Close(); actions.Send("StartTraining") end)
+        local upgrade = card(list, "NextMachine", 147, C.Blue)
+        upgrade.LayoutOrder = 2
+        local nextMachine = Panels.Machines[tier + 1]
+        W.Label(upgrade, "Level", "Academia nível " .. data.Level, UDim2.fromOffset(14, 5), UDim2.new(1, -28, 0, 23), 14, C.Blue)
+        local progress = W.Frame(upgrade, "XP", UDim2.fromOffset(14, 31), UDim2.new(1, -28, 0, 9), C.Ink)
+        local fraction = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(data.RequiredXP, 1), 0, 1)
+        W.Frame(progress, "Fill", UDim2.new(), UDim2.fromScale(fraction, 1), C.Blue)
+        if nextMachine then
+            W.Label(upgrade, "Next", nextMachine.Name .. " · Nv. " .. nextMachine.Level, UDim2.fromOffset(14, 46), UDim2.new(1, -28, 0, 21), 14)
+            W.Label(upgrade, "Gain", "+" .. (nextMachine.Force - Panels.Machines[tier].Force) .. " força base · " .. nextMachine.XP .. " XP / repetição", UDim2.fromOffset(14, 68), UDim2.new(1, -28, 0, 20), 12, C.Green)
+            local ready = data.Level >= nextMachine.Level and state.Coins >= nextMachine.Cost
+            local title = if data.Level < nextMachine.Level then "LIBERA NO NÍVEL " .. nextMachine.Level
+                elseif not ready then "FALTAM MOEDAS · $" .. Numbers.Format(nextMachine.Cost)
+                else "EVOLUIR · $" .. Numbers.Format(nextMachine.Cost)
+            local button = W.Button(upgrade, "Upgrade", title, UDim2.fromOffset(12, 94), UDim2.new(1, -24, 0, 43), if ready then C.Green else C.Card, 12)
+            button.Active, button.Selectable = ready, ready
+            button.Activated:Connect(function() if ready then actions.Send("UpgradeTrainingMachine", tier + 1) end end)
+        else
+            W.Label(upgrade, "Max", "Sua máquina chegou ao nível máximo!", UDim2.fromOffset(14, 56), UDim2.new(1, -28, 0, 32), 14, C.Green)
+        end
+        return
+    end
+
     if kind == "Orbes" then
-        local fragments = if state then state.OrbFragments or 0 else 0
-        hint(parent, "FRAGMENTOS: " .. Numbers.Format(fragments) .. " • Troque 10 fragmentos por 1 Orbe Comum.")
-        local craft = W.Button(parent, "CraftOrbFragments", "CRIAR 1 COMUM • 10 FRAGMENTOS", UDim2.fromOffset(4, 48), UDim2.new(1, -8, 0, 44), C.Blue, 12)
-        craft.Active, craft.Selectable = fragments >= 10, fragments >= 10
-        craft.Activated:Connect(function() actions.Send("CraftOrbFragments") end)
-        local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 104), UDim2.new(1, 0, 1, -104))
+        local fragments = state and state.OrbFragments or 0
+        hint(parent, "Orbes evoluídas têm uso livre. Fragmentos para desconto: " .. Numbers.Format(fragments))
+        local tier = state and state.OrbTier or 1
+        local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
         local order = table.clone(Panels.OrbOrder)
         if state and state.Benefits and state.Benefits.EternalPrism then table.insert(order, "Prismatica") end
         for index, id in order do
-            local definition = Config.Orbs[id]
-            local count = if state and state.Orbs then state.Orbs[id] or 0 else 0
+            local orb = Config.Orbs[id]
+            local count = state and (state.Orbs or {})[id] or 0
             local active = state and state.EquippedOrb == id
-            local row = card(list, id, 142, definition.Color)
+            local permanent = orb.Tier and orb.Tier <= tier
+            local nextTier = orb.Tier and orb.Tier == tier + 1
+            local canEquip = permanent or orb.IsPrismatic or count > 0
+            local row = card(list, id, 124, orb.Color)
             row.LayoutOrder = index
-            badge(row, definition.Color, "Orb")
-            local name = W.Label(row, "Name", definition.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
-            name.TextTruncate = Enum.TextTruncate.AtEnd
-            W.Label(row, "Stock", (if definition.IsPrismatic then "∞ ESTOQUE" else "×" .. Numbers.Format(count)) .. "  •  Poder " .. Numbers.Format(definition.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 19), 11, C.Muted, true)
-            W.Label(row, "Price", if definition.IsPrismatic then "Passe verificado • 10× sorte" elseif definition.IsMaster then "Recompensas e loja" else "$" .. Numbers.Format(definition.Price) .. " cada", UDim2.fromOffset(83, 56), UDim2.new(1, -95, 0, 20), 12, if definition.IsMaster then C.Pink else C.Green, true)
-            local equip = W.Button(row, "Equip", if active then "EQUIPADA" else "EQUIPAR", UDim2.fromOffset(12, 86), UDim2.new(0.5, -18, 0, 44), if active then C.Gold else C.Blue, 12)
-            equip.Activated:Connect(function()
-                if count < 1 and not definition.IsPrismatic then actions.Notify("Você precisa ter essa orbe para equipá-la.") else actions.EquipOrb(id) end
-            end)
-            local buy = W.Button(row, "Buy", if definition.IsMaster or definition.IsPrismatic then "VER LOJA" else "+1  COMPRAR", UDim2.new(0.5, 6, 0, 86), UDim2.new(0.5, -18, 0, 44), if definition.IsMaster then C.Pink else C.Green, 12)
-            buy.Activated:Connect(function()
-                if definition.IsMaster or definition.IsPrismatic then actions.Open("Loja") else actions.BuyOrb(id, 1) end
-            end)
+            badge(row, orb.Color, "Orb")
+            W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
+            local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
+            W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 21), 12, C.Muted)
+            if nextTier then
+                local price, used = GameplayMath.GetOrbEvolutionPrice(orb.Price, fragments)
+                local ready = state and state.Coins >= price
+                local cost = "$" .. Numbers.Format(price) .. (if used > 0 then " ✦" else "")
+                local evolve = W.Button(row, "Evolve", "EVOLUIR " .. cost, UDim2.fromOffset(12, 72), UDim2.new(if canEquip then .54 else 1, -24, 0, 44), if ready then C.Green else C.Card, 12)
+                evolve.Active, evolve.Selectable = ready == true, ready == true
+                evolve.Activated:Connect(function() if ready then actions.Send("EvolveOrb", orb.Tier) end end)
+            end
+            if canEquip then
+                local left = if nextTier then .54 else 0
+                local equip = W.Button(row, "Equip", if active then "EQUIPADA" else "EQUIPAR", UDim2.new(left, 12, 0, 72), UDim2.new(1 - left, -24, 0, 44), if active then C.Gold else C.Blue, 12)
+                equip.Activated:Connect(function() if not active then actions.EquipOrb(id) end end)
+            end
         end
         return
     end
@@ -7927,7 +8367,7 @@ return Panels
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="103">
+        <Item class="ModuleScript" referent="104">
           <Properties>
             <string name="Name">HUDWidgets</string>
             <string name="Source"><![CDATA[--!strict
@@ -8158,7 +8598,7 @@ return Widgets
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="104">
+        <Item class="ModuleScript" referent="105">
           <Properties>
             <string name="Name">ShopView</string>
             <string name="Source"><![CDATA[--!strict
@@ -8565,18 +9005,18 @@ function ShopView.Render(parent: GuiObject, notify: (string) -> ()): () -> ()
 		end
 		local index = 0
 		for _, item in Catalog.Items do
-			if item.Category == category then
+			if item.Category == category and item.Key ~= "EternalPrism" then
 				index += 1
 				createCard(item, index, revision)
 			end
 		end
 		resize()
 	end
-	for index, tab in { { Key = "Gamepasses", Name = "Gamepasses" }, { Key = "Orbes", Name = "Pacotes de Orbes" }, { Key = "Boosts", Name = "Totens & Poções" } } do
+	for index, tab in { { Key = "Gamepasses", Name = "Gamepasses" }, { Key = "Boosts", Name = "Totens & Poções" } } do
 		local item = button(tabs, tab.Key, tab.Name)
 		item.TextSize = 13
-		item.Position = UDim2.new((index - 1) / 3, if index == 1 then 0 else 3, 0, 0)
-		item.Size = UDim2.new(1 / 3, -5, 1, 0)
+		item.Position = UDim2.new((index - 1) / 2, if index == 1 then 0 else 3, 0, 0)
+		item.Size = UDim2.new(1 / 2, -5, 1, 0)
 		tabButtons[tab.Key] = item
 		table.insert(connections, item.Activated:Connect(function() render(tab.Key) end))
 	end
@@ -8619,7 +9059,7 @@ return ShopView
       </Item>
     </Item>
   </Item>
-  <Item class="Workspace" referent="105">
+  <Item class="Workspace" referent="106">
     <Properties>
       <string name="Name">Workspace</string>
       <float name="FallenPartsDestroyHeight">-100</float>

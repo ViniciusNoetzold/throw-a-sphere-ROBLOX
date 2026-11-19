@@ -3,8 +3,8 @@ local Training={}
 function Training.RequiredXP(level:number,rules:any):number
     return math.floor(rules.XPBase*math.clamp(level,1,rules.MaxLevel)^rules.XPExponent)
 end
-function Training.Gain(level:number,titan:boolean,rules:any):number
-    return (1+math.floor((math.clamp(level,1,rules.MaxLevel)-1)/rules.LevelsPerGain))*(if titan then 2 else 1)
+function Training.Gain(level: number, titan: boolean, rules: any, machine: any?): number
+    return (1+math.floor((math.clamp(level,1,rules.MaxLevel)-1)/rules.LevelsPerGain) + (if machine then machine.Force else 0))*(if titan then 2 else 1)
 end
 function Training.AddXP(profile:any,amount:number,rules:any):boolean
     if profile.TrainingLevel>=rules.MaxLevel then profile.TrainingXP=0;return false end

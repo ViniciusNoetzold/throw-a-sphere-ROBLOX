@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 11:49 — Brasília (UTC−3). Pista, academia e santuários revisados.** A faixa amarela ficou mais larga, com resposta mais rápida e uma barra de força menor em estilo cartoon. O ciclo completo do marcador leva 3,8 segundos. As laterais do túnel têm paredes. A praça, os biomas e a área de trocas têm barreiras de borda e retorno seguro em caso de queda.
+
+O HUD ficou mais compacto e o combo foi removido, incluindo seus bônus. As recompensas de captura ficam no menu **Resgates** e podem ser recolhidas longe da pista. Na **Academia**, cinco níveis de máquina dão mais força e XP por repetição. Em **Evoluir orbe**, moedas liberam evoluções permanentes em sequência e fragmentos dão desconto. Estoques antigos são preservados. O mapa tem oito santuários cercados, com criaturas andando e mostrando em verde a própria renda por segundo.
+
+**Validações.** A compilação Luau, as suítes com mocks, a integridade das skills e o build Rojo passaram. O Play local confirmou a faixa, o arremesso por clique, o resgate, as evoluções da orbe e da máquina, a renda no cercado e a proteção contra quedas. Consulte o [relatório de validação](docs/reviews/2026-11-19-pista-academia-santuarios.md).
+
+**Próximo trabalho.** Integrar a arte final e balancear os custos e ganhos. Validar em dispositivos físicos e com oito clientes simultâneos. O limite do servidor público deve ser configurado no Creator Dashboard ao preparar a publicação. O Play local usa StudioMemory. Os testes de DataStore publicado ainda estão pendentes.
+
+**Para continuar**, atualize o Git e abra `game/ThrowASphere.rbxlx`. A fonte editável continua em `src/`.
+
+### Checkpoint anterior — arremesso e academia
+
 **19/11/2026, 10:31 — Brasília (UTC−3). Arremesso por biomas e academia funcional com barra de XP.** O fluxo principal agora começa ao encostar na linha amarela: a barra aparece automaticamente, tem vermelho nas duas pontas e verde no centro, e aceita clique/toque em qualquer lugar ou R2. A câmera acompanha a orbe pelo corredor e o servidor define a criatura ao final do voo. Há três performances de arremesso por força e sete apresentações de revelação por raridade, com arte provisória. O jogador é impedido de entrar na pista.
 
 **Academia:** o botão ACADEMIA leva à barra provisória do próprio santuário. O treino faz repetições automáticas, aumenta força e XP, mostra a barra e o nível da academia e oferece um desafio de **2× a cada três repetições**, em posições diferentes. O desafio é opcional e seu bônus vale para uma repetição. Parar, morrer ou dar respawn limpa o treino e restaura os controles. Os novos campos de progresso preservam os saves existentes.
@@ -121,7 +133,7 @@ Conecte o plugin Rojo em `localhost:34872`. A fonte executável é `src/`; mudan
 
 **O Studio usa memória por padrão e reinicia os dados ao parar o Play.** O HUD identifica esse modo. O salvamento real é ativado automaticamente em servidores publicados. Para validar persistência no Studio, use uma experiência separada de teste, um DataStore exclusivo e o procedimento do [guia de ambiente](docs/AMBIENTE_E_DOIS_PCS.md). Não teste sobre saves de produção.
 
-O GitHub guarda o código e o place local. Publicar uma experiência Roblox e configurar produtos pagos são operações separadas. Antes de publicação, conferir limite de seis jogadores, identifiers reais, persistência, multiplayer e recibos. Uma vaga social adicional e a Trading Plaza externa precisam da configuração de implantação apropriada.
+O GitHub guarda o código e o place local. Publicar uma experiência Roblox e configurar produtos pagos são operações separadas. Antes de publicação, configurar o limite de oito jogadores e conferir identificadores, persistência, multiplayer e recibos. A Trading Plaza externa precisa da configuração de implantação apropriada.
 
 ## Histórico: passo 1
 

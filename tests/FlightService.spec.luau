@@ -30,7 +30,7 @@ local messages={}
 local results={}
 local serial=0
 local rngRoll=0
-local Config={Orbs={Comum={Power=10,Color="blue"},Mestre={Power=1000,IsMaster=true},Prismatica={Power=25,IsPrismatic=true}},
+local Config={Orbs={Comum={Power=10,Color="blue",Tier=1},Mestre={Power=1000,IsMaster=true},Prismatica={Power=25,IsPrismatic=true}},
  Creatures={Sproutling={Name="Sproutling",Biome="PradariaSolar",Rarity="Comum",Difficulty=1,BaseXP=25,BaseIncomePerSec=8}},
  Mutations={{Name="Normal",Multiplier=1}},Sizes={{Name="Normal",Multiplier=1}},Constants={MaxInventoryCreatures=500},
  CalculateShakeProbability=function()return 1 end}
@@ -104,6 +104,15 @@ test("prepare rejects a player outside the launch area",function()root.Position=
 test("launch rechecks departure from the launch area",function()local id=prepare();advance(.4);root.Position=Vector3.new(1000,0,0);assert(not Flight.Launch(player,id));assert(profile.Orbs.Comum==25);root.Position=Vector3.new(0,0,0)end)
 test("extra client arguments cannot select power or biome",function()local id=prepare();advance(.3);remotes.LaunchThrow.OnServerEvent:Fire(player,id,true,math.huge,"VazioCosmico");local m=messages[#messages];assert(math.abs(m.Power-Math.Power(.3,1.6))<1e-9 and m.BiomeId=="PradariaSolar")end)
 test("forged premium orb is rejected",function()profile.EquippedOrb="Prismatica";profile.Orbs.Prismatica=100;assert(not Flight.Prepare(player))end)
+test("a permanent evolution launches with zero consumable stock", function()
+    profile.OrbTier = 1
+    profile.Orbs.Comum = 0
+    local id = prepare()
+    advance(.4)
+    assert(Flight.Launch(player, id))
+    advance(8)
+    assert(profile.Orbs.Comum == 0 and #profile.CapturedCreatures == 1)
+end)
 test("verified eternal orb consumes no stock",function()profile.EquippedOrb="Prismatica";benefits.EternalPrism=true;local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);assert(profile.Orbs.Prismatica==nil and #profile.CapturedCreatures==1)end)
 test("triple throw consumes three and grants three",function()benefits.TripleThrow=true;local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);assert(profile.Orbs.Comum==22 and #profile.CapturedCreatures==3 and #results[1].Bundle==3)end)
 test("failed save freezes without sending a successful result",function()local id=prepare();advance(.4);Flight.Launch(player,id);saved=false;advance(8);assert(frozen and #results==0)end)

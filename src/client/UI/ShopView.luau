@@ -402,18 +402,18 @@ function ShopView.Render(parent: GuiObject, notify: (string) -> ()): () -> ()
 		end
 		local index = 0
 		for _, item in Catalog.Items do
-			if item.Category == category then
+			if item.Category == category and item.Key ~= "EternalPrism" then
 				index += 1
 				createCard(item, index, revision)
 			end
 		end
 		resize()
 	end
-	for index, tab in { { Key = "Gamepasses", Name = "Gamepasses" }, { Key = "Orbes", Name = "Pacotes de Orbes" }, { Key = "Boosts", Name = "Totens & Poções" } } do
+	for index, tab in { { Key = "Gamepasses", Name = "Gamepasses" }, { Key = "Boosts", Name = "Totens & Poções" } } do
 		local item = button(tabs, tab.Key, tab.Name)
 		item.TextSize = 13
-		item.Position = UDim2.new((index - 1) / 3, if index == 1 then 0 else 3, 0, 0)
-		item.Size = UDim2.new(1 / 3, -5, 1, 0)
+		item.Position = UDim2.new((index - 1) / 2, if index == 1 then 0 else 3, 0, 0)
+		item.Size = UDim2.new(1 / 2, -5, 1, 0)
 		tabButtons[tab.Key] = item
 		table.insert(connections, item.Activated:Connect(function() render(tab.Key) end))
 	end

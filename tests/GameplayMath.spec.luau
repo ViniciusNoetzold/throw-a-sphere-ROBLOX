@@ -19,11 +19,11 @@ equal(Math.GetRange(profile, {}), 47)
 equal(Math.GetRange(profile, {TitanArms = true}), 63.45)
 equal(Math.GetLuck(profile, {}, 1, 1000), 1)
 profile.ComboStreak = 10
-equal(Math.GetLuck(profile, {DoubleLuck = true}, 5, 1000), 15)
-equal(Math.GetXPMultiplier(profile, {}, 1000), 1) -- Fever is not counted twice.
+equal(Math.GetLuck(profile, {DoubleLuck = true}, 5, 1000), 10)
+equal(Math.GetXPMultiplier(profile, {}, 1000), 1) -- Old streak data confers no bonus.
 profile.EquippedOrb = "Prismatica"
-equal(Math.GetLuck(profile, {EternalPrism = true}, 1, 1000), 15)
-equal(Math.GetLuck(profile, {}, 1, 1000), 1.5) -- Orb string alone grants nothing.
+equal(Math.GetLuck(profile, {EternalPrism = true}, 1, 1000), 10)
+equal(Math.GetLuck(profile, {}, 1, 1000), 1) -- Orb string alone grants nothing.
 profile.BestiaryRewardClaimed.PradariaSolar = true
 profile.BestiaryRewardClaimed.Unclaimed = false
 profile.ComboStreak = 0

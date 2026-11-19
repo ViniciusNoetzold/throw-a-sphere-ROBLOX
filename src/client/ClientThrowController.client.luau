@@ -27,48 +27,57 @@ local function label(parent:Instance,name:string,value:string,pos:UDim2,size:UDi
  l.TextStrokeTransparency,l.Parent=0.4,parent
  return l
 end
-local panel=Instance.new("Frame")
-panel.Name,panel.AnchorPoint,panel.Position="ForcePanel",Vector2.new(0.5,1),UDim2.new(0.5,0,1,-100)
-panel.Size,panel.BackgroundColor3,panel.BackgroundTransparency=UDim2.new(0.46,0,0,94),Color3.fromRGB(12,22,42),0.08
-panel.Visible=false;panel.Parent=gui;round(panel)
-local limits=Instance.new("UISizeConstraint")
-limits.MinSize,limits.MaxSize,limits.Parent=Vector2.new(260,94),Vector2.new(430,94),panel
-local title=label(panel,"PowerLabel","PREPARE SUA ORBE",UDim2.fromOffset(8,5),UDim2.new(1,-16,0,26),18)
-local meter=Instance.new("Frame")
-meter.Name,meter.Position,meter.Size="PowerMeter",UDim2.fromOffset(18,33),UDim2.new(1,-36,0,24)
-meter.BackgroundColor3,meter.ClipsDescendants,meter.Parent=Color3.new(1,1,1),true,panel;round(meter)
-local gradient=Instance.new("UIGradient")
-gradient.Color,gradient.Parent=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(245,65,65)),ColorSequenceKeypoint.new(.25,Color3.fromRGB(255,180,55)),ColorSequenceKeypoint.new(.5,Color3.fromRGB(50,240,110)),ColorSequenceKeypoint.new(.75,Color3.fromRGB(255,180,55)),ColorSequenceKeypoint.new(1,Color3.fromRGB(245,65,65))}),meter
-local perfect=Instance.new("Frame")
-perfect.Position,perfect.Size,perfect.BackgroundColor3,perfect.BackgroundTransparency=UDim2.fromScale(0.47,0),UDim2.fromScale(0.06,1),Color3.new(1,1,1),0.75
-perfect.Parent=meter
-local pointer=Instance.new("Frame")
-pointer.Name,pointer.Size,pointer.AnchorPoint="PowerPointer",UDim2.new(0,6,1,0),Vector2.new(0.5,0)
-pointer.BackgroundColor3,pointer.BorderSizePixel,pointer.Parent=Color3.new(1,1,1),0,meter
-local button=Instance.new("TextButton")
-button.Name,button.Position,button.Size="LaunchButton",UDim2.fromOffset(18,62),UDim2.new(1,-36,0,24)
-button.Text,button.TextSize,button.Font="CLIQUE EM QUALQUER LUGAR",12,Enum.Font.GothamBlack
-button.BackgroundTransparency=1
-button.TextColor3,button.BackgroundColor3,button.Parent=Color3.fromRGB(220,245,230),Color3.fromRGB(105,240,145),panel;round(button)
+local ink = Color3.fromRGB(34, 39, 66)
+local panel = Instance.new("Frame")
+panel.Name, panel.AnchorPoint, panel.Position = "ForcePanel", Vector2.new(.5, 1), UDim2.new(.5, 0, 1, -76)
+panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 76), Color3.fromRGB(49, 57, 89)
+panel.Visible, panel.Parent = false, gui
+round(panel)
+local edge = Instance.new("UIStroke")
+edge.Color, edge.Thickness, edge.Parent = Color3.fromRGB(255, 225, 126), 2, panel
+local limits = Instance.new("UISizeConstraint")
+limits.MaxSize, limits.Parent = Vector2.new(288, 76), panel
+local title = label(panel, "PowerLabel", "FORÇA", UDim2.fromOffset(7, 2), UDim2.new(1, -14, 0, 22), 15)
+local meter = Instance.new("Frame")
+meter.Name, meter.Position, meter.Size = "PowerMeter", UDim2.fromOffset(15, 28), UDim2.new(1, -30, 0, 19)
+meter.BackgroundColor3, meter.BorderSizePixel, meter.Parent = Color3.new(1, 1, 1), 0, panel
+round(meter)
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 105)),
+    ColorSequenceKeypoint.new(.23, Color3.fromRGB(255, 198, 70)),
+    ColorSequenceKeypoint.new(.5, Color3.fromRGB(94, 245, 133)),
+    ColorSequenceKeypoint.new(.77, Color3.fromRGB(255, 198, 70)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 105)),
+})
+gradient.Parent = meter
+local perfect = Instance.new("Frame")
+perfect.Position, perfect.Size = UDim2.fromScale(.465, 0), UDim2.fromScale(.07, 1)
+perfect.BackgroundColor3, perfect.BackgroundTransparency, perfect.BorderSizePixel = Color3.new(1, 1, 1), .5, 0
+perfect.Parent = meter
+round(perfect)
+local pointer = Instance.new("Frame")
+pointer.Name, pointer.Size, pointer.AnchorPoint = "PowerPointer", UDim2.fromOffset(15, 23), Vector2.new(.5, .5)
+pointer.BackgroundColor3, pointer.BorderSizePixel, pointer.Parent = Color3.fromRGB(255, 249, 227), 0, meter
+round(pointer)
+local rim = Instance.new("UIStroke")
+rim.Color, rim.Thickness, rim.Parent = ink, 2, pointer
+local button = Instance.new("TextButton")
+button.Name, button.Position, button.Size = "LaunchButton", UDim2.fromOffset(6, 50), UDim2.new(1, -12, 0, 24)
+button.Text, button.TextSize, button.Font = "CLIQUE OU TOQUE  ·  R2", 11, Enum.Font.GothamBold
+button.BackgroundTransparency, button.TextColor3, button.Parent = 1, Color3.fromRGB(255, 242, 213), panel
 local top=label(gui,"Distance","",UDim2.new(0.5,0,0,70),UDim2.new(0.6,0,0,60),32)
 top.AnchorPoint=Vector2.new(0.5,0)
 local zone=label(gui,"Biome","",UDim2.new(0.5,0,0,130),UDim2.new(0.6,0,0,36),23)
 zone.AnchorPoint=Vector2.new(0.5,0)
-local motion=Instance.new("TextButton")
-motion.Name,motion.AnchorPoint,motion.Position,motion.Size="ReducedMotion",Vector2.new(1,1),UDim2.new(1,-14,1,-20),UDim2.fromOffset(156,30)
-motion.Text,motion.TextSize,motion.BackgroundColor3,motion.TextColor3="MOVIMENTO: COMPLETO",10,Color3.fromRGB(20,30,45),Color3.new(1,1,1)
-motion.Visible=false;motion.Parent=gui;round(motion)
-motion.Activated:Connect(function()
- local value=gui:GetAttribute("ReducedMotion")~=true;gui:SetAttribute("ReducedMotion",value)
- motion.Text=if value then "MOVIMENTO: REDUZIDO" else "MOVIMENTO: COMPLETO"
-end)
 local session:any=nil
-local waiting=false
 local generation=0
 local cleanup:(()->())?=nil
 local chargeHidden:{[ScreenGui]:boolean}={}
 local retryAt=0
-local hint=label(gui,"LaunchHint","Encoste na linha amarela à frente para arremessar",UDim2.new(.5,0,1,-115),UDim2.new(.8,0,0,22),13)
+local suppressUntilExit = false
+local blockingMessage: string? = nil
+local hint=label(gui,"LaunchHint","Encoste na linha amarela à frente para arremessar",UDim2.new(.5,0,1,-107),UDim2.new(.8,0,0,22),13)
 hint.AnchorPoint=Vector2.new(.5,0)
 local function atLine():boolean
  local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -94,57 +103,66 @@ local function restore()
  panel.Visible=false;top.Text,zone.Text="",""
 end
 local function idle()
- session,waiting=nil,false;restore()
- retryAt=os.clock()+0.6
- title.Text,button.Text="PARE NO CENTRO VERDE","CLIQUE OU TOQUE EM QUALQUER LUGAR"
+    session = nil
+    blockingMessage = nil
+    restore()
+    retryAt = os.clock() + .18
 end
-local function activate()
- if waiting or modal() or not atLine() then return end
- if not session then
-  waiting=true;remotes.PrepareThrow:FireServer()
-  task.delay(2,function() if not session then waiting=false end end)
- elseif session.State=="Charging" then
-  session.State="Submitting";button.Text="TRAVANDO FORÇA...";remotes.LaunchThrow:FireServer(session.Id)
- end
+local function confirm()
+    if not session or session.State ~= "Charging" or not atLine() then return end
+    session.State = "Submitting"
+    button.Text = "ARREMESSANDO…"
+    remotes.LaunchThrow:FireServer(session.Id)
 end
-button.Activated:Connect(activate)
-local function overUI(input:InputObject):boolean
- if input.KeyCode==Enum.KeyCode.ButtonR2 then return false end
- local point=if input.UserInputType==Enum.UserInputType.Touch then Vector2.new(input.Position.X,input.Position.Y) else Input:GetMouseLocation()
- for _,object in player.PlayerGui:GetGuiObjectsAtPosition(point.X,point.Y) do
-  local current:Instance?=object
-  while current and current~=player.PlayerGui do
-   if current:IsA("GuiButton") or (current:IsA("GuiObject") and current.Active) then return true end
-   current=current.Parent
-  end
- end
- return false
-end
-Input.InputBegan:Connect(function(input,processed)
- local confirm=input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.ButtonR2
- if session and session.State=="Charging" and confirm then activate();return end
- if processed or Input:GetFocusedTextBox() then return end
- if input.KeyCode==Enum.KeyCode.Escape or input.KeyCode==Enum.KeyCode.ButtonB then
-  if session and session.State=="Charging" then remotes.CancelThrow:FireServer(session.Id);idle() end
-  return
- end
- if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.ButtonR2 then
-  if not overUI(input) then activate() end
- end
+button.Activated:Connect(confirm)
+
+Input.InputBegan:Connect(function(input)
+    if not session or session.State ~= "Charging" or Input:GetFocusedTextBox() then return end
+    if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.ButtonB then
+        suppressUntilExit = true
+        remotes.CancelThrow:FireServer(session.Id)
+        idle()
+    elseif input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
+        or input.KeyCode == Enum.KeyCode.ButtonR2 then
+        confirm()
+    end
 end)
+
 Run.RenderStepped:Connect(function()
- local near=atLine()
- hint.Visible=not session and not near and not modal() and player:GetAttribute("TrainingActive")~=true
- if not session and near and not waiting and os.clock()>=retryAt and player:GetAttribute("DataLoaded")==true and not modal() then
-  retryAt=os.clock()+2
-  activate()
- end
- if session and session.State=="Charging" then
-  if modal() or not near then remotes.CancelThrow:FireServer(session.Id);idle();return end
-  local power=Math.Power(Workspace:GetServerTimeNow()-session.StartedAt,session.Period)
-  pointer.Position=UDim2.fromScale(Math.MeterPosition(Workspace:GetServerTimeNow()-session.StartedAt,session.Period),0)
-  title.Text=string.format("FORÇA %d%%  %s",math.floor(power*100),if power>=Rules.PerfectThreshold then "• PERFEITO!" else "")
- end
+    local near = atLine()
+    local inModal = modal()
+    local training = player:GetAttribute("TrainingActive") == true
+    if not near then
+        suppressUntilExit = false
+        if not session and panel.Visible then idle() end
+    end
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    hint.Visible = not near and not session and not inModal and not training and root ~= nil
+        and (root.Position - Rules.LinePosition).Magnitude < 50
+    if not session and near and not suppressUntilExit and not inModal and not training
+        and player:GetAttribute("DataLoaded") == true then
+        panel.Visible = true
+        pointer.Visible = false
+        title.Text = if blockingMessage then "ORBE INDISPONÍVEL" else "PREPARE SUA ORBE"
+        button.Text = blockingMessage or "PREPARANDO…"
+        if os.clock() >= retryAt then
+            retryAt = os.clock() + .18
+            remotes.PrepareThrow:FireServer()
+        end
+    elseif not session then
+        panel.Visible = false
+    end
+    if session and session.State == "Charging" then
+        if inModal or not near then
+            remotes.CancelThrow:FireServer(session.Id)
+            idle()
+            return
+        end
+        local elapsed = Workspace:GetServerTimeNow() - session.StartedAt
+        local power = Math.Power(elapsed, session.Period)
+        pointer.Position = UDim2.fromScale(Math.MeterPosition(elapsed, session.Period), .5)
+        title.Text = if power >= Rules.PerfectThreshold then "PERFEITO!" else "FORÇA " .. math.floor(power * 100) .. "%"
+    end
 end)
 local function flight(data:any)
  restore()
@@ -215,11 +233,17 @@ local function flight(data:any)
 end
 (remotes:WaitForChild("FlightUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
- waiting=false
  if data.State=="Charging" then
-  session=data;panel.Visible=true;hint.Visible=false
+  if not atLine() or modal() or suppressUntilExit then
+   remotes.CancelThrow:FireServer(data.Id)
+   return
+  end
+  session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
-  title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE / TOQUE EM QUALQUER LUGAR • R2"
+  title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
+ elseif data.State=="Blocked" then
+  blockingMessage="CONFIRA SUA ORBE E A COLEÇÃO"
+  retryAt=os.clock()+1
  elseif data.State=="Flying" then
   session=data
   title.Text=string.format("FORÇA CONFIRMADA: %d%%",math.floor(data.Power*100))
@@ -233,6 +257,3 @@ end)
  end
 end)
 player.CharacterRemoving:Connect(idle)
-Input.WindowFocusReleased:Connect(function()
- if session and session.State=="Charging" then remotes.CancelThrow:FireServer(session.Id);idle() end
-end)

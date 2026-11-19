@@ -32,13 +32,15 @@ local Training=(function()
 --[[SERVICE]]
 end)()
 local profile,busy,flight,benefits,messages
+local savedTier, worldTier = 0, 0
 local remotes={}
 for _,name in {'StartTraining','StopTraining','TrainingQTE'}do remotes[name]={OnServerEvent=signal()}end
 remotes.TrainingUpdate={FireClient=function(_,_,data)table.insert(messages,data)end}
 remotes.TrainingPose={FireAllClients=function()end}
 local ctx={DisableLoops=true,Remotes=remotes,Data={Get=function()return profile end,IsBusy=function()return busy end,IsLoaded=function()return profile~=nil end,
- MarkDirty=function()end,Sync=function()end,AddSnapshotProvider=function()end},
- World={GetSanctuary=function()return {FindFirstChild=function()return anchor end}end},Flight={IsActive=function()return flight end},
+ MarkDirty=function()end,Sync=function()end,AddSnapshotProvider=function()end,
+ TryLock=function()return not busy end,Unlock=function()end,SaveNow=function()savedTier=profile.TrainingMachine;return true end},
+ World={UpdateTrainingMachine=function(_,tier)worldTier=tier end,GetSanctuary=function()return {FindFirstChild=function()return anchor end}end},Flight={IsActive=function()return flight end},
  Monetization={GetBenefits=function()return benefits end},Progression={GrantXP=function(_,xp)profile.XP+=xp end}}
 Training.Init(ctx)
 local function advance(seconds)now+=seconds;Training.Tick()end
@@ -68,4 +70,19 @@ test('respawn invalidates pending bonus and session',function()Training.Start(pl
 test('death ends academy without rewarding a dead character',function()Training.Start(player,true);hum.Health=0;advance(2);assert(not Training.IsTraining(player) and profile.ThrowStrength==10)end)
 test('leaving triggers lifecycle cleanup',function()Training.Start(player,true);players.PlayerRemoving:Fire(player);assert(not Training.IsTraining(player) and not root.Anchored)end)
 test('strength and level stay capped',function()profile.TrainingLevel=Rules.MaxLevel;profile.ThrowStrength=Rules.MaxStrength;Training.Start(player,true);advance(2);assert(profile.ThrowStrength==Rules.MaxStrength and profile.TrainingXP==0)end)
+test("machine upgrade checks level and persists the paid tier before upgrading rewards", function()
+    profile.Coins = 500
+    profile.TrainingMachine = 1
+    assert(not Training.Upgrade(player, 2))
+    assert(profile.Coins == 500)
+    advance(.5)
+    profile.TrainingLevel = 2
+    assert(Training.Upgrade(player, 2))
+    assert(profile.Coins == 100 and savedTier == 2 and worldTier == 2)
+    advance(.5)
+    assert(not Training.Upgrade(player, 2))
+    assert(Training.Start(player, true))
+    advance(2)
+    assert(profile.ThrowStrength == 12 and profile.TrainingXP == 13)
+end)
 print('TrainingService: '..count..' progression/security/lifecycle scenarios passed')

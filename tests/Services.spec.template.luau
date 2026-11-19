@@ -24,8 +24,8 @@ local Config = {
 		TrainingCoins = 5, TrainingStrength = 1,
 	},
 	Orbs = {
-		Comum = { Name = "Orbe Comum", Price = 25 },
-		Esmeralda = { Name = "Orbe Esmeralda", Price = 180 },
+		Comum = { Tier = 1, Name = "Orbe Comum", Price = 25 },
+		Esmeralda = { Tier = 2, Name = "Orbe Esmeralda", Price = 180 },
 		Mestre = { Name = "Orbe Mestre", Price = 0, IsMaster = true },
 	},
 	Creatures = {
@@ -144,7 +144,7 @@ local function engine(options)
 		local node = object("ModuleScript", name); node.Parent = shared
 	end
 	local remotes = object("Folder", "Remotes"); remotes.Parent = storage
-	for _, name in ipairs({ "StateUpdate", "RequestState", "EquipToSanctuary", "ActionFeedback", "BuyOrb", "EquipOrb", "TrainThrowPower" }) do
+	for _, name in ipairs({ "StateUpdate", "RequestState", "EquipToSanctuary", "ActionFeedback", "EvolveOrb", "EquipOrb", "TrainThrowPower" }) do
 		local remote = object("RemoteEvent", name)
 		remote.OnServerEvent = signal()
 		remote.Messages = {}
@@ -411,16 +411,20 @@ test("offline income is capped at eight hours and survives rejoin", function()
 	assert(profile.CapturedCreatures[1].Uid == "one" and profile.IncomePerSec == 10)
 end)
 
-test("purchase validation forbids Master coin purchases and invalid quantities", function()
-	local e = engine({ Studio = true, WithEconomy = true })
+test("orb evolution rejects skipping and charges once for a permanent tier", function()
+	local e = engine({Studio = true, WithEconomy = true})
 	local p = e.AddPlayer(12)
-	e.Request("BuyOrb", p, "Mestre", 1)
-	e.Request("BuyOrb", p, "Comum", -1)
-	e.Request("BuyOrb", p, "Comum", 0 / 0)
-	assert(e.Data.Get(p).Coins == 150 and e.Data.Get(p).Orbs.Mestre == nil)
-	e.Advance(0.3)
-	e.Request("BuyOrb", p, "Comum", 2)
-	assert(e.Data.Get(p).Coins == 100 and e.Data.Get(p).Orbs.Comum == 27)
+	local profile = e.Data.Get(p)
+	profile.Coins = 300
+	profile.OrbFragments = 4
+	e.Request("EvolveOrb", p, 3)
+	assert(profile.Coins == 300 and profile.OrbTier == 1)
+	e.Advance(.5)
+	e.Request("EvolveOrb", p, 2)
+	assert(profile.Coins == 140 and profile.OrbTier == 2 and profile.OrbFragments == 0 and profile.EquippedOrb == "Esmeralda")
+	e.Advance(.5)
+	e.Request("EvolveOrb", p, 2)
+	assert(profile.Coins == 140 and profile.Orbs.Esmeralda == nil)
 end)
 
 test("training is rate limited and gives a recovery path when money/orbs run out", function()
@@ -472,7 +476,8 @@ test("v1 saves migrate in place without losing balance, records or equipped UIDs
 	first.RemovePlayer(p)
 	local saved = first.Store.Records.Player_101
 	saved.SchemaVersion = 1
-	for _, key in {"TotalCoinsEarned", "TotalCaptures", "FirstJoinedAt", "DailyStreak", "Boosts", "PendingTransactions", "ProcessedReceipts", "TrainingLevel", "TrainingXP"} do saved.Data[key] = nil end
+	saved.Data.Orbs.Esmeralda = 2
+	for _, key in {"TotalCoinsEarned", "TotalCaptures", "FirstJoinedAt", "DailyStreak", "Boosts", "PendingTransactions", "ProcessedReceipts", "TrainingLevel", "TrainingXP", "TrainingMachine", "OrbTier"} do saved.Data[key] = nil end
 	local second = engine({Store = first.Store, JobId = "migration-server"})
 	local rejoined = second.AddPlayer(101)
 	local migrated = assert(second.Data.Get(rejoined))
@@ -480,7 +485,8 @@ test("v1 saves migrate in place without losing balance, records or equipped UIDs
 	assert(migrated.CapturedCreatures[1].Uid == "legacy-uid" and migrated.SanctuarySlots[1] == "legacy-uid")
 	assert(migrated.TotalCoinsEarned == 4321 and migrated.TotalCaptures == 1)
 	assert(migrated.DailyStreak == 0 and next(migrated.ProcessedReceipts) == nil)
-	assert(migrated.TrainingLevel == 1 and migrated.TrainingXP == 0)
+	assert(migrated.TrainingLevel == 1 and migrated.TrainingXP == 0 and migrated.TrainingMachine == 1)
+	assert(migrated.OrbTier == 2 and migrated.Orbs.Esmeralda == 2)
 	assert(second.Store.Records.Player_101.SchemaVersion == 2)
 end)
 
@@ -489,7 +495,7 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local p = first.AddPlayer(102)
 	local profile = first.Data.Get(p)
 	profile.DailyStreak = 7; profile.LastDailyClaim = 1700000000
-	profile.TrainingLevel = 6; profile.TrainingXP = 25
+	profile.TrainingLevel = 6; profile.TrainingXP = 25; profile.TrainingMachine = 3; profile.OrbTier = 2
 	profile.PlaytimeClaimed["1"] = true; profile.MissionCounters.Captures = 15
 	profile.MissionClaimed.Capture15 = true; profile.BestiaryRewardClaimed.PradariaSolar = true
 	profile.ProcessedReceipts["purchase-id"] = true; profile.AppliedTransactions["completed-trade"] = true
@@ -502,7 +508,7 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local rejoined = second.AddPlayer(102)
 	local loaded = assert(second.Data.Get(rejoined))
 	assert(loaded.DailyStreak == 7 and loaded.PlaytimeClaimed["1"])
-	assert(loaded.TrainingLevel == 6 and loaded.TrainingXP == 25)
+	assert(loaded.TrainingLevel == 6 and loaded.TrainingXP == 25 and loaded.TrainingMachine == 3 and loaded.OrbTier == 2)
 	assert(loaded.ProcessedReceipts["purchase-id"] and loaded.AppliedTransactions["completed-trade"])
 	assert(loaded.MissionCounters.Captures == 15 and loaded.MissionClaimed.Capture15)
 	assert(loaded.Boosts.Luck.Multiplier == 2 and loaded.WeeklyPets == 2)
@@ -546,7 +552,7 @@ test("operation ownership blocks remotes and snapshots without blocking the trus
 	assert(e.Data.TryLock(p, "receipt")); assert(not e.Data.TryLock(p, "other"))
 	e.Data.Unlock(p, "wrong-owner"); assert(e.Data.IsBusy(p))
 	local remote = e.Remotes:FindFirstChild("StateUpdate"); local count = #remote.Messages
-	e.Request("TrainThrowPower", p); e.Request("BuyOrb", p, "Comum", 1)
+	e.Request("TrainThrowPower", p); e.Request("EvolveOrb", p, 2)
 	assert(e.Data.Get(p).Coins == 150 and e.Data.Get(p).Orbs.Comum == 25)
 	assert(e.Data.AddCoins(p, 5)); e.Data.Sync(p); assert(#remote.Messages == count)
 	e.Data.Unlock(p, "receipt"); e.Data.Sync(p)

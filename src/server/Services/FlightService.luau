@@ -28,25 +28,32 @@ local function ready(player: Player): (any, BasePart?)
     if not profile or not ctx.Data.IsLoaded(player) or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health <= 0 then return nil, nil end
     return profile, root
 end
-local function reject(player: Player, text: string)
-    ctx.Remotes.ActionFeedback:FireClient(player, {Message = text, Kind = "Error"})
+local function isReusable(profile: any, orb: any, benefits: any): boolean
+    return (orb.IsPrismatic and benefits.EternalPrism == true)
+        or (orb.Tier ~= nil and orb.Tier <= (profile.OrbTier or 0))
 end
 local function eligible(player: Player, profile: any): (boolean, any)
     local orb = Config.Orbs[profile.EquippedOrb]
     local benefits = ctx.Monetization.GetBenefits(player)
     if not orb or (orb.IsPrismatic and not benefits.EternalPrism) then return false, benefits end
-    if not (orb.IsPrismatic and benefits.EternalPrism) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
+    if not isReusable(profile, orb, benefits) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
     return ctx.Sanctuary.CanCapture(player), benefits
 end
-function Flight.Prepare(player: Player): boolean
+function Flight.Prepare(player: Player, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     if now < (requests[player] or 0) then return false end
-    requests[player] = now + 0.25
+    requests[player] = now + 0.15
     if sessions[player] or ctx.Data.IsBusy(player) or (ctx.Training and ctx.Training.IsTraining(player)) then return false end
     local profile, root = ready(player)
     if not profile or not root then return false end
-    if not Math.AtLine(root.Position,Rules.LinePosition,Rules.LineWidth,Rules.LineDepth) then reject(player, "Encoste na linha amarela antes do túnel para arremessar."); return false end
-    if not eligible(player, profile) then reject(player, "Confira suas orbes e o espaço no inventário."); return false end
+    if not Math.AtLine(root.Position, Rules.LinePosition, Rules.LineWidth, Rules.LineDepth) then return false end
+    if not eligible(player, profile) then
+        requests[player] = now + 1
+        send(player, {State = "Blocked", Message = "Confira a orbe equipada e o espaço na coleção."})
+        return false
+    end
+    if not automatic and profile.AutomationSettings and profile.AutomationSettings.Throw
+        and ctx.Monetization.GetBenefits(player).AutoThrow then return false end
     local entry = {Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now, Character = player.Character}
     sessions[player] = entry
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
@@ -96,18 +103,17 @@ local function finish(player: Player, entry: any)
             local mutation = Variants.FromQuantile(Config.Mutations, luck, rng:NextNumber())
             local size = Variants.FromQuantile(Config.Sizes, luck, rng:NextNumber())
             local income = math.floor(definition.BaseIncomePerSec * mutation.Multiplier * size.Multiplier)
-            local fever = profile.ComboStreak >= 10
-            local xp = if captured then definition.BaseXP * (if fever then 2 else 1) else math.max(5, math.floor(definition.BaseXP * 0.35)) + (if entry.Perfect then 15 else 0)
+            local xp = if captured then definition.BaseXP else math.max(5, math.floor(definition.BaseXP * 0.35)) + (if entry.Perfect then 15 else 0)
             local fragments = 0
             if captured then
                 local record = {Uid = HttpService:GenerateGUID(false), CreatureId = id, Mutation = mutation.Name, Size = size.Name, IncomePerSec = income, CapturedAt = os.time(), FusionStage = 0}
                 assert(ctx.Sanctuary.AddCapture(player, record), "Reserved inventory capacity was lost")
                 table.insert(drops, record)
                 profile.TotalCaptures += 1
-                profile.PityBonus, profile.ComboStreak = 0, math.min(10, profile.ComboStreak + 1)
+                profile.PityBonus = 0
                 ctx.Rewards.OnProgress(player, "Captures", 1)
             else
-                profile.PityBonus, profile.ComboStreak = math.min(1, profile.PityBonus + 0.05), 0
+                profile.PityBonus = math.min(1, profile.PityBonus + 0.05)
                 fragments = ctx.Drops.AwardFailureFragments(player)
             end
             if entry.Perfect then ctx.Rewards.OnProgress(player, "Criticals", 1) end
@@ -139,7 +145,12 @@ local function finish(player: Player, entry: any)
     end
     ctx.Data.MarkDirty(player)
     local saved = ctx.Data.SaveNow(player)
-    if not saved then sessions[player] = nil; ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso."); return end
+    if not saved then
+        sessions[player] = nil
+        ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso.")
+        send(player, {State = "Cancelled", Id = entry.Id})
+        return
+    end
     ctx.Data.Unlock(player, entry.Owner)
     entry.State = "Revealing"
     for _, record in drops do
@@ -159,15 +170,15 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     local elapsed = now - entry.StartedAt
     if elapsed < 0.1 then send(player, {State = "Charging", Id = entry.Id, StartedAt = entry.StartedAt, Period = Rules.MeterPeriod}); return false end
-    if elapsed > Rules.ChargeTimeout or ctx.Data.IsBusy(player) then return false end
+    if elapsed > Rules.ChargeTimeout or ctx.Data.IsBusy(player) then Flight.Cancel(player, id); return false end
     local profile, root = ready(player)
     if not profile or not root or entry.Character ~= player.Character or not Math.AtLine(root.Position,Rules.LinePosition,Rules.LineWidth,Rules.LineDepth) then Flight.Cancel(player, id); return false end
     local valid, benefits = eligible(player, profile)
     if not valid then Flight.Cancel(player, id); return false end
     local owner = "Flight:" .. entry.Id
-    if not ctx.Data.TryLock(player, owner) then return false end
+    if not ctx.Data.TryLock(player, owner) then Flight.Cancel(player, id); return false end
     local orbId, orb = profile.EquippedOrb, Config.Orbs[profile.EquippedOrb]
-    local infinite = orb.IsPrismatic and benefits.EternalPrism
+    local infinite = isReusable(profile, orb, benefits)
     local capacity = Config.Constants.MaxInventoryCreatures - ctx.Data.GetInventoryCount(profile)
     local count = math.min(if benefits.TripleThrow then 3 else 1, capacity, if infinite then 3 else profile.Orbs[orbId])
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
@@ -190,7 +201,7 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
 end
 function Flight.AutoThrow(player: Player): boolean
     if not ctx.Monetization.GetBenefits(player).AutoThrow then return false end
-    if not Flight.Prepare(player) then return false end
+    if not Flight.Prepare(player, true) then return false end
     local entry = sessions[player]
     task.delay(0.2, function() if sessions[player] == entry then Flight.Launch(player, entry.Id, true) end end)
     return true

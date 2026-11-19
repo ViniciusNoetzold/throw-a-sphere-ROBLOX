@@ -17,7 +17,7 @@ function SanctuaryService.GetSlotCapacity(profile: any, playerBenefits: any?): n
 	return Config.Constants.BaseSanctuarySlots + (if profile.Level >= 5 then 1 else 0) + (if profile.Level >= 15 then 1 else 0)
 end
 
-function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?): number
+function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?, shares: {[string]: number}?): number
 	local records: { [string]: any } = {}
 	for _, record in ipairs(profile.CapturedCreatures) do
 		records[record.Uid] = record
@@ -49,14 +49,18 @@ function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?
 	for _, record in ipairs(equipped) do
 		local count = elementCounts[Config.Creatures[record.CreatureId].Element]
 		local groupBonus = if count >= 6 then 1.6 elseif count >= 3 then 1.25 else 1
-		income += record.IncomePerSec * groupBonus
+		local share = record.IncomePerSec * groupBonus
+		income += share
+		if shares then shares[record.Uid] = share * (if starterTrio then 1.4 else 1) end
 	end
 	return income * (if starterTrio then 1.4 else 1)
 end
 
-function SanctuaryService.CalculateIncome(profile: any, playerBenefits: any?, now: number?): number
+function SanctuaryService.CalculateIncome(profile: any, playerBenefits: any?, now: number?, shares: {[string]: number}?): number
 	local multiplier = if GameplayMath.GetIncomeMultiplier then GameplayMath.GetIncomeMultiplier(profile, playerBenefits or {}, now or os.time()) else 1 + profile.Rebirths
-	return SanctuaryService.CalculateBaseIncome(profile, playerBenefits) * multiplier
+	local income = SanctuaryService.CalculateBaseIncome(profile, playerBenefits, shares) * multiplier
+	if shares then for uid, share in shares do shares[uid] = share * multiplier end end
+	return income
 end
 
 function SanctuaryService.Refresh(player: Player)
@@ -158,7 +162,9 @@ function SanctuaryService.Init(service: any, world: any, ctx: any?)
 			for _, player in ipairs(Players:GetPlayers()) do
 				local profile = dataService.Get(player)
 				if profile and (not (service.IsBusy and service.IsBusy(player)) or (player.GetAttribute and player:GetAttribute("FlightInProgress") == true)) then
-					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, benefits(player))
+					local shares = if worldService.UpdateSanctuaryIncome then {} else nil
+					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, benefits(player), nil, shares)
+					if shares then worldService.UpdateSanctuaryIncome(player, shares) end
 					if service.AddCoins then service.AddCoins(player, profile.IncomePerSec) else profile.Coins += profile.IncomePerSec end
 					dataService.Sync(player)
 				end

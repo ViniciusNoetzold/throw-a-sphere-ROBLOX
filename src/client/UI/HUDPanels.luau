@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local W = require(script.Parent:WaitForChild("HUDWidgets"))
 local Icons = require(script.Parent:WaitForChild("HUDIcons"))
@@ -10,6 +11,7 @@ local Gameplay = require(script.Parent:WaitForChild("GameplayPanels"))
 local C = W.Colors
 
 local Panels = {}
+Panels.Machines = require(Shared:WaitForChild("ConfigTraining")).Machines
 Panels.OrbOrder = {"Comum", "Esmeralda", "Rubi", "Safira", "Runica", "Hextech", "Cosmica", "Mestre"}
 Panels.MenuItems = {
     {Id = "Bestiario", Icon = "Book", Name = "Bestiário", Color = C.Blue},
@@ -25,10 +27,10 @@ Panels.MenuItems = {
 }
 Panels.Titles = {
     Bestiario = "BESTIÁRIO", Loja = "LOJA ROBUX", Fusao = "FUSÃO 5 → 1", Diario = "DIÁRIO & PRESENTES",
-    Rebirth = "REBIRTH", Ranking = "PLACARES", Criaturas = "MINHAS CRIATURAS", Orbes = "COLEÇÃO DE ORBES",
+    Rebirth = "REBIRTH", Ranking = "PLACARES", Criaturas = "MINHAS CRIATURAS", Orbes = "EVOLUÇÃO DE ORBES",
     Auto = "AUTO-ARREMESSO", Codigos = "CÓDIGOS", Menu = "EXPLORE SEU SANTUÁRIO",
     Biomas = "BIOMAS & PRAÇA DE TROCAS", GrupoVIP = "GRUPO & VIP", Trocas = "TROCAS SEGURAS", Leiloes = "LEILÕES POR MOEDAS",
-    Consumiveis = "CONSUMÍVEIS & POÇÕES",
+    Consumiveis = "CONSUMÍVEIS & POÇÕES", Academia = "ACADEMIA", Resgates = "RESGATES DA PISTA",
 }
 
 local function hint(parent: Instance, content: string, color: Color3?): TextLabel
@@ -179,7 +181,7 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             local row = card(list, "EmptyCollection", 190, C.Green)
             local icon = badge(row, C.Green, "Paw")
             icon.Position = UDim2.new(0.5, -29, 0, 12)
-            local empty = W.Label(row, "Empty", "SUA COLEÇÃO COMEÇA AQUI\n\nMire em uma criatura da Pradaria e solte a orbe. As primeiras capturas entram na base automaticamente.", UDim2.fromOffset(12, 76), UDim2.new(1, -24, 0, 102), 14, C.White)
+            local empty = W.Label(row, "Empty", "SUA COLEÇÃO COMEÇA AQUI\n\nVá até a faixa amarela e arremesse sua orbe. As primeiras capturas entram na base automaticamente.", UDim2.fromOffset(12, 76), UDim2.new(1, -24, 0, 102), 14, C.White)
             empty.TextWrapped = true
             empty.TextXAlignment = Enum.TextXAlignment.Center
             return
@@ -206,34 +208,92 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         return
     end
 
+    if kind == "Resgates" then
+        local list = W.List(parent, "RewardList", UDim2.new(), UDim2.fromScale(1, 1))
+        local rewards = (state and state.DropInfo or {}).Drops or {}
+        if #rewards == 0 then
+            hint(list, "As recompensas das capturas aparecem aqui.", C.Muted)
+        end
+        for index, reward in rewards do
+            local row = card(list, "Drop_" .. index, 66, C.Green)
+            row.LayoutOrder = index
+            local value = "+$" .. Numbers.Format(reward.Coins)
+            if reward.MasterOrbs > 0 then value ..= " · Mestre ×" .. Numbers.Format(reward.MasterOrbs) end
+            local label = W.Label(row, "Value", value, UDim2.fromOffset(16, 9), UDim2.new(.59, -12, 1, -18), 15, C.Green)
+            label.TextWrapped = true
+            local claim = W.Button(row, "Claim", "PEGAR", UDim2.new(.62, 0, 0, 11), UDim2.new(.38, -9, 0, 44), C.Green, 12)
+            claim.Activated:Connect(function() actions.Send("CollectDrop", reward.Id) end)
+        end
+        return
+    end
+
+    if kind == "Academia" then
+        local data = state and state.Training
+        if not data then hint(parent, "Carregando seu treino…"); return end
+        local list = W.List(parent, "Academy", UDim2.new(), UDim2.fromScale(1, 1))
+        local tier = data.MachineTier or 1
+        local current = card(list, "CurrentMachine", 112, C.Orange)
+        current.LayoutOrder = 1
+        W.Label(current, "Name", data.MachineName, UDim2.fromOffset(14, 6), UDim2.new(1, -28, 0, 28), 19)
+        W.Label(current, "Gain", "Máquina " .. tier .. " · +" .. data.Gain .. " força e +" .. data.XPPerRep .. " XP / repetição", UDim2.fromOffset(14, 35), UDim2.new(1, -28, 0, 23), 12, C.Green)
+        local start = W.Button(current, "Start", "COMEÇAR TREINO", UDim2.fromOffset(12, 61), UDim2.new(1, -24, 0, 43), C.Orange, 13)
+        start.Activated:Connect(function() actions.Close(); actions.Send("StartTraining") end)
+        local upgrade = card(list, "NextMachine", 147, C.Blue)
+        upgrade.LayoutOrder = 2
+        local nextMachine = Panels.Machines[tier + 1]
+        W.Label(upgrade, "Level", "Academia nível " .. data.Level, UDim2.fromOffset(14, 5), UDim2.new(1, -28, 0, 23), 14, C.Blue)
+        local progress = W.Frame(upgrade, "XP", UDim2.fromOffset(14, 31), UDim2.new(1, -28, 0, 9), C.Ink)
+        local fraction = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(data.RequiredXP, 1), 0, 1)
+        W.Frame(progress, "Fill", UDim2.new(), UDim2.fromScale(fraction, 1), C.Blue)
+        if nextMachine then
+            W.Label(upgrade, "Next", nextMachine.Name .. " · Nv. " .. nextMachine.Level, UDim2.fromOffset(14, 46), UDim2.new(1, -28, 0, 21), 14)
+            W.Label(upgrade, "Gain", "+" .. (nextMachine.Force - Panels.Machines[tier].Force) .. " força base · " .. nextMachine.XP .. " XP / repetição", UDim2.fromOffset(14, 68), UDim2.new(1, -28, 0, 20), 12, C.Green)
+            local ready = data.Level >= nextMachine.Level and state.Coins >= nextMachine.Cost
+            local title = if data.Level < nextMachine.Level then "LIBERA NO NÍVEL " .. nextMachine.Level
+                elseif not ready then "FALTAM MOEDAS · $" .. Numbers.Format(nextMachine.Cost)
+                else "EVOLUIR · $" .. Numbers.Format(nextMachine.Cost)
+            local button = W.Button(upgrade, "Upgrade", title, UDim2.fromOffset(12, 94), UDim2.new(1, -24, 0, 43), if ready then C.Green else C.Card, 12)
+            button.Active, button.Selectable = ready, ready
+            button.Activated:Connect(function() if ready then actions.Send("UpgradeTrainingMachine", tier + 1) end end)
+        else
+            W.Label(upgrade, "Max", "Sua máquina chegou ao nível máximo!", UDim2.fromOffset(14, 56), UDim2.new(1, -28, 0, 32), 14, C.Green)
+        end
+        return
+    end
+
     if kind == "Orbes" then
-        local fragments = if state then state.OrbFragments or 0 else 0
-        hint(parent, "FRAGMENTOS: " .. Numbers.Format(fragments) .. " • Troque 10 fragmentos por 1 Orbe Comum.")
-        local craft = W.Button(parent, "CraftOrbFragments", "CRIAR 1 COMUM • 10 FRAGMENTOS", UDim2.fromOffset(4, 48), UDim2.new(1, -8, 0, 44), C.Blue, 12)
-        craft.Active, craft.Selectable = fragments >= 10, fragments >= 10
-        craft.Activated:Connect(function() actions.Send("CraftOrbFragments") end)
-        local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 104), UDim2.new(1, 0, 1, -104))
+        local fragments = state and state.OrbFragments or 0
+        hint(parent, "Orbes evoluídas têm uso livre. Fragmentos para desconto: " .. Numbers.Format(fragments))
+        local tier = state and state.OrbTier or 1
+        local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
         local order = table.clone(Panels.OrbOrder)
         if state and state.Benefits and state.Benefits.EternalPrism then table.insert(order, "Prismatica") end
         for index, id in order do
-            local definition = Config.Orbs[id]
-            local count = if state and state.Orbs then state.Orbs[id] or 0 else 0
+            local orb = Config.Orbs[id]
+            local count = state and (state.Orbs or {})[id] or 0
             local active = state and state.EquippedOrb == id
-            local row = card(list, id, 142, definition.Color)
+            local permanent = orb.Tier and orb.Tier <= tier
+            local nextTier = orb.Tier and orb.Tier == tier + 1
+            local canEquip = permanent or orb.IsPrismatic or count > 0
+            local row = card(list, id, 124, orb.Color)
             row.LayoutOrder = index
-            badge(row, definition.Color, "Orb")
-            local name = W.Label(row, "Name", definition.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
-            name.TextTruncate = Enum.TextTruncate.AtEnd
-            W.Label(row, "Stock", (if definition.IsPrismatic then "∞ ESTOQUE" else "×" .. Numbers.Format(count)) .. "  •  Poder " .. Numbers.Format(definition.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 19), 11, C.Muted, true)
-            W.Label(row, "Price", if definition.IsPrismatic then "Passe verificado • 10× sorte" elseif definition.IsMaster then "Recompensas e loja" else "$" .. Numbers.Format(definition.Price) .. " cada", UDim2.fromOffset(83, 56), UDim2.new(1, -95, 0, 20), 12, if definition.IsMaster then C.Pink else C.Green, true)
-            local equip = W.Button(row, "Equip", if active then "EQUIPADA" else "EQUIPAR", UDim2.fromOffset(12, 86), UDim2.new(0.5, -18, 0, 44), if active then C.Gold else C.Blue, 12)
-            equip.Activated:Connect(function()
-                if count < 1 and not definition.IsPrismatic then actions.Notify("Você precisa ter essa orbe para equipá-la.") else actions.EquipOrb(id) end
-            end)
-            local buy = W.Button(row, "Buy", if definition.IsMaster or definition.IsPrismatic then "VER LOJA" else "+1  COMPRAR", UDim2.new(0.5, 6, 0, 86), UDim2.new(0.5, -18, 0, 44), if definition.IsMaster then C.Pink else C.Green, 12)
-            buy.Activated:Connect(function()
-                if definition.IsMaster or definition.IsPrismatic then actions.Open("Loja") else actions.BuyOrb(id, 1) end
-            end)
+            badge(row, orb.Color, "Orb")
+            W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
+            local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
+            W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 21), 12, C.Muted)
+            if nextTier then
+                local price, used = GameplayMath.GetOrbEvolutionPrice(orb.Price, fragments)
+                local ready = state and state.Coins >= price
+                local cost = "$" .. Numbers.Format(price) .. (if used > 0 then " ✦" else "")
+                local evolve = W.Button(row, "Evolve", "EVOLUIR " .. cost, UDim2.fromOffset(12, 72), UDim2.new(if canEquip then .54 else 1, -24, 0, 44), if ready then C.Green else C.Card, 12)
+                evolve.Active, evolve.Selectable = ready == true, ready == true
+                evolve.Activated:Connect(function() if ready then actions.Send("EvolveOrb", orb.Tier) end end)
+            end
+            if canEquip then
+                local left = if nextTier then .54 else 0
+                local equip = W.Button(row, "Equip", if active then "EQUIPADA" else "EQUIPAR", UDim2.new(left, 12, 0, 72), UDim2.new(1 - left, -24, 0, 44), if active then C.Gold else C.Blue, 12)
+                equip.Activated:Connect(function() if not active then actions.EquipOrb(id) end end)
+            end
         end
         return
     end

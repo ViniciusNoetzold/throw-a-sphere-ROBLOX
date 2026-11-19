@@ -8,7 +8,6 @@ local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Co
 local Events = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigEvents"))
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
 local player = Players.LocalPlayer
-local folder = Workspace:WaitForChild("CriaturasSelvagens")
 local tracked: {[Model]: {Peak: Part?, Beam: Beam?, Glow: Highlight?, Sparkles: Sparkles?}} = {}
 local state: any = nil
 local correction = Instance.new("ColorCorrectionEffect")
@@ -47,8 +46,21 @@ local function observe(model: Instance)
     end
     tracked[model] = item
 end
-for _, model in folder:GetChildren() do observe(model) end
-folder.ChildAdded:Connect(observe)
+local function observeWildFolder(folder: Instance)
+    folder.ChildAdded:Connect(observe)
+    for _, model in folder:GetChildren() do observe(model) end
+end
+local wildFolder = Workspace:FindFirstChild("CriaturasSelvagens")
+if wildFolder then
+    observeWildFolder(wildFolder)
+else
+    local connection: RBXScriptConnection
+    connection = Workspace.ChildAdded:Connect(function(child)
+        if child.Name ~= "CriaturasSelvagens" then return end
+        connection:Disconnect()
+        observeWildFolder(child)
+    end)
+end
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value

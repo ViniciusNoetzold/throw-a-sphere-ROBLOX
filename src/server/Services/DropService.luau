@@ -25,7 +25,7 @@ function Drops.Spawn(player: Player, position: Vector3, reward: any): string?
     for _, record in active do
         if record.Owner == player then count += 1; if not oldest or record.ExpiresAt < oldest.ExpiresAt then oldest = record end end
     end
-    local expires = Workspace:GetServerTimeNow() + rules.Lifetime
+    local expires = Workspace:GetServerTimeNow() + (if ctx.Flight then rules.MenuLifetime else rules.Lifetime)
     if count >= rules.MaxActivePerPlayer and oldest then
         oldest.Coins = math.min(rules.MaxCoinsPerDrop, oldest.Coins + coins)
         oldest.MasterOrbs += masters
@@ -35,7 +35,7 @@ function Drops.Spawn(player: Player, position: Vector3, reward: any): string?
     local id = HttpService:GenerateGUID(false)
     local record = {Id = id, Owner = player, Position = position, Coins = coins, MasterOrbs = masters, ExpiresAt = expires}
     active[id] = record
-    if not ctx.DisableVisuals then
+    if not ctx.DisableVisuals and not ctx.Flight then
         local part = Instance.new("Part")
         part.Name, part.Shape, part.Size = "Loot", Enum.PartType.Ball, Vector3.new(1.4,1.4,1.4)
         part.Anchored, part.CanCollide, part.CanTouch, part.CanQuery = true, false, false, false
@@ -57,7 +57,7 @@ local function collect(player: Player, id: string, automatic: boolean): boolean
     if not record or record.Owner ~= player or record.ExpiresAt <= Workspace:GetServerTimeNow() or ctx.Data.IsBusy(player) then return false end
     local profile = ctx.Data.Get(player)
     if not profile then return false end
-    if not automatic then
+    if not automatic and not ctx.Flight then
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
         if not root or not humanoid or humanoid.Health <= 0 or (root.Position - record.Position).Magnitude > rules.PickupRange then return false end
@@ -114,19 +114,19 @@ function Drops.Tick()
         local profile = ctx.Data.Get(record.Owner)
         if not profile then continue end
         local benefits = ctx.Monetization.GetBenefits(record.Owner)
-        local automatic = benefits.MegaCollector == true or (profile.Level >= 3 and ctx.World.IsAtSanctuary(record.Owner))
+        local automatic = benefits.MegaCollector == true or (not ctx.Flight and profile.Level >= 3 and ctx.World.IsAtSanctuary(record.Owner))
         if automatic then collect(record.Owner, id, true) end
     end
 end
 function Drops.GetSnapshot(player: Player, profile: any): any
     local list = {}
     for id, record in active do if record.Owner == player and record.ExpiresAt > Workspace:GetServerTimeNow() then table.insert(list, {Id = id, Coins = record.Coins, MasterOrbs = record.MasterOrbs, ExpiresAt = record.ExpiresAt, Position = record.Position}) end end
-    return {OrbFragments = profile.OrbFragments or 0, DropInfo = {ActiveCount = #list, Drops = list, CraftCost = rules.CraftCost, MasterChance = rules.MasterChance, AutoUnlocked = profile.Level >= 3, MegaCollector = ctx.Monetization.GetBenefits(player).MegaCollector == true}}
+    return {OrbFragments = profile.OrbFragments or 0, DropInfo = {ActiveCount = #list, Drops = list, CraftCost = rules.CraftCost, MasterChance = rules.MasterChance, AutoUnlocked = not ctx.Flight and profile.Level >= 3, MegaCollector = ctx.Monetization.GetBenefits(player).MegaCollector == true}}
 end
 function Drops.Init(context: any)
     ctx = context
     rules = ctx.DropConfig or require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigDrops"))
-    if not ctx.DisableVisuals then folder = Instance.new("Folder"); folder.Name, folder.Parent = "ThrowASphereDrops", Workspace end
+    if not ctx.DisableVisuals and not ctx.Flight then folder = Instance.new("Folder"); folder.Name, folder.Parent = "ThrowASphereDrops", Workspace end
     for name, action in {CraftOrbFragments = Drops.CraftOrbFragments, CollectDrop = Drops.Collect} do
         local remote = ctx.Remotes:FindFirstChild(name)
         if remote then remote.OnServerEvent:Connect(function(player, id)

@@ -106,8 +106,7 @@ function CaptureService.Init(dataService: any, spawnService: any?, progressionSe
 			throwResult:FireAllClients({Thrower = player, StartPos = startPosition, TargetModel = target, HitPos = result.Position, OrbColor = orb.Color, ShakesPassed = 0, Captured = false, IsBossHit = true, BossDefeated = defeated, CreatureName = definition.Name, CreatureId = wild.CreatureId, XPGained = 0, IsCritical = critical, IsLongShot = longShot})
 			return true
 		end
-		local fever = (profile.ComboStreak or 0) >= 10
-		local luck = if gameplay then gameplay.GetLuck(profile, benefits, if ctx.Weather then ctx.Weather.GetLuckMultiplier() else 1, os.time()) else (1 + (profile.Level - 1) * 0.015 + profile.PityBonus + profile.Rebirths * 0.5) * (if fever then 1.5 else 1)
+		local luck = if gameplay then gameplay.GetLuck(profile, benefits, if ctx.Weather then ctx.Weather.GetLuckMultiplier() else 1, os.time()) else (1 + (profile.Level - 1) * 0.015 + profile.PityBonus + profile.Rebirths * 0.5)
 		local chance = Config.CalculateShakeProbability(orb.Power * elementBonus, aimBonus, luck, definition.Difficulty, orb.IsMaster)
 		-- No yielding between stock verification, catch lock and consumption.
 		if not spawnService.Lock(target, player.UserId) then reject(player, "Outro jogador já está capturando esta criatura."); return end
@@ -138,14 +137,12 @@ function CaptureService.Init(dataService: any, spawnService: any?, progressionSe
 				return
 			end
 			profile.PityBonus = 0
-			profile.ComboStreak = math.min(10, (profile.ComboStreak or 0) + 1)
 			profile.TotalCaptures = (profile.TotalCaptures or 0) + 1
-			xp = math.floor(definition.BaseXP * (if fever then 2 else 1) * (if gameplay then 1 else 1 + profile.Rebirths * 0.5))
+			xp = math.floor(definition.BaseXP * (if gameplay then 1 else 1 + profile.Rebirths * 0.5))
 			if ctx and ctx.Rewards then ctx.Rewards.OnProgress(player, "Captures", 1) end
 			if ctx and ctx.Drops then ctx.Drops.OnCapture(player, record, result.Position) end
 		else
 			profile.PityBonus = math.min(1, profile.PityBonus + 0.05)
-			profile.ComboStreak = 0
 			xp = math.max(5, math.floor(definition.BaseXP * 0.35)) + (if critical then 15 else 0)
 			if ctx and ctx.Drops then fragments = ctx.Drops.AwardFailureFragments(player) end
 		end

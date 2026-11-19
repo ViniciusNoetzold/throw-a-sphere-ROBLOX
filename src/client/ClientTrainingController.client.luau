@@ -5,33 +5,47 @@ local Run=game:GetService("RunService")
 local Input=game:GetService("UserInputService")
 local Workspace=game:GetService("Workspace")
 local Debris=game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
 local player=Players.LocalPlayer
 local remotes=RS:WaitForChild("Remotes")
 local gui=Instance.new("ScreenGui")
 gui.Name,gui.ResetOnSpawn,gui.DisplayOrder,gui.Parent="AcademyHUD",false,75,player:WaitForChild("PlayerGui")
 local card=Instance.new("Frame")
-card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-25),UDim2.new(.65,0,0,155)
-card.BackgroundColor3,card.Visible,card.Parent=Color3.fromRGB(15,25,43),false,gui
+card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-25),UDim2.new(.85,0,0,144)
+card.BackgroundColor3,card.Visible,card.Parent=Color3.fromRGB(45,43,71),false,gui
 local max=Instance.new("UISizeConstraint")
-max.MinSize,max.MaxSize,max.Parent=Vector2.new(280,155),Vector2.new(440,155),card
+max.MinSize,max.MaxSize,max.Parent=Vector2.new(0,144),Vector2.new(355,144),card
 local round=Instance.new("UICorner");round.CornerRadius,round.Parent=UDim.new(0,14),card
+local accent = Instance.new("UIStroke")
+accent.Color, accent.Thickness, accent.Parent = Color3.fromRGB(255, 194, 103), 2, card
 local function text(name:string,y:number,h:number,size:number):TextLabel
  local label=Instance.new("TextLabel")
  label.Name,label.Position,label.Size=name,UDim2.fromOffset(12,y),UDim2.new(1,-24,0,h)
  label.BackgroundTransparency,label.TextColor3,label.TextSize,label.Font=1,Color3.new(1,1,1),size,Enum.Font.GothamBold
  label.Parent=card;return label
 end
-local title=text("AcademyLevel",8,25,19)
-local xp=text("AcademyXP",37,20,13)
+local title=text("AcademyLevel",5,24,16)
+local xp=text("AcademyXP",29,17,12)
 local track=Instance.new("Frame")
-track.Name,track.Position,track.Size,track.BackgroundColor3,track.Parent="XPTrack",UDim2.fromOffset(16,62),UDim2.new(1,-32,0,12),Color3.fromRGB(38,54,72),card
+track.Name,track.Position,track.Size,track.BackgroundColor3,track.Parent="XPTrack",UDim2.fromOffset(16,48),UDim2.new(1,-32,0,12),Color3.fromRGB(38,54,72),card
 local fill=Instance.new("Frame")
 fill.Name,fill.Size,fill.BackgroundColor3,fill.BorderSizePixel,fill.Parent="XPFill",UDim2.fromScale(0,1),Color3.fromRGB(70,220,255),0,track
-local reps=text("RepInfo",81,22,14)
+local reps=text("RepInfo",69,19,12)
+local cadence = Instance.new("Frame")
+cadence.Name, cadence.Size, cadence.Position = "RepProgress", UDim2.new(1, -32, 0, 4), UDim2.fromOffset(16, 63)
+cadence.BackgroundColor3, cadence.BorderSizePixel, cadence.Parent = Color3.fromRGB(73, 70, 102), 0, card
+local progress = Instance.new("Frame")
+progress.Size, progress.BackgroundColor3, progress.BorderSizePixel, progress.Parent = UDim2.fromScale(0, 1), Color3.fromRGB(255, 194, 103), 0, cadence
+local nextRepAt, interval = 0, 1.8
+local xpTween: Tween?
+
 local stop=Instance.new("TextButton")
-stop.Name,stop.Position,stop.Size="StopTraining",UDim2.new(.5,-90,1,-40),UDim2.fromOffset(180,30)
-stop.Text,stop.TextSize,stop.TextColor3,stop.BackgroundColor3="PARAR TREINO  [B / ESC]",12,Color3.new(1,1,1),Color3.fromRGB(65,80,105)
+stop.Name,stop.Position,stop.Size="StopTraining",UDim2.new(.5,-90,1,-48),UDim2.fromOffset(180,42)
+stop.Text,stop.TextSize,stop.TextColor3,stop.BackgroundColor3="PARAR TREINO",12,Color3.new(1,1,1),Color3.fromRGB(65,80,105)
 stop.Parent=card
+local stopCorner = Instance.new("UICorner")
+stopCorner.CornerRadius, stopCorner.Parent = UDim.new(0, 11), stop
+stop.Font = Enum.Font.GothamBold
 stop.Activated:Connect(function()remotes.StopTraining:FireServer()end)
 local qte=Instance.new("TextButton")
 qte.Name,qte.AnchorPoint,qte.Size="DoubleTrainingQTE",Vector2.new(.5,.5),UDim2.fromOffset(90,90)
@@ -66,23 +80,34 @@ Input.InputBegan:Connect(function(input,processed)
  elseif input.KeyCode==Enum.KeyCode.Escape or input.KeyCode==Enum.KeyCode.ButtonB then remotes.StopTraining:FireServer() end
 end)
 local function render(data:any)
- title.Text="ACADEMIA • NÍVEL "..tostring(data.Level or 1)
- xp.Text=tostring(data.XP or 0).." / "..tostring(data.RequiredXP or 60).." XP"
- fill.Size=UDim2.fromScale(math.clamp((data.XP or 0)/math.max(1,data.RequiredXP or 1),0,1),1)
- reps.Text=tostring(data.Reps or 0).." repetições  •  +"..tostring(data.Gain or 1).." força por ciclo"
+ title.Text = (data.MachineName or "Academia") .. "  ·  Nv. " .. tostring(data.Level or 1)
+ xp.Text = if data.Level >= 100 then "Nível máximo" else data.XP .. " / " .. data.RequiredXP .. " XP"
+ if xpTween then xpTween:Cancel() end
+ local fillAmount = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(1, data.RequiredXP), 0, 1)
+ xpTween = TweenService:Create(fill, TweenInfo.new(.18), {Size = UDim2.fromScale(fillAmount, 1)})
+ xpTween:Play()
+ nextRepAt, interval = data.NextRepAt or 0, data.Interval or 1.8
+ reps.Text = data.Reps .. " reps  ·  +" .. data.Gain .. " força  ·  +" .. data.XPPerRep .. " XP"
+
 end
 (remotes:WaitForChild("TrainingUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
- show(data.Active==true);render(data)
+ show(data.Active==true)
+ if not data.Active then return end
+ render(data)
  if data.State=="QTE" then current=data;qte.Position=UDim2.fromScale(data.X,data.Y);qte.Visible=true
  elseif data.State=="Perfect" then
-  current=nil;qte.Visible=false;reps.Text="PERFEITO! 2× FORÇA E XP NESTA REPETIÇÃO"
+  current=nil;qte.Visible=false;reps.Text="PERFEITO! 2× FORÇA E XP"
   local sound=Instance.new("Sound")
   sound.SoundId,sound.Volume,sound.PlaybackSpeed,sound.Parent="rbxasset://sounds/volume_slider.ogg",.15,1.5,game:GetService("SoundService")
   sound:Play();Debris:AddItem(sound,3)
  elseif data.State=="Missed" then current=nil;qte.Visible=false end
 end)
 Run.RenderStepped:Connect(function()
+ if active and nextRepAt > 0 then
+  local fraction = 1 - math.clamp((nextRepAt - Workspace:GetServerTimeNow()) / interval, 0, 1)
+  progress.Size = UDim2.fromScale(fraction, 1)
+ end
  if current then
   local remaining=current.ExpiresAt-Workspace:GetServerTimeNow()
   if remaining<=0 then current=nil;qte.Visible=false;return end

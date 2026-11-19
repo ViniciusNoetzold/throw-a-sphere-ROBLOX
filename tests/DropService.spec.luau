@@ -38,8 +38,9 @@ local data = {Get=function(player)return profiles[player]end, IsLoaded=function(
     Unlock=function(player,owner)assert(locks[player]==owner);locks[player]=nil end,
     MarkDirty=function()end,Sync=function()end,AddSnapshotProvider=function()end,SaveNow=function()return saveOK end,
     Freeze=function()frozen=true end,AddCoins=function(player,amount)profiles[player].Coins+=amount;profiles[player].TotalCoinsEarned+=amount end}
-Drops.Init({Data=data,DropConfig=Rules,DisableVisuals=true,DisableLoops=true,Remotes={FindFirstChild=function()return nil end},
-    Monetization={GetBenefits=function(player)return benefits[player]end},World={IsAtSanctuary=function(player)return homes[player]==true end}})
+local context = {Data=data,DropConfig=Rules,DisableVisuals=true,DisableLoops=true,Remotes={FindFirstChild=function()return nil end},
+    Monetization={GetBenefits=function(player)return benefits[player]end},World={IsAtSanctuary=function(player)return homes[player]==true end}}
+Drops.Init(context)
 local checks=0
 local function check(name,callback)callback();checks+=1;print("PASS "..name)end
 check("private variant quantiles never downgrade shared creatures",function()
@@ -86,6 +87,18 @@ check("level three collects at own sanctuary and Mega collects anywhere",functio
     benefits[second].MegaCollector=true
     local other=Drops.Spawn(second,Vector3.new(500,0,0),{Coins=10})
     Drops.Tick();assert(not Drops.Collect(second,other) and profiles[second].Coins==10)
+end)
+check("capture rewards can be claimed from the menu off the track by their owner", function()
+    context.Flight = {}
+    local id = Drops.Spawn(first, Vector3.new(500, 0, 0), {Coins = 16})
+    timestamp += 61
+    Drops.Tick()
+    assert(not Drops.Collect(second, id))
+    assert(Drops.GetSnapshot(first, profiles[first]).DropInfo.ActiveCount == 1)
+    local oldCoins = profiles[first].Coins
+    assert(Drops.Collect(first, id) and profiles[first].Coins == oldCoins + 16)
+    assert(not Drops.Collect(first, id))
+    context.Flight = nil
 end)
 check("rare Master drop uses the configured actual probability",function()
     roll=0.0005
