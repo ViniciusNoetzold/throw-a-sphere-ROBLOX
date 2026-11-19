@@ -191,7 +191,12 @@ function CaptureService.Init(dataService: any, spawnService: any?, progressionSe
 		end
 		return accepted
 	end
-	requestThrow.OnServerEvent:Connect(function(player: Player, target: any, hitPosition: any) CaptureService.TryThrow(player, target, hitPosition) end)
+	requestThrow.OnServerEvent:Connect(function(player: Player, target: any, hitPosition: any)
+		-- The flight meter is the only public throw path in the new game loop.
+		-- Legacy targeted mechanics remain callable internally for their regression suite.
+		if ctx and ctx.Flight then return end
+		CaptureService.TryThrow(player, target, hitPosition)
+	end)
 	Players.PlayerRemoving:Connect(function(player: Player)
 		nextThrowAt[player] = nil
 		nextRequestAt[player] = nil

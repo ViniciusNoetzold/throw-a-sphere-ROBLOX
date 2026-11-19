@@ -98,6 +98,36 @@
         },
         "CollectDrop": {
           "$className": "RemoteEvent"
+        },
+        "PrepareThrow": {
+          "$className": "RemoteEvent"
+        },
+        "LaunchThrow": {
+          "$className": "RemoteEvent"
+        },
+        "CancelThrow": {
+          "$className": "RemoteEvent"
+        },
+        "FlightUpdate": {
+          "$className": "RemoteEvent"
+        },
+        "ThrowWindup": {
+          "$className": "RemoteEvent"
+        },
+        "StartTraining": {
+          "$className": "RemoteEvent"
+        },
+        "StopTraining": {
+          "$className": "RemoteEvent"
+        },
+        "TrainingQTE": {
+          "$className": "RemoteEvent"
+        },
+        "TrainingUpdate": {
+          "$className": "RemoteEvent"
+        },
+        "TrainingPose": {
+          "$className": "RemoteEvent"
         }
       }
     },

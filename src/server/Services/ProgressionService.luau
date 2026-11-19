@@ -77,6 +77,7 @@ function ProgressionService.GrantXP(player: Player, amount: number): (boolean, n
 end
 
 function ProgressionService.Train(player: Player): (boolean, string)
+    if context and context.Training and context.Training.IsTraining(player) then return false, "Você já está treinando na academia." end
     if not allowed(player, "TrainThrowPower", 0.5) then return false, "Aguarde o próximo treino." end
     local profile = dataService.Get(player)
     if not profile then return false, "Carregando seus dados." end

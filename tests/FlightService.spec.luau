@@ -1,0 +1,118 @@
+--!strict
+local Math=(function()
+--[[MATH]]
+end)()
+local realRequire=require
+local now=100
+local delayed={}
+local Vector3={}
+local vm={}
+function Vector3.new(x,y,z) return setmetatable({X=x,Y=y,Z=z},vm) end
+vm.__add=function(a,b) return Vector3.new(a.X+b.X,a.Y+b.Y,a.Z+b.Z) end
+vm.__sub=function(a,b) return Vector3.new(a.X-b.X,a.Y-b.Y,a.Z-b.Z) end
+vm.__mul=function(a,b) return Vector3.new(a.X*b,a.Y*b,a.Z*b) end
+vm.__index=function(a,k) if k=="Magnitude" then return math.sqrt(a.X*a.X+a.Y*a.Y+a.Z*a.Z) end end
+local function signal()
+ local callbacks={}
+ return {Connect=function(_,f)table.insert(callbacks,f)end,Fire=function(_,...)for _,f in callbacks do f(...) end end}
+end
+local player={Parent=true,CharacterRemoving=signal(),attributes={}}
+function player:SetAttribute(k,v) self.attributes[k]=v end
+local root={Position=Vector3.new(0,0,0),IsA=function()return true end}
+local character={FindFirstChild=function()return root end,FindFirstChildOfClass=function()return {Health=100} end}
+player.Character=character
+local profile
+local busy=false
+local synced=0
+local saved=true
+local frozen=false
+local messages={}
+local results={}
+local serial=0
+local rngRoll=0
+local Config={Orbs={Comum={Power=10,Color="blue"},Mestre={Power=1000,IsMaster=true},Prismatica={Power=25,IsPrismatic=true}},
+ Creatures={Sproutling={Name="Sproutling",Biome="PradariaSolar",Rarity="Comum",Difficulty=1,BaseXP=25,BaseIncomePerSec=8}},
+ Mutations={{Name="Normal",Multiplier=1}},Sizes={{Name="Normal",Multiplier=1}},Constants={MaxInventoryCreatures=500},
+ CalculateShakeProbability=function()return 1 end}
+local rules={LaunchOrigin=Vector3.new(0,0,0),Direction=Vector3.new(0,0,-1),LinePosition=Vector3.new(0,0,0),LineWidth=42,LineDepth=7,MeterPeriod=1.6,ChargeTimeout=12,PerfectThreshold=.94,ZoneLength=300,WindupSeconds=.55,MinFlightSeconds=3.5,MaxFlightSeconds=7}
+local modules={Config=Config,ConfigFlight=rules,ConfigReveal={Comum={Duration=2.5,Rank=1}},ConfigEvents={SecretSpawnChance=1e-6,SpeciesWeights={Comum=55}},FlightMath=Math,VariantMath={FromQuantile=function(items)return items[1]end}}
+local shared=setmetatable({},{__index=function(_,k)return k end})
+local require=function(key)return modules[key]end
+local task={delay=function(t,f)table.insert(delayed,{At=now+t,Run=f})end}
+local os={time=function()return 1800000000 end}
+local Random={new=function()return {NextNumber=function()return rngRoll end}end}
+local players={PlayerAdded=signal(),PlayerRemoving=signal(),GetPlayers=function()return {player}end}
+local services={Players=players,ReplicatedStorage={WaitForChild=function()return shared end},Workspace={GetServerTimeNow=function()return now end},HttpService={GenerateGUID=function()serial+=1;return "id"..serial end}}
+local game={GetService=function(_,k)return services[k]end}
+local Flight=(function()
+--[[SERVICE]]
+end)()
+local benefits={}
+local remotes={}
+for _,name in {"PrepareThrow","LaunchThrow","CancelThrow"} do remotes[name]={OnServerEvent=signal()} end
+remotes.FlightUpdate={FireClient=function(_,_,data)table.insert(messages,data)end}
+remotes.ActionFeedback={FireClient=function()end}
+remotes.ThrowWindup={FireAllClients=function()end}
+remotes.ThrowResult={FireAllClients=function(_,data)table.insert(results,data)end}
+local ctx={Remotes=remotes,Layout={BiomeOrder={"PradariaSolar","FlorestaNeon"}},
+ Data={Get=function()return profile end,IsLoaded=function()return profile~=nil end,IsBusy=function()return busy end,
+ TryLock=function()if busy then return false end;busy=true;return true end,Unlock=function()busy=false end,
+ MarkDirty=function()end,Sync=function()synced+=1 end,SaveNow=function()return saved end,
+ Freeze=function()frozen=true end,GetInventoryCount=function(p)return #p.CapturedCreatures end},
+ Monetization={GetBenefits=function()return benefits end},Sanctuary={CanCapture=function()return #profile.CapturedCreatures<500 end,
+ AddCapture=function(_,record)table.insert(profile.CapturedCreatures,record);return true end},
+ Weather={GetLuckMultiplier=function()return 1 end},Gameplay={GetLuck=function()return 1 end},Rewards={OnProgress=function()end},
+ Drops={AwardFailureFragments=function()return 1 end,OnCapture=function()end},
+ Progression={GrantXP=function(_,xp)profile.XP+=xp;return false,xp end}}
+Flight.Init(ctx)
+local function advance(t)
+ now+=t
+ local again=true
+ while again do
+  again=false
+  for i=#delayed,1,-1 do if delayed[i].At<=now then local f=delayed[i].Run;table.remove(delayed,i);f();again=true end end
+ end
+end
+local count=0
+local function test(name,f)
+ profile={Coins=150,Level=1,ThrowStrength=10,EquippedOrb="Comum",Orbs={Comum=25,Mestre=1},UnlockedBiomes={PradariaSolar=true},CapturedCreatures={},ComboStreak=0,PityBonus=0,TotalCaptures=0,XP=0}
+ busy,saved,frozen=false,true,false;benefits={};messages={};results={};rngRoll=.5;player.Character=character
+ f();players.PlayerRemoving:Fire(player);delayed={};now+=20;count+=1;print("PASS "..name)
+end
+local function prepare()
+ assert(Flight.Prepare(player));return messages[#messages].Id
+end
+test("prepare never consumes an orb",function()prepare();assert(profile.Orbs.Comum==25 and not busy)end)
+test("foreign or forged nonce never launches",function()prepare();advance(.4);assert(not Flight.Launch(player,"forged"));assert(profile.Orbs.Comum==25)end)
+test("server meter fixes power; client extra values are ignored",function()
+ local id=prepare();advance(.4);assert(Flight.Launch(player,id));local m=messages[#messages];assert(m.Perfect and math.abs(m.Power-1)<1e-9);assert(profile.Orbs.Comum==24)
+end)
+test("single launch consumes once and rejects replay",function()local id=prepare();advance(.3);assert(Flight.Launch(player,id));assert(not Flight.Launch(player,id));assert(profile.Orbs.Comum==24)end)
+test("species is not rolled or awarded before landing",function()local id=prepare();advance(.4);Flight.Launch(player,id);assert(#results==0 and #profile.CapturedCreatures==0);advance(3);assert(#profile.CapturedCreatures==0)end)
+test("landing awards exactly once and has serializable nonrecursive bundle",function()
+ local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);assert(#profile.CapturedCreatures==1 and #results==1 and not busy);assert(results[1].Bundle[1]~=results[1]);advance(20);assert(#profile.CapturedCreatures==1)
+end)
+test("remote cancellation cannot refund an in-flight orb",function()local id=prepare();advance(.4);Flight.Launch(player,id);remotes.CancelThrow.OnServerEvent:Fire(player,id);assert(profile.Orbs.Comum==24 and busy)end)
+test("departure refunds an unresolved flight and unlocks data",function()local id=prepare();advance(.4);Flight.Launch(player,id);players.PlayerRemoving:Fire(player);assert(profile.Orbs.Comum==25 and not busy);advance(10);assert(#profile.CapturedCreatures==0)end)
+test("respawn cancels unresolved flight",function()local id=prepare();advance(.4);Flight.Launch(player,id);player.CharacterRemoving:Fire();assert(profile.Orbs.Comum==25 and not busy)end)
+test("resolved result can never be refunded",function()local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);Flight.Cancel(player,id);assert(profile.Orbs.Comum==24 and #profile.CapturedCreatures==1)end)
+test("expired charge never consumes stock",function()prepare();advance(13);assert(profile.Orbs.Comum==25 and not busy)end)
+test("stock is rechecked after charging",function()local id=prepare();profile.Orbs.Comum=0;advance(.4);assert(not Flight.Launch(player,id) and not busy)end)
+test("full inventory rejects preparation",function()for i=1,500 do profile.CapturedCreatures[i]={}end;assert(not Flight.Prepare(player))end)
+test("transaction lock rejects preparation",function()busy=true;assert(not Flight.Prepare(player))end)
+test("prepare rejects a player outside the launch area",function()root.Position=Vector3.new(1000,0,0);assert(not Flight.Prepare(player));root.Position=Vector3.new(0,0,0)end)
+test("launch rechecks departure from the launch area",function()local id=prepare();advance(.4);root.Position=Vector3.new(1000,0,0);assert(not Flight.Launch(player,id));assert(profile.Orbs.Comum==25);root.Position=Vector3.new(0,0,0)end)
+test("extra client arguments cannot select power or biome",function()local id=prepare();advance(.3);remotes.LaunchThrow.OnServerEvent:Fire(player,id,true,math.huge,"VazioCosmico");local m=messages[#messages];assert(math.abs(m.Power-Math.Power(.3,1.6))<1e-9 and m.BiomeId=="PradariaSolar")end)
+test("forged premium orb is rejected",function()profile.EquippedOrb="Prismatica";profile.Orbs.Prismatica=100;assert(not Flight.Prepare(player))end)
+test("verified eternal orb consumes no stock",function()profile.EquippedOrb="Prismatica";benefits.EternalPrism=true;local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);assert(profile.Orbs.Prismatica==nil and #profile.CapturedCreatures==1)end)
+test("triple throw consumes three and grants three",function()benefits.TripleThrow=true;local id=prepare();advance(.4);Flight.Launch(player,id);advance(8);assert(profile.Orbs.Comum==22 and #profile.CapturedCreatures==3 and #results[1].Bundle==3)end)
+test("failed save freezes without sending a successful result",function()local id=prepare();advance(.4);Flight.Launch(player,id);saved=false;advance(8);assert(frozen and #results==0)end)
+test("early release restores charging rather than sticking",function()local id=prepare();assert(not Flight.Launch(player,id));assert(messages[#messages].State=="Charging")end)
+test("auto throw requires a verified benefit",function()assert(not Flight.AutoThrow(player));benefits.AutoThrow=true;assert(Flight.AutoThrow(player));advance(.3);assert(profile.Orbs.Comum==24)end)
+assert(Math.Power(0,1.6)==0)
+assert(math.abs(Math.Power(.4,1.6)-1)<1e-9)
+assert(math.abs(Math.Power(1.6,1.6))<1e-9)
+assert(Math.Distance(100,20,25,1)>Math.Distance(100,20,25,0))
+local distance,biome=Math.Reachable(1400,{PradariaSolar=true,VazioCosmico=true},{"PradariaSolar","FlorestaNeon","VazioCosmico"},300)
+assert(distance==299 and biome=="PradariaSolar")
+print("FlightService: "..count.." lifecycle/security scenarios plus meter/distance/gate checks passed")

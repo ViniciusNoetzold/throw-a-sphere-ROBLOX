@@ -27,6 +27,8 @@ export type Profile = {
 	Level: number,
 	Rebirths: number,
 	ThrowStrength: number,
+	TrainingLevel: number,
+	TrainingXP: number,
 	PityBonus: number,
 	EquippedOrb: string,
 	Orbs: { [string]: number },
@@ -111,6 +113,7 @@ local function newProfile(): Profile
 		Level = 1,
 		Rebirths = 0,
 		ThrowStrength = Settings.InitialThrowStrength,
+		TrainingLevel = 1, TrainingXP = 0,
 		PityBonus = 0,
 		EquippedOrb = "Comum",
 		Orbs = { Comum = Settings.InitialOrbs },
@@ -218,6 +221,7 @@ local function decode(envelope: any): Profile
 	if data.FirstJoinedAt == nil then result.FirstJoinedAt = result.LastSeen end
 	assert(result.Level >= 1 and result.Level <= Settings.MaxLevel, "Invalid saved level")
 	assert(result.Level % 1 == 0, "Non-integral saved level")
+	assert(result.TrainingLevel>=1 and result.TrainingLevel<=100 and result.TrainingLevel%1==0 and result.TrainingXP<1e8,"Invalid academy progression")
 	assert(type(Config.Orbs[result.EquippedOrb]) == "table", "Unknown equipped orb")
 	for orbId, quantity in pairs(result.Orbs) do
 		assert(type(orbId) == "string" and Config.Orbs[orbId] ~= nil, "Unknown saved orb")
@@ -374,6 +378,7 @@ end
 
 local PUBLIC_FIELDS = {
 	"Coins", "Gems", "XP", "Level", "Rebirths", "ThrowStrength", "PityBonus", "EquippedOrb", "Orbs",
+	"TrainingLevel", "TrainingXP",
 	"CapturedCreatures", "SanctuarySlots", "Bestiary", "ComboStreak", "UnlockedBiomes", "OfflineReward", "IncomePerSec",
 	"TotalCoinsEarned", "TotalCaptures", "ExtraSanctuarySlots", "DailyStreak", "LastDailyClaim", "PlaytimeDay",
 	"OnlineSecondsToday", "PlaytimeClaimed", "MissionDay", "MissionCounters", "MissionClaimed", "BestiaryRewardClaimed",

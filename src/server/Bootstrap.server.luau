@@ -11,6 +11,8 @@ local ctx: any = {
     Sanctuary = require(Services.SanctuaryService),
     Progression = require(Services.ProgressionService),
     Capture = require(Services.CaptureService),
+    Flight = require(Services.FlightService),
+    Training = require(Services.TrainingService),
     Biomes = require(Services.BiomeService),
     Weather = require(Services.WeatherEventService),
     Boss = require(Services.BossService),
@@ -27,6 +29,7 @@ local ctx: any = {
 -- Register every callback before asynchronous profile loads start.
 -- Recover transactions before benefits, offline income and world assignment.
 ctx.World.Init(ctx)
+require(Services.FlightWorldService).Init(ctx)
 ctx.Biomes.Init(ctx)
 ctx.Boss.Init(ctx)
 ctx.Weather.Init(ctx)
@@ -39,6 +42,8 @@ ctx.Progression.Init(ctx.Data, ctx.Sanctuary, Remotes, ctx)
 ctx.Rewards.Init(ctx)
 ctx.Fusion.Init(ctx)
 ctx.Capture.Init(ctx)
+ctx.Flight.Init(ctx)
+ctx.Training.Init(ctx)
 ctx.Automation.Init(ctx)
 ctx.Drops.Init(ctx)
 ctx.Leaderboards.Init(ctx)

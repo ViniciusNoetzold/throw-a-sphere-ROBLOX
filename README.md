@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 10:31 — Brasília (UTC−3). Arremesso por biomas e academia funcional com barra de XP.** O fluxo principal agora começa ao encostar na linha amarela: a barra aparece automaticamente, tem vermelho nas duas pontas e verde no centro, e aceita clique/toque em qualquer lugar ou R2. A câmera acompanha a orbe pelo corredor e o servidor define a criatura ao final do voo. Há três performances de arremesso por força e sete apresentações de revelação por raridade, com arte provisória. O jogador é impedido de entrar na pista.
+
+**Academia:** o botão ACADEMIA leva à barra provisória do próprio santuário. O treino faz repetições automáticas, aumenta força e XP, mostra a barra e o nível da academia e oferece um desafio de **2× a cada três repetições**, em posições diferentes. O desafio é opcional e seu bônus vale para uma repetição. Parar, morrer ou dar respawn limpa o treino e restaura os controles. Os novos campos de progresso preservam os saves existentes.
+
+**Validações:** compilação Luau, suites existentes, 23 cenários novos de voo, 18 de academia, migração/save-load da academia, integridade das skills e build Rojo aprovados. No Play local pelo MCP foram conferidos treino, XP e subida de nível, desafios por teclado, parada por clique, ativação automática da força, clique fora do painel, câmera, limpeza de efeitos, bloqueio fora da linha, correção de entrada na pista e três poses de intensidades distintas. Esse Play usa **StudioMemory**; não equivale a DataStore em uma experiência publicada.
+
+**Pendências e próximo trabalho:** o usuário vai produzir os aparelhos e os modelos das criaturas. Os valores estão provisórios em `ConfigTraining`, `ConfigFlight` e `ConfigReveal`; balancear depois da integração da arte. Faltam multiplayer, dispositivos físicos, DataStore publicado, animações finais e adaptar o combate direcionado do chefe ao novo formato. O remote antigo de mira foi bloqueado no fluxo novo para não permitir arremessos fora da linha. As etapas 3 e 4 continuam pendentes.
+
+**Para continuar no outro PC:** atualizar o Git e abrir **`game/ThrowASphere.rbxlx`**; o código editável continua em `src/`. Se houver uma janela antiga aberta no Studio, reabrir o arquivo gerado sem salvar aquela janela por cima dele: uma transferência MCP longa foi truncada em uma sessão antiga, enquanto o build no disco permaneceu íntegro. O Play aprovado usou a outra sessão com fontes completas. Consulte o [funcionamento e integração da arte](docs/ARREMESSO_E_ACADEMIA.md) e o [relatório de validação](docs/reviews/2026-11-19-arremesso-academia.md).
+
+### Checkpoint anterior — instalação de skills
+
 **19/11/2026, 09:06 — Brasília (UTC−3). Skills de desenvolvimento adicionadas ao projeto.** Foram instaladas **155 skills locais**, com nove fontes fixadas por commit, licenças e arquivos de apoio preservados. A pasta `.agents/skills/`, o catálogo e o `skills.lock.json` acompanham o Git. Os 49 perfis de agentes Donchitos estão preservados como referência, sem ativação automática.
 
 Consulte [Skills e compatibilidade](docs/SKILLS.md) e o [catálogo completo](docs/SKILLS_CATALOGO.md). A referência `review-animations` foi resolvida para `emilkowalski/skills`; `mcp-roblox-docs` foi baixado como servidor opcional, sem registrar outro conector. O MCP oficial está disponível no cliente, mas a consulta desta sessão não encontrou um Studio aberto.

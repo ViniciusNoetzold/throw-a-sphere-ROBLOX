@@ -98,7 +98,8 @@ function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?
 	billboard.Adornee = head
 	billboard.Size = UDim2.fromOffset(230, 76)
 	billboard.StudsOffset = Vector3.new(0, 2 * scale, 0)
-	billboard.MaxDistance = 100
+	billboard.MaxDistance = 24
+	billboard.Enabled = options.Kind == "Boss"
 	billboard.Parent = head
 	local textLabel = Instance.new("TextLabel")
 	textLabel.Size = UDim2.fromScale(1, 1)

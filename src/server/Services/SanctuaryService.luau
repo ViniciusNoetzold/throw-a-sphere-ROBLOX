@@ -157,7 +157,7 @@ function SanctuaryService.Init(service: any, world: any, ctx: any?)
 			task.wait(1)
 			for _, player in ipairs(Players:GetPlayers()) do
 				local profile = dataService.Get(player)
-				if profile and not (service.IsBusy and service.IsBusy(player)) then
+				if profile and (not (service.IsBusy and service.IsBusy(player)) or (player.GetAttribute and player:GetAttribute("FlightInProgress") == true)) then
 					profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, benefits(player))
 					if service.AddCoins then service.AddCoins(player, profile.IncomePerSec) else profile.Coins += profile.IncomePerSec end
 					dataService.Sync(player)

@@ -28,7 +28,7 @@ local feedback = remotes:WaitForChild("ActionFeedback") :: RemoteEvent
 local throwResult = remotes:WaitForChild("ThrowResult") :: RemoteEvent
 local buyOrb = remotes:WaitForChild("BuyOrb") :: RemoteEvent
 local equipOrb = remotes:WaitForChild("EquipOrb") :: RemoteEvent
-local train = remotes:WaitForChild("TrainThrowPower") :: RemoteEvent
+local train = remotes:WaitForChild("StartTraining") :: RemoteEvent
 local equipSanctuary = remotes:WaitForChild("EquipToSanctuary") :: RemoteEvent
 
 local gui = Instance.new("ScreenGui")
@@ -257,7 +257,7 @@ local orbArtwork = Icons.Draw(orbIcon, "Orb", C.Blue)
 local orbLabel = W.Label(hotbar, "EquippedOrb", "ORBE COMUM ×25", UDim2.fromOffset(64, 8), UDim2.fromOffset(174, 24), 16, C.Blue)
 orbLabel.TextTruncate = Enum.TextTruncate.AtEnd
 local orbPower = W.Label(hotbar, "OrbPower", "PODER 10", UDim2.fromOffset(64, 32), UDim2.fromOffset(174, 20), 11, C.Muted, true)
-local trainButton = W.Button(hotbar, "Train", "TREINAR +1", UDim2.fromOffset(246, 10), UDim2.fromOffset(92, 36), C.Orange, 12)
+local trainButton = W.Button(hotbar, "Train", "ACADEMIA", UDim2.fromOffset(246, 10), UDim2.fromOffset(92, 36), C.Orange, 12)
 trainButton.Activated:Connect(function() train:FireServer() end)
 local swapButton = W.Button(hotbar, "SwapOrb", "TROCAR ORBE", UDim2.fromOffset(346, 10), UDim2.fromOffset(104, 36), C.Blue, 11)
 swapButton.Activated:Connect(function() openPanel("Orbes") end)
@@ -577,7 +577,7 @@ feedback.OnClientEvent:Connect(function(message: any)
 end)
 throwResult.OnClientEvent:Connect(function(data: any)
     if typeof(data) ~= "table" then return end
-    task.delay(3, function() showRareCapture(data) end)
+    task.delay(data.PresentationDuration or 3, function() showRareCapture(data) end)
     if data.Thrower ~= player then return end
     if data.IsCritical then spawnFloatingNumber("CRÍTICO 1.5×!", C.Gold, 28) end
     if data.IsLongShot then spawnFloatingNumber("TIRO LONGO 1.25×!", C.Blue, 23) end
@@ -585,8 +585,8 @@ throwResult.OnClientEvent:Connect(function(data: any)
         showNotice(if data.BossDefeated then "CHEFE DERROTADO! Recompensa dos participantes liberada." else "ACERTO NO CHEFE! Continue reduzindo a resistência.")
         return
     end
-    showNotice("ORBE LANÇADA! Aguarde as balançadas...")
-    task.delay(3, function()
+    showNotice(if data.FlightId then "A ORBE CHEGOU! Revelando o encontro..." else "ORBE LANÇADA! Aguarde as balançadas...")
+    task.delay(data.PresentationDuration or 3, function()
         local atLevelCap = (data.NewLevel or 1) >= Config.Constants.MaxLevel and not data.LeveledUp
         local gainedXP = if atLevelCap then 0 else data.XPGained or 0
         if gainedXP > 0 then spawnFloatingNumber("+" .. Numbers.Format(gainedXP) .. " XP!", C.Blue, 25) end

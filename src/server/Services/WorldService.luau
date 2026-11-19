@@ -30,16 +30,16 @@ local function label(parent: BasePart, text: string, offset: Vector3): TextLabel
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "Label"
 	billboard.Adornee = parent
-	billboard.Size = UDim2.fromOffset(280, 78)
+	billboard.Size = UDim2.fromOffset(220, 60)
 	billboard.StudsOffset = offset
 	billboard.AlwaysOnTop = false
-	billboard.MaxDistance = 130
+	billboard.MaxDistance = 38
 	billboard.Parent = parent
 	local textLabel = Instance.new("TextLabel")
 	textLabel.Size = UDim2.fromScale(1, 1)
 	textLabel.BackgroundTransparency = 1
 	textLabel.Font = Enum.Font.GothamBold
-	textLabel.TextSize = 18
+	textLabel.TextSize = 14
 	textLabel.TextColor3 = Color3.new(1, 1, 1)
 	textLabel.TextStrokeTransparency = 0.15
 	textLabel.TextWrapped = true
@@ -88,7 +88,7 @@ function WorldService.Init(context: any?)
 	spawn.Position = Vector3.new(0, 0.4, 20)
 	spawn.Color = Color3.fromRGB(125, 211, 252)
 	spawn.Parent = folder
-	label(spawn, "PRADARIA SOLAR\nSegure para mirar; solte para lançar", Vector3.new(0, 5, 0))
+	label(spawn, "PRADARIA SOLAR\nPrepare o lançamento e pare a barra de força", Vector3.new(0, 5, 0))
 
 	local lotPositions = {
 		Vector3.new(-68, 0, -55), Vector3.new(-74, 0, -17), Vector3.new(-64, 0, 30),
@@ -115,8 +115,16 @@ function WorldService.Init(context: any?)
 		end
 		table.insert(lots, lot)
 		station(lot, "PersonalTraining", position + Vector3.new(0, 1, -14), Color3.fromRGB(255,158,65), "TREINO PESSOAL", function(player)
-			if ctx and ctx.Progression and WorldService.IsAtSanctuary(player) then ctx.Progression.Train(player) end
+			if ctx and ctx.Training then ctx.Training.Start(player,false)
+			elseif ctx and ctx.Progression and WorldService.IsAtSanctuary(player) then ctx.Progression.Train(player) end
 		end)
+		-- Functional gym blockout. The user will replace these parts with final equipment.
+		for _,side in {-1,1} do
+			local post=part(lot,"GymPost",Vector3.new(.5,6,.5),position+Vector3.new(side*3,4,-14),Color3.fromRGB(90,110,140))
+			post.CanCollide=false
+		end
+		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-14),Color3.fromRGB(255,200,70))
+		bar.CanCollide=false
 	end
 	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 114), Color3.fromRGB(27, 40, 72))
 	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nCompre orbes e treine no painel", Vector3.new(0, 1, 0))

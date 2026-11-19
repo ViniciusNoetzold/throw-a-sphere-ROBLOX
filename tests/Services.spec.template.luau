@@ -472,7 +472,7 @@ test("v1 saves migrate in place without losing balance, records or equipped UIDs
 	first.RemovePlayer(p)
 	local saved = first.Store.Records.Player_101
 	saved.SchemaVersion = 1
-	for _, key in {"TotalCoinsEarned", "TotalCaptures", "FirstJoinedAt", "DailyStreak", "Boosts", "PendingTransactions", "ProcessedReceipts"} do saved.Data[key] = nil end
+	for _, key in {"TotalCoinsEarned", "TotalCaptures", "FirstJoinedAt", "DailyStreak", "Boosts", "PendingTransactions", "ProcessedReceipts", "TrainingLevel", "TrainingXP"} do saved.Data[key] = nil end
 	local second = engine({Store = first.Store, JobId = "migration-server"})
 	local rejoined = second.AddPlayer(101)
 	local migrated = assert(second.Data.Get(rejoined))
@@ -480,6 +480,7 @@ test("v1 saves migrate in place without losing balance, records or equipped UIDs
 	assert(migrated.CapturedCreatures[1].Uid == "legacy-uid" and migrated.SanctuarySlots[1] == "legacy-uid")
 	assert(migrated.TotalCoinsEarned == 4321 and migrated.TotalCaptures == 1)
 	assert(migrated.DailyStreak == 0 and next(migrated.ProcessedReceipts) == nil)
+	assert(migrated.TrainingLevel == 1 and migrated.TrainingXP == 0)
 	assert(second.Store.Records.Player_101.SchemaVersion == 2)
 end)
 
@@ -488,6 +489,7 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local p = first.AddPlayer(102)
 	local profile = first.Data.Get(p)
 	profile.DailyStreak = 7; profile.LastDailyClaim = 1700000000
+	profile.TrainingLevel = 6; profile.TrainingXP = 25
 	profile.PlaytimeClaimed["1"] = true; profile.MissionCounters.Captures = 15
 	profile.MissionClaimed.Capture15 = true; profile.BestiaryRewardClaimed.PradariaSolar = true
 	profile.ProcessedReceipts["purchase-id"] = true; profile.AppliedTransactions["completed-trade"] = true
@@ -500,6 +502,7 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local rejoined = second.AddPlayer(102)
 	local loaded = assert(second.Data.Get(rejoined))
 	assert(loaded.DailyStreak == 7 and loaded.PlaytimeClaimed["1"])
+	assert(loaded.TrainingLevel == 6 and loaded.TrainingXP == 25)
 	assert(loaded.ProcessedReceipts["purchase-id"] and loaded.AppliedTransactions["completed-trade"])
 	assert(loaded.MissionCounters.Captures == 15 and loaded.MissionClaimed.Capture15)
 	assert(loaded.Boosts.Luck.Multiplier == 2 and loaded.WeeklyPets == 2)
@@ -511,6 +514,8 @@ test("nested corrupt boosts, ledgers and escrow records are rejected without ove
 	local first = engine(); local p = first.AddPlayer(103); first.RemovePlayer(p)
 	local original = clone(first.Store.Records.Player_103)
 	local corruptions = {
+		function(data) data.TrainingLevel = 0 end,
+		function(data) data.TrainingXP = -1 end,
 		function(data) data.Boosts.Luck = {Multiplier = "bad", ExpiresAt = 1700000500} end,
 		function(data) data.ProcessedReceipts["receipt"] = "yes" end,
 		function(data) data.PendingTransactions["auction"] = {ReservedSlots = -1} end,

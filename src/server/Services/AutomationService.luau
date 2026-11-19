@@ -35,12 +35,15 @@ function AutomationService.TickPlayer(player: Player)
     for mode in modes do
         if settings[mode] and not granted[mode] then settings[mode] = false; context.Data.MarkDirty(player) end
     end
-    if settings.Train and context.World.IsInSanctuary(player) then context.Progression.Train(player) end
+    if settings.Train and context.World.IsInSanctuary(player) and not (context.Training and context.Training.IsTraining(player)) then context.Progression.Train(player) end
     if context.Data.IsBusy(player) then return end
     if settings.Throw then
-        local biome = context.Biomes.GetCurrentBiome(player)
-        local target, hitPosition = context.Spawn.FindAutoTarget(player, biome)
-        if target and hitPosition then context.Capture.TryThrow(player, target, hitPosition) end
+        if context.Flight then context.Flight.AutoThrow(player)
+        else
+            local biome = context.Biomes.GetCurrentBiome(player)
+            local target, hitPosition = context.Spawn.FindAutoTarget(player, biome)
+            if target and hitPosition then context.Capture.TryThrow(player, target, hitPosition) end
+        end
     end
     if context.Data.IsBusy(player) then return end
     if settings.Fusion and context.Fusion then
