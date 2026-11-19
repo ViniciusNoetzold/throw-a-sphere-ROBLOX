@@ -1,0 +1,3259 @@
+{
+  "formatVersion": 1,
+  "verifiedAt": "2026-11-19",
+  "sources": [
+    {
+      "repo": "Donchitos/Claude-Code-Game-Studios",
+      "ref": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "prefix": "donchitos",
+      "paths": [
+        ".claude/skills/adopt",
+        ".claude/skills/architecture-decision",
+        ".claude/skills/architecture-review",
+        ".claude/skills/art-bible",
+        ".claude/skills/asset-audit",
+        ".claude/skills/asset-spec",
+        ".claude/skills/balance-check",
+        ".claude/skills/brainstorm",
+        ".claude/skills/bug-report",
+        ".claude/skills/bug-triage",
+        ".claude/skills/changelog",
+        ".claude/skills/code-review",
+        ".claude/skills/consistency-check",
+        ".claude/skills/content-audit",
+        ".claude/skills/create-architecture",
+        ".claude/skills/create-control-manifest",
+        ".claude/skills/create-epics",
+        ".claude/skills/create-stories",
+        ".claude/skills/cut",
+        ".claude/skills/day-one-patch",
+        ".claude/skills/design-review",
+        ".claude/skills/design-system",
+        ".claude/skills/dev-story",
+        ".claude/skills/estimate",
+        ".claude/skills/gate-check",
+        ".claude/skills/help",
+        ".claude/skills/hotfix",
+        ".claude/skills/launch-checklist",
+        ".claude/skills/localize",
+        ".claude/skills/map-systems",
+        ".claude/skills/milestone-review",
+        ".claude/skills/next-step",
+        ".claude/skills/onboard",
+        ".claude/skills/patch-notes",
+        ".claude/skills/perf-profile",
+        ".claude/skills/playtest-report",
+        ".claude/skills/project-settings",
+        ".claude/skills/project-stage-detect",
+        ".claude/skills/propagate-design-change",
+        ".claude/skills/prototype",
+        ".claude/skills/qa-plan",
+        ".claude/skills/quick-design",
+        ".claude/skills/regression-suite",
+        ".claude/skills/release-checklist",
+        ".claude/skills/retrospective",
+        ".claude/skills/reverse-document",
+        ".claude/skills/review-all-gdds",
+        ".claude/skills/scope-check",
+        ".claude/skills/security-audit",
+        ".claude/skills/settings",
+        ".claude/skills/setup-engine",
+        ".claude/skills/skill-improve",
+        ".claude/skills/skill-test",
+        ".claude/skills/smoke-check",
+        ".claude/skills/soak-test",
+        ".claude/skills/sprint-plan",
+        ".claude/skills/sprint-status",
+        ".claude/skills/start",
+        ".claude/skills/story-done",
+        ".claude/skills/story-readiness",
+        ".claude/skills/team-audio",
+        ".claude/skills/team-combat",
+        ".claude/skills/team-level",
+        ".claude/skills/team-live-ops",
+        ".claude/skills/team-narrative",
+        ".claude/skills/team-polish",
+        ".claude/skills/team-qa",
+        ".claude/skills/team-release",
+        ".claude/skills/team-ui",
+        ".claude/skills/tech-debt",
+        ".claude/skills/test-evidence-review",
+        ".claude/skills/test-flakiness",
+        ".claude/skills/test-helpers",
+        ".claude/skills/test-setup",
+        ".claude/skills/ux-design",
+        ".claude/skills/ux-review",
+        ".claude/skills/vertical-slice",
+        ".claude/skills/write-changelog"
+      ],
+      "stars": 40130,
+      "license": "MIT",
+      "vendorPath": "vendor/skill-sources/Donchitos--Claude-Code-Game-Studios"
+    },
+    {
+      "repo": "gamedev-skills/awesome-gamedev-agent-skills",
+      "ref": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "prefix": "gamedev",
+      "paths": [
+        "skills/other-engines/roblox-characters",
+        "skills/other-engines/roblox-datastores",
+        "skills/other-engines/roblox-luau",
+        "skills/other-engines/roblox-networking",
+        "skills/other-engines/roblox-physics",
+        "skills/other-engines/roblox-simulator-economy",
+        "skills/other-engines/roblox-studio-workflow",
+        "skills/other-engines/roblox-ui"
+      ],
+      "stars": 9521,
+      "license": "Apache-2.0",
+      "vendorPath": "vendor/skill-sources/gamedev-skills--awesome-gamedev-agent-skills"
+    },
+    {
+      "repo": "scenario-labs/skills",
+      "ref": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "prefix": "",
+      "paths": [
+        "skills/game-engines/roblox/scenario-roblox-animation",
+        "skills/game-engines/roblox/scenario-roblox-architecture",
+        "skills/game-engines/roblox/scenario-roblox-assets",
+        "skills/game-engines/roblox/scenario-roblox-data",
+        "skills/game-engines/roblox/scenario-roblox-environment",
+        "skills/game-engines/roblox/scenario-roblox-expert",
+        "skills/game-engines/roblox/scenario-roblox-gameplay",
+        "skills/game-engines/roblox/scenario-roblox-luau",
+        "skills/game-engines/roblox/scenario-roblox-monetization",
+        "skills/game-engines/roblox/scenario-roblox-networking",
+        "skills/game-engines/roblox/scenario-roblox-performance",
+        "skills/game-engines/roblox/scenario-roblox-tooling",
+        "skills/game-engines/roblox/scenario-roblox-ui",
+        "skills/game-engines/roblox/scenario-roblox-vfx-audio"
+      ],
+      "stars": 3900,
+      "license": "MIT",
+      "vendorPath": "vendor/skill-sources/scenario-labs--skills"
+    },
+    {
+      "repo": "EL4CTEO/roblox-skills",
+      "ref": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "prefix": "el4cteo",
+      "paths": [
+        "skills/roblox-analytics-liveops",
+        "skills/roblox-architecture",
+        "skills/roblox-audio",
+        "skills/roblox-characters-animation",
+        "skills/roblox-code-review",
+        "skills/roblox-data-stores",
+        "skills/roblox-game-systems",
+        "skills/roblox-input",
+        "skills/roblox-luau",
+        "skills/roblox-monetization",
+        "skills/roblox-networking",
+        "skills/roblox-npc-ai",
+        "skills/roblox-open-cloud",
+        "skills/roblox-performance",
+        "skills/roblox-physics",
+        "skills/roblox-security",
+        "skills/roblox-studio-mcp",
+        "skills/roblox-teleport-matchmaking",
+        "skills/roblox-testing",
+        "skills/roblox-text-chat",
+        "skills/roblox-tooling",
+        "skills/roblox-ui",
+        "skills/roblox-world-building"
+      ],
+      "stars": 122,
+      "license": "MIT",
+      "vendorPath": "vendor/skill-sources/EL4CTEO--roblox-skills"
+    },
+    {
+      "repo": "fagemx/gstack-game",
+      "ref": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "prefix": "gstack",
+      "paths": [
+        "skills/asset-review",
+        "skills/balance-review",
+        "skills/build-playability-review",
+        "skills/careful",
+        "skills/feel-pass",
+        "skills/game-codex",
+        "skills/game-debug",
+        "skills/game-direction",
+        "skills/game-docs",
+        "skills/game-eng-review",
+        "skills/game-ideation",
+        "skills/game-import",
+        "skills/game-qa",
+        "skills/game-retro",
+        "skills/game-review",
+        "skills/game-ship",
+        "skills/game-ux-review",
+        "skills/game-visual-qa",
+        "skills/gameplay-implementation-review",
+        "skills/guard",
+        "skills/implementation-handoff",
+        "skills/pitch-review",
+        "skills/plan-design-review",
+        "skills/player-experience",
+        "skills/playtest",
+        "skills/prototype-slice-plan",
+        "skills/spark-lens",
+        "skills/triage",
+        "skills/unfreeze"
+      ],
+      "stars": 83,
+      "license": "MIT",
+      "vendorPath": "vendor/skill-sources/fagemx--gstack-game"
+    },
+    {
+      "repo": "danicat/skills",
+      "ref": "196aeeefa48e1e3d075b171e57e33e6dce28f8c5",
+      "prefix": "danicat",
+      "paths": [
+        "game-dev/game-design"
+      ],
+      "stars": 25,
+      "license": "Apache-2.0",
+      "vendorPath": "vendor/skill-sources/danicat--skills"
+    },
+    {
+      "repo": "emilkowalski/skills",
+      "ref": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "prefix": "emil",
+      "paths": [
+        "skills/review-animations"
+      ],
+      "vendorPath": "vendor/skill-sources/emilkowalski--skills"
+    },
+    {
+      "repo": "agent-skills-hub/agent-skills-hub",
+      "ref": "efc0b9639b83cf19aa73cc1b74844a6f302fe7ca",
+      "prefix": "hub",
+      "paths": [
+        "skills/game-development/game-design"
+      ],
+      "vendorPath": "vendor/skill-sources/agent-skills-hub--agent-skills-hub"
+    },
+    {
+      "repo": "n4tivex/mcp-roblox-docs",
+      "ref": "4237bef46f7bfad89899cb4d5d06a7039d4a79ad",
+      "prefix": "",
+      "paths": [],
+      "stars": 16,
+      "vendorPath": "vendor/skill-sources/n4tivex--mcp-roblox-docs"
+    }
+  ],
+  "skills": [
+    {
+      "name": "donchitos-adopt",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/adopt",
+      "installedPath": ".agents/skills/donchitos-adopt",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-detect.md": "d5dd0f50b52f1600edd2cfb9ddb87025cf99f22109623b9c81c37deb3021acc3",
+        "references/2-format-audit.md": "b9dca7c03ef0dcbb391f7a56294ba668c9046928b1a9634db83e247355c4d582",
+        "references/3-classify.md": "ba708873c7a72055da515a7f290be80b6a6b8e63610b4f6a1549fab82ed9e042",
+        "references/4-migration-plan.md": "27386c73a5fde71606320013f80d55d093c3cbbdca0318dbcbf70d13a9f7b99e",
+        "references/5-summary.md": "0661b1c4feb24d630ad4a1fd6a888cee699d907fbe01cef18e8dc658b0178622",
+        "references/6-write.md": "41237efc5d0dc90ebe41d77a0e457f0d9fe73bb34e12de30e8a22c2023475de2",
+        "references/7-first-action.md": "290607da90ceea57ddceccf45c4444c1136fc8e258a8bd631658121ec55462bf",
+        "SKILL.md": "afba1ad2dc266fb0fe349a9933d19869e6708dd8fb0f9643bb8ecd2d83e8779a"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-architecture-decision",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/architecture-decision",
+      "installedPath": ".agents/skills/donchitos-architecture-decision",
+      "files": {
+        "CONTRACT.md": "f295ec9326ff3050d71219be899bc4a75a97fff28a1221ead0693006c8f8a2be",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/0-accept.md": "abc2ab957854d947d7ee01c132cebf9c19c851aef3dfa788e3ee21ce82881016",
+        "references/0-retrofit.md": "f41ba65eda577623b3dbcef762495672924bf8ab382e7c2650e61006a378d0ce",
+        "references/1-engine-context.md": "0e0e4e96781ee752bff34d705c1dc26359fd662b50087ae7780495ddfaea353c",
+        "references/3-gather-context.md": "f226269d8c23f6d9fbc784fbc0dbf050d12a860ec20be0a3388b9b9345ff2d55",
+        "references/4-decide.md": "14a595f2efc8c0fdbbd9dbf6c0912250b817073db2a1de17ebf1c831d0822f8a",
+        "references/5-generate.md": "eb42f7b288c3adf8b8a205cc72f52f135913457426f4b907ee6e1f00533b253c",
+        "SKILL.md": "16a25383d74b1986e5727088861bbbc2949eec9453a6b05c67c222adbef1de1e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-architecture-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/architecture-review",
+      "installedPath": ".agents/skills/donchitos-architecture-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-load.md": "d866809875b0d6499cb9ae243ea28643c6d7a72bb06a0dec0894853c45f807ce",
+        "references/2-extract-requirements.md": "c34e4466059db1c71ccbd42946a91ee62964db38f761f333288cb59db2a84263",
+        "references/3-traceability.md": "dd90c9669632cb844d45ca3a1ce2007fd0f34dbf8b13031f22db100cc8961a75",
+        "references/4-conflicts.md": "b20b53754a69064941366d5ab8ca34cc1aced6f0e40ef09b4d39a0b6d48d2d57",
+        "references/5-engine.md": "e286c87c840b412f2303cf7a68260a324701462f197616460fac76e37748ea75",
+        "references/6-document-coverage.md": "f902dc64c01721cee13fd880a3670704c409cc82b9686eb7c0b7609dbdd5fcb7",
+        "references/7-report.md": "9e94874eaf3fc6252fc763dda1dc3798fdb90230ed4a3e0042a929b1743aca4c",
+        "references/8-write.md": "f7c34fad5198874728b61cb23faae6555debaa63bed376082ed2da1f24e165bc",
+        "references/9-handoff.md": "d2e5a7e1395faeb6edee4013cf04226210be6c0af4e5998615343250d24a8452",
+        "references/lens-engine.md": "86fae08efe3f23927d8203fd09c29899ed9bf7da0088d0a45842138babd85e2c",
+        "SKILL.md": "4590021b3d44beb807463c031e0c6ea2962c65a0ae976f1a4ff11705866a7f98"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-art-bible",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/art-bible",
+      "installedPath": ".agents/skills/donchitos-art-bible",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/lens-art-director.md": "db431cde424bd1dd439e3c6797c388e8859c939c8c1b72b4bca95b285adb7b71",
+        "references/lens-technical-artist.md": "478e248dfd2cd58767f4529f1270e6b6d27cae2010e3edb9d2e4e46b7c391b36",
+        "references/lens-ux-designer.md": "a7381144df5014ebbfc115be154924553e9ff1b2397ca1be95b6fa88a2fd9398",
+        "SKILL.md": "dfcba916b6034ace0ffd9274dbc8414f055959d0f4d87b37dd1846a2384bd027"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-asset-audit",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/asset-audit",
+      "installedPath": ".agents/skills/donchitos-asset-audit",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "0233695ae006198baefcaa8324c262f3a696ade4fd46974c57f534ddb0d49bdf"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-asset-spec",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/asset-spec",
+      "installedPath": ".agents/skills/donchitos-asset-spec",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "8bc6a6a35effe48f8eb58b7660a3af1b55926b4ff46b48a062d39e782fdb515d"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-balance-check",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/balance-check",
+      "installedPath": ".agents/skills/donchitos-balance-check",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "f10d9af2b6ec4304ba09f8d02665b9956fdb684fbe6dd7f317086c37bfbce8ed"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-brainstorm",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/brainstorm",
+      "installedPath": ".agents/skills/donchitos-brainstorm",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/full-concept.md": "614ea764eb466d7785eb78130dd980e0996709430ef4c6283cac69d3bfa32fc9",
+        "SKILL.md": "2031534e3064aea35f12d4a5077ceabd416c88c9abb53037ac79b10aa261d8b7"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-bug-report",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/bug-report",
+      "installedPath": ".agents/skills/donchitos-bug-report",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "833f4e1ae5b9dceff7ab4623a8bef6a14453b5bcfb5159f39d82bd9be1804638"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-bug-triage",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/bug-triage",
+      "installedPath": ".agents/skills/donchitos-bug-triage",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "9879cccc5fedde2f64eda288c7a35aef3977b380c359d9c990b36ab8340bcf7a"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-changelog",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/changelog",
+      "installedPath": ".agents/skills/donchitos-changelog",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "e8f1a358727912a9f0d4aa629039602675cee1cd16d84e69d33af7aec1f4bf11"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-code-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/code-review",
+      "installedPath": ".agents/skills/donchitos-code-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/lens-engine.md": "5fb9b0bb370c62dbc4929309983627cbcc8dbb4e43f8462a0940484df8bc844c",
+        "SKILL.md": "ed0071c02b6234f265e9839ae6c211b5a86d08375d2c8097c72b5e220d59f2ff"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-consistency-check",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/consistency-check",
+      "installedPath": ".agents/skills/donchitos-consistency-check",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "76441ef3e1476b1816c3bc6ada3a8fc50c43b56544c9b823b9a3a6cef4101ced"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-content-audit",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/content-audit",
+      "installedPath": ".agents/skills/donchitos-content-audit",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "635055ba93a8bbc30d9502b36ed7d7ba84ae8bee538d40951808c2bbad8518cc"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-create-architecture",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/create-architecture",
+      "installedPath": ".agents/skills/donchitos-create-architecture",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/0-load-context.md": "2083798d7784c597ca8b9c0933f13d3fd2161936c0fc6771a351f98ab0b56481",
+        "references/1-layers.md": "889231d49bd42e96bb0d4cd3bb052434bce83f5567ebf2d1567b82b3712a0f46",
+        "references/2-module-ownership.md": "1c373de52748ed4941a223092f6a6d17b251df32cac500f275672f4742ee5dff",
+        "references/3-data-flow.md": "33664f68c24c751182df4a95eda3ae2740a94381d58a7806b1d2a40c2b96506a",
+        "references/4-api-boundaries.md": "dc914d8fa14cb7e80b46fbc4702d327ba473284744425272f854237645f6d0fd",
+        "references/5-adr-audit.md": "f2dffe08fe962b555cf87f62141cd82b12928ceb7fa67544f5a6c8f485b58e51",
+        "references/6-missing-adrs.md": "d88aa82cabb0803e6b8d989664da8b219eed7f8e39de7fe66b9c635aefdf1ade",
+        "references/7-write.md": "e10e9fb89a6b09bd0cd41791d8da83dd79f996a83847982daccf144e0960ee69",
+        "references/8-handoff.md": "dd6f3eb676c4497cf61383cee696d94db1dc7d22c73d5baa574a1f215229bf77",
+        "SKILL.md": "3032568fb4c9b43f2217571cb3e6917a405e3ff094611346350fd62fc4e04403"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-create-control-manifest",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/create-control-manifest",
+      "installedPath": ".agents/skills/donchitos-create-control-manifest",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "40befc2c6f3c7d6eae759d5e30a5c3df278086f039d15d2869b79e96d8b30ab2"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-create-epics",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/create-epics",
+      "installedPath": ".agents/skills/donchitos-create-epics",
+      "files": {
+        "CONTRACT.md": "a48adfb04175d21ba016118e614c11def9477ad76c06ca26acf767d3ad4139b3",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/pr-epic-gate.md": "990efdfb2d6955ace5c3562e4753a5a8599f63cb39a48e51366124bcbca4f6d3",
+        "SKILL.md": "7a864f6727e2f3f73573082196fbe3fcaef29cb74cb9010a358c8eec6c837e75"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-create-stories",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/create-stories",
+      "installedPath": ".agents/skills/donchitos-create-stories",
+      "files": {
+        "CONTRACT.md": "f273445220bb18f0e4664ce3b97a62b1c0e5773f9d5b451d1eb0df66164beb4b",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/qa-lead-gate.md": "752d3bc7d4d5de0fa36031821d00128d5c7eb3f3bf66fd6f9e869e943e51eb98",
+        "SKILL.md": "a7f84e5b8304386745c973f9478e89fa778e6ad23d235cf10a7c8388dadce233"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-cut",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/cut",
+      "installedPath": ".agents/skills/donchitos-cut",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "222501554e135d74bfec0d77daf756c3f0d20cf23464e60e79d979c3e555c846"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-day-one-patch",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/day-one-patch",
+      "installedPath": ".agents/skills/donchitos-day-one-patch",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "ad47606cb76c8e01baae71022d3e65f53e9841801d4a6768f9c083ee3e034e03"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-design-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/design-review",
+      "installedPath": ".agents/skills/donchitos-design-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "95ce340d5f5429368758dcdb0935afe42957bcc4ce95816ac29fd2f15bb98284"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-design-system",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/design-system",
+      "installedPath": ".agents/skills/donchitos-design-system",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-parse-arguments.md": "7fa53f3742a5a21ff42e58e8f54a823112d0817172714c361df34960e54c7970",
+        "references/2-gather-context.md": "149f349250ed5c49c8fbe9cba92f4f1f750b9d5dce96c9a98267cfe29d8a0040",
+        "references/3-file-skeleton.md": "95dc956f90e443d15f4cd0ff4f7709f70c9068d5da5b163c9226220ac7d89e52",
+        "references/4-section-design.md": "20e2a4c04d52a8a375c9d3408b67b97263bccd9f5b50ceb58778ba5d77636a13",
+        "references/5-post-design.md": "a220b1ab6528e31d792ef42398c15ff0bf5513f8cfce00d8893efd097c29bd93",
+        "references/lens-creative-director.md": "783ae4cb2a19bc79f9ced53cc8da5b19bc77a6a7fc08f83881e42bebcefbb9f7",
+        "references/lens-qa-lead.md": "7a6a6e93a1d203039ab7e51da686cdfe93610c7361e71be7ffd1995d2a085dbe",
+        "references/lens-specialists.md": "b48c95abe63f8d630762b89ad8d42f195f94c71fea480728ff287f265ff3c76a",
+        "references/lens-systems-designer.md": "0a779d324fa54981188dd4c144dcb97de53712f8363bddfebd7fed795d9a37f5",
+        "SKILL.md": "576c592bb4a92ecf96c2064e8338900b2adce102b7b543c52c176f9dca7f24d4"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-dev-story",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/dev-story",
+      "installedPath": ".agents/skills/donchitos-dev-story",
+      "files": {
+        "CONTRACT.md": "5499e9ce229080246973a5d2142e06ead75cdebf1274eff81afc6926b90e7a8c",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/engine-checks.md": "c3ec789cc1c424366e5e85ebc56e5df317b5dfdd011f9e944e6242235640fdb4",
+        "references/version-mismatch.md": "2f38c7964569cba3b22bfbfc0cc702ecb1c4580e7aa294994b3047cae9318a41",
+        "SKILL.md": "e13c2763dd1ff4dbab62c9cef165e0f5e0fd6444c19d8d19bcb31a72230bcdc8"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-estimate",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/estimate",
+      "installedPath": ".agents/skills/donchitos-estimate",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "239724b38285ed0870655c45f27f63094727597c6912a7c62d131ad0f9a4aced"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-gate-check",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/gate-check",
+      "installedPath": ".agents/skills/donchitos-gate-check",
+      "files": {
+        "CONTRACT.md": "0901f2e46665877d8a70354caedddeceba6148ca34f8705a10242f570286dff3",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/2b-workflow-tier.md": "3daee07be4df4801b2d5295dbfee80d04cccb526ca37552fd32a3d3b101fc055",
+        "references/3-run-gate-check.md": "7bf00524fd8b3c84cbceb91e57f051e54b6f01e228017a305b9ce51e59ac6e34",
+        "references/4-assessment.md": "1a9f903ad984ff6dde7ad4fc46992068d3a8e27127ac269a1c4fe21e5b9604ab",
+        "references/5-verdict.md": "d23968436c962f985c726ed73189864d8e7d2aa177bf8593e68cc025ab7faab8",
+        "references/6-update-stage.md": "1e85a5785c7cdf8fab50f7b2879a40fdf5c57cf18703da09223007f57a8314a0",
+        "references/7-next-steps.md": "ef245f448a24ba5cdbefb9f5152ec3b97aed0c945bdb76305db993da21ccd15e",
+        "references/gate-polish.md": "74f62e880cc9a12e6ee8230245a4ecc445bd0a404aa9b53af86a7e64d22ee20d",
+        "references/gate-pre-production.md": "8d3a76481995ce40a1c1d4f791c103a7b5476d4bdb359f5a48afc3ab5274ce4c",
+        "references/gate-production.md": "8457c5c37cb79ebb2dfc3ee98eae5c39fd50ac8a7c7af6cef8ff7a060f035833",
+        "references/gate-release.md": "3b8a069361c6945cf4c3ae3e5ae4ddd81e1dfb675e3336d11b282d5def15319d",
+        "references/gate-systems-design.md": "6d54c2530016a7c8819b0b86eed180c100eac11c5c1cd43d8c18c25b5deb17ed",
+        "references/gate-technical-setup.md": "8b84b1bc6940c44901e4be0ed89ec05462e81f4f7b2130b7e3aa3536239807c9",
+        "SKILL.md": "aff6643fcf1d45f858639ce4eae6d24b81b3f99928edf94d4da488f742090649"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-help",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/help",
+      "installedPath": ".agents/skills/donchitos-help",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "b0a016bc5039195458ccc08ab1808f259da4c821ce27a7902753a606cf3b4169"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-hotfix",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/hotfix",
+      "installedPath": ".agents/skills/donchitos-hotfix",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "36b00f36cc10be9af25c5c9db64527412066cfe924753c6efd332c1c2d37e9f1"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-launch-checklist",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/launch-checklist",
+      "installedPath": ".agents/skills/donchitos-launch-checklist",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "8d085cfe8ea99bf843b7a733d4a5b7593849e9236014fc32fe385b9a72a8b896"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-localize",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/localize",
+      "installedPath": ".agents/skills/donchitos-localize",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "89a64b6b335c2fe3a1838a526e332a375e215cf868880cc4b2febaf516ce8275"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-map-systems",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/map-systems",
+      "installedPath": ".agents/skills/donchitos-map-systems",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "4307710150d3afe24a210402fae6e824391f20b6801ea3b0a6217d416b0a07fb"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-milestone-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/milestone-review",
+      "installedPath": ".agents/skills/donchitos-milestone-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "71e904ef873c9ea4b263ccc07ce024dd56499272ddedad5cf767d3764049cc91"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-next-step",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/next-step",
+      "installedPath": ".agents/skills/donchitos-next-step",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "e7ea8f670d7dff3cedca86cea4a6007e2be8c589ed0055d3a7c27787903b8779"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-onboard",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/onboard",
+      "installedPath": ".agents/skills/donchitos-onboard",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "36960ffaa5a296cb3b92748319dd5ded6a89012cfdafa4207dd2bd3d9b0d6d54"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-patch-notes",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/patch-notes",
+      "installedPath": ".agents/skills/donchitos-patch-notes",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "10a11140fd5d4e52b8bf94f4c6b172964f080645fdcdf97930e7a0a36cf12235"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-perf-profile",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/perf-profile",
+      "installedPath": ".agents/skills/donchitos-perf-profile",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "2406b1b2a55f2ec86b7379335f58ad984eac5f89bcf165600da8a5fb1db74eea"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-playtest-report",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/playtest-report",
+      "installedPath": ".agents/skills/donchitos-playtest-report",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "c8cdfdcbe05e5f5aeb9381686dc53f308f21ca0b0a0039686658c27a963742fc"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-project-settings",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/project-settings",
+      "installedPath": ".agents/skills/donchitos-project-settings",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "664b12ba7a17a7a87a33d17450c6ad96cdcbf31bd8cef66e4dd4d87836cf0acd"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-project-stage-detect",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/project-stage-detect",
+      "installedPath": ".agents/skills/donchitos-project-stage-detect",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "9efa9d818d4efee8195b97d1b82ff6f782f3a5a1dffd17a126b384ab4e3a67bd"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-propagate-design-change",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/propagate-design-change",
+      "installedPath": ".agents/skills/donchitos-propagate-design-change",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "46400f4f016e6f2e60f588ae4f44200c75cd95442b42fb7110b34ee02665f204"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-prototype",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/prototype",
+      "installedPath": ".agents/skills/donchitos-prototype",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-question.md": "f18b6fcf27c13a3645e3d1e61ae3562415b2e7e4ffe84697abbd07cc6be5686b",
+        "references/2-load-context.md": "88b28b8d0dc3132c8e668ccdd84cb3f9eaeb4b33933f18907aa5e649572fad46",
+        "references/3-choose-path.md": "ff29a05f7fef9491cee9366db3e50e435a8bd9fe604b0378c29a145980784762",
+        "references/4-plan.md": "8e2c9901b370d38506cfc9253d6035de4f5796e91da2088b1511f51f5b9e0072",
+        "references/5-implement.md": "4800a122afc9e64746833789ddc5257e904eff3c4cceaed21d4c2226221d1742",
+        "references/6-debrief.md": "d43732bfbcc0d4f50da5d63b50eea5db580ed55c5d32bc6c0ce45512f153e3fb",
+        "references/7-report.md": "a2cc11c358bc59fdb5fb8be543f5806c67ea4f7e28d03466346bfa66cf8e9fc2",
+        "references/8-cd-review.md": "a3b2da073a0407e93d1511c8132f96abdc797a029925badef478e0d4a5954afd",
+        "references/9-summary.md": "f503d0283f84a27b2d45862d8922fc17a0adcdcb36ef69649350875976eb96f0",
+        "references/one-shot-0-door.md": "c0c62fde52f1db925fba8d6baf7c7e618b20d32eba61b005d837264d3892f85b",
+        "references/one-shot-1-card.md": "974ca2b4ae2b4b8ac0a2ab15c060cd046dc99f15af2757169eb4749a708b74ed",
+        "references/one-shot-2-build.md": "b2f3ec40e52d25b8ef4db949fd93a7d12dfb45d93aea9b880b54d2ac7e4650ec",
+        "references/one-shot-2c-self-check.md": "29c5bf2dd6cb6874768aa5465f78e6121267360ec473b15365f1ec0b63ed589a",
+        "references/one-shot-3-handover.md": "c53a0b91052be73ecf2b8d71cf05993927b8a8325394291682e6c9ef17ab3458",
+        "references/one-shot-4-change.md": "3153068f503b216af097a875217cad9fdac37b2aae92ca048a0f4514b07b228a",
+        "references/one-shot-5-grow.md": "eb270c3a8b0cdcd43a858ed039708409a521ba1bd24a4c6f6fa05dfb03a53560",
+        "references/one-shot-files.md": "2f9694230f1387a04de74677933f310fe4362bdc0457286f3390aad82c52bbf4",
+        "references/spike-mode.md": "16d03a37e1ae3a082bd17adc120dc3120c1df59c90262877eb0d1d9fe97e9b0c",
+        "SKILL.md": "14612c39492241ab6799e375b7114b2cbe2bf6c1e47fa047fd6af8a24bc2941e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-qa-plan",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/qa-plan",
+      "installedPath": ".agents/skills/donchitos-qa-plan",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "d6d18a6d4fe65cf417f837aa27d29ba81d43d842fb56658cd7d5a73e3b1daeb4"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-quick-design",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/quick-design",
+      "installedPath": ".agents/skills/donchitos-quick-design",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "81372483353edee1f3c53fd696d3ccd124a9ba65f76e3d485f8195a7703827d2"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-regression-suite",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/regression-suite",
+      "installedPath": ".agents/skills/donchitos-regression-suite",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "958e697d14d0c05d901030856031e859a25600000bc6f22b1def12e843337cde"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-release-checklist",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/release-checklist",
+      "installedPath": ".agents/skills/donchitos-release-checklist",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "99f9831e40728a13d7c41b76c7de0fe5fb614df456b4c6a06134cae0537145cf"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-retrospective",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/retrospective",
+      "installedPath": ".agents/skills/donchitos-retrospective",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "bd04ba5adbb28ee361b242f84cb214200ed945df4a8c7df85b935de976692b20"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-reverse-document",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/reverse-document",
+      "installedPath": ".agents/skills/donchitos-reverse-document",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/from-a-game.md": "d34e6e479323c3873bf6d1ec75d17953392bf3e22e8df3238ceaddb9b99ac308",
+        "SKILL.md": "3d60c182c786641f942e0527fc19a2269730d8962d6cc67ad91ff8ed3bd3f487"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-review-all-gdds",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/review-all-gdds",
+      "installedPath": ".agents/skills/donchitos-review-all-gdds",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-load.md": "db1b6e59f09522e6fb4134f7498954e73c28fa878b390380b5793ada0eff82a5",
+        "references/2-consistency.md": "38596caeb557efbca1ecb7b767f558865453b2266a35a59f7e34f173b44a2351",
+        "references/3-design-holism.md": "8855ba326fc36a2406c15afbcbdb22f01875ed079e4cd1446d8ffed668e819ee",
+        "references/4-scenarios.md": "6cbabdb03c253ab2c2fe384ae075d68fbeeef705fc5acd60fcb60f9784ae286d",
+        "references/5-report.md": "ae51d4b943c57dbedb5f08a78ec7b4608324c0a9bb97b509c40bb1772e4040cb",
+        "references/6-write.md": "e4f3a48fd218f010138b5ef0453178dc7d4617db93044a1c57b7f2d35cbd2942",
+        "references/7-handoff.md": "76a11e26daef756825db1aabf6380c3781a1ac479eea38a63104ad697163b4c6",
+        "SKILL.md": "ab05cbdca95a68c40e5d877e7f78bb292a3d705ab1abb0987379808f348ba862"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-scope-check",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/scope-check",
+      "installedPath": ".agents/skills/donchitos-scope-check",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "2b85fbd434ecad1fc415bf87210e7c21761fe899e2a6887f3ec78174e41937ae"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-security-audit",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/security-audit",
+      "installedPath": ".agents/skills/donchitos-security-audit",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "b34f487087ad912b7685fa447791c0ea2bdae4f0103a6ea8e6cda2257fe55782"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-settings",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/settings",
+      "installedPath": ".agents/skills/donchitos-settings",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "d8d861aa13f910d71ad4c24cd0fad5afd23bb693279a71646cf78e37f62c7827"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-setup-engine",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/setup-engine",
+      "installedPath": ".agents/skills/donchitos-setup-engine",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/11-upgrade.md": "317bc0eb662673c6f8b3890827598432ce8c036539d957e98e041ce88586bcea",
+        "references/12-output-summary.md": "cb997943c00a9e2de1e75bf76765b2ab022d5bd5910d8941545f2386db1f379e",
+        "references/2-guided-mode.md": "a8c29bef998bad2fdd0c0041a0ca6ec2fb6e6f4f7b68d3378ca5691b4eb4c76d",
+        "references/3-version.md": "3d8017fc0c9198915b017908b1d90fa486c4ceba43a0b6db8047056a2079af7c",
+        "references/4-claude-md-stack.md": "8783e2b0bf80201f084f15ac47729dc9273e1dce1e3609a5c3b41d6ec668a0f1",
+        "references/5-technical-preferences.md": "2bb1744c5bf557a58b1b80b2e5961c9fe5fdd0477269a34d2cceb666b06d6494",
+        "references/5.5-project-yaml.md": "869d8fe7fced78b1eb0de241e5c4eae7c74ccd520c4ff03503fb3cea4bc70d4d",
+        "references/6-knowledge-gap.md": "1c274bcfe1a986219b96fb863ada349c40c1d8b90bdfc6f6053c9ea1c7ea11f2",
+        "references/7-reference-docs.md": "8e4642bcc0e043d0fc9076ce5a06153f653960524564466fc2c34b617c2101ce",
+        "references/7.5-scaffold.md": "f27167c5c630b3e21c6d4182c5d543df85883e980c72ea29044a669853071bb0",
+        "references/8-verify.md": "cc0d97051177e32d715816380898f54788283716929ec53cd8f383e564a982b4",
+        "references/godot-language-config.md": "82b2aad2ad6a63616c30a5168f720eb6e83ca40e585bddf82dc13395a0a7d404",
+        "references/web.md": "785d42767f422530302d9b57545c260ca467b01535be4fc075fb1cede604bc86",
+        "SKILL.md": "3f81aace084520b6519b337eb54bc0936dcf7c7a5e9732f3408bed8376cd3129"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-skill-improve",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/skill-improve",
+      "installedPath": ".agents/skills/donchitos-skill-improve",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "25aa350e8fda07f620d75208bf26f46e53e23ff326ad187044dac89bcb2a8b33"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-skill-test",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/skill-test",
+      "installedPath": ".agents/skills/donchitos-skill-test",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "8e2a3422dfa919bc800b2326b5889eed3b0e059f8c27cb50865cf0dd360a27bc"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-smoke-check",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/smoke-check",
+      "installedPath": ".agents/skills/donchitos-smoke-check",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-detect-setup.md": "07af6a1dc13f17fddb6f1877e578969471ffa37e3e5b1845334ca216a36fdff3",
+        "references/2-run-tests.md": "c3cec04703f7a7573943ad2b5df6fe41dbdef273f4a157783f3006bd76742ca0",
+        "references/3-coverage.md": "34cee3af8199169ed5771a889174c96f955ed3a56cf26fd56077fada46d62224",
+        "references/4-manual-checks.md": "160d773ed338bf51eaf3f801ad4c64f05ef4b00f507e3c7fbeee58c8389aa979",
+        "references/5-report.md": "8db03263162f860f9c9a6cd79c18de7e30b9f951fc92ebc1be5288aa5b5b6b31",
+        "references/6-write-gate.md": "35510aaea59e83332a5eccc98a417afed5327114a6180fe62f2b7344cd716192",
+        "SKILL.md": "a38e0dcf061759c687a1649b10df4530001901db6ee6a3daaf0d0d36f52216b5"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-soak-test",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/soak-test",
+      "installedPath": ".agents/skills/donchitos-soak-test",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "cd9347c716eeae1eace7e6987ab52bc08ce8737b4a9e36a5500d4561330e0335"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-sprint-plan",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/sprint-plan",
+      "installedPath": ".agents/skills/donchitos-sprint-plan",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "c271e34225f23bebb15e0e599b6c2f04ab08aaeb877f70f588702950ef572c2e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-sprint-status",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/sprint-status",
+      "installedPath": ".agents/skills/donchitos-sprint-status",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "d0b57947c60f1a6b5c4df7017f3aeb2d033e22ba9a8786a356ab3866061615ce"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-start",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/start",
+      "installedPath": ".agents/skills/donchitos-start",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "97639ecac729b278de57b21a033f8fe247d8c282a8c2599608fa1d577392af75"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-story-done",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/story-done",
+      "installedPath": ".agents/skills/donchitos-story-done",
+      "files": {
+        "CONTRACT.md": "b805929ac2ad562172f5ff9d0492268b172cd7db0f3043a94bf35dc7eec9117a",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/review-gates.md": "49618b4e574a5db5dd9b25bc681b92d357b513ef9e05c760a4509d0471913741",
+        "references/sprint-next.md": "d18331c32a0e15ac6858d60ac4c9b220b81da607c3f5c83f69eaa691cc932c10",
+        "references/tech-debt-row.md": "9bc9090f96ee6b1e3e03a99fee382dcd5029647f07ce1bcdb6d730a492f8c31e",
+        "SKILL.md": "4d93059892c22dd6585541a14617151f5c376af43921f163b371c59892bb554e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-story-readiness",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/story-readiness",
+      "installedPath": ".agents/skills/donchitos-story-readiness",
+      "files": {
+        "CONTRACT.md": "9f72e5fad1591d91ddb19f295ef392ac31d227908c248354b7584327ebd73891",
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/qa-lead-gate.md": "f919c5e0cfc94d1caccd0c68c4ab5b97b64fca75c24d1632ab6f2297a534c226",
+        "SKILL.md": "f2500ac75c668997928306e1238ff6919d136bf1ef10105151530b57f557fabd"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-audio",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-audio",
+      "installedPath": ".agents/skills/donchitos-team-audio",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "a882d0df2977dcdceec0ae10d2cdfc847d925fbae255616bf8b6a4900355d27e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-combat",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-combat",
+      "installedPath": ".agents/skills/donchitos-team-combat",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "c8336d480c35c62a4678edfa2a39834869f9befe3f867479bb4922a7803ef3e0"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-level",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-level",
+      "installedPath": ".agents/skills/donchitos-team-level",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "b367b1655850481072475290b2287ca9bbb41cddb7905a29f32f14f7b7975f22"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-live-ops",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-live-ops",
+      "installedPath": ".agents/skills/donchitos-team-live-ops",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "ac1ccb0f925c1035b3bd85db45040045c15e127c2490314af33beaef5f0730f1"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-narrative",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-narrative",
+      "installedPath": ".agents/skills/donchitos-team-narrative",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "c33370df3b66b36ca91885a105fdb4d696a0cdd4cd9a02bc6bd5dfe9f849ac6a"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-polish",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-polish",
+      "installedPath": ".agents/skills/donchitos-team-polish",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "f77a897abb4cbac39305ba6aa4b46b897711e0172ab3ab9b4a666b65db33dece"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-qa",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-qa",
+      "installedPath": ".agents/skills/donchitos-team-qa",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "7a88dced9359d2841ab8569f904643df9f52035f3323cf420db763f20520f091"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-release",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-release",
+      "installedPath": ".agents/skills/donchitos-team-release",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "8cab02366e2092cfa602ddfaa06083a650dbbeaa3476a0c1f3d5a8aafa6a1cf0"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-team-ui",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/team-ui",
+      "installedPath": ".agents/skills/donchitos-team-ui",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "7a04d215ec60e20af23e81156e235c9e29ea26534b40f46bb973bd5e12c89612"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-tech-debt",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/tech-debt",
+      "installedPath": ".agents/skills/donchitos-tech-debt",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "181bc91a830e058fe38e5710b9168208e25d2d09528670e14111ea0f7fdc0162"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-test-evidence-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/test-evidence-review",
+      "installedPath": ".agents/skills/donchitos-test-evidence-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "f7c912beb1962b64a78e7e77bbba6a518874e3fb4d6aae71a51594386285fb54"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-test-flakiness",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/test-flakiness",
+      "installedPath": ".agents/skills/donchitos-test-flakiness",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "a64a2f807aae75cc75864154875359fcb728630e28ac866ade3e5c447a9bd8a6"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-test-helpers",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/test-helpers",
+      "installedPath": ".agents/skills/donchitos-test-helpers",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "d2739d93ae47d6f6f81c961ad4a3040c629a670824154147b013f3b307740a26"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-test-setup",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/test-setup",
+      "installedPath": ".agents/skills/donchitos-test-setup",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/1-detect.md": "db091629bad368d40b069fd0415e8b0f874738a13746d60f1177249d0787c85c",
+        "references/2-plan.md": "75554e9eba090bb8a2d9a2e0e0c68583deaae6960e2adc7e0e80f88b5a924e58",
+        "references/3-directories.md": "2c097fdc41cabdd472673d6fefcea0528249a9aaf695bd59734e65cc8e09e568",
+        "references/4-ci.md": "504a26128cde3c2d60d57d01cc3763a479040de2e551ef0aa685a615c016980d",
+        "references/5-smoke-seed.md": "c2c4dabcf16bca70fa3d4170b5fbb6ea9ae92dae4567a23fc0066025f5c9ba6e",
+        "references/6-summary.md": "68024b370fff56598affeb99726f71207df1dd2cf33efd941360709e032a855f",
+        "SKILL.md": "d1e9f5f76e9918c30996f35568556d26396b6bf387ee597aaef8fbc854bff824"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-ux-design",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/ux-design",
+      "installedPath": ".agents/skills/donchitos-ux-design",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "references/2-gather-context.md": "b8c7dac24f6ea2fdd7ef278bf5074a4cba6c068e500154099231dad0997d2b8e",
+        "references/3-file-skeleton.md": "ec58c4982148229b4d336f217c92f9fdf71029e22e68b9d0d0e51e909b22a901",
+        "references/4-authoring.md": "c0df1eb0c791565c660e93ee813cc96dcc4a5f687ac25406cd75f8801f3abd40",
+        "references/5-crossref-handoff.md": "b1785beef772c20984ce2f545edd29104a5587df8fca57f1d4d7d547af5aaa00",
+        "references/sections-hud.md": "41f737fdc05271030b85f8d8af1e2030d9558eca831376bb4fd92a3d4243b054",
+        "references/sections-patterns.md": "f22f4012b3d7e7a78ebe3b18d7aee67319aef65b2799405d6a8e5a5717e8fe75",
+        "references/sections-ux-spec.md": "fce8ca3eb9ab452328e2f1b20ceb01c707a3be9d6a74b5acf481ecdb6a1e9219",
+        "SKILL.md": "6353876e193db392198f93bcf286a838d281b7b0214607ff9c2f78920b058ba6"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-ux-review",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/ux-review",
+      "installedPath": ".agents/skills/donchitos-ux-review",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "a83b91a14abadf6b984d30589afd45a1aac3982b7dcb8ce09841d20f04e5d5f6"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-vertical-slice",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/vertical-slice",
+      "installedPath": ".agents/skills/donchitos-vertical-slice",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "2c3f027ec6676016689839f66daed690cf1ced93bb8c71cbd8c4fa1f5fd24772"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "donchitos-write-changelog",
+      "repository": "Donchitos/Claude-Code-Game-Studios",
+      "commit": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+      "upstreamPath": ".claude/skills/write-changelog",
+      "installedPath": ".agents/skills/donchitos-write-changelog",
+      "files": {
+        "LICENSE.upstream": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+        "SKILL.md": "399b6554fd85e1e2559388c84979500051306fc1dcb9a34e2ddf35dc2c65f6ef"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "Claude dynamic injection removed",
+        "helper paths point to vendored package",
+        "Claude model override removed"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-characters",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-characters",
+      "installedPath": ".agents/skills/gamedev-roblox-characters",
+      "files": {
+        "agents/openai.yaml": "d206f4538baeb195e01d29cc53ea712948e6820c3c6539f7f2e2cce6656b8885",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/lifecycle-and-animation.md": "ecee2fe0dc55245ef94861d68852bbdb5c7de09eb2cb2c60e5e37295c3cfbed0",
+        "SKILL.md": "ad4e44b7634b92c16358a8fc3f43ccc1df4f83d8bd64f8df1f6b9e814e56a9a6"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-datastores",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-datastores",
+      "installedPath": ".agents/skills/gamedev-roblox-datastores",
+      "files": {
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/sessions-and-limits.md": "cb60a5656cbe1ad5975c4ae1cc10ebf67c20afc766c41306a7bc5446ded4201e",
+        "SKILL.md": "2aa63cec1e99bc08c18c755fbc2b58fdcf4d1eb8703057c1e8465391043231e0"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-luau",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-luau",
+      "installedPath": ".agents/skills/gamedev-roblox-luau",
+      "files": {
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/client-server.md": "9b7058aba25b0a1a80deb5d7b70416807e3911f4613bc53890cc311c04ebfe98",
+        "SKILL.md": "035bfe63d72941f1e2b50455f99ba7eb799cbe70622f59b034e8f0fe7496718d"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-networking",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-networking",
+      "installedPath": ".agents/skills/gamedev-roblox-networking",
+      "files": {
+        "agents/openai.yaml": "b3f530519ed19704b115584ded1842ca430fef1650fa873694c4d9cfc7e29401",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/validation-and-testing.md": "4c4b3de8de48e95a6a3f692302c04dd7d4154e29c225eb585944afa5a88f22ac",
+        "SKILL.md": "9d53ebe80deaa3f9b63660f16d352b08471d0c144920dd7ad77b8eb45162ad9f"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-physics",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-physics",
+      "installedPath": ".agents/skills/gamedev-roblox-physics",
+      "files": {
+        "agents/openai.yaml": "55b06a72b4e88c5ec5a4c9d7c3a9684849b6362545d97c8703e79a22120500bf",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/queries-and-ownership.md": "04c07117f22e7af7c74ee9b5150d9dbd41763b116753def52b2043a88493a459",
+        "SKILL.md": "421a14cbdeec6223c6c9f08862aba508d860cde08546869e580bfa43b0286207"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-simulator-economy",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-simulator-economy",
+      "installedPath": ".agents/skills/gamedev-roblox-simulator-economy",
+      "files": {
+        "agents/openai.yaml": "c33b5eae57bb578820ae29208d61242c420bc475704da94c4dda023a69b33f48",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/formulas.md": "735b39089d134d78cec1f77b32d219d6d1253afd0c5fedf2ac35219ceba46567",
+        "references/server-patterns.md": "d7d9af87a23f90fbb8412f81b9365ef7cf994d27c206fbb96cfb033b4f87a02e",
+        "scripts/balance.luau": "e8ec84664e9a168d23ff4d254eb8cf7b42360ced173e261a1cab377d5df53976",
+        "scripts/economy_math.luau": "9e2dd83e1852a896b7bfd8d6d6d71f342afa860e924d30a54e6c253a4f1b50b8",
+        "scripts/test_economy_math.luau": "0cec72e142254bd7737bdc29331fdaa12fa1f8bba218a194761ff1eea82af108",
+        "SKILL.md": "2efb2852a55ac57878506b2424b62f7f233fc5a1a9d25c8decb321157180f2ba"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-studio-workflow",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-studio-workflow",
+      "installedPath": ".agents/skills/gamedev-roblox-studio-workflow",
+      "files": {
+        "agents/openai.yaml": "34f2fe7716ef36610d0a577e05bdcfb36cbaaa25da23a159ee9c02a2d248c7d3",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/studio-mcp.md": "e78f8c6c7dc0ddaae61e052f044fdd778e36fcc90824985217488670fcfdcbcf",
+        "references/studio-verification.md": "bc184b2457a680b8503f6faac4aa2b4e9f947e9cf59bb6cb2819f62ce4d8a745",
+        "SKILL.md": "f78c529f4ad29eba0ff2622fbd9379f4aa3965785e911d14486aa18914bc20b5"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gamedev-roblox-ui",
+      "repository": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "upstreamPath": "skills/other-engines/roblox-ui",
+      "installedPath": ".agents/skills/gamedev-roblox-ui",
+      "files": {
+        "agents/openai.yaml": "4c67a26a3054126e21db6fb6f893135944a8ca0fac9d619506e867b989073ded",
+        "assets/inventory-quality-test.model.json": "cf9b4953a17bf85709aff48ff0da8acfb3a4ed2760c79e30534878820fb06d38",
+        "assets/inventory-quality-test.project.json": "ab2388eefb502d3e9e165aadc55aba09841940c757ad6d06048e4a8fcdfa0348",
+        "LICENSE.upstream": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE.upstream": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8",
+        "references/input-navigation.md": "3e308425856ced1d37a1c6907fb30b325e3d4441202b1154809d347f07cc9a45",
+        "references/responsive-layout.md": "e0616c2609ef51c446e836f0c5e2bb023c4249bb448b0a7dac13fb9d98b6419e",
+        "SKILL.md": "2a34bf0cf8f70beeb083c482c4b0fb4c7c080ede6ab4a5315278c09b1059309b"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "scenario-roblox-animation",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-animation",
+      "installedPath": ".agents/skills/scenario-roblox-animation",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/characters.md": "9104a491aa494be443f365ad1cfee68c924f9ff4b897ae4803465a51ff805992",
+        "references/critique.md": "7c45d61d872b5ba487d7c587e3aa10863960baff4674996d7c29f70653dc93b0",
+        "references/expert-notes.md": "156ef980e436db99d5914f3f686c10985b096bf1a9ff995200f7daf54a5c9d52",
+        "references/gui-paths.md": "2322c0dfb4b8cfc90f1618ca108c6abe8b9c4f2b3ee1115a2f34644c5465a73d",
+        "references/procedures.md": "fe6b309fbf38fec755172927d0ddc7b49a6db3c7bfe8dab7b3d999cdd4a0c011",
+        "references/sources.md": "f2c4e4fb7241920810872a673c6006f2a2ba86178ef286b78f73e142b97dbe35",
+        "scripts/agentkit/animation/AnimAudit.luau": "bcd344a88ac030c44172e7a01ee9c3538b419acc797d2837b322f7d8373a345c",
+        "scripts/agentkit/animation/AnimClip.luau": "32e7e076746da5dbbaaa909fd4ee78aaafbbd2b5dae3513468d8a8d2557a4a13",
+        "scripts/agentkit/animation/AnimFace.luau": "34663a269d8470695150b7dfe0d4fbfab1101691b81322f9dc44067c6bfd23f4",
+        "scripts/agentkit/animation/AnimIK.luau": "6eb13bee8a1ad68b41c916a60dd175d765a5f9eb194b295c2e4e7f09207a3832",
+        "scripts/agentkit/animation/AnimRig.luau": "97201c45285536fe97f23356e58a39479e31fc262822abb171af2f2d139b1d2d",
+        "scripts/blender_roblox_anim.py": "6822f61e9ddae0166d98e6f581b6c78629afed2077064e2f580f39cb8159e010",
+        "scripts/rbx_animation.py": "0ad6b947a53203010a21903a9612378e15ab947a119836d90b0d6ad719bb010c",
+        "SKILL.md": "3e6516918e0cfbfa055208c533cd83b4e3e27675d428099e9301dcdad65971ca"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-architecture",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-architecture",
+      "installedPath": ".agents/skills/scenario-roblox-architecture",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "9fa21c9d67f2e7d224f16fbbcbd75dc6b496779fd05a99b6b8a47cb05a5b04d6",
+        "references/expert-notes.md": "83ad5dfcb1290b2c3a20b41095b683b392a2d376cbeb0a14802f20bc38628bb0",
+        "references/gui-paths.md": "2ff9842619ae03068d4f6716afa18c196f3c73d412c6c8c72435793363ccd38e",
+        "references/procedures.md": "9dcf037583163ad498ac62beaba16824727ae012a6de307e5e3e4665353fcd7b",
+        "references/project-setup.md": "5001aec6b4636062b83f15d567a1a9fbdd903db7f37717bd132062244d82a02f",
+        "references/sources.md": "ea85da832a7ec64c4cfa126f5d9a7083001d6f256af9b43081a956f1c8531887",
+        "scripts/agentkit/architecture/ArchAudit.luau": "ee52968da053a6e7937727a535a9a2fa29e5f005e522337b8e0b7806ddd22549",
+        "scripts/agentkit/architecture/Binder.luau": "701b04bed1f00a799ddd26a75065cdcbe1c111dbe5ef0d57d0fdb25a18ab528c",
+        "scripts/agentkit/architecture/Loader.luau": "1c9b2afdbd9d9691a9209ae9c290bd735ec25b645cd25a9f1009ea8708e4f90a",
+        "scripts/agentkit/architecture/lune_arch_audit.luau": "c4478d66a927fd88824b9670605be4f610882d717c412af1a3f93f9a14a482a4",
+        "scripts/agentkit/architecture/lune_place_facts.luau": "5d49633ebac30d67267ae3ca983d5f0d3469cebe4d469250d17570a40b92c882",
+        "scripts/rbx_architecture.py": "987b08ded3ecac12b134ac7719838714906aac5c586f90a4b0060d599eb70708",
+        "scripts/templates/arena/fixtures/first/FixtureLoadingModule.luau": "d8dc3f922086851221ef2932ceba1e1eea6c173f405a9a4593f298b67c4a6ebe",
+        "scripts/templates/arena/fixtures/FixtureDoor1/DoorScript.model.json": "3eb6d14c0fde8be960d21f756cfb2dc3071770e45eaad263191b0fd89af6fc18",
+        "scripts/templates/arena/fixtures/FixtureDoor1/init.meta.json": "905b7a06f2e99e7244fb871f9190cd1d3e867fefae688d7575d8ead1d4ca7b2e",
+        "scripts/templates/arena/fixtures/FixtureDoor1/Panel.model.json": "f2b76c916318901367fca77fa9aa257a224a5065ab53511e14dd55296b8eff77",
+        "scripts/templates/arena/fixtures/FixtureDoor2/DoorScript.model.json": "3eb6d14c0fde8be960d21f756cfb2dc3071770e45eaad263191b0fd89af6fc18",
+        "scripts/templates/arena/fixtures/FixtureDoor2/init.meta.json": "905b7a06f2e99e7244fb871f9190cd1d3e867fefae688d7575d8ead1d4ca7b2e",
+        "scripts/templates/arena/fixtures/FixtureDoor2/Panel.model.json": "d107c1a11219a7bfbc1135df069d2b097fda22c822d81630a3f984b9d31e1eec",
+        "scripts/templates/arena/fixtures/FixtureSecondEntry.server.luau": "f6dc4db5f98efc4ab00ba4218b98b30f043f650f999175e82a382f6e634a08c5",
+        "scripts/templates/arena/fixtures/FixtureTwiceProbe.client.luau": "b8271542119643c0c85913df80ea2ae6649f15d0f23b93c5022d79d603fad2ea",
+        "scripts/templates/arena/fixtures/gui/FixturePerLife.model.json": "1394c9c802f37f7444db7f2f0db5f03d7b5e0843e3e321c72a2bac56769603d6",
+        "scripts/templates/arena/fixtures/gui/FixtureScreens/FixtureNested.model.json": "83c05485527783ea0e678a48a884ca20990c318b72a8c345894e34717570992e",
+        "scripts/templates/arena/fixtures/replicated/CharacterCache.luau": "16e29e8bd30b54c13bef42bc64e13e02680059edc1a5e7f00bf24a43c3f19d0e",
+        "scripts/templates/arena/fixtures/replicated/CycleA.luau": "1a89c2a26d3d7bcfcf52e43848c23365b82547445be37747e93215a8013f7ba7",
+        "scripts/templates/arena/fixtures/replicated/CycleB.luau": "e85431bc870bc10e8c808f19440875b8110c4f1a94731e68a3ccd331a7530565",
+        "scripts/templates/arena/fixtures/replicated/FixtureRemote.model.json": "2d3af930ffa7972bde538721472684415decbacbd4885f030598cc7038d7d69b",
+        "scripts/templates/arena/fixtures/replicated/GlobalRegistry.luau": "95a47b3d2a380e54637ff8c0f93bd36b863c12442d2726b2fbc717d707eebadb",
+        "scripts/templates/arena/fixtures/replicated/LeakyClass.luau": "acec036db1c4d9204fab75d269b379b0ed7cda65b7dc665e7bdc170ea6ae9ed5",
+        "scripts/templates/arena/fixtures/replicated/LeakyServerModule.luau": "deb8abf93104373e2f3f8ccf3118b9b7ea0e739a6fe81bb024c1237d8a1e356b",
+        "scripts/templates/arena/fixtures/replicated/Maps/FixtureMap.model.json": "1c256f0085122039fba1d732eb006a2015b3244dc5bb6c5bf186eaf37101a135",
+        "scripts/templates/arena/fixtures/replicated/ReachesServer.luau": "bab0885461eb03cbf0a2c2d61f7dd69c43b5dccfef86f5d35647d400dd87a5cd",
+        "scripts/templates/arena/fixtures/replicated/RemovalLogger.luau": "d58ef561e0b0c2412c13feb1393cc0cdddf528488abcbeff3f83d1da676e8494",
+        "scripts/templates/arena/fixtures/replicated/ScoreGui.luau": "e24da8b76e1def9dfcef25ae566be0c79c01a240aa30f779d9c633137d4c99c0",
+        "scripts/templates/arena/fixtures/replicated/ScoreService.luau": "49fe245d272a3c09162fa9447a21b9f623304a2baa7d15c9e6598e4d4294f844",
+        "scripts/templates/arena/src/assets/Maps/Crossroads.model.json": "3d959229f0a19c153bcb18a6162b14f2221c2cfb6d3b1a7bcba2c137fc474437",
+        "scripts/templates/arena/src/assets/Maps/Pillars.model.json": "e5d7f597dab81381d16750aa5416d997f05f49d95d64e694a0ba28176ab3ce4c",
+        "scripts/templates/arena/src/assets/Tools/Sword.model.json": "f29237a68d5e1e6609b6e5b90bff2b4fbcd91b928eb910af9a8fd91cad109477",
+        "scripts/templates/arena/src/client/Controllers/RoundController.luau": "5b4377e6952445ef00a05cd9eb58e19541efef2d8fc4efc910e110ed3935a272",
+        "scripts/templates/arena/src/client/Controllers/ShopController.luau": "2edf884a4df67d606a870d2f18c4959b659944a814b57e40a356d16adf1f388b",
+        "scripts/templates/arena/src/client/Main.client.luau": "89f60a67e03d0cc8008577d3082ec4b2f8cec9fbf00ccbef6e1034bcc44584d5",
+        "scripts/templates/arena/src/first/Boot.client.luau": "fc983f5ecabbddb8ba29c7cf8be9f14a28e2512a992b3c8a2a7b43251fbf2f53",
+        "scripts/templates/arena/src/gui/Shop.model.json": "3f0ba238c3b898ccd037e521600174f821a60ba62095c06a50bd1d413d6d65e0",
+        "scripts/templates/arena/src/server/Main.server.luau": "b617b44c481bdecbe60893e7fdbe16bbfaed360c8485c6a971f4f17d371d9b90",
+        "scripts/templates/arena/src/server/Services/MapService.luau": "2a86a384dd605a80ec31afc363233849ba600fc3a342a3c31ccb4846ff92463b",
+        "scripts/templates/arena/src/server/Services/PlayerService.luau": "30d45d55fbe85ef5b18e2de29b20e3c237340f066ea1e1cdb1a8b07c24867cd7",
+        "scripts/templates/arena/src/server/Services/RoundService.luau": "7c12522b8368dc815612f72ecdee16f1fa660d4c2241d5d984ffae76afe39101",
+        "scripts/templates/arena/src/server/Services/TeamService.luau": "c738e1a5a3998e3206f3f0a3fd454b53b57355566514934c0b715bfe4a2d9eb3",
+        "scripts/templates/arena/src/server/Services/WeaponService.luau": "d34055e5bf5520e5c3bb54d270eee2f48c3e4ed649cca08a9f24a574fa152b3e",
+        "scripts/templates/arena/src/shared/Config.luau": "fef7a066b4fd06638a2f45c389d4723c6f3fd2556e4d2c196a2fd0364f53e5d7",
+        "scripts/templates/arena/src/shared/RoundMachine.luau": "4e37cf9b962ae8d5d4315bcd986e04e252223f6e313d915aaf988921a07e20c6",
+        "scripts/templates/arena/src/shared/Signal.luau": "ef4045dbf5ed732adb2c392bcf10b70ea05e20225e7f4895d7c89724666d935d",
+        "SKILL.md": "0e9baeb5b3e00078d33bff2743479d7d88d716b9444998f329636e6ea4797458"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-assets",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-assets",
+      "installedPath": ".agents/skills/scenario-roblox-assets",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/avatar-item-checks.md": "2bbea6938ee57055b02191cc5a3fa0313a8538e09234b4d7d89f5c6b126861c0",
+        "references/critique.md": "4e10843cb0a5c9a326419f00ff6235d79f257c3aa623596929b7fa74788689fe",
+        "references/expert-notes.md": "27a8d57ff536e5d3ee4f87c7a1888d615f9194545c6658e02174e9a87dd70988",
+        "references/gui-paths.md": "0f1037cde68e89ec9971f61129f615b42863bdc9f001c7d82f55b982ee36fddc",
+        "references/procedures.md": "984ed5d2f7cc701d5c379bb09bedbbdc2c265c13cf1bad3f494bd5cb9594d209",
+        "references/sources.md": "8da0e2e5e5dce3e49e362a121741cdbbb7311f5a6c866f267a31506c9f161724",
+        "scripts/agentkit/assets/AssetAudit.luau": "06e472253488711db04c5854d0c15e93974d9fe40930f265b81f573c01c0b2d4",
+        "scripts/agentkit/assets/MeshBuild.luau": "86585eb604e658877fa1135c7e6f921369590935c9ca71993a925ff0dd7554b9",
+        "scripts/agentkit/assets/Payload.luau": "8a1028580076c1841484ea92590afde73fee79ab5e1e64fd3a234dbbf4bfb8fd",
+        "scripts/agentkit/assets/UGCCheck.luau": "ff565683c7ea5066bca65799cca4bc9a0ae342382e229e092bf7a4e859c833eb",
+        "scripts/blender_roblox_prep.py": "3490c74dc854633c56296a3e907601d755e33ed9379b06325ca181403b317e97",
+        "scripts/rbx_assets.py": "d9dc9ad9272871c8256a4fa3d13cf6d57f4d6ea09c73a95c347ab9e1e63edd78",
+        "SKILL.md": "f0f81a5b60fd00065a1085029e27189e9ef23de92852eaf378844ed59951e9bf"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-data",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-data",
+      "installedPath": ".agents/skills/scenario-roblox-data",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "c6f9175056d7dc6afd9c3665e5ed9cf5654b754196dc974f02de0d3c05f66b1c",
+        "references/expert-notes.md": "48ebcdec8c7d29b1ed98fe6879adf5009fa03c7f3d64bed8a6d000eab13371a5",
+        "references/gui-paths.md": "65b1de3e83e419230e9955c33f0c8d1fc90e238f83756887a37dce66f9cdce4d",
+        "references/procedures.md": "8e3387c1964180cb6a9c2ca367d2e916f0cba2f8587e1375ba7ae639f0445568",
+        "references/sources.md": "a9f8f5d31f431f9d9393d2852602b37ca9ed4e26a19577b7d4db357da55d809e",
+        "scripts/agentkit/data/DataAudit.luau": "a0ae3f133b35c001aebfceea00f31a5332d93c616677eba8d524c51532921127",
+        "scripts/agentkit/data/DataCheck.luau": "ed264c7b986534382c6064e0709c533473eef606cab0590e9641b30d5c939e7d",
+        "scripts/agentkit/data/KeyQueue.luau": "d642ce78d8a932666bdf669f5b8f4aee2cb583d44f24e64fe3abf73923538a20",
+        "scripts/agentkit/data/lune_data_audit.luau": "bc6d298e45caa07861449ee838b1b011347f960070522089ba257c274810686e",
+        "scripts/agentkit/data/Migrate.luau": "fe7957377f6560bbbb3db92ece60bb77618069d9582a24b77bcee519f90a9b35",
+        "scripts/agentkit/data/MockDataStore.luau": "b1bd3a9f7b12dd4f207676e1f9e257e6df08873637651b22bb7e5895fbe4febe",
+        "scripts/agentkit/data/PlayerData.luau": "1df45816f69b7da6afe4fecd0ab3b91804eec344bcd8cd4891a32ab558bdee50",
+        "scripts/agentkit/data/Receipts.luau": "b5a463db44052f2b132a93a2f3305ec931f3a6b0707d109d84a8f4a36b866a6b",
+        "scripts/agentkit/data/SafeTeleport.luau": "e0bbf80ca65f493910201700832848eada6017e20ce93c8a2fbbb507505425ac",
+        "scripts/agentkit/data/ServerSim.luau": "f23a2a4eeed8a760805b9c9086e270d4577d0309cc0dcf84bbaa2d592415856f",
+        "scripts/agentkit/data/Trade.luau": "e70d1647f50198c63d92be66b7f8bf0c9f7ec58e56736cc01b16dd3e69afa8fc",
+        "scripts/rbx_data.py": "3220a10d538eeb44f532537e56524e15c8bb626f75022b36b229aeb0cb2b3081",
+        "SKILL.md": "c395fde3a814297c975820fdb56072c4a93b2bb09f4605c9e6c37bbe3b4f30c1"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-environment",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-environment",
+      "installedPath": ".agents/skills/scenario-roblox-environment",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "1936ed38c2b37fcf68956428d64c70271271ba2ff65bbbd15a54328c7d964f40",
+        "references/expert-notes.md": "5d3975023675d066132293d8e710200b55c86a191f88b6b0676e3d7e0537bd35",
+        "references/foliage.md": "87f9912c668b01a2944564dbfe15a32561413f3eaa0384bc998a0b47fc9b3675",
+        "references/gui-paths.md": "d0f8081a04fed30c5840699323d0881d79ec35d684ffc8b91887d8b7f14182fb",
+        "references/procedures.md": "9a5979776d22c38b74bb4dbf3f71f9b2f0c3403549a0ff6ddce73d83f703b526",
+        "references/sources.md": "1c5a0dd4e850eb75dbad0ff08c359bc74407209860cc8fb23ef7f4b3313cf999",
+        "references/verification.md": "19b886aff0ec1375d34f0de7021356427d40e8e2ba520a1ddf6eaecf09fc1c4a",
+        "scripts/agentkit/environment/EnvAudit.luau": "cbd2420b829f12be571d187515629fb2708b6c9769827c31d8a520619da2942b",
+        "scripts/agentkit/environment/Graybox.luau": "c1fa16d84c5d3d77c0054309464319dd7f31643bd01ac8a4bd860b087bf5e5fb",
+        "scripts/agentkit/environment/Looks.luau": "bb7a49c50318dfa8247aa6bbdb0e3f3564c2bfae59c475aaa606ed8bab4308dc",
+        "scripts/agentkit/environment/lune_env_audit.luau": "65e6cd5e8c268c4260eb86666880a09a41f5c88dc4c36c74f1a8bd04bc125c78",
+        "scripts/agentkit/environment/MaterialKit.luau": "f2c78a78de7c664f44effd5d199f8beec04e77c9405b06c5a0815ce3b79fee80",
+        "scripts/agentkit/environment/Scatter.luau": "c740ccc7f3f6b977c8a9c8e57305d911a1764a99590f76601fa13860534cf8d0",
+        "scripts/agentkit/environment/TerrainKit.luau": "8d7c72f67cab30b4c6e509b42ee1be2db4f6ba7a7bd6d2546a7a0627f691869e",
+        "scripts/agentkit/environment/WorldCheck.luau": "3a19af2fd180d10c6daa8c1a10f0f61594a5951bf65729c36419462efa458e58",
+        "scripts/rbx_environment.py": "9bc1039300770a92e335eb7c236d40d5a97c95d2a1e31736ed196083134b9502",
+        "SKILL.md": "0bacfb9ab3a9c4a940808a48adb5e7586713d85f0d1cce05483227dc4594eb67"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-expert",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-expert",
+      "installedPath": ".agents/skills/scenario-roblox-expert",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "9ff677fdb285cc664b090813c1fefd48efcb94258cc7e08e8a270f74bdc9cfe2",
+        "references/expert-notes.md": "86aef63d3cabe390c5cfcb75f5d621404383e809b69d46501fab944119623235",
+        "references/gui-paths.md": "c5c717fcb5cd0afccc9d6d03eda1db4f23af967396089e50c8fd25eb91dded43",
+        "references/procedures.md": "f0584e87b7165584340fe5734bcbae684590cfc98aea2f30e630505c81e4683a",
+        "references/sources.md": "7f7bbedf880db7afeb2be1fd7bf8047e30de80a0f37663ef3f4b5a05feb59e0b",
+        "references/traps.md": "58c345f2a1577d1dc03a49cedd7a233d914f1b7528a629354ee4d234160d6a46",
+        "scripts/agentkit/Audit.luau": "bb861775f362a1b11e3e059941193ab0ec71f5084e8daf7aee538756fff9492d",
+        "scripts/agentkit/lune_audit.luau": "2a260bcd4395a286f574db8e4fa4f9c72fffba2b3befa134b4fa37e96226e22a",
+        "scripts/agentkit/Spec.luau": "3b7b1cd771641b5ce2c7a7835d3950a166007f3e1a1315c23d7c033318df11d5",
+        "scripts/agentkit/Stats.luau": "f759418493c9e2c2d106c57f9c238abfa89d169bc02d506ba6d7d6675e2ebbe8",
+        "scripts/rbx_check.py": "96bba7c2725de4e9dcf99f77c025ec7d98d2f05e6969a11b02a30d1d9d193284",
+        "scripts/rbx_env.py": "4788ef09c06c24bd30d755efa751aca3b72e0dd0cc2ecd5e80c0b2e66e4c5aa0",
+        "scripts/rbx_mcp.py": "d040892e50791f3774edb93f2bc1ff514ec387ef030488f526c30cfc0d23692c",
+        "scripts/rbx_play.py": "285941ef61c3fed23c9d63bacb67886e88b0563adf8fdf732c5b2602c9934428",
+        "scripts/rbx_review.py": "558c27e9528a44671cee8e556f99dfff456dbbfffd3d829ddba519394dcc91e6",
+        "scripts/rbx_run.py": "415884aeda26d316af4010798354cdbf7367d6ff1042cec4efdbe665680951f6",
+        "SKILL.md": "98837c92b2eddc4139bc88e9fe389eaf42d11e45dfff9f4c9f2e39d6c795b994"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-gameplay",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-gameplay",
+      "installedPath": ".agents/skills/scenario-roblox-gameplay",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "9a61feaaf5e012d447984c1c067a1447459d574d2f75b8814a2684638140d94d",
+        "references/expert-notes.md": "60355f563b8151d168de6a5f69d8f2e7ce701f549e2fd323ec9cbb7681bcfdbb",
+        "references/gui-paths.md": "53ef868905bdfa814f7b112c8659cbf3fe452600cd322961d5911c81b8417018",
+        "references/procedures.md": "4072c21331a42acf85a4f671433d6c009c070be277eb992e4a75b7708ed0d84f",
+        "references/sources.md": "15f92e21fcbbcd899ba82bbf394976227037345d44f623782a58ce29968fb8f1",
+        "scripts/agentkit/gameplay/boot/GameplayClient.client.luau": "d7217ad551e230a8b30f84698bdd859420d458d06667a4e6f08610792da61bce",
+        "scripts/agentkit/gameplay/boot/GameplayServer.server.luau": "4bb6ec4c475b74cf801b4472cb4b8a21e593aaab18bf4af6cdee8013e0c34660",
+        "scripts/agentkit/gameplay/Car.luau": "0261b7f6e34a75ae62c9df1cfb6cb900a49a5ced7b0712f6d97dda4cd500796d",
+        "scripts/agentkit/gameplay/CarSafety.luau": "9cfd015cffa81d08403037fe73e3dd3086381d5d05fc6255003da88ea0dc9333",
+        "scripts/agentkit/gameplay/Combo.luau": "6ec5a90267e08119742610176455b45f5b0e2b47491b8d4494ea9e62c8711e3c",
+        "scripts/agentkit/gameplay/DebugDraw.luau": "714657b393b7f6652efcca9eb36aaba09d7e3a91e86b84a1e111d79e538ff9de",
+        "scripts/agentkit/gameplay/GameplayAudit.luau": "d72f1c482a546ac25025fc3e4de5555d7a28d0d81e015dba92ff99084f16a687",
+        "scripts/agentkit/gameplay/GameplayInputs.luau": "3b03543d4944b3d7aab450a2833741c5bf7c1c91dec3c026649958050a83ed5a",
+        "scripts/agentkit/gameplay/Hitbox.luau": "ef964c6c7122229e3977b7009e70d7883758c8d6e076f27aa970db1ebb6f569e",
+        "scripts/agentkit/gameplay/lune_gameplay_audit.luau": "b6c7d25f659fc69c0c70c9f8ea4a0a1592feb1d9d4ba87f7ea913175bc08e37b",
+        "scripts/agentkit/gameplay/lune_unit.luau": "5a89ee52dbe142ccc599a4f52e28d0c4f452ff14b84971e53f1c02423ae2d464",
+        "scripts/agentkit/gameplay/NpcBrain.luau": "840b6b669e52a453fcb615e20506dae13ff940dae27e9369fbecfc0e6f150ec5",
+        "scripts/agentkit/gameplay/NpcPool.luau": "14944834516c28c0536973f0a6f8f0269f73d7606fa06d774a61f84ef7316ef0",
+        "scripts/agentkit/gameplay/NpcService.luau": "29de0ce8a85bb0c689d634deffa048b4c8f75358807b83343f2921bf3e60b365",
+        "scripts/agentkit/gameplay/PathGuard.luau": "2d073e7d6d90cb8d39ba303d515674a2844dba6890347881c67549ddfa70b10a",
+        "scripts/agentkit/gameplay/Projectile.luau": "016690d9a4a413a7023618fa972ff0e95fdc688c410a1c6c850bd4df0759b301",
+        "scripts/agentkit/gameplay/StateMachine.luau": "3103ad673bb4cd8a8cc399a1c12d0217f1e8c755e396a4c4fe03927ac3b81284",
+        "scripts/rbx_gameplay.py": "d56b517be502a9f181c927b0ea1e9182c9c9261f645e4c8cc7f4439f53ac6492",
+        "SKILL.md": "b83c36bad8b8397acd0b6f2145f8fced5f6456876acd4bbb2fcabe435aadcbb4"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-luau",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-luau",
+      "installedPath": ".agents/skills/scenario-roblox-luau",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "ebb4653f7445e739e54d82fb915908ee761dd8daabdcb4b2cd273ad2fd5e07b5",
+        "references/expert-notes.md": "7e56a32333f4f424ffff24dcb89b201151a006d0da1039fbaa63e724c45db70a",
+        "references/gui-paths.md": "0a6b05fa959070cdd07ce34d96b9dc0a8bdfb19d07cb4a8fc5d07d051d0d2e16",
+        "references/procedures.md": "85e23408c36dc8bd04e1a5e514022a5012d8df58d34b5a5632ddaec6625ab40f",
+        "references/sources.md": "dec5b948576db7d841ace704dfc5383eb3e85ea87e4c0cbda8a4afdb3c37e0dd",
+        "scripts/agentkit/luau/Bench.luau": "05aca372fa5e292488a08557740a9b697342d19dd8da27705f2327fc78801fb7",
+        "scripts/agentkit/luau/BufferCodec.luau": "ed92aff14a5fb5299e8a31f3a04f1141405a0961678ee1ce5424ceef9436955e",
+        "scripts/agentkit/luau/Leak.luau": "b679a3d448c463cba5bbb9361f34724bfd532bf9553ac38e71bbd8c80bf6acd6",
+        "scripts/agentkit/luau/LuauAudit.luau": "e2134d1aa7709b12aff87fd4a8859d2dada7571baeef651a275dbcf44e032d84",
+        "scripts/agentkit/luau/lune_luau_audit.luau": "150f472bbfb87915c4f1cb7f82436210731962ce915a437f4e9aa544e05810a3",
+        "scripts/agentkit/luau/Parallel.luau": "0771da452283718bc3a11e58b2f0ddbf1fbcd1564a4f527542d7590abe131885",
+        "scripts/agentkit/luau/Probe.luau": "4859d79c274697b4b0dd9c910bb0a9e7893cf23196b82f8cd65113ea6b09f586",
+        "scripts/agentkit/luau/templates/Class.luau": "ceb393806190ab3fdde0635dd313b7fa19a2befaa2eda6c5810b84e6064e5cd3",
+        "scripts/agentkit/luau/templates/ParallelWorker.server.luau": "019c7ca4351c619975631bc5700420612cdfe5dee1e8600ab9ca4cc53865e372",
+        "scripts/rbx_luau.py": "b60948e2fd27b102c468a5032c373a4b21b61c801783013166d0a8aa2c58bb5b",
+        "SKILL.md": "96f41a1883ccbde92a1fd9f0cc30f5c6f409cff4192c6fb1d783454361d99ba3"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-monetization",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-monetization",
+      "installedPath": ".agents/skills/scenario-roblox-monetization",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "359b2b5937302de55ac464c963944bb93ffa8119c20ca922af7273726902bcf1",
+        "references/expert-notes.md": "79829dd0f1d5320253495a54ce78c5baed2fc25d40a3b386030daa922252510f",
+        "references/gui-paths.md": "d185b77d9821341aac82b486d3e3bb8c9a5aad508afabb808421e00bc282340d",
+        "references/launch-liveops.md": "232bb2fd8918e67a0a84192de5e1740aa7e021bfabdf1b4d64fb8898e9a055bf",
+        "references/procedures.md": "fd043e37a2989ed2115a2a9bf99125875dea79903392bd252db7b2514af007c7",
+        "references/sources.md": "c70b710f22a6212a79123f41f7c943d95c5104aa409e97b7d33bb4d4acfe641b",
+        "scripts/agentkit/monetization/Catalog.luau": "a03199cb45f0adce25f62808f52709825eb970f7681210ab5eacc3d761f0b10f",
+        "scripts/agentkit/monetization/Entitlements.luau": "0af687891e80cfaea35d7a7caba378741ca9c5b138c9ee257e4ac2643aa49673",
+        "scripts/agentkit/monetization/LiveConfig.luau": "d7af0904065ecde5e9999e9f9e63c8b44cabef5ec6254d9a75bc08521a83a08e",
+        "scripts/agentkit/monetization/lune_mon_audit.luau": "46bf937613c3dcb4c02a72fb416560a5b05c585c3cd47dfba2cf75aabb2390ea",
+        "scripts/agentkit/monetization/MonAudit.luau": "467a2da816764ee520ffb9d4bb0c9ae5a2c973e1cf0841138caaa64c7ff2bc3e",
+        "scripts/agentkit/monetization/Odds.luau": "d9ef0b9a5516855b6783c080acb404b319a8e836828c6de8cc3b2c773402621d",
+        "scripts/agentkit/monetization/PriceText.luau": "a6999de524b98f82f10b986ee5c3dfcae022aa9e9bb7f0e0e6c050edc4be4790",
+        "scripts/agentkit/monetization/Purchases.luau": "9acecc6d8d9bff4d7bf4b03a6a27c9b3c79e1b60c4be214977cfed34977dc9c3",
+        "scripts/agentkit/monetization/ShopRank.luau": "fc754a3cfd8980c19f2c5d74910838a1cbcd4aedad0a95901edb1125a8dda698",
+        "scripts/agentkit/monetization/Telemetry.luau": "54b4b62d99eb86052f48d44cc9f0f35e8f9f4f9a30d9f08548713a2a91920263",
+        "scripts/rbx_monetization.py": "1d6091a77cebd9c451c92dd943649d58c2ba0b33cb9dca36d25fd9bb1039a038",
+        "SKILL.md": "b38273977b61fb5c5e3857b7a75acd0918ee4d00a096c2cafbb4213e21120f8e"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-networking",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-networking",
+      "installedPath": ".agents/skills/scenario-roblox-networking",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "e4d80900c96482110143444cee6b2fb34adaf33954b4f8f01b50b995abc492aa",
+        "references/expert-notes.md": "6b92606036d930415d3e7eb3b8a86ff83834f98fb1a1c4db94de788faa9c2ad7",
+        "references/gui-paths.md": "8091348f8886b2dc15e82fe1b2f7e37d99f8767e8ff5d63d6c5355d8da754519",
+        "references/procedures.md": "c100790a56ed3ec4081df3d452c7be4048a489df0b2a9bd98656691973edf01b",
+        "references/sources.md": "93549de3b4212ba269a2b330ca46992d171f0b9cbc7f1df42539a9597c09b9e1",
+        "scripts/agentkit/networking/Exploit.luau": "5adebf24aee3b24e8386d015a53779aee8af50a65f2110a612c34537ed0c1acb",
+        "scripts/agentkit/networking/Guard.luau": "5f664aa2df80f2208061a9a370737a919a67771097defed38977fc4f45ed879a",
+        "scripts/agentkit/networking/HitCheck.luau": "9613fa7453d1f1bd3d7fd15ea2fedf84fffefd85ad054a223245293f3d4abbd7",
+        "scripts/agentkit/networking/lune_net_audit.luau": "3d2c9000259e28d60d202fff90244cd304397524de59ecda08df848d05c4451e",
+        "scripts/agentkit/networking/MoveGuard.luau": "aa00498ce15bb5a5ca61e07b2a8fb86e663d4e2a14e2ce1555785bb79b355973",
+        "scripts/agentkit/networking/Net.luau": "cea7bd9a470a79030f0bb6d16543229b2e189f8b800600dd4517bcca3ee39908",
+        "scripts/agentkit/networking/NetAudit.luau": "1076825cda81669bc11c240af071ae0a64b87250aba6e4abe61fde1796e9d18e",
+        "scripts/agentkit/networking/RateLimit.luau": "20390526b7988f7c95ff6a800d18e0f1041f71bcf356d8860b0ea2116c3638d4",
+        "scripts/agentkit/networking/Suspicion.luau": "4b58a83b3d30481d86004e4d2f51324c0e286b8bb5f74267715e1ad2051a1c57",
+        "scripts/rbx_net.py": "1702602ac75cf1fe3f76cd7e52a0cf4a8f546913f7381d1ac65d1640d60b4df1",
+        "SKILL.md": "3085a3f59f236acf6d614c089b51d522b9fff3865df59d95c212236bad72167e"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-performance",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-performance",
+      "installedPath": ".agents/skills/scenario-roblox-performance",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "7ddb490d50e245a4321d86110faa169d7fc5e2d10e45789ccc4cc319aff350f3",
+        "references/expert-notes.md": "41c9ad22a2e67e3c4ec0e4ab6aa063597e54e3b7485155898202e09ad723f7dc",
+        "references/gui-paths.md": "c5e1b1a6f8d8b3910a6074c5d238eeced13f8ee094d783b9868c22f5ca566ddc",
+        "references/memory-and-crowds.md": "74747c4353df996e2c58204d59029651ab84cdfef1282cd80f2f37c9e43ef56b",
+        "references/procedures.md": "e930539598be59d4a868bcf5784c42b222f06ea248a7478ef0c785c646a11c2e",
+        "references/sources.md": "998c22d5957f434077acbbf4b2fc834fe69f3bff8035ec710342d92fa628b65d",
+        "scripts/agentkit/performance/HeapProf.luau": "bcce9d3453d41e9fc50bda996367f7435f5e848c9bcf99978fc64dced7db27ce",
+        "scripts/agentkit/performance/lune_perf_audit.luau": "db4ee7eeb7deb825a58db16818e707def84bec1cd65330e3abab48b704d70fe7",
+        "scripts/agentkit/performance/MicroProf.luau": "c42965f20ee2b15fee05833154b8f60a0c647b086697c01b32b5334ce5e5b40d",
+        "scripts/agentkit/performance/PerfAudit.luau": "2bcbfc22e067279986dcbec6dccf68226cd90cfe752c63f7430d0512794a90b2",
+        "scripts/agentkit/performance/PerfProbe.luau": "5f2edf04f1dbaf370d1b743ce26ea0b7240132e334504d843cdb27120b01ef07",
+        "scripts/agentkit/performance/SceneScan.luau": "9eecd91419921071b0194d6c45ee0458eb036e8155403e5081c27315a107ed0f",
+        "scripts/agentkit/performance/ScriptProf.luau": "6d5647744ceebac95a0d32fe160b93430c8cbef90c1b9c8356467313bda67313",
+        "scripts/rbx_perf.py": "01dab3bb33236c0f59af6b4d71da33be3172369ce0ed13112b3683beae19f651",
+        "SKILL.md": "91c422c032f6e07ef133d2f82d004f73c09251df7d44edd1113c4d39e5451515"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-tooling",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-tooling",
+      "installedPath": ".agents/skills/scenario-roblox-tooling",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "c2354dcbb5437ad753b080aad67df2b0ec8608d5623280f1e779fd832a15b1b6",
+        "references/expert-notes.md": "19103243b8fe43f8906abe901699d3f42c77c8ad3827f393659caf6c922e44ab",
+        "references/gui-paths.md": "0055a239c9c541351150daf0c5cfdd18b5516212ff8d2af1b2ef64fd8e3ee512",
+        "references/procedures.md": "ebbe8fb72dc63e6303e5d8e56b6d7aaaceded299dced162cd8ae6abba5a9cd37",
+        "references/sources.md": "428c1aa5a0448709540884f4ad3b4785cd2b043a18678fa3abf9aa0c87c157d6",
+        "scripts/agentkit/tooling/ShipCheck.luau": "863a543c2d573b5669023c470e2d63545acc34523eaaef510b3ea61fc400c776",
+        "scripts/agentkit/tooling/SyncCheck.luau": "8830ea6ac1414556400a0ed63eb2c9f4774a863679e0c1f5b3e13e8564ec9e15",
+        "scripts/agentkit/tooling/TestRunner.luau": "fcabe722d0424c89c15e82156539f15a8b4e7afe93ee84d62e92c1066d5c5e04",
+        "scripts/rbx_tooling.py": "b8e614ecacb82c67d90b80e4dd41452c3870d6931fa38b374a63445c281f321b",
+        "scripts/template/.github/workflows/ci.yml": "439ce71e79df13207351ca2267d20569d852547fc001a780aaecc6286d20b313",
+        "scripts/template/.github/workflows/publish.yml": "a1e2545932dfda5ba2a59884b7a37bf7fc38fba4cd547f78c88fc4cf08175bbe",
+        "scripts/template/.gitignore": "d1cac78a4b086d31efba29a3c5f27ae8aa87d6d1b29b7eb117b3c9e85779f897",
+        "scripts/template/.luaurc": "f517fe14339e472ca050d07f21fd1bce37af20bf8a36d9ef40f586dd93cdda11",
+        "scripts/template/.styluaignore": "d5d27d1b67d2cd35f2f0833c0d3597a86f5b9b9ebe3cd59d0a38dd1393ba9845",
+        "scripts/template/default.project.json": "7ebb0d8b3fd8ad98a93a048b2d5711439c6c5b45dbeec5efb44ef1e94705388d",
+        "scripts/template/places.json": "0e9cdf2832da20c44a74d15724326a0a3d0a05d977e124345dd63f1bb860efe2",
+        "scripts/template/rokit.toml": "d19ee37350d9d50bd14616e856b715127eb026e588fd26706c5e6ff149971a8c",
+        "scripts/template/selene.toml": "6c2077e5f51817ac9df8cdfaabb3f7b59204e1b09b72259596cd213686945ae8",
+        "scripts/template/ship.project.json": "3903f75b567ca581b508df2a919857ae8bac65d401e9cb18ae2232fa84a17a38",
+        "scripts/template/src/client/Main.client.luau": "073b68c29ca81d9e7da4a5a38efb4351d8791606852212900a0bcaa7b9bbed54",
+        "scripts/template/src/server/Main.server.luau": "d272845da1c0e1a649fad0af3e820b5ddbc00df954fb3a859067a4970dd8b7ff",
+        "scripts/template/src/shared/Damage.luau": "10f136ca2ca130ea5b04d8fadc8602dc5eb010d142fcf693ea38fc619c28764b",
+        "scripts/template/src/shared/Damage.spec.luau": "f552417594661bc54e3ec91f953d4219cb268d5200acc2411e45c19401a1b961",
+        "scripts/template/src/shared/Remotes.model.json": "defe5265410eeea30c2c234c153e98c84f17d6667113591f90a3a099bfcf61d5",
+        "scripts/template/src/shared/Remotes.studio.spec.luau": "845aeea33c07f68fe7fc544132b2e2268d00cb1aa644c2b76d5129cc2532e26b",
+        "scripts/template/stylua.toml": "367e54c8dcd233588aa16570ba050b201a57ff7e699904d16a99ec1850951a1f",
+        "scripts/template/tools/check_key.luau": "402f3ef7636161729a4b84f984f121247bb8dd5560bb4864fc58e71f5944ca23",
+        "scripts/template/tools/cloud_luau.luau": "662138b8c5eebc1929667b5f766db6a8f9d788b07fd2dcb3cb9d7e7837f33a28",
+        "scripts/template/tools/merge_place.luau": "1a6fb6097bf6b467e008f1b893b34b791316aecfbe9441475a3b4740b9e0be99",
+        "scripts/template/tools/place_versions.luau": "b368ee5847d9d382a3e9c203ace6203a3f1cfd6d60aa9ddf33660c6f500df89d",
+        "scripts/template/tools/publish.luau": "54cf524017e4ea04d21916028e9d6c159fecc5ae95a3a5ea06daa39a06d7a006",
+        "scripts/template/tools/restart_servers.luau": "21bd6fa5c87888bf03a03dad975594902584315d7d08d4d36916f8cadddc3ed6",
+        "scripts/template/tools/ship_check.luau": "e982f373270894ef6b966066dfc875a2bc6279e1d8048f7232ac07572a5c0b15",
+        "scripts/template/tools/test.luau": "4b127ec5ff561aba80ceb7e4601bcae6116d6d5b81816dddaeb2b8e4f56aed0b",
+        "scripts/template/tools/testkit/EngineTests.luau": "d54fd1ff2f9fd512384a1ca2ebb7d31892654ad254b68edfbadfd3a9741bed57",
+        "scripts/template/wally.toml": "992c2e2bc922a0c7c2821e77fa7085cd3df75c8e69412cf2a356f7436412e2fc",
+        "SKILL.md": "5a19f9975fb75e0239ce888ea87b8b1b5e8349ba28c6ad0bd487206cd5f9316a"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-ui",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-ui",
+      "installedPath": ".agents/skills/scenario-roblox-ui",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/critique.md": "bf8e3a4909cf341cba4179b84c5703d0ff53b04abc47884dbb0dae29820684fd",
+        "references/expert-notes.md": "542b3750a765daf42ca84633c5020fd6bff92e7f50396d01fff1fcddcb24781f",
+        "references/gui-paths.md": "1c9127b560eab7dc8b3408ebfcad348be859e2e31cdb9c96359d4bf00766fe33",
+        "references/player-settings.md": "b9a5ea644eed162f53d3515ad867b8a7a1000a172ddc1976858a6af60d971c3d",
+        "references/procedures.md": "b44b0e0d33129f84437ee3a0b4b8926cee628e574a8b1ee885703d1e95730f18",
+        "references/screen-budget.md": "d1a28f3116ae77e188821d8297526d0a2ed1883855aff7ca196ae499b704ee2a",
+        "references/sources.md": "3381a6c32abf3ab43200b4ca4a87d6ae81359d05773fdd0aa970866c6607dcb5",
+        "scripts/agentkit/ui/templates/BuildMenuHud.luau": "30918fd014e84abb6ebac7246e2183e3799da587dbc58d4bdb0c47b595ea24e0",
+        "scripts/agentkit/ui/templates/Catalog.luau": "db2145071eb59ddfe9c632032ea73ec74067c04690690363b85c340260e80350",
+        "scripts/agentkit/ui/templates/MenuController.luau": "16aa1bdb525c5d94aaad096ac16c24f27fa0f13e2289b1283f5841748fd06e79",
+        "scripts/agentkit/ui/templates/ShopServer.luau": "6a85011c9ac4113b408c64120b2f3d2411e8d79347777f40d557e547e769341d",
+        "scripts/agentkit/ui/UIAudit.luau": "1d61d55439b226d9c58cdcc86f97f08e416f73031602140d752fd7ed929395b8",
+        "scripts/agentkit/ui/UIInput.luau": "b589fe75a5e816730f74ec2ece9287c4f5731e35db9da7b067ced7044f5e2a3b",
+        "scripts/agentkit/ui/UIKit.luau": "9bf9f1c576610828b2dfa02ce53682e89f2c9ee4cfcf6a3c9d1faef7fdd2b224",
+        "scripts/agentkit/ui/UILayout.luau": "ed5d148b4dc5f814044e805608edb05e3d18dcceb6811e5d71a9150a9c4903a2",
+        "scripts/agentkit/ui/UISettings.luau": "02e08594728796f7315dc74978b6326d9abf4affe987b9366865eb91704eede9",
+        "scripts/agentkit/ui/UIStyle.luau": "60e0c6f3efbbb91c57537e537456c34048f764a499db4bac4f9ab01ce8c84dcd",
+        "scripts/rbx_ui.py": "abc476283f22eba42e0f05de26f0bbaa877987e31d62ec985713b4090f8aa2d6",
+        "SKILL.md": "26649a1aa3ee878271a657929d684c33102925cadc83d028e9c94afeab1744ae"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "scenario-roblox-vfx-audio",
+      "repository": "scenario-labs/skills",
+      "commit": "a14d061fe5db33d339b1d89f775f37337481295f",
+      "upstreamPath": "skills/game-engines/roblox/scenario-roblox-vfx-audio",
+      "installedPath": ".agents/skills/scenario-roblox-vfx-audio",
+      "files": {
+        "LICENSE.upstream": "26f54ae8c2f3d1fb0e3f810a599e6fb51852d1f176b97578961826be3bb98cef",
+        "references/copy-ready.md": "f36bcbef76260225f1dc3d4819628a34bc4a671301c851e97d2e02c4d9213bc3",
+        "references/critique.md": "7ef2539baebb59e06392ec03a1afc9b10811d5ef930be89f604284942c907760",
+        "references/expert-notes.md": "e6cb38ce8d023267f31adcd864813077ea05a2563efb8ef4c6d8946882cab8a3",
+        "references/gui-paths.md": "9c3ce5482a1ad499a30d947082cf7e96b6a816c0ac32cadc45770d404461102c",
+        "references/procedures.md": "81137252aea64285347ee4e6b9edc12b09a48bed8f4b82e5d66f898f2b607432",
+        "references/sources.md": "74b9f43107cc838f4fd6171c3fa13deaf5a22f323701768917480f58b4ef2b89",
+        "scripts/agentkit/vfx-audio/AudioAudit.luau": "9e447c3fd83663a254301403fe69031424c71684bced4796d2e9853c0cec7937",
+        "scripts/agentkit/vfx-audio/AudioKit.luau": "e6c5c113e77b4c0ddfbca3d217a0da222626857e1caab25ac07a20b888f0307a",
+        "scripts/agentkit/vfx-audio/runtime/Footsteps.luau": "a545b036c3df717541131db75a7a8752cf6af913f2b15e3e8fe7f804ad3ce647",
+        "scripts/agentkit/vfx-audio/runtime/FxReplicator.luau": "4cc388d0146a905445dd92db12e82fbcc18385407204242b83a208a917324f27",
+        "scripts/agentkit/vfx-audio/VfxAudit.luau": "9502db0186210eeefb338d160dc9fa4dd698d105b93c872fab3fe150c0dcd293",
+        "scripts/agentkit/vfx-audio/VfxKit.luau": "e7964db945b7370fc917b2f3a8844efae7ec1ace7cd4771709eac6309dfbcf3d",
+        "scripts/rbx_vfx_audio.py": "320795c3b367f4a6f3d4abefaf8ea5ab29c5eebaad903caf8871e8d8de6e4a4a",
+        "SKILL.md": "b66ba4967097df949ef56e3130ee6cde183e160fe92b718b1793093f76f8b9f9"
+      },
+      "adaptations": []
+    },
+    {
+      "name": "el4cteo-roblox-analytics-liveops",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-analytics-liveops",
+      "installedPath": ".agents/skills/el4cteo-roblox-analytics-liveops",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "SKILL.md": "1e9c53b19e98233c4df58b1e7ff4326238b7ce2b4ea65ccdd272978f1e5909be"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-architecture",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-architecture",
+      "installedPath": ".agents/skills/el4cteo-roblox-architecture",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/ecosystem.md": "3d0b4293a6f6fdffe576d32d1cafdaabb8196cd0e6f97359d72d34c1c7081065",
+        "references/streaming.md": "711025a89081f7fba3bcc149264b78637b3d35563230ceb1cc47b48c41cdf5a9",
+        "SKILL.md": "914a0349d45dd12d963256146198dcaa1900b9cdd0f47b6deae8ab1de39b4383"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-audio",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-audio",
+      "installedPath": ".agents/skills/el4cteo-roblox-audio",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "SKILL.md": "5b8c2255823ad582c4cb3fa064f38623f601c389ab7c72e9904440c815d78963"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-characters-animation",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-characters-animation",
+      "installedPath": ".agents/skills/el4cteo-roblox-characters-animation",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/character-controller-library.md": "82b8ff8f232f0926f5d3213a68b03109f071c4c43b0e2d46e2b5826349995289",
+        "SKILL.md": "14fba81f531628fd06808dd1f9ab39425b7f082a0bfd34b8f0614fb609f2222c"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-code-review",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-code-review",
+      "installedPath": ".agents/skills/el4cteo-roblox-code-review",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/deprecated-apis.md": "ed31110869aeb68007c571f34a81c583e7274da5c208f71552783631490520b7",
+        "SKILL.md": "7706050878e5eb4f80c0ac9f48d80533876692cefe57f29570f85e8ff20639b2"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-data-stores",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-data-stores",
+      "installedPath": ".agents/skills/el4cteo-roblox-data-stores",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/memory-and-messaging.md": "5937cc552452ffcde6d7e05aa93e7f785dac9fdadf531efeaa030528fd2a2a92",
+        "references/raw-datastore.md": "3e8377cbec72bf1d5b73200119e6bb3a2ab38368b64162eb1923a4d71d005ad1",
+        "SKILL.md": "37871de719889e18ba49f308d87406b738f31a50cafeed4b17f906abbbea1040"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-game-systems",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-game-systems",
+      "installedPath": ".agents/skills/el4cteo-roblox-game-systems",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/combat.md": "a70441cd19258fee6c3467124bdaad621ab6d32bda4ab21bb10567de2739a301",
+        "references/inventory-shop.md": "4d9d0482267756bf43e848d3559f22a1897ce718928f07de5abd9f15f08740af",
+        "references/progression.md": "94f3683d999a67021bdad2e589416ca411ab954a42ce8371c8c2b7ce49115530",
+        "references/round-system.md": "b9fd6637ce1af4a9c93d257ff8890fb4bba25e1a423fe17020c05bfaec8e0a00",
+        "SKILL.md": "d72e4e81ae752edf145fd322cb4d9eb30ca361f61c29aecd2c9a5d87f88a4c62"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-input",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-input",
+      "installedPath": ".agents/skills/el4cteo-roblox-input",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "SKILL.md": "4f90eac0f22e530c95de9244dd56debed57393e4bf90735cafafb73548546e02"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-luau",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-luau",
+      "installedPath": ".agents/skills/el4cteo-roblox-luau",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/stdlib-cheatsheet.md": "242f6961a739727dc9e6beb666e5ba86e07487a43e4ec83820c9a35ce70164b0",
+        "references/type-system.md": "0aa560abb7a4db026bc0e6642a9eae90ca4b16a2a27adb4bfa43bba0af849053",
+        "SKILL.md": "a3e0595146bddfd027484ef1b37b93d265c2c32a07339406dfdb951595c00985"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-monetization",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-monetization",
+      "installedPath": ".agents/skills/el4cteo-roblox-monetization",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/ads-and-extras.md": "b1d3ddaab9b93c2e416019d5308c7167df996a5a6aabe42bd4ee7f047c28827c",
+        "SKILL.md": "3414ffac9b3a8d2263226b6da521ad571d574e1958884dbd4d1deb39daf086d5"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-networking",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-networking",
+      "installedPath": ".agents/skills/el4cteo-roblox-networking",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/patterns.md": "a0d023e614be54d7b38edecc3df1648e0c3402d4e3f77345677564cd4222b84f",
+        "SKILL.md": "4f6c3497760c3633246b07493bd99e20800881ab4215ddcdf9f1228c7510c1fe"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-npc-ai",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-npc-ai",
+      "installedPath": ".agents/skills/el4cteo-roblox-npc-ai",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/scaling-npcs.md": "ac17986afb1b2d4a90f4961f241eaa32ec33782396ed33c78d3b7cca1b5e6668",
+        "SKILL.md": "ff55ce180a4a3a826e8990225e90ffe69027b6f71de77626709fd735fec17fa2"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-open-cloud",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-open-cloud",
+      "installedPath": ".agents/skills/el4cteo-roblox-open-cloud",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/webhooks.md": "86a4b016f53d8d419c6dd4aa6b74de1f3b5b73d4d7f4d7df8ec8a9c234cf6741",
+        "SKILL.md": "7bbd9cf0c723aa500a40d769e694cd010012281136e6bef5947dfa6ea0eaec24"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-performance",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-performance",
+      "installedPath": ".agents/skills/el4cteo-roblox-performance",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/profiling.md": "5f1a0beb4f9ba3efffe833b6c78800850994d57712bb890aa631f10df9db071c",
+        "SKILL.md": "edb96e9ef89fc73b90879ff9e112894ef0514635c46b9907e34c96e63ca11153"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-physics",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-physics",
+      "installedPath": ".agents/skills/el4cteo-roblox-physics",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/recipes.md": "9c958834057e265576e87aad850c03cd1eabd22a8251f18d6c7e84e754c84730",
+        "references/server-authority.md": "1500d6a40334acaabdc2a227aed072054a418b2f8cf4b40d109e1573b441a2f2",
+        "SKILL.md": "4cd066d1bf61c9979574b1bbf042bae8648ee38c47acc7cd0f361348008d2c4c"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-security",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-security",
+      "installedPath": ".agents/skills/el4cteo-roblox-security",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/checklist.md": "75b4624a4be879cacfcc572003f450430de67f02afcdb9c2bd8f07916513adf6",
+        "SKILL.md": "1d5dcefa6abfe3f304e874739a37bd854587155ea3c9f32a0c5ca3bbaf83a769"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-studio-mcp",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-studio-mcp",
+      "installedPath": ".agents/skills/el4cteo-roblox-studio-mcp",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/client-setup.md": "762efb89c0235f7b0c4e116d7c340f147834e4fd8698a20f8a0a1cf5458f3398",
+        "SKILL.md": "edc09e7ba43987bb0dcece183ac854962faf482931b9765b14c998ded4253829"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-teleport-matchmaking",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-teleport-matchmaking",
+      "installedPath": ".agents/skills/el4cteo-roblox-teleport-matchmaking",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "SKILL.md": "01d07ecabd2c89ea612395dae8d52841a3075b59cc00c1b2300a2f8e54998e91"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-testing",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-testing",
+      "installedPath": ".agents/skills/el4cteo-roblox-testing",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/cloud-test-runner.md": "583c3a1eefe38c4c3c2e5e5934dd5fdd24cf1f4413b1e35fa73644eafed4eaa4",
+        "SKILL.md": "0904b50541f89e479a87969abfb3f8052a2bef87d5f153621058883ba5bf149b"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-text-chat",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-text-chat",
+      "installedPath": ".agents/skills/el4cteo-roblox-text-chat",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/chat-recipes.md": "c745a564aa1ff5acf2bfa5f648de7d62187f1f5b21d0c051415586bdc5b32146",
+        "SKILL.md": "f2c58c46c089d8a7091b7a44f88bae1dce02723f86f2232f13944e64393a468f"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-tooling",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-tooling",
+      "installedPath": ".agents/skills/el4cteo-roblox-tooling",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/ci-workflow.md": "ce3cde2c02989b36f5c974e2660df243a6964dc87127ba32ce7e5303aa7c3da3",
+        "SKILL.md": "7f921d9346a7b5553c091d86e703ff74d535246e751ab926ea43f42107be5d02"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-ui",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-ui",
+      "installedPath": ".agents/skills/el4cteo-roblox-ui",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "references/styling-and-frameworks.md": "62e568a34c7867da3ecaff83785253cc47d7739d3b3ac8fbaabba399dec4ed5a",
+        "SKILL.md": "cb3e7216de42aa84f7583d7e4e450a07f1b192096ad9327613d8250f4e1672ed"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "el4cteo-roblox-world-building",
+      "repository": "EL4CTEO/roblox-skills",
+      "commit": "cac3ce045f49630f13b76f45c452d1f96e910d50",
+      "upstreamPath": "skills/roblox-world-building",
+      "installedPath": ".agents/skills/el4cteo-roblox-world-building",
+      "files": {
+        "LICENSE.upstream": "d81d0037e3a29a01ccfefaae420d5ba73e905cabf3995700e9075c7205c06cc5",
+        "SKILL.md": "d30fdba4b0123c15a123453309abdfc405019bfde7a290aea609cee9b6e620f6"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "gstack-asset-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/asset-review",
+      "installedPath": ".agents/skills/gstack-asset-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/benchmarks.md": "1d5f02765f89dacf92eef96a00d6232e44e4da045be737e4ac13b668f64d94ee",
+        "references/gotchas.md": "202d198f0da7d528b8d5105df80883399e94dbc67b89a49143c5bfc729c906a8",
+        "references/naming-conventions.md": "a0b18e5f1f7998838d8904b1fc341e57ad8dd5f51e8d49a2433c18d370fb8a50",
+        "references/pipeline-checks.md": "81c53ee8d5462d660b3c2fb732b4a1c1c380e0c8dc7a5a5cf0aa43c5bb4a51c5",
+        "references/scoring.md": "2f8f7963c90d68c4729b8e531984b6695f772a61af2600487ddd3197844ae1de",
+        "SKILL.md": "cebe2f5d593821516eeac2fa0f3e60d76a27c67642b1a0d03625588751b440a5",
+        "SKILL.md.tmpl": "30705307aa12e760fd63fa3e5f5759671e542d2c881b5c5e6b4cc5a108b55fe4"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-balance-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/balance-review",
+      "installedPath": ".agents/skills/gstack-balance-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/character-balance.md": "2658982dab39563f7e96df9fb80711f15f42e8daf66ff0253727dc07c98b62f3",
+        "references/cross-section.md": "653e83e5247f98fee02462e9e32a22906700acab1b2aa8e06bed7ddb2324bf20",
+        "references/difficulty-curve.md": "35cfd60d90e2fdab08b3d789801db6190d22616e495ef80389204583f7d6ba4c",
+        "references/economy-model.md": "282478f96e2a6517efd33159477481217dfd3d88d48e328579004f1badbb3147",
+        "references/gotchas.md": "d930262e821f465f16755bf5d9351f4a5c677837b3c403b64635a9f38ffdf412",
+        "references/monetization.md": "88410e651ba9b24958a96328a0cc28adbc333e72f0dca08f93d9adc977c62803",
+        "references/progression.md": "34b04089015fd75efc206761e24378274405c2f42d1bdf1af6cb280427c56034",
+        "references/scoring.md": "edf4c58b1e3e53da4f63d48b095a588e90f26d1c4329e18f784509f66120d286",
+        "SKILL.md": "95260023beeb93a0f0fc03a8c601ad75514aa69e0b12f4218741debe1bde7727",
+        "SKILL.md.tmpl": "f1327e25fe3b25fad06de4f0fd662bcd4c6948477d3cd31d620db6d3693894b3"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-build-playability-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/build-playability-review",
+      "installedPath": ".agents/skills/gstack-build-playability-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "7c312c81874883a77d54d2331193b5a04811e270a04acb79900465c363aaab7f",
+        "references/scoring.md": "735e05a9ab31e0830409f652e809a85073b61ee998fcb8a9053767fc6fc41fb6",
+        "SKILL.md": "7eb73836ffda2dde934319d941971d35c31a8e5398f7e21e13f1a741a507dc10",
+        "SKILL.md.tmpl": "7306865a878ad064a83c34eaed787d198a066c2737e472381fa101bb9cd08dfd"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-careful",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/careful",
+      "installedPath": ".agents/skills/gstack-careful",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "0c16ebafabbec1793f583f66c349514dde8da4fefca2a8bafb7cf2555a9ddeec",
+        "SKILL.md.tmpl": "9724acef5ebdbfeb244b75bd2d3330518bd09ac07b490a527ac86299f37641e5"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-feel-pass",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/feel-pass",
+      "installedPath": ".agents/skills/gstack-feel-pass",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/feedback-chains.md": "42d633f5bdbf85176b492df1bf4bb2b4aeb2fd6a2b42b9a1cc0d87bcf0b0ddb8",
+        "references/feel-vocabulary.md": "0b4692f0e52cac0f9286dffee496b6f44ef2a2cb4574683496939fe0210e7478",
+        "references/gotchas.md": "99b9a6ede6a2519fe97c062f50cd452b00f9a6597e0368232562b68a294e6272",
+        "references/scoring.md": "4d0d9fc3a3e7d6a551707d664d71cd967df91dcb15b2ed3f6f8e78d2f202dc0a",
+        "SKILL.md": "1432eddf86207aa5f6ae7db569df21b38b4232c089efa1c7765fd323528d8363",
+        "SKILL.md.tmpl": "f04edb12cf829bd148bc3eb2ca0b715bb116e15a8fe4d183101ef56070d9884a"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-codex",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-codex",
+      "installedPath": ".agents/skills/gstack-game-codex",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/attack-by-game-type.md": "3bd5526572c60856ae9d4b8a27aac0e354ee3750ec0579d8ce9d189e88a6240a",
+        "references/design-fallacies.md": "d764de435b5f20b0259fa67f9acd3de028dbafe07e06dbcef66aed2e5c9b4ae8",
+        "references/exploit-taxonomy.md": "88fc2a5b719f5c3f7d27031b24ea51fce1fe66b27dfb2b4e14ae4073159197dd",
+        "references/gotchas.md": "2febac1357ad74521b39915da17b1d9a98002922c92da371892f5eb076a141b0",
+        "SKILL.md": "ebfefe2cab23adc40f3deaefb6404ea3f15c6d2dac958ebeace4a1f633717f62",
+        "SKILL.md.tmpl": "0e5880024df99bdaae746a31344fe7c7408365051dd13d7e47cc78786615dd53"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-debug",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-debug",
+      "installedPath": ".agents/skills/gstack-game-debug",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "b4eef0e8a532fc44a993a80e0f339794de481b47234cf62cb735227b4703f03c",
+        "SKILL.md.tmpl": "3a2d7878ce3a3632a16f56f40325a57847a1e106d9f3b22ba0860ed7c8110ce2"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-direction",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-direction",
+      "installedPath": ".agents/skills/gstack-game-direction",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "8ea7a78d75a1a446d00f482e0035d94d1b6d3729ba55e87c5fe78c6a8cdc27c1",
+        "SKILL.md": "82c859214b9ca3f604c963437313af3ee8e1fedfef35a5b1c506a06426d64833",
+        "SKILL.md.tmpl": "2ecc3fd24f01f1b5c2eaeed7f21288fdba0a1ae958697fd796f46cb8478b8491"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-docs",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-docs",
+      "installedPath": ".agents/skills/gstack-game-docs",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "eeeb52445a4bf820fc262bb6d0e176392762024548cfd802a973a11330068f8a",
+        "SKILL.md.tmpl": "4be5be61eb02230bb3b3abeb10fd811677358194bd43a99eb995bfb7497375c0"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-eng-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-eng-review",
+      "installedPath": ".agents/skills/gstack-game-eng-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/engine-framework.md": "577fc2a8760ed047f755ce0aa89080a353c77280a66d7066f5e12cfaa91f3f6b",
+        "references/gotchas.md": "84610b9850aca02587285d6c70b341b6426d67c31621ecd27f9e5580a25a3c6b",
+        "references/networking-patterns.md": "af9e8e4b8245912d4a3b1aeafdefb0643374762fba550bb9e1963d8c618df0b1",
+        "references/performance-budgets.md": "9ab2f2376fc2f8174c25bda96d3593cb49f980ee12b230a2fcc722a6a5d14265",
+        "references/scoring.md": "d610d29b36b5ec971c7c7190acb0bf5ae421fa2ef182bd4d6fc235e8a9145402",
+        "SKILL.md": "1281a46e3ad7d1b34467f051b83f42542043f3e034652af17eb1a95b51585c15",
+        "SKILL.md.tmpl": "a2f1fb737141dbfbe9aa3c2bc70d007455537f18927ba109aa3fa3e72f429890"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-ideation",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-ideation",
+      "installedPath": ".agents/skills/gstack-game-ideation",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "fb4b2db7c6c5124de686488018401792caf2ca005147e7f0ed371465487e98f7",
+        "SKILL.md": "5b090a0e6598c92ae2bdcc231f14d6c4a66d652054385604e4798f115df1a1fa",
+        "SKILL.md.tmpl": "655fa854a8a40e1ba3b49f56bf09ef5a59b9663d9288f844ce77e3c1f14c2bd1"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-import",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-import",
+      "installedPath": ".agents/skills/gstack-game-import",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "2dd130d63e15b493937ae339f20724cec3d254c730e3719cedcdf00c7c88f431",
+        "SKILL.md": "274b10e70e5cf9f8930d1d1cce282ea4a482068db261d222f7b119439382abfd",
+        "SKILL.md.tmpl": "ea38d3a699c7075aae7555eb829217b255a60a79886ad6488a76796be863b78c"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-qa",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-qa",
+      "installedPath": ".agents/skills/gstack-game-qa",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "a34bef78c731824b9dccd37aaeff1ad1a2ea1bdfdd0f64c4a97b04aa8a8cbc8e",
+        "references/scoring.md": "4a5e32fce29cfceb3e994215af42eab84ee63a877fe1e113156b837ad39f57b3",
+        "SKILL.md": "6c4c2c3ffda2b4010389bcc4c5e7dd6aae4073147ffd85752dbe00e1bd4b6c80",
+        "SKILL.md.tmpl": "04ef90884b56a8fc4aa53ebd2029e4eead5b5f4ac0100a2f3dce741fb6c63354"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-retro",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-retro",
+      "installedPath": ".agents/skills/gstack-game-retro",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "211f8d0c68f0ec1a5a5c0804eae2a3b7db2d0b13af5b5c6fdaf99ffa91559f6b",
+        "SKILL.md.tmpl": "9f5ce42daf8f9bd5eccc283bdc386d83d5eed69ef9bb8db9ed3bf8fd4118eb92"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-review",
+      "installedPath": ".agents/skills/gstack-game-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/core-loop.md": "880ffe5c9a20e337eed1ba5dcb2a904ea6f51598ed712630aba29941e36fb6b6",
+        "references/cross-section.md": "bf1552129f93b39e8388c50a6983d1448e1eb403669fe880666d17d3badee6c0",
+        "references/design-consistency.md": "c5d70ed7ae8af14a9d319106153223e0a0361b9bba78ea8a842940909630e72c",
+        "references/economy.md": "2a97418663bc23419895712b618ca77afb02b1877973735f2cfc2d3049c36da9",
+        "references/gotchas.md": "6b584e5a875a34056047cb4642344069c46db5da6adace001b3eaec8fcf2bbec",
+        "references/motivation.md": "68f75794bd02b326b34ff71bd9cf144ffd57dd12b4f4615e1b3f7787f76d5b47",
+        "references/progression.md": "150ffb4f4a853f544974d2734c2fda104e4b7aa47a0e7e1aba667d689713f848",
+        "references/risk.md": "8ffdaf4bfe72ef13dcb0b22a0348f6fc5ac8140366f13309e1624815a70d9f48",
+        "references/scoring.md": "187b029fd7c42dbe69be939b405baea37e38f927069a1970942a2b41a4362bf7",
+        "SKILL.md": "f858cf3f0814d8149360558afa2c3486ddf311052e614fc06aaf179631fea9cc",
+        "SKILL.md.tmpl": "42cabe7e2d1c063e5e476955d94369a165ccd69a95c5e45c62c1e0cf6435b4cb"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-ship",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-ship",
+      "installedPath": ".agents/skills/gstack-game-ship",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "89b59b39951c7335a1d1b237d08fb0d70b95835ce5da855a7dcd293237e4916f",
+        "SKILL.md": "6280e45ab1708bae92270b3331399ccfb888c062fa6114af0a8c3a00b8c5a94c",
+        "SKILL.md.tmpl": "074d3fb746e0cd1c4ecc42273f3a48eb4d1844d6d2af74ac9604ce6b9c488e74"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-ux-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-ux-review",
+      "installedPath": ".agents/skills/gstack-game-ux-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/gotchas.md": "e098f6ee9b5332b29b5040c8ee7cdd247557200d4f24593cac1bd2b8af141fee",
+        "references/scoring.md": "326630f1c37abd175a5f24666db3fc73c07be104196b029b777bf00d1d4f00cb",
+        "SKILL.md": "ad5bbbb59dde56eed5ad654b0811f5393ee2013ab2825d230d617223368109b0",
+        "SKILL.md.tmpl": "c029779d89aae25baba384bc4663aa8bab784002daefdb1fb31a95dbf10e000a"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-game-visual-qa",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/game-visual-qa",
+      "installedPath": ".agents/skills/gstack-game-visual-qa",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/animation-standards.md": "ebd317b5f6617d1d9b3382a9222ab1f0eefb8dc3635c6f1e05210977dde8f3a7",
+        "references/gotchas.md": "3691df1eb2eb27e33548211d4635336b10b48e9bfdac70130f30e72d04ce9eea",
+        "references/platform-requirements.md": "914a56665c1abebdfc7514c91648b111fbb78b8afe0280824e633f0059b6f7e9",
+        "references/scoring.md": "53d72ce6b58e27f00bd3c3be73a607e6fe6bf4d9343164c822b1b125a8109e7a",
+        "references/visual-thresholds.md": "0e7ec0e7410dd8e71449eed20d17362488ba1aae510ebd348d211c620d25b8ef",
+        "SKILL.md": "f2cdb39231129a937bd2720d9b4b936f0e22e3453b18744ea8b78eb3907989e5",
+        "SKILL.md.tmpl": "7cd057cb6594bc0c89f5b946f30e88dd94669ea88f98d6c1a595c5e26952fd13"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-gameplay-implementation-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/gameplay-implementation-review",
+      "installedPath": ".agents/skills/gstack-gameplay-implementation-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/design-intent-checks.md": "bbc14afbf85f782e81b9f1325c9886174301bd3c19b5b4735fdfbad4c3d9efec",
+        "references/gotchas.md": "0e759485d5229fa6bc6351563d095fb075471d2518172a8e984779b1a1f3481a",
+        "references/pass1-critical.md": "73ddecbb621769e20c18b6adb5eed9b36f1372c49f5f45d080321a30056ee607",
+        "references/pass2-informational.md": "092ac67b115149ee0244e8eac767023d7713e015b8c40671d26e2069b8765a95",
+        "SKILL.md": "4f53017018eb81d1388dffe7acca115ea94bdb53f65c14f7852f33c20d28c289",
+        "SKILL.md.tmpl": "21c9215ef95a626aa2910873614e21e60231e30096dd3538dc7e532ae0748307"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-guard",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/guard",
+      "installedPath": ".agents/skills/gstack-guard",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "7f5ea75eeb576de53fba8c04d8a372f921931617dc9769950187411b3ad144f6",
+        "SKILL.md.tmpl": "c32897bd339df7bae20f47cfb7fc68a591172a66905f2e559aa2d853692a533f"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-implementation-handoff",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/implementation-handoff",
+      "installedPath": ".agents/skills/gstack-implementation-handoff",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/acceptance-patterns.md": "4c4cccbaf51ae6db3fbdf2d5d8ab93bb85dd8e28821ae3218c0698f16e9c5ff9",
+        "references/gotchas.md": "fc3f3e0fd9814d7b8cc173cdc114e202e64ce6ec86c4ce65afcb0a21f9e75a1b",
+        "references/handoff-template.md": "09fee48d3b097edde122ef31464b8dc379e8aac11e036c6a78f7fe8047d2c65a",
+        "SKILL.md": "86cb4a12021f5945296ce646e57212d5418dab3fede1470a6521941e771cb6aa",
+        "SKILL.md.tmpl": "138622b4470ce89b12efac31b7fcf870e51bf60bdd3d07644745bae9e9ccdfb2"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-pitch-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/pitch-review",
+      "installedPath": ".agents/skills/gstack-pitch-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/business-case.md": "11677a935fcd1bd1d61b3e622d1d2ca5f86c16135af13088a663a655c1732cc0",
+        "references/differentiation.md": "c67898054dcf4e5083b1f7f40b8286b89d2362fb2f6521d75178f9ff7bce930e",
+        "references/feasibility.md": "23aab282cd3beaec609c28eccc527c38c9dfd4e6b5c5100c2faa4be6f5fe36e5",
+        "references/gotchas.md": "118384833aa93d046547b39ca5f4a58cad3cd4cb06d11d2226564a212d7aacf4",
+        "references/market-positioning.md": "c1baf7dfce0c9620468df7f8d3a067350fe750173e885b07be7798e5f981abdd",
+        "references/pitch-quality.md": "732a36d206ff7f801f4a11d5132d2f54723d235c49844dc8a43ef2d25e6262b4",
+        "references/scoring.md": "17cb0feedb43411cffab1a0d5d2de35ceac5bcc8b6ad63a1cfbcaa845a715c2a",
+        "SKILL.md": "3701e038ed0f8d72d8ac64cb3ca87d5411a83fe03df9ac67b84ee73d0c6e31e7",
+        "SKILL.md.tmpl": "cd1d75d5e6610813edde51dc8e76a4b39ac154cd865cfd90c514b55c75e0d6e5"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-plan-design-review",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/plan-design-review",
+      "installedPath": ".agents/skills/gstack-plan-design-review",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/design-system-template.md": "7001e4eeca65a66274e0307568d42a6f07170f704653a939ed0f12e9c69e507d",
+        "references/game-slop-patterns.md": "37ca535d69240f90a3e44c6307f5d7c5f531ffb05aa3e0c557d755df909670f8",
+        "references/gotchas.md": "59a6738cc64606fbfe4b5f373f627b76d3b7655f3ab9057085485c1d22b0f6dc",
+        "references/interaction-states.md": "01d1b654adc161184b63ac68626ac46df20bbeb21d07e2643bbeed905601df4d",
+        "references/scoring.md": "97012f60d28a1e5b4d3b548d4f8300209fc3dcbd690bd31a5f824f9f60e89254",
+        "SKILL.md": "2d956471c710f915ff6b75e74085d5b656b452cf567172722a470d7644bd9e42",
+        "SKILL.md.tmpl": "5dd4447d8f3190235c1623d297ce90efcf2e9458e3c8232d04fcaa1d2cc67a70"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-player-experience",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/player-experience",
+      "installedPath": ".agents/skills/gstack-player-experience",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/emotion-vocabulary.md": "19d3ed9f7b44e2b8dbf449b129293de6d8144f6ece078bbc329684d24f3ef565",
+        "references/gotchas.md": "7ba5d2e31043d93d3b1820906cf27bea1ef1426168c44fceaea8fab49a03f669",
+        "references/personas.md": "e5f50f637d7f523e80826b9b30d018b01774b55804488e587b79e4126498b6dc",
+        "references/scoring.md": "34091fb4c729cabf0ba2c944030dcde5c6e32d0dc8ba311592a2dee345dfa1c7",
+        "references/walkthrough-phases.md": "4a7825ba6d1199d382393a43a8212fc9f17b9ec7f346dcc6c0d4cf886fcaa0ab",
+        "SKILL.md": "6e51fa5bdf16ea0429cbdbb19272d3a68c442dc446e7825b0bdb69aee4a7ed91",
+        "SKILL.md.tmpl": "710376239a4884d8d12d9a54950204039bfd569e977f83c6cd9cb5e2fd6fef9f"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-playtest",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/playtest",
+      "installedPath": ".agents/skills/gstack-playtest",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/analysis-framework.md": "59fe224ff04e42381cc122f892d25da2e99a04b13ee56b3a4582217ea9e53af7",
+        "references/event-injection.md": "1b61d695bd03b6e6f17a80c4d5c7cce15166152a1b58dfbfb6cc0db78e20cf66",
+        "references/gotchas.md": "233d340cc3276e76deeef304e47c80463aaeb53e6256fd52f33389c9cf25458e",
+        "references/metrics-and-benchmarks.md": "e45fd2eea8fcdd1f6e6bfc1c29704b2889d49a54c107b8d6f5d7a9ef7fd68967",
+        "SKILL.md": "ac538b0a3ef2cf79f63c810e6b10a591ceb286115fe5523aff498da56f2ad090",
+        "SKILL.md.tmpl": "3540104c2d576cc61c7cdcb3e91a41d5f8ed74d5cc07cc426463c463f3079a54"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-prototype-slice-plan",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/prototype-slice-plan",
+      "installedPath": ".agents/skills/gstack-prototype-slice-plan",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/examples.md": "9f7fd8f0c45eba7cd21befe98128b3cdd292233237b9929c247c94173cba9399",
+        "references/gotchas.md": "6ef851885045a6ed75b62ab6b9f595521343749cae8002207b23d9ac4a0790d0",
+        "references/scoring.md": "2d2288e51ef904b5b7a25bfb0c29361a43d76a6ddb7d010003e862e48c1245d3",
+        "references/slice-types.md": "626f055a8d91ff30c2d259875d87d20b35fc70b4531083e61756a42aaf3e98a2",
+        "SKILL.md": "163918097c861e4822121a7a858f4364f05d0367c4721bfc6e49e55e8d1bd517",
+        "SKILL.md.tmpl": "79f4a47ab35c70fe59223b41b0dc13465c9351f3c487b5e2885112adecb9ba91"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-spark-lens",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/spark-lens",
+      "installedPath": ".agents/skills/gstack-spark-lens",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "references/dialogue-patterns.md": "a5f5c16ea75c6d5e7bee27a60ab2229c4df2ef0b21d4e19c9ec9edc65c0434a9",
+        "references/method-stack.md": "cc8580d7502510cbc21494bf5a8c603c12c4133563313c4c5e06b8c13d1d3644",
+        "SKILL.md": "536721ac123610f862b60c0f59426a7440a1707af76f3ccee4976af19b327600",
+        "SKILL.md.tmpl": "40737f7ebabca6c8a5e2323b49d56dcd08a0344a4eaeb145b4266e987a08621d"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-triage",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/triage",
+      "installedPath": ".agents/skills/gstack-triage",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "a06ef3f431b85f33e95936837151e7c1175136a40235c1fc2c753200371dbedf",
+        "SKILL.md.tmpl": "800a0df7e18d35dd78aa718be6222d4084588fee5c4c98c829b81f8ffd06a01e"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "gstack-unfreeze",
+      "repository": "fagemx/gstack-game",
+      "commit": "7259ab9782fa9c17e45c16f1fb8347823ddb4379",
+      "upstreamPath": "skills/unfreeze",
+      "installedPath": ".agents/skills/gstack-unfreeze",
+      "files": {
+        "LICENSE.upstream": "f80d7595db80d1d1412cbd6bdd47e9590c39e449d576411058c56d29bc0d17c6",
+        "SKILL.md": "73f7f4705495078608c3e7c217d59ffb3c6aab05e70a55ead3ceb39323fe911e",
+        "SKILL.md.tmpl": "d1912d0c1886fd5f2a4f66ee4dbd5639a3116a898e2024704a2f391818f45e63"
+      },
+      "adaptations": [
+        "unique discovery name",
+        "startup preamble removed",
+        "review artifacts kept inside Git project"
+      ]
+    },
+    {
+      "name": "danicat-game-design",
+      "repository": "danicat/skills",
+      "commit": "196aeeefa48e1e3d075b171e57e33e6dce28f8c5",
+      "upstreamPath": "game-dev/game-design",
+      "installedPath": ".agents/skills/danicat-game-design",
+      "files": {
+        "LICENSE.upstream": "b4fd658df0e5efc14a98495eee0c52a444fa38264978acfe172d121ab3b386d6",
+        "references/gdd_template.md": "e6456844c6af90ad9a16f947728687b0ca732f4775614ee66476f4282a447299",
+        "SKILL.md": "d3d8c4a468bd1bd0721e4b740a2639de5e5dd490bad3dc77b244f3536bb00d25"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "emil-review-animations",
+      "repository": "emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "upstreamPath": "skills/review-animations",
+      "installedPath": ".agents/skills/emil-review-animations",
+      "files": {
+        "LICENSE.upstream": "4ff5bdb7887ec1435c9cab0e8d1a7caee704d894d65c2a008ccc68b1cc2f260b",
+        "SKILL.md": "9a685c89a2d004e6c8a274c2867907a47a4cbb533e53975464b26183f445f0ba",
+        "STANDARDS.md": "2d2c28e9fe98dd55a879bafa1684827c812eb31f6b63fe578141d3978ddc664e"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    },
+    {
+      "name": "hub-game-design",
+      "repository": "agent-skills-hub/agent-skills-hub",
+      "commit": "efc0b9639b83cf19aa73cc1b74844a6f302fe7ca",
+      "upstreamPath": "skills/game-development/game-design",
+      "installedPath": ".agents/skills/hub-game-design",
+      "files": {
+        "LICENSE.upstream": "6cf8c4df7fe3ec33c8f440f80435d9fcb0b2a39267c37af528d875ab34c893f4",
+        "SKILL.md": "c609d7935e0d8df3da106ab2a3e3c4e6ac03b908ae86614188e8426d1f23a1ce"
+      },
+      "adaptations": [
+        "unique discovery name"
+      ]
+    }
+  ]
+}

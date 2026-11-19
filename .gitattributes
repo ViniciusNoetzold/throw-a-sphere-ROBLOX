@@ -8,3 +8,6 @@
 *.rbxlx text eol=lf
 *.png binary
 
+# Preserve the pinned installed skill bytes across Windows/Linux checkouts.
+.agents/skills/** -text
+

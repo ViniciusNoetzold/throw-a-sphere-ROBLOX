@@ -1,0 +1,71 @@
+# Changelog
+
+## 1.1.3 — 2026-11-17
+
+Updated for Roblox releases from November 3 to November 17, 2026 (Studio 0.747).
+
+- **Fixes**: Rojo pin is now 7.7.1, which Studio's new Content asset format needs. Server-authority `AnimationTrack`s now
+  survive reconciliation (the "don't cache tracks" advice is gone). `PlayerCharacterDestroyBehavior` is on by default.
+- **Luau**: `buffer.readvectorf32x2/x3` and `writevectorf32x2/x3`, `SerializationService:SerializeValue`, smarter `--!native`,
+  and the `while local` and Luau Modularity (`export`, cyclic requires) betas.
+- **Teleports**: test `TeleportAsync` in Studio without publishing, and `DataModel.ServerRegion`.
+- **Studio MCP**: `open_cloud_invoke`, per-game MCP permissions, and the new Roblox skills for Open Cloud and asset import.
+- **UI and audio**: `Color3` contrast helpers, linear-space color tweens, `AudioStreamReader`/`AudioStreamWriter`,
+  and `VideoFrame.SubtitlesChanged`.
+- **Other**: Ban Lists, timed options retired, MemoryStore `UpdateAsync` retries, asset versioning and `*Content`
+  properties, a 500-stud minimum draw distance, Journeys and new experiment metrics, and Team Test client logs.
+
+## 1.1.2 — 2026-11-03
+
+Updated for Roblox releases from October 19 to November 3, 2026 (Studio 0.745).
+
+- **Teleports**: reserved servers use `TeleportOptions.ReservedServerId` (a GUID). `ReserveServerAsync`,
+  `ShouldReserveServer`, and access codes are deprecated. You can now teleport to VIP servers with `VipServerId`.
+- **Chat**: platform-integrated chat (`TextChannelWindow`, no access to message text) becomes required in May 2027.
+- **Security**: Device Trust API (`Player.DeviceTrustLevel`, `IntegrityService.EvaluatePlayerDeviceTrust`).
+- **Physics**: shapecast `Margin`, `SizeGradient`, `Shapecast` pose and size overrides, and `ExcludeInstances`/`IncludeInstances`.
+- **Performance**: `ServerLowMemoryWarning` for cleaning up before an out-of-memory crash.
+- **Other**: custom terrain materials, publishing an `EditableImage` with `PromptCreatePlatformContentAsync`, the
+  Input Action Manager, elliptical `UIGradient`, and the planned `AvatarUnificationMode` deprecation.
+- `validate.py` now flags deprecated reserved-server code and `PromptCreateAssetAsync`.
+
+## 1.1.1 — 2026-10-17
+
+Updated for Roblox releases from mid-September to October 17, 2026 (Studio 0.743).
+
+- **Fixes**: server authority is fully released (no more "rolling out"), and the camera now syncs through
+  `Player:GetCameraState()`; `ClipsDescendants` clips rotated UI by default; Device Emulator → Device Simulator.
+- **Physics**: `BasePart:BindToCollisionSummaries` for impact point, normal, and speed; `CollisionFidelity.Tunable`.
+- **Streaming**: `Player.FrustumStreaming` for scopes, racing, and free cameras.
+- **Monetization**: `MarketplaceService:OpenShop`, selling items outside the game, refund handling, age
+  check API (`PromptAgeCheck`, `AgeChecked`), and the US 18+ DevEx rate.
+- **Open Cloud**: Transaction Refunded webhook details, legacy web API rate-limit cuts, new thumbnail error format.
+- **Data stores**: Roblox-native Friends and Global leaderboards.
+- **Audio**: Acoustic Simulation (fully released) and text-to-speech auto-translation.
+- **Chat, analytics, building**: custom Quick Words, Early Harm Detection, Player Support reports, early
+  testers, the new discovery measurement, and EditableMesh batch APIs.
+
+## 1.1.0 — 2026-09-28
+
+- Support for many more agents. `install.sh` and `install.ps1` now read their targets from
+  `scripts/agents.tsv` and add Windsurf, Roo Code, Kiro, JetBrains Junie, Goose, Qwen Code, Continue,
+  Crush, Trae, Augment, OpenHands, Devin, Mistral Vibe, Qoder, CodeBuddy, Tabnine, Rovo Dev, iFlow,
+  Pi, Antigravity, Amp, Kilo Code, Factory Droid, and Cursor's global folder. Run
+  `--list-agents` / `-ListAgents` to see them.
+- README and the new `docs/agents.md` document `npx skills add EL4CTEO/roblox-skills`, which installs
+  into 70+ agents.
+- `install.ps1`: skill names now work without `-Agent` (they were bound to the wrong parameter), and
+  `-Agent a,b` works when the script is run with `pwsh -File`.
+- `validate.py` checks `scripts/agents.tsv` and that `docs/agents.md` lists every agent.
+
+## 1.0.0 — 2026-09-28
+
+- Initial release: 23 skills covering Luau, architecture, networking, security, data stores,
+  monetization, UI, input, physics, characters and animation, NPC AI, performance, tooling, testing,
+  Open Cloud, Studio MCP, audio, text chat, teleports and matchmaking, analytics and live ops, world
+  building, game systems, and code review.
+- Verified against Roblox creator docs and the engine API reference (Studio 0.740).
+- `scripts/validate.py` checks the spec, links, and formatting, type-checks every Luau example with
+  luau-lsp, and scans for deprecated APIs.
+- Claude Code plugin marketplace, cross-agent installers (`install.sh` / `install.ps1`), and a Roblox
+  Studio Assistant bundle builder.

@@ -4,6 +4,16 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 09:06 — Brasília (UTC−3). Skills de desenvolvimento adicionadas ao projeto.** Foram instaladas **155 skills locais**, com nove fontes fixadas por commit, licenças e arquivos de apoio preservados. A pasta `.agents/skills/`, o catálogo e o `skills.lock.json` acompanham o Git. Os 49 perfis de agentes Donchitos estão preservados como referência, sem ativação automática.
+
+Consulte [Skills e compatibilidade](docs/SKILLS.md) e o [catálogo completo](docs/SKILLS_CATALOGO.md). A referência `review-animations` foi resolvida para `emilkowalski/skills`; `mcp-roblox-docs` foi baixado como servidor opcional, sem registrar outro conector. O MCP oficial está disponível no cliente, mas a consulta desta sessão não encontrou um Studio aberto.
+
+**Validações desta instalação:** integridade das 155 skills e 888 arquivos por SHA-256 aprovada; compilação Luau, suites do projeto e build Rojo aprovados. O runner de progressão foi ajustado para usar temporários em `.tools/test-scratch/`, evitando a pasta externa `Desktop/work` que falhou neste PC. Os sistemas do jogo não foram alterados. As cópias de skills têm bytes preservados pelo Git para a verificação funcionar também no outro PC.
+
+**Próximo trabalho:** usar as skills pertinentes ao integrar os modelos do usuário, preparar rigs/animações e continuar as verificações pendentes descritas abaixo. A instalação das skills não conclui etapas de arte, multiplayer, publicação ou validação em produção.
+
+### Checkpoint anterior do jogo
+
 **18/11/2026, 21:45 — Brasília (UTC−3), horário de consolidação previsto. Mecânicas do jogo base implementadas; validação local e preparação da entrega concluídas conforme os resultados abaixo.**
 
 A base do passo 1 foi preservada e ampliada. O trabalho desta sessão inclui a UI refinada, os sistemas da Geração 1 e a migração dos saves para schema 2. Os modelos e as animações finais serão produzidos pelo usuário e integrados em uma próxima etapa; as 30 espécies usam modelos provisórios feitos de peças do Roblox.

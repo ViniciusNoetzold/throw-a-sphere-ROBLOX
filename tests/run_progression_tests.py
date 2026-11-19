@@ -28,8 +28,8 @@ def main():
         sources.append(f'{name} = [{separator}[\n{source}\n]{separator}],')
     template = (root / "tests/ProgressionSystems.spec.template.luau").read_text(encoding="utf-8")
     template = template.replace("__PRODUCTION_SOURCES__", "\n".join(sources))
-    scratch = root.parent / "work"
-    scratch.mkdir(exist_ok=True)
+    scratch = root / ".tools" / "test-scratch"
+    scratch.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="progression-tests-", dir=scratch) as temporary:
         script = Path(temporary) / "progression.luau"
         script.write_text(template, encoding="utf-8")

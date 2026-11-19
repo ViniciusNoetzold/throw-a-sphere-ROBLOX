@@ -5,6 +5,8 @@ $runtimePath = Join-Path $projectRoot '.tools/luau/luau.exe'
 if (-not (Test-Path -LiteralPath $compilerPath)) { throw 'Execute primeiro scripts/Install-Tools.ps1.' }
 Push-Location $projectRoot
 try {
+    python (Join-Path $projectRoot 'scripts/Verify-Skills.py')
+    if ($LASTEXITCODE -ne 0) { throw 'Falha na integridade das skills locais.' }
     $sourceFiles = Get-ChildItem -LiteralPath 'src' -Recurse -Filter '*.luau'
     foreach ($sourceFile in $sourceFiles) {
         & $compilerPath --null $sourceFile.FullName
