@@ -33,6 +33,7 @@ Panels.Titles = {
     Auto = "AUTO-ARREMESSO", Codigos = "CÓDIGOS", Menu = "EXPLORE SEU SANTUÁRIO",
     Biomas = "BIOMAS & PRAÇA DE TROCAS", GrupoVIP = "GRUPO & VIP", Trocas = "TROCAS SEGURAS", Leiloes = "LEILÕES POR MOEDAS",
     Consumiveis = "CONSUMÍVEIS & POÇÕES", Academia = "ACADEMIA", Resgates = "RESGATES DA PISTA",
+    VitrineOrbes = "VITRINE DE ORBES",
 }
 
 local function hint(parent: Instance, content: string, color: Color3?): TextLabel
@@ -328,11 +329,60 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         return
     end
 
+    if kind == "VitrineOrbes" then
+        local sources = OrbVisual.GetImportedModels()
+        if #sources == 0 then
+            hint(parent, "A vitrine está disponível na versão com modelos.")
+            return
+        end
+        local viewport = Instance.new("ViewportFrame")
+        viewport.Name, viewport.Size = "OrbShowcase", UDim2.new(1, 0, 1, -86)
+        viewport.BackgroundTransparency = 1
+        viewport.Ambient, viewport.LightColor = Color3.fromRGB(170, 185, 211), C.White
+        viewport.Parent = parent
+        local world = Instance.new("WorldModel")
+        world.Parent = viewport
+        local camera = Instance.new("Camera")
+        camera.FieldOfView, camera.CFrame, camera.Parent = 38, CFrame.lookAt(Vector3.new(2.1, 1.45, -4.7), Vector3.zero), viewport
+        viewport.CurrentCamera = camera
+        local caption = W.Label(parent, "OrbName", "", UDim2.new(0, 4, 1, -86), UDim2.new(1, -8, 0, 32), 17, C.Gold, true)
+        local previous = W.Button(parent, "PreviousOrb", "ANTERIOR", UDim2.new(0, 4, 1, -47), UDim2.new(.33, -8, 0, 44), C.Blue, 12)
+        local back = W.Button(parent, "BackToOrbs", "EVOLUÇÕES", UDim2.new(.33, 4, 1, -47), UDim2.new(.34, -8, 0, 44), C.Purple, 12)
+        local nextOrb = W.Button(parent, "NextOrb", "PRÓXIMA", UDim2.new(.67, 4, 1, -47), UDim2.new(.33, -8, 0, 44), C.Blue, 12)
+        local index = 1
+        local function show()
+            world:ClearAllChildren()
+            local source = sources[index]
+            local model = OrbVisual.CloneImported(source, 2.2)
+            if model then model.Parent = world end
+            local name = source:FindFirstChild("NomeOrbe")
+            local title = if name and name:IsA("StringValue") then name.Value else source.Name
+            caption.Text = string.format("%s  ·  %d/%d", title, index, #sources)
+        end
+        previous.Activated:Connect(function()
+            index = (index - 2) % #sources + 1
+            show()
+        end)
+        nextOrb.Activated:Connect(function()
+            index = index % #sources + 1
+            show()
+        end)
+        back.Activated:Connect(function() actions.Open("Orbes") end)
+        show()
+        return
+    end
+
     if kind == "Orbes" then
         local fragments = state and state.OrbFragments or 0
         hint(parent, "Orbes evoluídas têm uso livre. Fragmentos para desconto: " .. Numbers.Format(fragments))
         local tier = state and state.OrbTier or 1
         local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
+        local imported = OrbVisual.GetImportedModels()
+        if #imported > 0 then
+            local showcase = W.Button(list, "OpenOrbShowcase", "VITRINE 3D  ·  " .. #imported .. " ORBES", UDim2.new(), UDim2.new(1, -2, 0, 44), C.Purple, 14)
+            showcase.LayoutOrder = 0
+            showcase.Activated:Connect(function() actions.Open("VitrineOrbes") end)
+        end
         local order = table.clone(Panels.OrbOrder)
         if state and state.Benefits and state.Benefits.EternalPrism then table.insert(order, "Prismatica") end
         for index, id in order do
@@ -345,17 +395,19 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             local row = card(list, id, 124, orb.Color)
             row.LayoutOrder = index
             local medallion = badge(row, orb.Color, "Orb")
-            local pictogram = medallion:FindFirstChild("Pictogram")
-            if pictogram then pictogram:Destroy() end
-            local preview = Instance.new("ViewportFrame")
-            preview.Name, preview.Size = "OrbModel", UDim2.fromScale(1, 1)
-            preview.BackgroundTransparency, preview.Parent = 1, medallion
-            preview.Ambient, preview.LightColor = Color3.fromRGB(175, 187, 204), Color3.new(1, 1, 1)
-            local camera = Instance.new("Camera")
-            camera.FieldOfView, camera.CFrame, camera.Parent = 35, CFrame.lookAt(Vector3.new(1.14, .96, -1.65), Vector3.zero), preview
-            preview.CurrentCamera = camera
-            local model = OrbVisual.Create(orb.Color, 1, id)
-            model.Parent = preview
+            if #imported == 0 then
+                local pictogram = medallion:FindFirstChild("Pictogram")
+                if pictogram then pictogram:Destroy() end
+                local preview = Instance.new("ViewportFrame")
+                preview.Name, preview.Size = "OrbModel", UDim2.fromScale(1, 1)
+                preview.BackgroundTransparency, preview.Parent = 1, medallion
+                preview.Ambient, preview.LightColor = Color3.fromRGB(175, 187, 204), Color3.new(1, 1, 1)
+                local camera = Instance.new("Camera")
+                camera.FieldOfView, camera.CFrame, camera.Parent = 35, CFrame.lookAt(Vector3.new(1.14, .96, -1.65), Vector3.zero), preview
+                preview.CurrentCamera = camera
+                local model = OrbVisual.Create(orb.Color, 1, id)
+                model.Parent = preview
+            end
             W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
             local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
             W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power) .. " · Raros ×" .. Numbers.Format(orb.RareBoost, 2),

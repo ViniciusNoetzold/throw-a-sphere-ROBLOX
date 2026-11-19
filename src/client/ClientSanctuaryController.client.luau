@@ -28,18 +28,15 @@ local function observe(instance: Instance)
         Left = if left and left:IsA("BasePart") then left else nil,
         Right = if right and right:IsA("BasePart") then right else nil,
     }
-    task.defer(CreatureArt.ShowOn, instance, instance.Name, instance:GetAttribute("ArtScale") or 1, 1, 11)
+    CreatureArt.TrackOn(instance, instance.Name, instance:GetAttribute("ArtScale") or 1, 1, 11, 95)
 end
 
 for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model) end
 CollectionService:GetInstanceAddedSignal("SanctuaryWalker"):Connect(function(model) task.defer(observe, model) end)
 CollectionService:GetInstanceRemovedSignal("SanctuaryWalker"):Connect(function(model)
-    if model:IsA("Model") then walkers[model] = nil end
-end)
-
-CreatureArt.Loaded:Connect(function(id: string)
-    for model in walkers do
-        if model.Name == id then CreatureArt.ShowOn(model, id, model:GetAttribute("ArtScale") or 1, 1, 11) end
+    if model:IsA("Model") then
+        CreatureArt.UntrackOn(model)
+        walkers[model] = nil
     end
 end)
 

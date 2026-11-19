@@ -9,6 +9,7 @@ local NumberFormatter = require(ReplicatedStorage:WaitForChild("Shared"):WaitFor
 local Layout = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
 
 local TrainingRules = require(ReplicatedStorage.Shared.ConfigTraining)
+local WorldArt = require(script.Parent.WorldArtService)
 
 local WorldService = {}
 local worldFolder: Folder? = nil
@@ -175,6 +176,7 @@ function WorldService.Init(context: any?)
 	folder.Name = "ThrowASphereWorld"
 	folder.Parent = Workspace
 	worldFolder = folder
+	WorldArt.Init(folder, ctx, {Part = part, Label = label, Station = station, ProtectArea = protectArea})
 	local grass = Color3.fromRGB(92, 176, 70)
 	part(folder, "Mainland", Vector3.new(1730, 48, 490), Vector3.new(525, -25, -11), Color3.fromRGB(111, 91, 65))
 	local hubFloor = part(folder, "Foundation", Vector3.new(290, 1, 330), Vector3.new(0, -0.6, 20), grass)
@@ -247,6 +249,7 @@ function WorldService.Init(context: any?)
 		end
 		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-18),Color3.fromRGB(255,200,70))
 		bar.CanCollide=false
+		WorldArt.RegisterGym(lot, index)
 	end
 	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 173), Color3.fromRGB(27, 40, 72))
 	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nEvolua sua orbe e treine na academia", Vector3.new(0, 1, 0))
@@ -294,6 +297,15 @@ function WorldService.Init(context: any?)
 end
 
 function WorldService.GetSanctuary(player: Player): Model? return if owners[player] then lots[owners[player]] else nil end
+function WorldService.GetTrainingAnchor(player: Player): BasePart?
+	local lot = WorldService.GetSanctuary(player)
+	return if lot then WorldArt.GetTrainingAnchor(lot) else nil
+end
+function WorldService.GetReservePosition(): Vector3? return WorldArt.GetReservePosition() end
+function WorldService.UpdateAcademyArt(player: Player, academyLevel: number)
+	local lot = WorldService.GetSanctuary(player)
+	if lot then WorldArt.UpdateGym(lot, academyLevel) end
+end
 function WorldService.GetSanctuaryReturnPosition(player: Player): Vector3?
 	local lot = WorldService.GetSanctuary(player)
 	local platform = lot and lot.PrimaryPart
@@ -361,6 +373,7 @@ function WorldService.ReleaseSanctuary(player: Player)
 	local textLabel = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
 	if textLabel then textLabel.Text = "SANTUÁRIO LIVRE" end
 	WorldService.UpdateTrainingMachine(player, 1, TrainingRules.Machines[1].Name)
+	WorldArt.ReleaseGym(lot)
 	owners[player] = nil
 	displaySignatures[player] = nil
 end
@@ -437,6 +450,7 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 	end
 	local machineTier = profile.TrainingMachine or 1
 	WorldService.UpdateTrainingMachine(player, machineTier, TrainingRules.Machines[machineTier].Name)
+	WorldService.UpdateAcademyArt(player, profile.TrainingLevel or 1)
 	local signature = table.concat(profile.SanctuarySlots, ":")
 	if displaySignatures[player] == signature then return end
 	displaySignatures[player] = signature

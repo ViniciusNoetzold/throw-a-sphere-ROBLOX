@@ -51,12 +51,13 @@ function Training.Start(player:Player,travel:boolean?):boolean
     if now<(requests[player] or 0) or sessions[player] or ctx.Data.IsBusy(player) or not ctx.Data.IsLoaded(player) or not profile or (ctx.Flight and ctx.Flight.IsActive(player)) then return false end
     requests[player]=now+Rules.RequestCooldown
     local lot=ctx.World.GetSanctuary(player)
-    local anchor=lot and lot:FindFirstChild("PersonalTraining")
+    local station=lot and lot:FindFirstChild("PersonalTraining")
+    local anchor=(if ctx.World.GetTrainingAnchor then ctx.World.GetTrainingAnchor(player) else nil) or station
     local character=player.Character
     local root=character and character:FindFirstChild("HumanoidRootPart")
     local humanoid=character and character:FindFirstChildOfClass("Humanoid")
     if not anchor or not anchor:IsA("BasePart") or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health<=0 then return false end
-    if not travel and (root.Position-anchor.Position).Magnitude>16 then return false end
+    if not travel and (not station or not station:IsA("BasePart") or (root.Position-station.Position).Magnitude>16) then return false end
     local interval = Rules.RepSeconds - machine(profile).Speed
     local s={Character=character,Root=root,Humanoid=humanoid,Anchored=root.Anchored,Speed=humanoid.WalkSpeed,AutoRotate=humanoid.AutoRotate,
         Anchor=anchor,Reps=0,StartedAt=now,Interval=interval,NextAt=now+interval,QTE=nil}
@@ -74,6 +75,7 @@ local function award(player: Player, stats: any): any
     local appliedForce = math.min(stats.Force, math.max(0, Rules.MaxStrength - p.ThrowStrength))
     p.ThrowStrength += appliedForce
     local leveled, academyXP = Math.AddXP(p, stats.XP, Rules)
+    if leveled and ctx.World.UpdateAcademyArt then ctx.World.UpdateAcademyArt(player, p.TrainingLevel) end
     local _, gainedPlayerXP = ctx.Progression.GrantXP(player, stats.PlayerXP)
     ctx.Data.MarkDirty(player)
     ctx.Data.Sync(player)

@@ -1,21 +1,37 @@
-# Build local com a arte Blender
+# Arte de criaturas, orbes, academias e reserva
 
-Abra `build/ThrowASphere-ComModelos.rbxlx` e clique em **Play** para ver o lote de arte. O arquivo reúne 148 modelos Blender da revisão `13572c53171b816548580e1ab4eab0ce2e1a2c3d` do repositório privado da equipe. A exportação preserva a geometria e os materiais e ajusta os eixos e a escala. Os PNGs da origem são prévias e referências. O cliente monta e aplica o atlas UV com as cores originais na primeira aparição de cada modelo. [Documentação de MeshPart](https://create.roblox.com/docs/reference/engine/classes/MeshPart).
+Abra [`game/ThrowASphere-ComModelos.rbxlx`](../game/ThrowASphere-ComModelos.rbxlx) no Roblox Studio e clique em **Play**. O jogo e os arquivos de arte acompanham o Git. A origem é a revisão `96a5c6fee9784d144a48d41425ccb01113324b8f` do repositório de Nicolas Doering Santos. [Repositório de origem](https://github.com/nicolasdoeringsantos/modelospokemonroblox)
 
-Somente as espécies com malha no build aparecem nas novas capturas, no mapa e no bestiário. A captura, o cercado, o pódio e a revelação usam o mesmo carregador. Os seis biomas têm espécies próprias do lote. As criaturas antigas cuja arte está pendente ficam no inventário e podem ser vendidas. Geometrias alternativas de Frostseal, Sireseal e Glacierness são preservadas na Dourada.
+O lote tem 148 criaturas e 290 variantes de cor ou geometria. O cliente monta um atlas com as cores dos materiais do Blender e reaproveita as malhas no mapa, no curral, no pódio e na revelação. Os seis biomas têm espécies próprias do lote. Capturas antigas cuja arte está pendente ficam no inventário. Geometrias alternativas de Frostseal, Sireseal e Glacierness aparecem na Dourada.
 
-Enorme, Shiny e Dourada usam a medida da Pokédex quando a espécie de referência está identificada, à razão de 3,5 studs por metro. Modelos originais sem medida de referência usam a escala do artista. No cercado, o maior eixo fica limitado a 11 studs para caber no espaço de circulação. [Tabela de alturas da Pokédex](https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/pokemon.csv).
+Enorme, Shiny e Dourada usam a medida da Pokédex quando a espécie de referência está identificada, à razão de 3,5 studs por metro. Criaturas sem medida de referência usam a escala do artista. No cercado, o maior eixo fica limitado a 11 studs para caber no espaço de circulação. [Tabela de alturas da Pokédex](https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/pokemon.csv)
 
-Para gerar a versão com arte em outro PC, atualize o projeto pelo Git e clone o repositório privado de modelos em `.tools/modelospokemonroblox` com uma conta que tenha acesso. Execute na raiz do projeto, ajustando o caminho do executável e da origem conforme a máquina.
+O menu **Orbes → Vitrine 3D** mostra os 11 modelos da equipe, um por vez. Nove foram associados às orbes que o jogo já usa no arremesso. Reforçada e Turbo aparecem na vitrine. A academia usa as 21 artes ao longo da progressão de treino. A Reserva Natural é uma área visitável com amostras de criaturas.
+
+## Reconstruir ou editar em outro PC
+
+Com o Git atualizado, o Rojo instalado e o Python no PATH, execute na raiz do projeto.
 
 ```powershell
-$blender = 'C:\Program Files\Blender Foundation\Blender 5.2\blender.exe'
-git -C .tools/modelospokemonroblox fetch origin 13572c53171b816548580e1ab4eab0ce2e1a2c3d
-git -C .tools/modelospokemonroblox checkout --detach 13572c53171b816548580e1ab4eab0ce2e1a2c3d
-& $blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/Export-CreatureArt.py -- .tools/modelospokemonroblox art/creatures/local/data art/creatures/local/glb
 powershell -ExecutionPolicy Bypass -File scripts/Build.ps1 -WithCreatureArt
 ```
 
-Os 148 GLBs base ficam em `art/creatures/local/glb/`. As malhas e o place com arte ficam em caminhos ignorados pelo Git. O build público `game/ThrowASphere.rbxlx` permite testar a academia e as interfaces. As capturas ficam disponíveis ao gerar e abrir a versão com arte.
+O build extrai o pacote do próprio repositório e gera `build/ThrowASphere-ComModelos.rbxlx`. Para abrir os fontes dos modelos e os GLBs no Blender, extraia a arte para a pasta local.
 
-No Studio, o cliente monta uma malha por espécie e reaproveita esse recurso entre o mapa, o cercado e a revelação. A malha usa a API EditableMesh para carregar os dados e é convertida em conteúdo opaco quando a API permite. A disponibilidade de memória e das permissões em produção precisa de validação antes de usar o mesmo caminho em uma experiência publicada. Para publicação, as equipes podem importar os GLBs na conta ou grupo que detém a arte após decidir as permissões. [Documentação de EditableMesh](https://create.roblox.com/docs/reference/engine/classes/EditableMesh) · [Importador do Studio](https://create.roblox.com/docs/studio/importer).
+```powershell
+python scripts/Prepare-BundledArt.py restore
+```
+
+- `art/creatures/local/glb/` contém os 148 GLBs para importar no Blender.
+- `art/creatures/local/blender-source/scripts_blender_criaturas/` contém os scripts originais que geram as criaturas.
+- `art/creatures/local/modelos_roblox/` contém os originais de orbes, garagens, reserva e a vitrine de apresentação.
+- `art/creatures/local/data/` contém as malhas e variantes que o jogo lê.
+
+Para regenerar malhas a partir dos scripts Blender, use o executável da sua instalação. Os dois argumentos do build apontam para a arte local que você quer testar.
+
+```powershell
+& $blender --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/Export-CreatureArt.py -- art/creatures/local/blender-source art/creatures/local/data art/creatures/local/glb
+& .\scripts\Build.ps1 -WithCreatureArt -CreatureDataSource art/creatures/local/data -WorldArtSource art/creatures/local/modelos_roblox
+```
+
+O cliente usa EditableMesh para montar as criaturas. As 16 mais próximas da câmera dentro do alcance de exibição têm prioridade no mundo. A malha é liberada quando sua última cópia sai de cena. A memória em celulares e as permissões dessa API na experiência publicada precisam de um teste próprio antes da implantação. [Documentação de EditableMesh](https://create.roblox.com/docs/reference/engine/classes/EditableMesh) · [Importador do Studio](https://create.roblox.com/docs/studio/importer)

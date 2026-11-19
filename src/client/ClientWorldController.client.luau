@@ -48,7 +48,7 @@ local function observe(model: Instance)
         item.Peak, item.Beam = peak, beam
     end
     tracked[model] = item
-    task.defer(CreatureArt.ShowOn, model, id, scale, 1.1 * scale)
+    CreatureArt.TrackOn(model, id, scale, 1.1 * scale, nil, 115)
 end
 local function observeWildFolder(folder: Instance)
     folder.ChildAdded:Connect(observe)
@@ -67,14 +67,6 @@ else
 end
 for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
 CollectionService:GetInstanceAddedSignal("PodiumCreature"):Connect(function(model) task.defer(observe, model) end)
-CreatureArt.Loaded:Connect(function(id: string)
-    for model in tracked do
-        if model:GetAttribute("CreatureId") == id then
-            local scale = model:GetAttribute("ArtScale") or 1
-            CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
-        end
-    end
-end)
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value
@@ -96,7 +88,12 @@ task.spawn(function()
         for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
         local hue = (Workspace:GetServerTimeNow() * 0.12) % 1
         for model, item in tracked do
-            if not model.Parent then if item.Peak then item.Peak:Destroy() end; tracked[model] = nil; continue end
+            if not model.Parent then
+                if item.Peak then item.Peak:Destroy() end
+                CreatureArt.UntrackOn(model)
+                tracked[model] = nil
+                continue
+            end
             local originalMesh = model:FindFirstChild("OriginalMesh")
             if originalMesh and originalMesh:IsA("BasePart") and model.PrimaryPart then
                 local scale = model:GetAttribute("ArtScale") or 1

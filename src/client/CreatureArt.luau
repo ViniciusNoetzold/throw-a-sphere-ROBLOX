@@ -3,20 +3,24 @@
 local AssetService = game:GetService("AssetService")
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local sources = shared:WaitForChild("CreatureMeshes")
 local variants = require(shared.ConfigMutacoes)
 
 type Geometry = {Vertices: {number}, Faces: {number}, Colors: {number}}
 type MeshData = Geometry & {Palettes: {[string]: {number}}?, Shapes: {[string]: Geometry}?, Scales: {[string]: number}?, ReferenceScale: number?}
-type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage}
+type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage, Users: number, IdleSince: number}
+type LoadState = {Loading: boolean, Attempts: number, RetryAt: number, Retryable: boolean, Done: BindableEvent}
+type WorldDisplay = {Model: Model, Id: string, Scale: number, RootHeight: number, MaxExtent: number?, Distance: number}
 local CreatureArt = {}
 local templates: {[string]: Template} = {}
-local attempted: {[string]: boolean} = {}
+local loads: {[string]: LoadState} = {}
+local MAX_LOAD_ATTEMPTS, RETRY_COOLDOWN = 3, 5
 local scales: {[string]: {[string]: number}} = {}
 local referenceScales: {[string]: number} = {}
-local loaded = Instance.new("BindableEvent")
-CreatureArt.Loaded = loaded.Event
+local displays: {[Model]: WorldDisplay} = {}
+local MAX_WORLD_DISPLAYS = 16
 
 -- The source pack has Blender materials rather than image files. Rasterize the
 -- original palette into a padded UV atlas so every displayed mesh has a texture.
@@ -48,10 +52,22 @@ end
 
 local function load(source: ModuleScript, palette: string?)
     local key = if palette then source.Name .. ":" .. palette else source.Name
-    if attempted[key] then return end
-    attempted[key] = true
+    if templates[key] then return end
+    local state = loads[key]
+    if state then
+        -- CreateMeshPartAsync/baking may yield. All consumers await the same result,
+        -- including a reveal that starts while a world instance is loading.
+        if state.Loading then state.Done.Event:Wait(); return end
+        if not state.Retryable or state.Attempts >= MAX_LOAD_ATTEMPTS or os.clock() < state.RetryAt then return end
+    else
+        state = {Loading = false, Attempts = 0, RetryAt = 0, Retryable = false, Done = Instance.new("BindableEvent")}
+        loads[key] = state
+    end
+    state.Loading, state.Attempts = true, state.Attempts + 1
     local mesh: EditableMesh? = nil
     local image: EditableImage? = nil
+    local createdPart: MeshPart? = nil
+    local memoryUnavailable = false
     local ok, problem = pcall(function()
         local data: MeshData = HttpService:JSONDecode(require(source))
         scales[source.Name] = data.Scales or {}
@@ -60,7 +76,7 @@ local function load(source: ModuleScript, palette: string?)
         local paletteColors = if palette and data.Palettes then data.Palettes[palette] else nil
         if palette and geometry == data and not paletteColors then return end
         local editable = AssetService:CreateEditableMesh()
-        if not editable then error("Mesh memory unavailable") end
+        if not editable then memoryUnavailable = true; error("Mesh memory unavailable") end
         mesh = editable
         local vertices: {number}, positions: {Vector3} = {}, {}
         for i = 1, #geometry.Vertices, 3 do
@@ -71,7 +87,7 @@ local function load(source: ModuleScript, palette: string?)
         local rgb = paletteColors or geometry.Colors
         local grid = math.ceil(math.sqrt(#rgb / 3))
         local texture = AssetService:CreateEditableImage({Size = Vector2.one * grid * 8})
-        if not texture then error("Texture memory unavailable") end
+        if not texture then memoryUnavailable = true; error("Texture memory unavailable") end
         image = texture
         local uvs = atlas(editable, texture, rgb, grid)
         local normals: {[Vector3]: number} = {}
@@ -97,6 +113,7 @@ local function load(source: ModuleScript, palette: string?)
             if success then part = value; editable:Destroy(); mesh = nil end
         end
         local template = part or AssetService:CreateMeshPartAsync(content, options)
+        createdPart = template
         template.Name = "OriginalMesh"
         template.TextureContent = Content.fromObject(texture)
         template:SetAttribute("ArtPalette", palette)
@@ -104,14 +121,19 @@ local function load(source: ModuleScript, palette: string?)
         template.Material = Enum.Material.SmoothPlastic
         template.Anchored = true
         template.CanCollide, template.CanQuery, template.CanTouch = false, false, false
-        templates[key] = {Part = template, RetainedMesh = mesh, Texture = texture}
-        loaded:Fire(source.Name)
+        templates[key] = {Part = template, RetainedMesh = mesh, Texture = texture, Users = 0, IdleSince = os.clock()}
     end)
     if not ok then
+        if createdPart then createdPart:Destroy() end
         if mesh then mesh:Destroy() end
         if image then image:Destroy() end
         warn("[CreatureArt]", source.Name, problem)
     end
+    local message = string.lower(tostring(problem))
+    state.Loading = false
+    state.Retryable = not ok and (memoryUnavailable or string.find(message, "memory", 1, true) ~= nil or string.find(message, "budget", 1, true) ~= nil)
+    state.RetryAt = os.clock() + RETRY_COOLDOWN
+    state.Done:Fire()
 end
 
 function CreatureArt.Size(id: string, name: any, fallback: number, mutation: any?): number
@@ -127,22 +149,40 @@ end
 function CreatureArt.Get(id: string, mutation: string?): MeshPart?
     local source = sources:FindFirstChild(id)
     if not source or not source:IsA("ModuleScript") then return nil end
-    if not templates[id] then load(source) end
-    local normal = templates[id]
-    if not normal then return nil end
     local variantPart: Template? = nil
     if mutation == "Dourada" or mutation == "ArcoIris" then
         load(source, mutation)
         variantPart = templates[id .. ":" .. mutation]
     end
-    local template = variantPart or normal
+    if not variantPart and not templates[id] then load(source) end
+    local template = variantPart or templates[id]
+    if not template then return nil end
     local mesh = template.Part:Clone()
+    template.Users += 1
+    mesh.Destroying:Connect(function()
+        template.Users -= 1
+        if template.Users == 0 then template.IdleSince = os.clock() end
+    end)
     if not variantPart and mutation and mutation ~= "Normal" then
         for _, style in variants.Mutations do
             if style.Name == mutation then mesh.Color = Color3.new(1, 1, 1):Lerp(style.Color, .55); break end
         end
     end
     return mesh
+end
+
+local function releaseIdle()
+    local now = os.clock()
+    for key, template in templates do
+        if template.Users == 0 and now - template.IdleSince >= 1 then
+            templates[key] = nil
+            template.Part:Destroy()
+            template.Texture:Destroy()
+            if template.RetainedMesh then template.RetainedMesh:Destroy() end
+            local state = loads[key]
+            if state then state.Attempts, state.Retryable, state.RetryAt = 0, true, 0 end
+        end
+    end
 end
 
 function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight: number, maxExtent: number?): MeshPart?
@@ -171,5 +211,67 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
     mesh.Parent = model
     return mesh
 end
+
+function CreatureArt.TrackOn(model: Model, id: string, scale: number, rootHeight: number, maxExtent: number?, distance: number)
+    displays[model] = {Model = model, Id = id, Scale = scale, RootHeight = rootHeight, MaxExtent = maxExtent, Distance = distance}
+end
+
+local function hideOn(model: Model)
+    local mesh = model:FindFirstChild("OriginalMesh")
+    if not mesh then return end
+    for _, item in model:GetDescendants() do
+        if item:IsA("BillboardGui") and item.Adornee == mesh then
+            item.Adornee = model:FindFirstChild("Head") or model.PrimaryPart
+        end
+    end
+    mesh:Destroy()
+end
+
+function CreatureArt.UntrackOn(model: Model)
+    displays[model] = nil
+    hideOn(model)
+end
+
+-- The pack is available in every biome, but EditableMesh memory belongs to this
+-- client. Load the closest actors first and free meshes when their last clone leaves.
+task.spawn(function()
+    while script.Parent do
+        task.wait(.35)
+        releaseIdle()
+        local camera = Workspace.CurrentCamera
+        if not camera then continue end
+        local eye = camera.CFrame.Position
+        local nearby = {}
+        for model, display in displays do
+            local pivot = model.PrimaryPart
+            if not model.Parent then
+                displays[model] = nil
+            elseif pivot then
+                local distance = (pivot.Position - eye).Magnitude
+                local alreadyVisible = model:FindFirstChild("OriginalMesh") ~= nil
+                if distance <= display.Distance + (if alreadyVisible then 15 else 0) then
+                    table.insert(nearby, {Display = display, Distance = distance})
+                else
+                    hideOn(model)
+                end
+            end
+        end
+        table.sort(nearby, function(a, b) return a.Distance < b.Distance end)
+        for index = MAX_WORLD_DISPLAYS + 1, #nearby do hideOn(nearby[index].Display.Model) end
+        local loadsThisUpdate = 0
+        for index = 1, math.min(MAX_WORLD_DISPLAYS, #nearby) do
+            local display = nearby[index].Display
+            local model = display.Model
+            if model.Parent and displays[model] == display and not model:FindFirstChild("OriginalMesh") then
+                local mesh = CreatureArt.ShowOn(model, display.Id, display.Scale, display.RootHeight, display.MaxExtent)
+                if mesh then
+                    if displays[model] ~= display then hideOn(model) end
+                    loadsThisUpdate += 1
+                    if loadsThisUpdate >= 2 then break end
+                end
+            end
+        end
+    end
+end)
 
 return CreatureArt

@@ -663,7 +663,8 @@ end) end
 local openPanelRemote = remotes:WaitForChild("OpenPanel") :: RemoteEvent
 local allowedPanels = {Menu = true, Bestiario = true, Loja = true, Fusao = true, Diario = true, Rebirth = true,
     Ranking = true, Criaturas = true, Orbes = true, Auto = true, Codigos = true, Biomas = true,
-    Academia = true, Resgates = true, Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true}
+    Academia = true, Resgates = true, Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true,
+    VitrineOrbes = true}
 openPanelRemote.OnClientEvent:Connect(function(panelId: any)
     if typeof(panelId) ~= "string" or not allowedPanels[panelId] then return end
     -- A station prompt requests an open panel, rather than toggling it closed.

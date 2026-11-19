@@ -34,3 +34,10 @@ jobs:
           for runner in tests/run_*_tests.py; do python3 "$runner" --luau .tools/luau/luau; done
       - name: Build Roblox place
         run: .tools/rojo/rojo build default.project.json -o build/ThrowASphere.rbxlx
+      - name: Verify and build the bundled art
+        run: |
+          python3 scripts/Prepare-BundledArt.py verify
+          python3 scripts/Prepare-BundledArt.py restore --destination build/bundled-art
+          mkdir -p build/creature-art-staging
+          python3 scripts/Embed-CreatureArt.py build/ThrowASphere.rbxlx build/bundled-art/data build/creature-art-staging/ThrowASphere-ComModelos.rbxlx
+          python3 scripts/Embed-WorldArt.py build/creature-art-staging/ThrowASphere-ComModelos.rbxlx build/bundled-art/modelos_roblox build/ThrowASphere-ComModelos.rbxlx

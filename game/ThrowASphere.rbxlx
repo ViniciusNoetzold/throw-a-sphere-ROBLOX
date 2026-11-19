@@ -5599,12 +5599,13 @@ function Training.Start(player:Player,travel:boolean?):boolean
     if now<(requests[player] or 0) or sessions[player] or ctx.Data.IsBusy(player) or not ctx.Data.IsLoaded(player) or not profile or (ctx.Flight and ctx.Flight.IsActive(player)) then return false end
     requests[player]=now+Rules.RequestCooldown
     local lot=ctx.World.GetSanctuary(player)
-    local anchor=lot and lot:FindFirstChild("PersonalTraining")
+    local station=lot and lot:FindFirstChild("PersonalTraining")
+    local anchor=(if ctx.World.GetTrainingAnchor then ctx.World.GetTrainingAnchor(player) else nil) or station
     local character=player.Character
     local root=character and character:FindFirstChild("HumanoidRootPart")
     local humanoid=character and character:FindFirstChildOfClass("Humanoid")
     if not anchor or not anchor:IsA("BasePart") or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health<=0 then return false end
-    if not travel and (root.Position-anchor.Position).Magnitude>16 then return false end
+    if not travel and (not station or not station:IsA("BasePart") or (root.Position-station.Position).Magnitude>16) then return false end
     local interval = Rules.RepSeconds - machine(profile).Speed
     local s={Character=character,Root=root,Humanoid=humanoid,Anchored=root.Anchored,Speed=humanoid.WalkSpeed,AutoRotate=humanoid.AutoRotate,
         Anchor=anchor,Reps=0,StartedAt=now,Interval=interval,NextAt=now+interval,QTE=nil}
@@ -5622,6 +5623,7 @@ local function award(player: Player, stats: any): any
     local appliedForce = math.min(stats.Force, math.max(0, Rules.MaxStrength - p.ThrowStrength))
     p.ThrowStrength += appliedForce
     local leveled, academyXP = Math.AddXP(p, stats.XP, Rules)
+    if leveled and ctx.World.UpdateAcademyArt then ctx.World.UpdateAcademyArt(player, p.TrainingLevel) end
     local _, gainedPlayerXP = ctx.Progression.GrantXP(player, stats.PlayerXP)
     ctx.Data.MarkDirty(player)
     ctx.Data.Sync(player)
@@ -5808,6 +5810,218 @@ return Weather
       </Item>
       <Item class="ModuleScript" referent="90">
         <Properties>
+          <string name="Name">WorldArtService</string>
+          <string name="Source"><![CDATA[--!strict
+-- Native source models stay in ServerStorage. Only occupied gym annexes are cloned.
+local ServerStorage = game:GetService("ServerStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CollectionService = game:GetService("CollectionService")
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local TrainingRules = require(Shared.ConfigTraining)
+local Layout = require(Shared.ConfigWorld)
+local Config = require(Shared.Config)
+
+local WorldArt = {}
+type Gym = {Folder: Folder, Pivot: CFrame, Anchor: BasePart, Art: Model?, ArtLevel: number?}
+local gyms: {[Model]: Gym} = {}
+local ctx: any
+local helpers: any
+local root: Folder?
+local reserveEntry: Vector3?
+local reserveCenter = Vector3.new(-430, 0, 35)
+
+-- The authored pack has 21 stages named 01..200; the existing academy caps at
+-- 100. This visual-only mapping exposes every stage without changing XP/saves.
+function WorldArt.GetGymArtLevel(academyLevel: number): number
+    local progress = math.clamp((academyLevel - 1) / math.max(1, TrainingRules.MaxLevel - 1), 0, 1)
+    local stage = math.floor(progress * 20 + 1e-7)
+    return if stage == 0 then 1 else stage * 10
+end
+
+local function prepare(model: Model)
+    for _, item in model:GetDescendants() do
+        if item:IsA("BasePart") then
+            item.Anchored, item.CanTouch = true, false
+        end
+    end
+end
+
+local function fit(model: Model, maxSize: Vector3)
+    local _, size = model:GetBoundingBox()
+    local scale = math.min(1, maxSize.X / math.max(size.X, .1), maxSize.Z / math.max(size.Z, .1))
+    if scale < 1 then model:ScaleTo(model:GetScale() * scale) end
+end
+
+local function marker(model: Model, name: string): CFrame?
+    local found = model:FindFirstChild(name, true)
+    if found and found:IsA("Attachment") then return found.WorldCFrame end
+    if found and found:IsA("BasePart") then return found.CFrame end
+    return nil
+end
+
+local function canTravel(player: Player): boolean
+    return ctx ~= nil and ctx.Data ~= nil and ctx.Data.IsLoaded(player) and not ctx.Data.IsBusy(player)
+        and not (ctx.Training and ctx.Training.IsTraining(player))
+        and not (ctx.Flight and ctx.Flight.IsActive(player))
+end
+
+local function travel(player: Player, destination: Vector3)
+    if not canTravel(player) then return end
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    local body = character and character:FindFirstChild("HumanoidRootPart")
+    if not character or not humanoid or humanoid.Health <= 0 or not body or not body:IsA("BasePart") then return end
+    character:PivotTo(CFrame.lookAt(destination, destination - Vector3.zAxis * 10))
+    body.AssemblyLinearVelocity, body.AssemblyAngularVelocity = Vector3.zero, Vector3.zero
+end
+
+function WorldArt.GetTrainingAnchor(lot: Model): BasePart?
+    local gym = gyms[lot]
+    return if gym and gym.Art then gym.Anchor else nil
+end
+
+function WorldArt.GetReservePosition(): Vector3? return reserveEntry end
+
+function WorldArt.UpdateGym(lot: Model, academyLevel: number): boolean
+    local gym = gyms[lot]
+    if not gym then return false end
+    local level = WorldArt.GetGymArtLevel(academyLevel)
+    if gym.ArtLevel == level and gym.Art and gym.Art.Parent then return true end
+    local templates = ServerStorage:FindFirstChild("ImportedGyms")
+    local template = templates and templates:FindFirstChild(string.format("GaragemNivel%02d", level))
+    if not template or not template:IsA("Model") then return false end
+    local art = template:Clone()
+    art.Name = "NativeGym"
+    prepare(art)
+    fit(art, Vector3.new(128, 40, 128))
+    art:PivotTo(gym.Pivot)
+    local line = marker(art, "LinhaArremesso") or marker(art, "PivoArremesso")
+    if not line then art:Destroy(); return false end
+    -- The interaction/training anchor is independent of the art instance. A
+    -- level-up can replace geometry while an active repetition retains its anchor.
+    gym.Anchor.CFrame = line
+    art:SetAttribute("SourceArtLevel", level)
+    if gym.Art then gym.Art:Destroy() end
+    gym.Art, gym.ArtLevel = art, level
+    art.Parent = gym.Folder
+    gym.Folder:SetAttribute("AcademyLevel", academyLevel)
+    gym.Folder:SetAttribute("SourceArtLevel", level)
+    return true
+end
+
+function WorldArt.ReleaseGym(lot: Model)
+    local gym = gyms[lot]
+    if not gym then return end
+    if gym.Art then gym.Art:Destroy() end
+    gym.Art, gym.ArtLevel = nil, nil
+    gym.Folder:SetAttribute("AcademyLevel", nil)
+    gym.Folder:SetAttribute("SourceArtLevel", nil)
+end
+
+function WorldArt.RegisterGym(lot: Model, index: number)
+    if not root or not helpers or gyms[lot] or not ServerStorage:FindFirstChild("ImportedGyms") then return end
+    local center = Vector3.new(-255 + ((index - 1) % 4) * 170, 0, 365 + math.floor((index - 1) / 4) * 180)
+    local folder = Instance.new("Folder")
+    folder.Name, folder.Parent = "AcademyAnnex_" .. index, root
+    folder:SetAttribute("SanctuaryIndex", index)
+    helpers.Part(folder, "Foundation", Vector3.new(140, 3, 140), center + Vector3.new(0, -1.6, 0), Color3.fromRGB(82, 99, 91))
+    local pivot = CFrame.new(center + Vector3.new(6, .1, 47))
+    local entry = center + Vector3.new(0, 4, 58)
+    helpers.ProtectArea(folder, center, Vector3.new(140, 1, 140), entry, Color3.fromRGB(103, 159, 111))
+    local anchor = helpers.Part(folder, "TrainingAnchor", Vector3.new(.2, .2, .2), pivot.Position, Color3.new())
+    anchor.Transparency, anchor.CanCollide, anchor.CanTouch, anchor.CanQuery = 1, false, false, false
+    gyms[lot] = {Folder = folder, Pivot = pivot, Anchor = anchor}
+    helpers.Station(folder, "ReturnToSanctuary", center + Vector3.new(0, .8, 61), Color3.fromRGB(92, 214, 163), "VOLTAR AO SANTUÁRIO", function(player: Player)
+        travel(player, ctx.World.GetSanctuaryReturnPosition(player) or ctx.World.GetHubPosition())
+    end)
+    helpers.Station(folder, "AcademyPanel", center + Vector3.new(14, .8, 61), Color3.fromRGB(255, 183, 73), "TREINAR NA ACADEMIA", function(player: Player)
+        if ctx.World.GetSanctuary(player) == lot then ctx.Remotes.OpenPanel:FireClient(player, "Academia") end
+    end)
+    local platform = lot.PrimaryPart
+    if platform then
+        helpers.Station(lot, "VisitAcademy", platform.Position + Vector3.new(-13, .45, -18), Color3.fromRGB(255, 183, 73), "VISITAR ACADEMIA", function(player: Player)
+            if ctx.World.GetSanctuary(player) ~= lot then return end
+            travel(player, entry)
+        end)
+    end
+end
+
+local function reserveSamples(reserve: Model)
+    local available: {string} = {}
+    local sources = Shared:FindFirstChild("CreatureMeshes")
+    if not sources then return end
+    for id in Config.Creatures do
+        if sources:FindFirstChild(id) and (not ctx.AuthoredCreatures or ctx.AuthoredCreatures[id]) then table.insert(available, id) end
+    end
+    table.sort(available)
+    -- Prefer one authored species per biome, then fill to eight; these are
+    -- display actors, never SpawnService creatures or sanctuary income records.
+    local selected: {string}, used: {[string]: boolean} = {}, {}
+    for _, biome in Layout.BiomeOrder do
+        for _, id in available do
+            if Config.Creatures[id].Biome == biome and not used[id] then
+                table.insert(selected, id); used[id] = true; break
+            end
+        end
+    end
+    for _, id in available do
+        if #selected >= 8 then break end
+        if not used[id] then table.insert(selected, id); used[id] = true end
+    end
+    local display = Instance.new("Folder")
+    display.Name, display.Parent = "ReserveCreatures", reserve
+    for index, id in selected do
+        local at = marker(reserve, string.format("PosicaoPokemon%02d", index))
+        if not at then continue end
+        local home = at.Position + Vector3.new(0, 1.5, 0)
+        local actor = Instance.new("Model")
+        actor.Name = id
+        actor:SetAttribute("ReserveDisplay", true)
+        actor:SetAttribute("PenHome", home)
+        actor:SetAttribute("WalkPhase", index * 2.399963)
+        actor:SetAttribute("ArtScale", .8)
+        local body = helpers.Part(actor, "Body", Vector3.one, home, Color3.new())
+        local head = helpers.Part(actor, "Head", Vector3.one, home + Vector3.new(0, .6, -.9), Color3.new())
+        for _, item in {body, head} do
+            item.Transparency, item.CanCollide, item.CanTouch, item.CanQuery = 1, false, false, false
+        end
+        actor.PrimaryPart = body
+        helpers.Label(head, Config.Creatures[id].Name, Vector3.new(0, 1.5, 0))
+        actor.Parent = display
+        CollectionService:AddTag(actor, "SanctuaryWalker")
+    end
+end
+
+function WorldArt.Init(world: Folder, context: any, builders: any)
+    if root then return end
+    root, ctx, helpers = world, context or {}, builders
+    local source = ServerStorage:FindFirstChild("ImportedReserve")
+    if not source or not source:IsA("Model") then return end
+    local reserve = source:Clone()
+    reserve.Name = "NaturalReserve"
+    prepare(reserve)
+    fit(reserve, Vector3.new(128, 40, 128))
+    reserve:PivotTo(CFrame.new(reserveCenter + Vector3.new(0, .1, 49)))
+    helpers.Part(world, "ReserveFoundation", Vector3.new(144, 4, 128), reserveCenter + Vector3.new(0, -5.1, 0), Color3.fromRGB(110, 91, 64))
+    local entry = marker(reserve, "EntradaSantuario")
+    reserveEntry = (if entry then entry.Position else reserveCenter + Vector3.new(0, .1, 44)) + Vector3.new(0, 4, 0)
+    helpers.ProtectArea(reserve, reserveCenter, Vector3.new(144, 1, 128), reserveEntry, Color3.fromRGB(119, 173, 91))
+    reserve.Parent = world
+    reserveSamples(reserve)
+    helpers.Station(world, "VisitReserve", Vector3.new(-42, .8, 173), Color3.fromRGB(104, 208, 123), "RESERVA NATURAL\nVISITAR CRIATURAS", function(player: Player)
+        if reserveEntry then travel(player, reserveEntry) end
+    end)
+    helpers.Station(reserve, "ReturnToHub", reserveCenter + Vector3.new(0, .8, 52), Color3.fromRGB(104, 208, 123), "VOLTAR AO HUB", function(player: Player)
+        travel(player, ctx.World.GetHubPosition())
+    end)
+end
+
+return WorldArt
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="91">
+        <Properties>
           <string name="Name">WorldService</string>
           <string name="Source"><![CDATA[--!strict
 -- Generated world and interaction anchors shared by all Roblox builds.
@@ -5820,6 +6034,7 @@ local NumberFormatter = require(ReplicatedStorage:WaitForChild("Shared"):WaitFor
 local Layout = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
 
 local TrainingRules = require(ReplicatedStorage.Shared.ConfigTraining)
+local WorldArt = require(script.Parent.WorldArtService)
 
 local WorldService = {}
 local worldFolder: Folder? = nil
@@ -5986,6 +6201,7 @@ function WorldService.Init(context: any?)
 	folder.Name = "ThrowASphereWorld"
 	folder.Parent = Workspace
 	worldFolder = folder
+	WorldArt.Init(folder, ctx, {Part = part, Label = label, Station = station, ProtectArea = protectArea})
 	local grass = Color3.fromRGB(92, 176, 70)
 	part(folder, "Mainland", Vector3.new(1730, 48, 490), Vector3.new(525, -25, -11), Color3.fromRGB(111, 91, 65))
 	local hubFloor = part(folder, "Foundation", Vector3.new(290, 1, 330), Vector3.new(0, -0.6, 20), grass)
@@ -6058,6 +6274,7 @@ function WorldService.Init(context: any?)
 		end
 		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-18),Color3.fromRGB(255,200,70))
 		bar.CanCollide=false
+		WorldArt.RegisterGym(lot, index)
 	end
 	local tutorial = part(folder, "TutorialBoard", Vector3.new(26, 8, 1), Vector3.new(0, 5, 173), Color3.fromRGB(27, 40, 72))
 	label(tutorial, "THROW A SPHERE!\nCapture → Santuário → $/s\nEvolua sua orbe e treine na academia", Vector3.new(0, 1, 0))
@@ -6105,6 +6322,15 @@ function WorldService.Init(context: any?)
 end
 
 function WorldService.GetSanctuary(player: Player): Model? return if owners[player] then lots[owners[player]] else nil end
+function WorldService.GetTrainingAnchor(player: Player): BasePart?
+	local lot = WorldService.GetSanctuary(player)
+	return if lot then WorldArt.GetTrainingAnchor(lot) else nil
+end
+function WorldService.GetReservePosition(): Vector3? return WorldArt.GetReservePosition() end
+function WorldService.UpdateAcademyArt(player: Player, academyLevel: number)
+	local lot = WorldService.GetSanctuary(player)
+	if lot then WorldArt.UpdateGym(lot, academyLevel) end
+end
 function WorldService.GetSanctuaryReturnPosition(player: Player): Vector3?
 	local lot = WorldService.GetSanctuary(player)
 	local platform = lot and lot.PrimaryPart
@@ -6172,6 +6398,7 @@ function WorldService.ReleaseSanctuary(player: Player)
 	local textLabel = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
 	if textLabel then textLabel.Text = "SANTUÁRIO LIVRE" end
 	WorldService.UpdateTrainingMachine(player, 1, TrainingRules.Machines[1].Name)
+	WorldArt.ReleaseGym(lot)
 	owners[player] = nil
 	displaySignatures[player] = nil
 end
@@ -6248,6 +6475,7 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 	end
 	local machineTier = profile.TrainingMachine or 1
 	WorldService.UpdateTrainingMachine(player, machineTier, TrainingRules.Machines[machineTier].Name)
+	WorldService.UpdateAcademyArt(player, profile.TrainingLevel or 1)
 	local signature = table.concat(profile.SanctuarySlots, ":")
 	if displaySignatures[player] == signature then return end
 	displaySignatures[player] = signature
@@ -6299,21 +6527,21 @@ return WorldService
       </Item>
     </Item>
   </Item>
-  <Item class="SoundService" referent="91">
+  <Item class="SoundService" referent="92">
     <Properties>
       <string name="Name">SoundService</string>
       <bool name="RespectFilteringEnabled">true</bool>
     </Properties>
   </Item>
-  <Item class="StarterPlayer" referent="92">
+  <Item class="StarterPlayer" referent="93">
     <Properties>
       <string name="Name">StarterPlayer</string>
     </Properties>
-    <Item class="StarterPlayerScripts" referent="93">
+    <Item class="StarterPlayerScripts" referent="94">
       <Properties>
         <string name="Name">StarterPlayerScripts</string>
       </Properties>
-      <Item class="LocalScript" referent="94">
+      <Item class="LocalScript" referent="95">
         <Properties>
           <string name="Name">BaseHUD</string>
           <string name="Source"><![CDATA[--!strict
@@ -6981,7 +7209,8 @@ end) end
 local openPanelRemote = remotes:WaitForChild("OpenPanel") :: RemoteEvent
 local allowedPanels = {Menu = true, Bestiario = true, Loja = true, Fusao = true, Diario = true, Rebirth = true,
     Ranking = true, Criaturas = true, Orbes = true, Auto = true, Codigos = true, Biomas = true,
-    Academia = true, Resgates = true, Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true}
+    Academia = true, Resgates = true, Missoes = true, Consumiveis = true, GrupoVIP = true, Trocas = true, Leiloes = true,
+    VitrineOrbes = true}
 openPanelRemote.OnClientEvent:Connect(function(panelId: any)
     if typeof(panelId) ~= "string" or not allowedPanels[panelId] then return end
     -- A station prompt requests an open panel, rather than toggling it closed.
@@ -6992,7 +7221,7 @@ requestState:FireServer()
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="95">
+      <Item class="ModuleScript" referent="96">
         <Properties>
           <string name="Name">CameraFocus</string>
           <string name="Source"><![CDATA[--!strict
@@ -7051,7 +7280,7 @@ return CameraFocus
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="96">
+      <Item class="LocalScript" referent="97">
         <Properties>
           <string name="Name">ClientSanctuaryController</string>
           <string name="Source"><![CDATA[--!strict
@@ -7084,18 +7313,15 @@ local function observe(instance: Instance)
         Left = if left and left:IsA("BasePart") then left else nil,
         Right = if right and right:IsA("BasePart") then right else nil,
     }
-    task.defer(CreatureArt.ShowOn, instance, instance.Name, instance:GetAttribute("ArtScale") or 1, 1, 11)
+    CreatureArt.TrackOn(instance, instance.Name, instance:GetAttribute("ArtScale") or 1, 1, 11, 95)
 end
 
 for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model) end
 CollectionService:GetInstanceAddedSignal("SanctuaryWalker"):Connect(function(model) task.defer(observe, model) end)
 CollectionService:GetInstanceRemovedSignal("SanctuaryWalker"):Connect(function(model)
-    if model:IsA("Model") then walkers[model] = nil end
-end)
-
-CreatureArt.Loaded:Connect(function(id: string)
-    for model in walkers do
-        if model.Name == id then CreatureArt.ShowOn(model, id, model:GetAttribute("ArtScale") or 1, 1, 11) end
+    if model:IsA("Model") then
+        CreatureArt.UntrackOn(model)
+        walkers[model] = nil
     end
 end)
 
@@ -7135,7 +7361,7 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="97">
+      <Item class="LocalScript" referent="98">
         <Properties>
           <string name="Name">ClientThrowController</string>
           <string name="Source"><![CDATA[--!strict
@@ -7455,7 +7681,7 @@ player.CharacterRemoving:Connect(idle)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="98">
+      <Item class="LocalScript" referent="99">
         <Properties>
           <string name="Name">ClientTrainingController</string>
           <string name="Source"><![CDATA[--!strict
@@ -7640,7 +7866,7 @@ Players.PlayerRemoving:Connect(stopPose)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="99">
+      <Item class="LocalScript" referent="100">
         <Properties>
           <string name="Name">ClientWorldController</string>
           <string name="Source"><![CDATA[--!strict
@@ -7693,7 +7919,7 @@ local function observe(model: Instance)
         item.Peak, item.Beam = peak, beam
     end
     tracked[model] = item
-    task.defer(CreatureArt.ShowOn, model, id, scale, 1.1 * scale)
+    CreatureArt.TrackOn(model, id, scale, 1.1 * scale, nil, 115)
 end
 local function observeWildFolder(folder: Instance)
     folder.ChildAdded:Connect(observe)
@@ -7712,14 +7938,6 @@ else
 end
 for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
 CollectionService:GetInstanceAddedSignal("PodiumCreature"):Connect(function(model) task.defer(observe, model) end)
-CreatureArt.Loaded:Connect(function(id: string)
-    for model in tracked do
-        if model:GetAttribute("CreatureId") == id then
-            local scale = model:GetAttribute("ArtScale") or 1
-            CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
-        end
-    end
-end)
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value
@@ -7741,7 +7959,12 @@ task.spawn(function()
         for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
         local hue = (Workspace:GetServerTimeNow() * 0.12) % 1
         for model, item in tracked do
-            if not model.Parent then if item.Peak then item.Peak:Destroy() end; tracked[model] = nil; continue end
+            if not model.Parent then
+                if item.Peak then item.Peak:Destroy() end
+                CreatureArt.UntrackOn(model)
+                tracked[model] = nil
+                continue
+            end
             local originalMesh = model:FindFirstChild("OriginalMesh")
             if originalMesh and originalMesh:IsA("BasePart") and model.PrimaryPart then
                 local scale = model:GetAttribute("ArtScale") or 1
@@ -7767,7 +7990,7 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="100">
+      <Item class="ModuleScript" referent="101">
         <Properties>
           <string name="Name">CreatureArt</string>
           <string name="Source"><![CDATA[--!strict
@@ -7775,20 +7998,24 @@ end)
 local AssetService = game:GetService("AssetService")
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 local shared = ReplicatedStorage:WaitForChild("Shared")
 local sources = shared:WaitForChild("CreatureMeshes")
 local variants = require(shared.ConfigMutacoes)
 
 type Geometry = {Vertices: {number}, Faces: {number}, Colors: {number}}
 type MeshData = Geometry & {Palettes: {[string]: {number}}?, Shapes: {[string]: Geometry}?, Scales: {[string]: number}?, ReferenceScale: number?}
-type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage}
+type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage, Users: number, IdleSince: number}
+type LoadState = {Loading: boolean, Attempts: number, RetryAt: number, Retryable: boolean, Done: BindableEvent}
+type WorldDisplay = {Model: Model, Id: string, Scale: number, RootHeight: number, MaxExtent: number?, Distance: number}
 local CreatureArt = {}
 local templates: {[string]: Template} = {}
-local attempted: {[string]: boolean} = {}
+local loads: {[string]: LoadState} = {}
+local MAX_LOAD_ATTEMPTS, RETRY_COOLDOWN = 3, 5
 local scales: {[string]: {[string]: number}} = {}
 local referenceScales: {[string]: number} = {}
-local loaded = Instance.new("BindableEvent")
-CreatureArt.Loaded = loaded.Event
+local displays: {[Model]: WorldDisplay} = {}
+local MAX_WORLD_DISPLAYS = 16
 
 -- The source pack has Blender materials rather than image files. Rasterize the
 -- original palette into a padded UV atlas so every displayed mesh has a texture.
@@ -7820,10 +8047,22 @@ end
 
 local function load(source: ModuleScript, palette: string?)
     local key = if palette then source.Name .. ":" .. palette else source.Name
-    if attempted[key] then return end
-    attempted[key] = true
+    if templates[key] then return end
+    local state = loads[key]
+    if state then
+        -- CreateMeshPartAsync/baking may yield. All consumers await the same result,
+        -- including a reveal that starts while a world instance is loading.
+        if state.Loading then state.Done.Event:Wait(); return end
+        if not state.Retryable or state.Attempts >= MAX_LOAD_ATTEMPTS or os.clock() < state.RetryAt then return end
+    else
+        state = {Loading = false, Attempts = 0, RetryAt = 0, Retryable = false, Done = Instance.new("BindableEvent")}
+        loads[key] = state
+    end
+    state.Loading, state.Attempts = true, state.Attempts + 1
     local mesh: EditableMesh? = nil
     local image: EditableImage? = nil
+    local createdPart: MeshPart? = nil
+    local memoryUnavailable = false
     local ok, problem = pcall(function()
         local data: MeshData = HttpService:JSONDecode(require(source))
         scales[source.Name] = data.Scales or {}
@@ -7832,7 +8071,7 @@ local function load(source: ModuleScript, palette: string?)
         local paletteColors = if palette and data.Palettes then data.Palettes[palette] else nil
         if palette and geometry == data and not paletteColors then return end
         local editable = AssetService:CreateEditableMesh()
-        if not editable then error("Mesh memory unavailable") end
+        if not editable then memoryUnavailable = true; error("Mesh memory unavailable") end
         mesh = editable
         local vertices: {number}, positions: {Vector3} = {}, {}
         for i = 1, #geometry.Vertices, 3 do
@@ -7843,7 +8082,7 @@ local function load(source: ModuleScript, palette: string?)
         local rgb = paletteColors or geometry.Colors
         local grid = math.ceil(math.sqrt(#rgb / 3))
         local texture = AssetService:CreateEditableImage({Size = Vector2.one * grid * 8})
-        if not texture then error("Texture memory unavailable") end
+        if not texture then memoryUnavailable = true; error("Texture memory unavailable") end
         image = texture
         local uvs = atlas(editable, texture, rgb, grid)
         local normals: {[Vector3]: number} = {}
@@ -7869,6 +8108,7 @@ local function load(source: ModuleScript, palette: string?)
             if success then part = value; editable:Destroy(); mesh = nil end
         end
         local template = part or AssetService:CreateMeshPartAsync(content, options)
+        createdPart = template
         template.Name = "OriginalMesh"
         template.TextureContent = Content.fromObject(texture)
         template:SetAttribute("ArtPalette", palette)
@@ -7876,14 +8116,19 @@ local function load(source: ModuleScript, palette: string?)
         template.Material = Enum.Material.SmoothPlastic
         template.Anchored = true
         template.CanCollide, template.CanQuery, template.CanTouch = false, false, false
-        templates[key] = {Part = template, RetainedMesh = mesh, Texture = texture}
-        loaded:Fire(source.Name)
+        templates[key] = {Part = template, RetainedMesh = mesh, Texture = texture, Users = 0, IdleSince = os.clock()}
     end)
     if not ok then
+        if createdPart then createdPart:Destroy() end
         if mesh then mesh:Destroy() end
         if image then image:Destroy() end
         warn("[CreatureArt]", source.Name, problem)
     end
+    local message = string.lower(tostring(problem))
+    state.Loading = false
+    state.Retryable = not ok and (memoryUnavailable or string.find(message, "memory", 1, true) ~= nil or string.find(message, "budget", 1, true) ~= nil)
+    state.RetryAt = os.clock() + RETRY_COOLDOWN
+    state.Done:Fire()
 end
 
 function CreatureArt.Size(id: string, name: any, fallback: number, mutation: any?): number
@@ -7899,22 +8144,40 @@ end
 function CreatureArt.Get(id: string, mutation: string?): MeshPart?
     local source = sources:FindFirstChild(id)
     if not source or not source:IsA("ModuleScript") then return nil end
-    if not templates[id] then load(source) end
-    local normal = templates[id]
-    if not normal then return nil end
     local variantPart: Template? = nil
     if mutation == "Dourada" or mutation == "ArcoIris" then
         load(source, mutation)
         variantPart = templates[id .. ":" .. mutation]
     end
-    local template = variantPart or normal
+    if not variantPart and not templates[id] then load(source) end
+    local template = variantPart or templates[id]
+    if not template then return nil end
     local mesh = template.Part:Clone()
+    template.Users += 1
+    mesh.Destroying:Connect(function()
+        template.Users -= 1
+        if template.Users == 0 then template.IdleSince = os.clock() end
+    end)
     if not variantPart and mutation and mutation ~= "Normal" then
         for _, style in variants.Mutations do
             if style.Name == mutation then mesh.Color = Color3.new(1, 1, 1):Lerp(style.Color, .55); break end
         end
     end
     return mesh
+end
+
+local function releaseIdle()
+    local now = os.clock()
+    for key, template in templates do
+        if template.Users == 0 and now - template.IdleSince >= 1 then
+            templates[key] = nil
+            template.Part:Destroy()
+            template.Texture:Destroy()
+            if template.RetainedMesh then template.RetainedMesh:Destroy() end
+            local state = loads[key]
+            if state then state.Attempts, state.Retryable, state.RetryAt = 0, true, 0 end
+        end
+    end
 end
 
 function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight: number, maxExtent: number?): MeshPart?
@@ -7944,19 +8207,155 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
     return mesh
 end
 
+function CreatureArt.TrackOn(model: Model, id: string, scale: number, rootHeight: number, maxExtent: number?, distance: number)
+    displays[model] = {Model = model, Id = id, Scale = scale, RootHeight = rootHeight, MaxExtent = maxExtent, Distance = distance}
+end
+
+local function hideOn(model: Model)
+    local mesh = model:FindFirstChild("OriginalMesh")
+    if not mesh then return end
+    for _, item in model:GetDescendants() do
+        if item:IsA("BillboardGui") and item.Adornee == mesh then
+            item.Adornee = model:FindFirstChild("Head") or model.PrimaryPart
+        end
+    end
+    mesh:Destroy()
+end
+
+function CreatureArt.UntrackOn(model: Model)
+    displays[model] = nil
+    hideOn(model)
+end
+
+-- The pack is available in every biome, but EditableMesh memory belongs to this
+-- client. Load the closest actors first and free meshes when their last clone leaves.
+task.spawn(function()
+    while script.Parent do
+        task.wait(.35)
+        releaseIdle()
+        local camera = Workspace.CurrentCamera
+        if not camera then continue end
+        local eye = camera.CFrame.Position
+        local nearby = {}
+        for model, display in displays do
+            local pivot = model.PrimaryPart
+            if not model.Parent then
+                displays[model] = nil
+            elseif pivot then
+                local distance = (pivot.Position - eye).Magnitude
+                local alreadyVisible = model:FindFirstChild("OriginalMesh") ~= nil
+                if distance <= display.Distance + (if alreadyVisible then 15 else 0) then
+                    table.insert(nearby, {Display = display, Distance = distance})
+                else
+                    hideOn(model)
+                end
+            end
+        end
+        table.sort(nearby, function(a, b) return a.Distance < b.Distance end)
+        for index = MAX_WORLD_DISPLAYS + 1, #nearby do hideOn(nearby[index].Display.Model) end
+        local loadsThisUpdate = 0
+        for index = 1, math.min(MAX_WORLD_DISPLAYS, #nearby) do
+            local display = nearby[index].Display
+            local model = display.Model
+            if model.Parent and displays[model] == display and not model:FindFirstChild("OriginalMesh") then
+                local mesh = CreatureArt.ShowOn(model, display.Id, display.Scale, display.RootHeight, display.MaxExtent)
+                if mesh then
+                    if displays[model] ~= display then hideOn(model) end
+                    loadsThisUpdate += 1
+                    if loadsThisUpdate >= 2 then break end
+                end
+            end
+        end
+    end
+end)
+
 return CreatureArt
 ]]></string>
         </Properties>
       </Item>
-      <Item class="Folder" referent="101">
+      <Item class="Folder" referent="102">
         <Properties>
           <string name="Name">Throw</string>
         </Properties>
-        <Item class="ModuleScript" referent="102">
+        <Item class="ModuleScript" referent="103">
           <Properties>
             <string name="Name">OrbVisual</string>
             <string name="Source"><![CDATA[--!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Shared = ReplicatedStorage:WaitForChild("Shared")
 local OrbVisual = {}
+
+local importedNames: {[string]: string} = {
+    Comum = "Orbe001_Comum",
+    Esmeralda = "Orbe100_Esmeralda",
+    Rubi = "Orbe080_Vulcanica",
+    Safira = "Orbe120_Glacial",
+    Runica = "Orbe060_Aco",
+    Hextech = "Orbe140_Plasma",
+    Cosmica = "Orbe160_Cosmica",
+    Mestre = "Orbe180_Dourada",
+    Prismatica = "Orbe200_Prisma",
+}
+
+function OrbVisual.GetImportedModels(): {Model}
+    local folder = Shared:FindFirstChild("ImportedOrbModels")
+    local models: {Model} = {}
+    if folder then
+        for _, model in folder:GetChildren() do
+            if model:IsA("Model") and model.PrimaryPart then table.insert(models, model) end
+        end
+    end
+    table.sort(models, function(a, b) return a.Name < b.Name end)
+    return models
+end
+
+function OrbVisual.CloneImported(source: Model, diameter: number): (Model?, BasePart?)
+    local model = source:Clone()
+    local core = model.PrimaryPart
+    if not core then
+        model:Destroy()
+        return nil, nil
+    end
+    local _, size = model:GetBoundingBox()
+    local extent = math.max(size.X, size.Y, size.Z)
+    if extent <= 0 then
+        model:Destroy()
+        return nil, nil
+    end
+    model.Name = "Orb"
+    model:SetAttribute("ImportedOrb", source.Name)
+    model:ScaleTo(model:GetScale() * diameter / extent)
+    model:PivotTo(CFrame.identity)
+    return model, core
+end
+
+function OrbVisual.GetLidParts(model: Model): {[BasePart]: CFrame}
+    local pivot = model:GetPivot()
+    local lid: {[BasePart]: CFrame} = {}
+    if model:GetAttribute("ImportedOrb") then
+        for _, folderName in {"Casca", "Acabamentos"} do
+            local folder = model:FindFirstChild(folderName)
+            if folder then
+                for _, part in folder:GetDescendants() do
+                    if part:IsA("BasePart") then
+                        local offset = pivot:ToObjectSpace(part.CFrame)
+                        if offset.Y > .025 and part.Name ~= "Canal central" then lid[part] = offset end
+                    end
+                end
+            end
+        end
+    else
+        local crown = model:FindFirstChild("Crown")
+        if crown and crown:IsA("BasePart") then lid[crown] = pivot:ToObjectSpace(crown.CFrame) end
+    end
+    return lid
+end
+
+function OrbVisual.GetLightPart(model: Model): BasePart?
+    local light = model:FindFirstChild("Prism") or model:FindFirstChild("Indicador do fecho", true)
+        or model:FindFirstChild("Aro do fecho", true)
+    return if light and light:IsA("BasePart") then light else nil
+end
 
 type Style = {Fittings: number, Metal: Color3, Shell: Color3, Halo: boolean?}
 local steel = Color3.fromRGB(179, 209, 224)
@@ -7974,6 +8373,13 @@ local styles: {[string]: Style} = {
 }
 
 function OrbVisual.Create(color: Color3, diameter: number, orbId: string?): (Model, BasePart)
+    local folder = Shared:FindFirstChild("ImportedOrbModels")
+    local assetName = if orbId then importedNames[orbId] else nil
+    local source = if folder and assetName then folder:FindFirstChild(assetName) else nil
+    if source and source:IsA("Model") then
+        local imported, core = OrbVisual.CloneImported(source, diameter)
+        if imported and core then return imported, core end
+    end
     local model = Instance.new("Model")
     model.Name = "Orb"
     local style = if orbId then styles[orbId] or baseStyle else baseStyle
@@ -8021,7 +8427,7 @@ return OrbVisual
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="103">
+        <Item class="ModuleScript" referent="104">
           <Properties>
             <string name="Name">RevealDirector</string>
             <string name="Source"><![CDATA[--!strict
@@ -8058,6 +8464,17 @@ local function preview(id: string, mutation: string?): Model
         mesh.CFrame = CFrame.new()
         mesh.Parent = model
         model.PrimaryPart = mesh
+    else
+        -- A native marker keeps the reveal readable if local mesh generation is
+        -- unavailable; it never substitutes a creature ID or changes the result.
+        local marker = Instance.new("Part")
+        marker.Name, marker.Size = "ArtUnavailable", Vector3.one * 1.8
+        marker.CFrame = CFrame.Angles(0, math.rad(45), math.rad(35))
+        marker.Color = if Config.Creatures[id] then Config.Creatures[id].BodyColor else Color3.fromRGB(134, 196, 255)
+        marker.Material, marker.Anchored = Enum.Material.SmoothPlastic, true
+        marker.CanCollide, marker.CanQuery, marker.CanTouch = false, false, false
+        marker.Parent, model.PrimaryPart = model, marker
+        model:SetAttribute("ArtFallback", true)
     end
     return model
 end
@@ -8091,6 +8508,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
         end
     end
     creature.Parent = world
+    if creature:GetAttribute("ArtFallback") then label(overlay, "VISUAL 3D INDISPONÍVEL", .84, 20, 12, Color3.fromRGB(211, 222, 255)) end
     local colors: {[BasePart]: Color3} = {}
     local transparencies: {[BasePart]: number} = {}
     for _, p in creature:GetDescendants() do if p:IsA("BasePart") then colors[p] = p.Color;transparencies[p]=p.Transparency;p.Color = Color3.new();p.Transparency=1 end end
@@ -8101,15 +8519,19 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     local radius = math.max(size.X,size.Y,size.Z) * 2.2
     local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5), data.OrbId)
     captureOrb.Parent = world
-    local crown = captureOrb:FindFirstChild("Crown") :: BasePart?
-    local prism = captureOrb:FindFirstChild("Prism") :: BasePart?
-    local crownOffset = if crown then captureOrb:GetPivot():ToObjectSpace(crown.CFrame) else CFrame.identity
+    local lid = OrbVisual.GetLidParts(captureOrb)
+    local prism = OrbVisual.GetLightPart(captureOrb)
     local prismColor = if prism then prism.Color else tier.Color
     local intro = FlightRules.CaptureIntroSeconds
     local absorptionEnd = .95
+    local lastGap = 0
     local function poseOrb(frame: CFrame, gap: number)
         captureOrb:PivotTo(frame)
-        if crown then crown.CFrame = frame * crownOffset * CFrame.new(0, gap, 0) * CFrame.Angles(gap * .25, 0, 0) end
+        if gap ~= 0 or lastGap ~= 0 then
+            local opening = frame * CFrame.new(0, gap, 0) * CFrame.Angles(gap * .25, 0, 0)
+            for part, offset in lid do part.CFrame = opening * offset end
+        end
+        lastGap = gap
     end
     local burst: {Frame} = {}
     for i = 1, (if reduced then 0 else 5 + tier.Rank * 4) do
@@ -8351,7 +8773,7 @@ return Director
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="104">
+        <Item class="ModuleScript" referent="105">
           <Properties>
             <string name="Name">ThrowPose</string>
             <string name="Source"><![CDATA[--!strict
@@ -8404,11 +8826,11 @@ return Pose
           </Properties>
         </Item>
       </Item>
-      <Item class="Folder" referent="105">
+      <Item class="Folder" referent="106">
         <Properties>
           <string name="Name">UI</string>
         </Properties>
-        <Item class="ModuleScript" referent="106">
+        <Item class="ModuleScript" referent="107">
           <Properties>
             <string name="Name">CommercePanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -8746,7 +9168,7 @@ return Commerce
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="107">
+        <Item class="ModuleScript" referent="108">
           <Properties>
             <string name="Name">GameplayPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -9178,7 +9600,7 @@ return View
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="108">
+        <Item class="ModuleScript" referent="109">
           <Properties>
             <string name="Name">HUDIcons</string>
             <string name="Source"><![CDATA[--!strict
@@ -9368,7 +9790,7 @@ return Icons
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="109">
+        <Item class="ModuleScript" referent="110">
           <Properties>
             <string name="Name">HUDPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -9406,6 +9828,7 @@ Panels.Titles = {
     Auto = "AUTO-ARREMESSO", Codigos = "CÓDIGOS", Menu = "EXPLORE SEU SANTUÁRIO",
     Biomas = "BIOMAS & PRAÇA DE TROCAS", GrupoVIP = "GRUPO & VIP", Trocas = "TROCAS SEGURAS", Leiloes = "LEILÕES POR MOEDAS",
     Consumiveis = "CONSUMÍVEIS & POÇÕES", Academia = "ACADEMIA", Resgates = "RESGATES DA PISTA",
+    VitrineOrbes = "VITRINE DE ORBES",
 }
 
 local function hint(parent: Instance, content: string, color: Color3?): TextLabel
@@ -9701,11 +10124,60 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         return
     end
 
+    if kind == "VitrineOrbes" then
+        local sources = OrbVisual.GetImportedModels()
+        if #sources == 0 then
+            hint(parent, "A vitrine está disponível na versão com modelos.")
+            return
+        end
+        local viewport = Instance.new("ViewportFrame")
+        viewport.Name, viewport.Size = "OrbShowcase", UDim2.new(1, 0, 1, -86)
+        viewport.BackgroundTransparency = 1
+        viewport.Ambient, viewport.LightColor = Color3.fromRGB(170, 185, 211), C.White
+        viewport.Parent = parent
+        local world = Instance.new("WorldModel")
+        world.Parent = viewport
+        local camera = Instance.new("Camera")
+        camera.FieldOfView, camera.CFrame, camera.Parent = 38, CFrame.lookAt(Vector3.new(2.1, 1.45, -4.7), Vector3.zero), viewport
+        viewport.CurrentCamera = camera
+        local caption = W.Label(parent, "OrbName", "", UDim2.new(0, 4, 1, -86), UDim2.new(1, -8, 0, 32), 17, C.Gold, true)
+        local previous = W.Button(parent, "PreviousOrb", "ANTERIOR", UDim2.new(0, 4, 1, -47), UDim2.new(.33, -8, 0, 44), C.Blue, 12)
+        local back = W.Button(parent, "BackToOrbs", "EVOLUÇÕES", UDim2.new(.33, 4, 1, -47), UDim2.new(.34, -8, 0, 44), C.Purple, 12)
+        local nextOrb = W.Button(parent, "NextOrb", "PRÓXIMA", UDim2.new(.67, 4, 1, -47), UDim2.new(.33, -8, 0, 44), C.Blue, 12)
+        local index = 1
+        local function show()
+            world:ClearAllChildren()
+            local source = sources[index]
+            local model = OrbVisual.CloneImported(source, 2.2)
+            if model then model.Parent = world end
+            local name = source:FindFirstChild("NomeOrbe")
+            local title = if name and name:IsA("StringValue") then name.Value else source.Name
+            caption.Text = string.format("%s  ·  %d/%d", title, index, #sources)
+        end
+        previous.Activated:Connect(function()
+            index = (index - 2) % #sources + 1
+            show()
+        end)
+        nextOrb.Activated:Connect(function()
+            index = index % #sources + 1
+            show()
+        end)
+        back.Activated:Connect(function() actions.Open("Orbes") end)
+        show()
+        return
+    end
+
     if kind == "Orbes" then
         local fragments = state and state.OrbFragments or 0
         hint(parent, "Orbes evoluídas têm uso livre. Fragmentos para desconto: " .. Numbers.Format(fragments))
         local tier = state and state.OrbTier or 1
         local list = W.List(parent, "OrbList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
+        local imported = OrbVisual.GetImportedModels()
+        if #imported > 0 then
+            local showcase = W.Button(list, "OpenOrbShowcase", "VITRINE 3D  ·  " .. #imported .. " ORBES", UDim2.new(), UDim2.new(1, -2, 0, 44), C.Purple, 14)
+            showcase.LayoutOrder = 0
+            showcase.Activated:Connect(function() actions.Open("VitrineOrbes") end)
+        end
         local order = table.clone(Panels.OrbOrder)
         if state and state.Benefits and state.Benefits.EternalPrism then table.insert(order, "Prismatica") end
         for index, id in order do
@@ -9718,17 +10190,19 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             local row = card(list, id, 124, orb.Color)
             row.LayoutOrder = index
             local medallion = badge(row, orb.Color, "Orb")
-            local pictogram = medallion:FindFirstChild("Pictogram")
-            if pictogram then pictogram:Destroy() end
-            local preview = Instance.new("ViewportFrame")
-            preview.Name, preview.Size = "OrbModel", UDim2.fromScale(1, 1)
-            preview.BackgroundTransparency, preview.Parent = 1, medallion
-            preview.Ambient, preview.LightColor = Color3.fromRGB(175, 187, 204), Color3.new(1, 1, 1)
-            local camera = Instance.new("Camera")
-            camera.FieldOfView, camera.CFrame, camera.Parent = 35, CFrame.lookAt(Vector3.new(1.14, .96, -1.65), Vector3.zero), preview
-            preview.CurrentCamera = camera
-            local model = OrbVisual.Create(orb.Color, 1, id)
-            model.Parent = preview
+            if #imported == 0 then
+                local pictogram = medallion:FindFirstChild("Pictogram")
+                if pictogram then pictogram:Destroy() end
+                local preview = Instance.new("ViewportFrame")
+                preview.Name, preview.Size = "OrbModel", UDim2.fromScale(1, 1)
+                preview.BackgroundTransparency, preview.Parent = 1, medallion
+                preview.Ambient, preview.LightColor = Color3.fromRGB(175, 187, 204), Color3.new(1, 1, 1)
+                local camera = Instance.new("Camera")
+                camera.FieldOfView, camera.CFrame, camera.Parent = 35, CFrame.lookAt(Vector3.new(1.14, .96, -1.65), Vector3.zero), preview
+                preview.CurrentCamera = camera
+                local model = OrbVisual.Create(orb.Color, 1, id)
+                model.Parent = preview
+            end
             W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
             local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
             W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power) .. " · Raros ×" .. Numbers.Format(orb.RareBoost, 2),
@@ -9757,7 +10231,7 @@ return Panels
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="110">
+        <Item class="ModuleScript" referent="111">
           <Properties>
             <string name="Name">HUDWidgets</string>
             <string name="Source"><![CDATA[--!strict
@@ -9988,7 +10462,7 @@ return Widgets
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="111">
+        <Item class="ModuleScript" referent="112">
           <Properties>
             <string name="Name">ShopView</string>
             <string name="Source"><![CDATA[--!strict
@@ -10449,7 +10923,7 @@ return ShopView
       </Item>
     </Item>
   </Item>
-  <Item class="Workspace" referent="112">
+  <Item class="Workspace" referent="113">
     <Properties>
       <string name="Name">Workspace</string>
       <float name="FallenPartsDestroyHeight">-100</float>

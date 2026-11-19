@@ -33,6 +33,7 @@ local Training=(function()
 end)()
 local profile,busy,flight,benefits,messages
 local savedTier, worldTier = 0, 0
+local academyAnchor, artLevel = nil, 0
 local remotes={}
 for _,name in {'StartTraining','StopTraining','TrainingQTE'}do remotes[name]={OnServerEvent=signal()}end
 remotes.TrainingUpdate={FireClient=function(_,_,data)table.insert(messages,data)end}
@@ -40,14 +41,15 @@ remotes.TrainingPose={FireAllClients=function()end}
 local ctx={DisableLoops=true,Remotes=remotes,Data={Get=function()return profile end,IsBusy=function()return busy end,IsLoaded=function()return profile~=nil end,
  MarkDirty=function()end,Sync=function()end,AddSnapshotProvider=function()end,
  TryLock=function()return not busy end,Unlock=function()end,SaveNow=function()savedTier=profile.TrainingMachine;return true end},
- World={UpdateTrainingMachine=function(_,tier)worldTier=tier end,GetSanctuary=function()return {FindFirstChild=function()return anchor end}end},Flight={IsActive=function()return flight end},
+ World={UpdateTrainingMachine=function(_,tier)worldTier=tier end,GetSanctuary=function()return {FindFirstChild=function()return anchor end}end,
+ GetTrainingAnchor=function()return academyAnchor end,UpdateAcademyArt=function(_,level)artLevel=level end},Flight={IsActive=function()return flight end},
  Monetization={GetBenefits=function()return benefits end},Progression={GrantXP=function(_,xp)profile.XP+=xp;return false,xp end}}
 Training.Init(ctx)
 local function advance(seconds)now+=seconds;Training.Tick()end
 local count=0
 local function test(name,f)
  Training.Stop(player);now+=10;messages={};profile={TrainingLevel=1,TrainingXP=0,ThrowStrength=10,XP=0}
- busy,flight,benefits=false,false,{};player.Character=character;root.Parent=true;root.Position=Vector3.new(0,0,0);hum.Health=100
+ busy,flight,benefits=false,false,{};academyAnchor,artLevel=nil,0;player.Character=character;root.Parent=true;root.Position=Vector3.new(0,0,0);hum.Health=100
  f();count+=1;print('PASS '..name)
 end
 local function three()for _=1,3 do advance(Rules.RepSeconds+.01)end end
@@ -72,6 +74,19 @@ test('busy profiles and active flight reject start',function()busy=true;assert(n
 test('busy transaction pauses cycles without catchup burst',function()Training.Start(player,true);busy=true;advance(100);assert(profile.ThrowStrength==10);busy=false;advance(.21);assert(profile.ThrowStrength==11)end)
 test('station interaction validates distance',function()root.Position=Vector3.new(500,0,0);assert(not Training.Start(player,false))end)
 test('academy button travels only to server owned station',function()root.Position=Vector3.new(500,0,0);assert(Training.Start(player,true));assert(root.Position.X==anchor.Position.X and root.Anchored and hum.WalkSpeed==0)end)
+
+test('native annex marker starts training while proximity still checks the owned lot station',function()
+ academyAnchor={Position=Vector3.new(150,0,300),IsA=function()return true end}
+ root.Position=Vector3.new(500,0,0);assert(not Training.Start(player,false));advance(1)
+ root.Position=Vector3.new(0,0,0);assert(Training.Start(player,false))
+ assert(root.Position.X==150 and root.Position.Z==300);advance(2)
+ assert(profile.ThrowStrength==11 and Training.IsTraining(player))
+end)
+
+test('academy level up immediately refreshes native art without changing paid machine tier',function()
+ profile.TrainingXP=21;profile.TrainingMachine=1;assert(Training.Start(player,true));advance(2)
+ assert(artLevel==2 and profile.TrainingMachine==1 and Training.IsTraining(player))
+end)
 test('stop restores movement and prevents future rewards',function()Training.Start(player,true);Training.Stop(player);advance(100);assert(not root.Anchored and hum.WalkSpeed==16 and hum.AutoRotate and profile.ThrowStrength==10)end)
 test('respawn invalidates pending bonus and session',function()Training.Start(player,true);three();local id=qte().Id;player.Character={};assert(not Training.HitQTE(player,id));Training.Tick();assert(not Training.IsTraining(player))end)
 test('death ends academy without rewarding a dead character',function()Training.Start(player,true);hum.Health=0;advance(2);assert(not Training.IsTraining(player) and profile.ThrowStrength==10)end)

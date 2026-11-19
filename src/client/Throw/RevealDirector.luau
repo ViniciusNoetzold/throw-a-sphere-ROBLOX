@@ -32,6 +32,17 @@ local function preview(id: string, mutation: string?): Model
         mesh.CFrame = CFrame.new()
         mesh.Parent = model
         model.PrimaryPart = mesh
+    else
+        -- A native marker keeps the reveal readable if local mesh generation is
+        -- unavailable; it never substitutes a creature ID or changes the result.
+        local marker = Instance.new("Part")
+        marker.Name, marker.Size = "ArtUnavailable", Vector3.one * 1.8
+        marker.CFrame = CFrame.Angles(0, math.rad(45), math.rad(35))
+        marker.Color = if Config.Creatures[id] then Config.Creatures[id].BodyColor else Color3.fromRGB(134, 196, 255)
+        marker.Material, marker.Anchored = Enum.Material.SmoothPlastic, true
+        marker.CanCollide, marker.CanQuery, marker.CanTouch = false, false, false
+        marker.Parent, model.PrimaryPart = model, marker
+        model:SetAttribute("ArtFallback", true)
     end
     return model
 end
@@ -65,6 +76,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
         end
     end
     creature.Parent = world
+    if creature:GetAttribute("ArtFallback") then label(overlay, "VISUAL 3D INDISPONÍVEL", .84, 20, 12, Color3.fromRGB(211, 222, 255)) end
     local colors: {[BasePart]: Color3} = {}
     local transparencies: {[BasePart]: number} = {}
     for _, p in creature:GetDescendants() do if p:IsA("BasePart") then colors[p] = p.Color;transparencies[p]=p.Transparency;p.Color = Color3.new();p.Transparency=1 end end
@@ -75,15 +87,19 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     local radius = math.max(size.X,size.Y,size.Z) * 2.2
     local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5), data.OrbId)
     captureOrb.Parent = world
-    local crown = captureOrb:FindFirstChild("Crown") :: BasePart?
-    local prism = captureOrb:FindFirstChild("Prism") :: BasePart?
-    local crownOffset = if crown then captureOrb:GetPivot():ToObjectSpace(crown.CFrame) else CFrame.identity
+    local lid = OrbVisual.GetLidParts(captureOrb)
+    local prism = OrbVisual.GetLightPart(captureOrb)
     local prismColor = if prism then prism.Color else tier.Color
     local intro = FlightRules.CaptureIntroSeconds
     local absorptionEnd = .95
+    local lastGap = 0
     local function poseOrb(frame: CFrame, gap: number)
         captureOrb:PivotTo(frame)
-        if crown then crown.CFrame = frame * crownOffset * CFrame.new(0, gap, 0) * CFrame.Angles(gap * .25, 0, 0) end
+        if gap ~= 0 or lastGap ~= 0 then
+            local opening = frame * CFrame.new(0, gap, 0) * CFrame.Angles(gap * .25, 0, 0)
+            for part, offset in lid do part.CFrame = opening * offset end
+        end
+        lastGap = gap
     end
     local burst: {Frame} = {}
     for i = 1, (if reduced then 0 else 5 + tier.Rank * 4) do

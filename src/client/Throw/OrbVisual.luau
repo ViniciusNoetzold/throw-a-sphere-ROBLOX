@@ -1,5 +1,79 @@
 --!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Shared = ReplicatedStorage:WaitForChild("Shared")
 local OrbVisual = {}
+
+local importedNames: {[string]: string} = {
+    Comum = "Orbe001_Comum",
+    Esmeralda = "Orbe100_Esmeralda",
+    Rubi = "Orbe080_Vulcanica",
+    Safira = "Orbe120_Glacial",
+    Runica = "Orbe060_Aco",
+    Hextech = "Orbe140_Plasma",
+    Cosmica = "Orbe160_Cosmica",
+    Mestre = "Orbe180_Dourada",
+    Prismatica = "Orbe200_Prisma",
+}
+
+function OrbVisual.GetImportedModels(): {Model}
+    local folder = Shared:FindFirstChild("ImportedOrbModels")
+    local models: {Model} = {}
+    if folder then
+        for _, model in folder:GetChildren() do
+            if model:IsA("Model") and model.PrimaryPart then table.insert(models, model) end
+        end
+    end
+    table.sort(models, function(a, b) return a.Name < b.Name end)
+    return models
+end
+
+function OrbVisual.CloneImported(source: Model, diameter: number): (Model?, BasePart?)
+    local model = source:Clone()
+    local core = model.PrimaryPart
+    if not core then
+        model:Destroy()
+        return nil, nil
+    end
+    local _, size = model:GetBoundingBox()
+    local extent = math.max(size.X, size.Y, size.Z)
+    if extent <= 0 then
+        model:Destroy()
+        return nil, nil
+    end
+    model.Name = "Orb"
+    model:SetAttribute("ImportedOrb", source.Name)
+    model:ScaleTo(model:GetScale() * diameter / extent)
+    model:PivotTo(CFrame.identity)
+    return model, core
+end
+
+function OrbVisual.GetLidParts(model: Model): {[BasePart]: CFrame}
+    local pivot = model:GetPivot()
+    local lid: {[BasePart]: CFrame} = {}
+    if model:GetAttribute("ImportedOrb") then
+        for _, folderName in {"Casca", "Acabamentos"} do
+            local folder = model:FindFirstChild(folderName)
+            if folder then
+                for _, part in folder:GetDescendants() do
+                    if part:IsA("BasePart") then
+                        local offset = pivot:ToObjectSpace(part.CFrame)
+                        if offset.Y > .025 and part.Name ~= "Canal central" then lid[part] = offset end
+                    end
+                end
+            end
+        end
+    else
+        local crown = model:FindFirstChild("Crown")
+        if crown and crown:IsA("BasePart") then lid[crown] = pivot:ToObjectSpace(crown.CFrame) end
+    end
+    return lid
+end
+
+function OrbVisual.GetLightPart(model: Model): BasePart?
+    local light = model:FindFirstChild("Prism") or model:FindFirstChild("Indicador do fecho", true)
+        or model:FindFirstChild("Aro do fecho", true)
+    return if light and light:IsA("BasePart") then light else nil
+end
 
 type Style = {Fittings: number, Metal: Color3, Shell: Color3, Halo: boolean?}
 local steel = Color3.fromRGB(179, 209, 224)
@@ -17,6 +91,13 @@ local styles: {[string]: Style} = {
 }
 
 function OrbVisual.Create(color: Color3, diameter: number, orbId: string?): (Model, BasePart)
+    local folder = Shared:FindFirstChild("ImportedOrbModels")
+    local assetName = if orbId then importedNames[orbId] else nil
+    local source = if folder and assetName then folder:FindFirstChild(assetName) else nil
+    if source and source:IsA("Model") then
+        local imported, core = OrbVisual.CloneImported(source, diameter)
+        if imported and core then return imported, core end
+    end
     local model = Instance.new("Model")
     model.Name = "Orb"
     local style = if orbId then styles[orbId] or baseStyle else baseStyle

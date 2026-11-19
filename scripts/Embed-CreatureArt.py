@@ -1,4 +1,5 @@
 """Produce a private Studio place with local mesh data. The public build stays clean."""
+import csv
 import json
 import math
 from pathlib import Path
@@ -45,6 +46,15 @@ def main():
     files = sorted(source_dir.glob("*.json"))
     if not files:
         raise SystemExit("No private mesh data. Run Export-CreatureArt.py in Blender first.")
+    with Path(__file__).with_name("CreaturePack.csv").open(encoding="utf-8", newline="") as manifest:
+        rows = list(csv.DictReader(manifest))
+    expected = {row["id"] for row in rows}
+    if len(expected) != len(rows):
+        raise SystemExit("Duplicate creature IDs in CreaturePack.csv.")
+    found = {file.stem for file in files}
+    if found != expected:
+        missing, extra = sorted(expected - found), sorted(found - expected)
+        raise SystemExit(f"Creature art does not match CreaturePack.csv. Missing: {missing}. Extra: {extra}.")
     if place.resolve() == output.resolve() or output.name != "ThrowASphere-ComModelos.rbxlx":
         raise SystemExit("Refusing to put private artwork into the public place.")
     tree = ElementTree.parse(place)

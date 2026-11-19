@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 19:50 — Brasília (UTC−3). Criaturas, orbes, academias e Reserva Natural integradas.** O jogo pronto para abrir e os arquivos de origem da arte acompanham este repositório. O lote da equipe contém 148 criaturas com 290 variantes de cor ou geometria, 11 orbes, 21 garagens de treino e uma reserva.
+
+No jogo, as criaturas aparecem nos seis biomas, na revelação e no curral. Nove orbes usam os modelos novos no arremesso. As 11 podem ser vistas em **Orbes → Vitrine 3D**. As garagens aparecem conforme o nível da academia e a Reserva Natural tem acesso pelo hub.
+
+O pacote inclui os 148 GLBs, os scripts de geração para Blender e os originais Roblox de orbes, garagens, reserva e vitrine. IDs de criaturas, orbes e dados salvos foram preservados. [Arte da equipe e instruções para editar ou reconstruir](docs/CREATURE_ART.md)
+
+**Validação.** Compilação Luau, testes do projeto, integridade dos 448 arquivos de arte e build Rojo passaram. No Play local com um jogador, conferi a Vitrine 3D, as oito criaturas da reserva, a ida e volta ao hub, o treino em uma garagem importada e a troca da arte 01 pela 200 na mesma âncora. Uma captura real de Leekduck exibiu a orbe importada no voo e na revelação e a criatura capturada no curral. O carregador monta as criaturas próximas e libera as malhas quando saem de cena.
+
+**Próximo passo.** Preparar rigs e animações por lotes, começando pelas criaturas da Pradaria Solar. O teste em aparelhos físicos, multiplayer e DataStore de uma experiência publicada continua pendente.
+
+### Checkpoint anterior — biomas e cargos
+
 **19/11/2026, 16:27 — Brasília (UTC−3). Biomas e cargos distribuídos até o fim da progressão.** O jogador começa na Pradaria Solar e passa a liberar os novos trechos durante toda a progressão até o nível 1.000.
 
 | Nível | Último bioma liberado | Teto da pista |
@@ -193,7 +205,7 @@ powershell -ExecutionPolicy Bypass -File scripts/Install-Tools.ps1 -InstallStudi
 powershell -ExecutionPolicy Bypass -File scripts/Test.ps1
 ```
 
-Abra **[game/ThrowASphere.rbxlx](game/ThrowASphere.rbxlx)** no Roblox Studio e aperte **Play**. O arquivo acompanha o Git; o build também regenera a cópia em `build/`. Para apenas jogar o protótipo, não é necessário instalar as ferramentas de build.
+Abra **[game/ThrowASphere-ComModelos.rbxlx](game/ThrowASphere-ComModelos.rbxlx)** no Roblox Studio e clique em **Play**. Para regenerar o arquivo depois de editar o código, execute `scripts/Build.ps1 -WithCreatureArt`. [Instruções para extrair e editar a arte](docs/CREATURE_ART.md)
 
 No mouse/toque, segure para mirar e solte sobre uma criatura. No controle, mire com a câmera e use R2. Use os menus para treinar, comprar/equipar orbes, gerenciar o santuário e acessar as demais mecânicas. Os destinos e requisitos aparecem no menu Biomas; trocas e leilões exigem nível 15 e presença na praça local.
 

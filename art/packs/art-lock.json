@@ -1,0 +1,22 @@
+{
+  "catalog_sha256": "7000cee19953c6bd7d00dd1cf71a651144205124838fe9cfcb9e8c328a5a4806",
+  "format": 1,
+  "packs": {
+    "creatures": {
+      "archive": "creatures.zip",
+      "files": 444,
+      "sha256": "c86c9919ecd146cc6e4bd0ccda757fe32d018efe4a2f1e91987b391ca6cc8589",
+      "unpacked_bytes": 119674264,
+      "zip_bytes": 32218166
+    },
+    "world": {
+      "archive": "world.zip",
+      "files": 4,
+      "sha256": "671deba5fc046ba141417f07602f1701fa340cd0ca8ab1f793326728a253a906",
+      "unpacked_bytes": 44779347,
+      "zip_bytes": 1109822
+    }
+  },
+  "revision": "96a5c6fee9784d144a48d41425ccb01113324b8f",
+  "source": "https://github.com/nicolasdoeringsantos/modelospokemonroblox.git"
+}
