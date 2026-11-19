@@ -6,7 +6,11 @@ local sources = {
 	ProgressionService = __PROGRESSIONSERVICE_SOURCE__,
 	GameplayMath = __GAMEPLAYMATH_SOURCE__,
 	ConfigProgression = __CONFIGPROGRESSION_SOURCE__,
+	TrainingMath = __TRAININGMATH_SOURCE__,
+	ConfigTraining = __CONFIGTRAINING_SOURCE__,
 }
+local trainingRules = assert(loadstring(sources.ConfigTraining))()
+local trainingMath = assert(loadstring(sources.TrainingMath))()
 
 local function clone(value)
 	if type(value) ~= "table" then return value end
@@ -22,6 +26,7 @@ local Config = {
 		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
 		TrainingCoins = 5, TrainingStrength = 1,
+		MaxTrainingLevel = trainingRules.MaxLevel, MaxTrainingMachine = #trainingRules.Machines,
 	},
 	Orbs = {
 		Comum = { Tier = 1, Name = "Orbe Comum", Price = 25 },
@@ -34,6 +39,7 @@ local Config = {
 	},
 	GetXPRequiredForLevel = function(level) return math.floor(100 * level ^ 1.6) end,
 	GetMaxThrowRange = function(strength, level) return 40 + strength * 0.5 + level * 2 end,
+	ReconcileTrainingXP = function(profile) trainingMath.AddXP(profile, 0, trainingRules) end,
 }
 
 local function createStore()
@@ -495,7 +501,7 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local p = first.AddPlayer(102)
 	local profile = first.Data.Get(p)
 	profile.DailyStreak = 7; profile.LastDailyClaim = 1700000000
-	profile.TrainingLevel = 6; profile.TrainingXP = 25; profile.TrainingMachine = 3; profile.OrbTier = 2
+	profile.TrainingLevel = 60; profile.TrainingXP = 25; profile.TrainingMachine = 8; profile.OrbTier = 2
 	profile.PlaytimeClaimed["1"] = true; profile.MissionCounters.Captures = 15
 	profile.MissionClaimed.Capture15 = true; profile.BestiaryRewardClaimed.PradariaSolar = true
 	profile.ProcessedReceipts["purchase-id"] = true; profile.AppliedTransactions["completed-trade"] = true
@@ -508,12 +514,24 @@ test("new progression, receipt and pending escrow fields survive a real save/loa
 	local rejoined = second.AddPlayer(102)
 	local loaded = assert(second.Data.Get(rejoined))
 	assert(loaded.DailyStreak == 7 and loaded.PlaytimeClaimed["1"])
-	assert(loaded.TrainingLevel == 6 and loaded.TrainingXP == 25 and loaded.TrainingMachine == 3 and loaded.OrbTier == 2)
+	assert(loaded.TrainingLevel == 60 and loaded.TrainingXP == 25 and loaded.TrainingMachine == 8 and loaded.OrbTier == 2)
 	assert(loaded.ProcessedReceipts["purchase-id"] and loaded.AppliedTransactions["completed-trade"])
 	assert(loaded.MissionCounters.Captures == 15 and loaded.MissionClaimed.Capture15)
 	assert(loaded.Boosts.Luck.Multiplier == 2 and loaded.WeeklyPets == 2)
 	assert(loaded.PendingTransactions["auction-id"].Receive[1].Uid == "escrow")
 	assert(second.Data.GetReservedSlots(loaded) == 1)
+end)
+
+test("an older academy XP balance carries across the new lower threshold", function()
+	local first = engine()
+	local player = first.AddPlayer(1102)
+	first.RemovePlayer(player)
+	local saved = first.Store.Records.Player_1102.Data
+	saved.TrainingLevel, saved.TrainingXP, saved.TrainingMachine, saved.ThrowStrength = 1, 55, 1, 47
+	local second = engine({Store = first.Store, JobId = "academy-migration"})
+	local loaded = assert(second.Data.Get(second.AddPlayer(1102)))
+	assert(loaded.TrainingLevel == 2 and loaded.TrainingXP == 31)
+	assert(loaded.TrainingMachine == 1 and loaded.ThrowStrength == 47)
 end)
 
 test("nested corrupt boosts, ledgers and escrow records are rejected without overwriting saves", function()

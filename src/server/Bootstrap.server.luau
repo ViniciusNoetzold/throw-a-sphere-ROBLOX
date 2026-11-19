@@ -2,8 +2,20 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = script.Parent.Services
 local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Config = require(Shared.Config)
+local meshFolder = Shared:WaitForChild("CreatureMeshes")
+local encounterCreatures: typeof(Config.Creatures) = {}
+local authoredCreatures: {[string]: boolean} = {}
+for id, definition in Config.Creatures do
+    local source = meshFolder:FindFirstChild(id)
+    if source and source:IsA("ModuleScript") then authoredCreatures[id] = true end
+    if not definition.RequiresArt or authoredCreatures[id] then encounterCreatures[id] = definition end
+end
 local ctx: any = {
     Remotes = Remotes,
+    EncounterCreatures = encounterCreatures,
+    AuthoredCreatures = authoredCreatures,
     Gameplay = require(ReplicatedStorage.Shared.GameplayMath),
     Data = require(Services.DataService),
     World = require(Services.WorldService),

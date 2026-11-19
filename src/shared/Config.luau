@@ -1,6 +1,8 @@
 --!strict
 local Math = require(script.Parent.CaptureMath)
 local Variants = require(script.Parent.ConfigMutacoes)
+local TrainingRules = require(script.Parent.ConfigTraining)
+local TrainingMath = require(script.Parent.TrainingMath)
 return {
 	Orbs = require(script.Parent.ConfigOrbes),
 	Creatures = require(script.Parent.ConfigCriaturas),
@@ -12,6 +14,9 @@ return {
 	GetMaxThrowRange = Math.GetMaxThrowRange,
 	CalculateShakeProbability = Math.CalculateShakeProbability,
 	GetAimBonus = Math.GetAimBonus,
+	ReconcileTrainingXP = function(profile: any)
+		TrainingMath.AddXP(profile, 0, TrainingRules)
+	end,
 	Constants = {
 		MaxLevel = 100, BaseSanctuarySlots = 6, MaxOfflineSeconds = 28800,
 		DataStoreName = "ThrowASphere_v1", StudioPersistence = false,
@@ -19,6 +24,7 @@ return {
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
 		CaptureLockSeconds = 4.5, ThrowCooldownSeconds = 4.5,
 		TrainingCoins = 5, TrainingStrength = 1,
+		MaxTrainingLevel = TrainingRules.MaxLevel, MaxTrainingMachine = #TrainingRules.Machines,
 		MaxInventoryCreatures = 500, MaxSanctuarySlots = 24,
 	},
 }

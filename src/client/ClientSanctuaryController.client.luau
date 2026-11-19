@@ -21,7 +21,6 @@ local function observe(instance: Instance)
     local caption = board and board:FindFirstChildWhichIsA("TextLabel")
     if typeof(home) ~= "Vector3" or typeof(phase) ~= "number" or not caption or not instance.PrimaryPart then return end
     local left, right = instance:FindFirstChild("LeftFoot"), instance:FindFirstChild("RightFoot")
-    CreatureArt.ShowOn(instance, instance.Name, 1, 1)
     walkers[instance] = {
         Home = home,
         Phase = phase,
@@ -29,6 +28,7 @@ local function observe(instance: Instance)
         Left = if left and left:IsA("BasePart") then left else nil,
         Right = if right and right:IsA("BasePart") then right else nil,
     }
+    task.defer(CreatureArt.ShowOn, instance, instance.Name, instance:GetAttribute("ArtScale") or 1, 1, 11)
 end
 
 for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model) end
@@ -39,7 +39,7 @@ end)
 
 CreatureArt.Loaded:Connect(function(id: string)
     for model in walkers do
-        if model.Name == id then CreatureArt.ShowOn(model, id, 1, 1) end
+        if model.Name == id then CreatureArt.ShowOn(model, id, model:GetAttribute("ArtScale") or 1, 1, 11) end
     end
 end)
 

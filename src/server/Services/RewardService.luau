@@ -179,7 +179,7 @@ function RewardService.ClaimBestiary(player: Player, biomeId: any): (boolean, st
     return commit(player, "BestiaryReward", function(profile)
         if profile.BestiaryRewardClaimed[biomeId] then return false, "Bônus deste bioma já recebido." end
         local required = 0
-        for id, definition in Config.Creatures do
+        for id, definition in context.EncounterCreatures or Config.Creatures do
             if definition.Biome == biomeId then required += 1; if not profile.Bestiary[id] then return false, "Descubra todas as criaturas deste bioma." end end
         end
         if required == 0 then return false, "Este bioma ainda não possui uma coleção." end

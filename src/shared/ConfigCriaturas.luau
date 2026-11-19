@@ -1,6 +1,6 @@
 --!strict
--- Catalog sourced from the 30 individual creature briefs. Only the first biome spawns in step 1.
-export type CreatureDef = { Id: string, Name: string, Element: string, Rarity: string, Biome: string, Difficulty: number, BaseIncomePerSec: number, BaseXP: number, BodyColor: Color3, HeadOffsetY: number }
+-- Base catalog plus optional species available in builds with the authored mesh pack.
+export type CreatureDef = { Id: string, Name: string, Element: string, Rarity: string, Biome: string, Difficulty: number, BaseIncomePerSec: number, BaseXP: number, BodyColor: Color3, HeadOffsetY: number, RequiresArt: boolean? }
 local Creatures: { [string]: CreatureDef } = {
 	Pyrokit = { Id = "Pyrokit", Name = "Pyrokit", Element = "Fogo", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 18, BaseIncomePerSec = 12, BaseXP = 40, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
 	Blazefox = { Id = "Blazefox", Name = "Blazefox", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 320, BaseIncomePerSec = 280, BaseXP = 180, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
@@ -32,5 +32,24 @@ local Creatures: { [string]: CreatureDef } = {
 	Eclipsion = { Id = "Eclipsion", Name = "Eclipsion", Element = "Cosmico", Rarity = "Lendaria", Biome = "Global", Difficulty = 180000, BaseIncomePerSec = 260000, BaseXP = 4000, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
 	Meteorgon = { Id = "Meteorgon", Name = "Meteorgon", Element = "Fogo", Rarity = "Lendaria", Biome = "Global", Difficulty = 210000, BaseIncomePerSec = 310000, BaseXP = 4500, BodyColor = Color3.fromRGB(249,115,22), HeadOffsetY = 2.6 },
 	Omnisfera = { Id = "Omnisfera", Name = "Omnisfera", Element = "Cosmico", Rarity = "Secreta", Biome = "Global", Difficulty = 500000, BaseIncomePerSec = 1000000, BaseXP = 15000, BodyColor = Color3.fromRGB(168,85,247), HeadOffsetY = 2.6 },
+
+	Bulbavine = { Id = "Bulbavine", Name = "Bulbavine", Element = "Planta", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 18, BaseIncomePerSec = 12, BaseXP = 40, BodyColor = Color3.fromRGB(107, 204, 168), HeadOffsetY = 2.0, RequiresArt = true },
+	Floradine = { Id = "Floradine", Name = "Floradine", Element = "Planta", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 124, BaseIncomePerSec = 114, BaseXP = 160, BodyColor = Color3.fromRGB(87, 189, 184), HeadOffsetY = 2.2, RequiresArt = true },
+	Jungleking = { Id = "Jungleking", Name = "Jungleking", Element = "Planta", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 659, BaseIncomePerSec = 632, BaseXP = 480, BodyColor = Color3.fromRGB(82, 179, 163), HeadOffsetY = 2.5, RequiresArt = true },
+	Embernewt = { Id = "Embernewt", Name = "Embernewt", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 128, BaseIncomePerSec = 118, BaseXP = 160, BodyColor = Color3.fromRGB(245, 117, 36), HeadOffsetY = 2.6, RequiresArt = true },
+	Flareclaw = { Id = "Flareclaw", Name = "Flareclaw", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 130, BaseIncomePerSec = 120, BaseXP = 160, BodyColor = Color3.fromRGB(224, 56, 41), HeadOffsetY = 2.9, RequiresArt = true },
+	Ignidrake = { Id = "Ignidrake", Name = "Ignidrake", Element = "Fogo", Rarity = "Epica", Biome = "CanionVulcanico", Difficulty = 668, BaseIncomePerSec = 644, BaseXP = 480, BodyColor = Color3.fromRGB(245, 122, 31), HeadOffsetY = 3.8, RequiresArt = true },
+	Shellsplash = { Id = "Shellsplash", Name = "Shellsplash", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 134, BaseIncomePerSec = 124, BaseXP = 160, BodyColor = Color3.fromRGB(92, 194, 235), HeadOffsetY = 2.4, RequiresArt = true },
+	Tidecrest = { Id = "Tidecrest", Name = "Tidecrest", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 136, BaseIncomePerSec = 126, BaseXP = 160, BodyColor = Color3.fromRGB(71, 143, 224), HeadOffsetY = 2.6, RequiresArt = true },
+	Hydrocannon = { Id = "Hydrocannon", Name = "Hydrocannon", Element = "Agua", Rarity = "Epica", Biome = "AbismoGlacial", Difficulty = 677, BaseIncomePerSec = 656, BaseXP = 480, BodyColor = Color3.fromRGB(56, 122, 214), HeadOffsetY = 3.2, RequiresArt = true },
+	Silkworm = { Id = "Silkworm", Name = "Silkworm", Element = "Inseto", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 20, BaseIncomePerSec = 17, BaseXP = 25, BodyColor = Color3.fromRGB(102, 204, 71), HeadOffsetY = 1.9, RequiresArt = true },
+	Chrysalid = { Id = "Chrysalid", Name = "Chrysalid", Element = "Inseto", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 142, BaseIncomePerSec = 132, BaseXP = 160, BodyColor = Color3.fromRGB(82, 189, 66), HeadOffsetY = 2.2, RequiresArt = true },
+	Flutterwing = { Id = "Flutterwing", Name = "Flutterwing", Element = "Inseto", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 686, BaseIncomePerSec = 668, BaseXP = 480, BodyColor = Color3.fromRGB(97, 77, 168), HeadOffsetY = 2.8, RequiresArt = true },
+	Stinglarva = { Id = "Stinglarva", Name = "Stinglarva", Element = "Inseto", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 23, BaseIncomePerSec = 8, BaseXP = 25, BodyColor = Color3.fromRGB(204, 158, 82), HeadOffsetY = 2.0, RequiresArt = true },
+	Ambercocoon = { Id = "Ambercocoon", Name = "Ambercocoon", Element = "Inseto", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 148, BaseIncomePerSec = 138, BaseXP = 160, BodyColor = Color3.fromRGB(240, 199, 61), HeadOffsetY = 2.4, RequiresArt = true },
+	Lancewasp = { Id = "Lancewasp", Name = "Lancewasp", Element = "Inseto", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 695, BaseIncomePerSec = 680, BaseXP = 480, BodyColor = Color3.fromRGB(250, 209, 41), HeadOffsetY = 3.0, RequiresArt = true },
+	Gustfinch = { Id = "Gustfinch", Name = "Gustfinch", Element = "Vento", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 26, BaseIncomePerSec = 11, BaseXP = 25, BodyColor = Color3.fromRGB(163, 117, 77), HeadOffsetY = 2.1, RequiresArt = true },
+	Skytalon = { Id = "Skytalon", Name = "Skytalon", Element = "Vento", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 154, BaseIncomePerSec = 144, BaseXP = 160, BodyColor = Color3.fromRGB(168, 117, 71), HeadOffsetY = 2.7, RequiresArt = true },
+	Galehawk = { Id = "Galehawk", Name = "Galehawk", Element = "Vento", Rarity = "Epica", Biome = "PradariaSolar", Difficulty = 704, BaseIncomePerSec = 692, BaseXP = 480, BodyColor = Color3.fromRGB(173, 122, 71), HeadOffsetY = 3.1, RequiresArt = true },
 }
 return Creatures

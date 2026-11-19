@@ -1,5 +1,5 @@
 --!strict
--- Disposable blockout. Replace the generated models with the art from steps 3/4.
+-- Generated world and interaction anchors shared by all Roblox builds.
 local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 local Workspace = game:GetService("Workspace")
@@ -33,24 +33,64 @@ local function part(parent: Instance, name: string, size: Vector3, position: Vec
 	return item
 end
 
-local function protectArea(parent: Instance, center: Vector3, size: Vector3, returnAt: Vector3)
+local function retainingWall(parent: Instance, center: Vector3, length: number, inward: Vector3, tint: Color3)
+    local stone = Color3.fromRGB(96, 91, 83):Lerp(tint, .26)
+    local moss = Color3.fromRGB(102, 163, 73):Lerp(tint, .33)
+    local axis = Vector3.yAxis:Cross(inward)
+    local function block(name: string, size: Vector3, offset: Vector3, color: Color3, decor: boolean?): Part
+        local position = center + axis * offset.X + Vector3.yAxis * offset.Y + inward * offset.Z
+        local item = part(parent, name, size, position, color)
+        item.CFrame = CFrame.lookAt(position, position + inward)
+        if decor then item.CanCollide, item.CanTouch, item.CanQuery = false, false, false end
+        return item
+    end
+    block("TerraceWall", Vector3.new(length, 27, 5), Vector3.new(0, 12.5, 0), stone)
+    block("WallFooting", Vector3.new(length, 2.6, 7), Vector3.new(0, .7, .3), stone:Lerp(Color3.new(), .2))
+    block("GrassRim", Vector3.new(length, 1.25, 6.7), Vector3.new(0, 26.35, -.35), moss)
+    local panels = math.ceil(length / 20)
+    local width = length / panels
+    for row = 0, 1 do
+        local step = if row == 0 then width else width * .5
+        local offset = -length / 2
+        local index = 0
+        while offset < length / 2 - .1 do
+            local span = math.min(step, length / 2 - offset)
+            local shade = if (index + row) % 2 == 0 then .17 else .07
+            local brick = block("StuddedBrick", Vector3.new(span - .13, 10.3, 1.05),
+                Vector3.new(offset + span / 2, 7.45 + row * 10.7, 2.7), stone:Lerp(Color3.new(1, 1, 1), shade), true)
+            brick.FrontSurface = Enum.SurfaceType.Studs
+            offset += span
+            step, index = width, index + 1
+        end
+    end
+    for index = 1, math.ceil(length / 55) do
+        local step = length / math.ceil(length / 55)
+        local span = (index - .5) * step - length / 2
+        local skyline = 31 + (index * 7) % 14
+        block("EarthBank", Vector3.new(step + .05, skyline + 13, 24),
+            Vector3.new(span, (skyline - 13) / 2, -15), stone:Lerp(moss, .27))
+        block("BankGrass", Vector3.new(step + .11, 1.2, 24.15),
+            Vector3.new(span, skyline + .35, -15), moss)
+    end
+end
+
+local function protectArea(parent: Instance, center: Vector3, size: Vector3, returnAt: Vector3, tint: Color3, runwayOpening: boolean?)
     table.insert(safeAreas, {Center = center, Size = size, ReturnAt = returnAt})
     local guards = Instance.new("Folder")
-    guards.Name, guards.Parent = "EdgeGuards", parent
-    local trim = Color3.fromRGB(189, 221, 156)
-    local tall = 24
+    guards.Name, guards.Parent = "RetainingWalls", parent
     for _, side in {-1, 1} do
-        local x = center.X + side * (size.X / 2 - .65)
-        local z = center.Z + side * (size.Z / 2 - .65)
-        for _, edge in {
-            {Position = Vector3.new(x, 0, center.Z), Size = Vector3.new(1.3, tall, size.Z)},
-            {Position = Vector3.new(center.X, 0, z), Size = Vector3.new(size.X, tall, 1.3)},
-        } do
-            local guard = part(guards, "BoundaryWall", edge.Size, edge.Position + Vector3.new(0, tall / 2, 0), trim)
-            guard.Transparency, guard.CanQuery, guard.CanTouch, guard.CastShadow = 1, false, false, false
-            local curb = part(guards, "BoundaryTrim", Vector3.new(edge.Size.X, 1.15, edge.Size.Z), edge.Position + Vector3.new(0, .55, 0), trim)
-            curb.CanCollide, curb.CanTouch, curb.CanQuery = false, false, false
-            curb.TopSurface = Enum.SurfaceType.Smooth
+        local x = center.X + side * (size.X / 2 - 1)
+        local z = center.Z + side * (size.Z / 2 - 1)
+        retainingWall(guards, Vector3.new(x, 0, center.Z), size.Z, Vector3.new(-side, 0, 0), tint)
+        if runwayOpening and side == -1 then
+            local halfGap = 36
+            local length = size.X / 2 - halfGap
+            for _, flank in {-1, 1} do
+                retainingWall(guards, Vector3.new(center.X + flank * (halfGap + length / 2), 0, z),
+                    length, Vector3.zAxis, tint)
+            end
+        else
+            retainingWall(guards, Vector3.new(center.X, 0, z), size.X, Vector3.new(0, 0, -side), tint)
         end
     end
 end
@@ -133,14 +173,15 @@ function WorldService.Init(context: any?)
 	if worldFolder then return end
 	local folder = Instance.new("Folder")
 	folder.Name = "ThrowASphereWorld"
-	folder:SetAttribute("GeneratedBlockout", true)
 	folder.Parent = Workspace
 	worldFolder = folder
-	local hubFloor = part(folder, "Foundation", Vector3.new(290, 1, 330), Vector3.new(0, -0.6, 20), Color3.fromRGB(63, 192, 34))
-	protectArea(folder, hubFloor.Position, hubFloor.Size, Layout.HubPosition + Vector3.new(0, 4, 0))
+	local grass = Color3.fromRGB(92, 176, 70)
+	part(folder, "Mainland", Vector3.new(1730, 48, 490), Vector3.new(525, -25, -11), Color3.fromRGB(111, 91, 65))
+	local hubFloor = part(folder, "Foundation", Vector3.new(290, 1, 330), Vector3.new(0, -0.6, 20), grass)
+	protectArea(folder, hubFloor.Position, hubFloor.Size, Layout.HubPosition + Vector3.new(0, 4, 0), grass, true)
 	for x = -7, 6 do
 		for z = -5, 7 do
-			local color = if (x + z) % 2 == 0 then Color3.fromRGB(76, 217, 43) else Color3.fromRGB(63, 192, 34)
+			local color = if (x + z) % 2 == 0 then Color3.fromRGB(113, 190, 78) else grass
 			part(folder, "GrassTile", Vector3.new(16, 0.2, 16), Vector3.new(x * 16 + 8, 0, z * 16 + 8), color)
 		end
 	end
@@ -195,10 +236,14 @@ function WorldService.Init(context: any?)
 			if ctx and ctx.Training and WorldService.GetSanctuary(player) == lot then ctx.Remotes.OpenPanel:FireClient(player, "Academia")
 			elseif ctx and ctx.Progression and WorldService.IsAtSanctuary(player) then ctx.Progression.Train(player) end
 		end)
-		-- Functional gym blockout. The user will replace these parts with final equipment.
+		local gymBase = position + Vector3.new(0, 1.25, -18)
+		part(lot, "GymDeck", Vector3.new(11.5, .26, 9.3), gymBase, Color3.fromRGB(52, 57, 66)).CanCollide = false
 		for _,side in {-1,1} do
-			local post=part(lot,"GymPost",Vector3.new(.5,6,.5),position+Vector3.new(side*3,4,-18),Color3.fromRGB(90,110,140))
+			local post=part(lot,"GymPost",Vector3.new(.65,6,.65),position+Vector3.new(side*3,4,-18),Color3.fromRGB(90,110,140))
 			post.CanCollide=false
+			part(lot, "GymShoe", Vector3.new(2, .6, 2), gymBase + Vector3.new(side * 3, .38, 0), Color3.fromRGB(34, 40, 53)).CanCollide = false
+			local grip = part(lot, "Grip", Vector3.new(.95, .64, .64), position + Vector3.new(side * 1.45, 7, -18), Color3.fromRGB(32, 36, 44))
+			grip.Shape, grip.CanCollide = Enum.PartType.Cylinder, false
 		end
 		local bar=part(lot,"GymBar",Vector3.new(7,.5,.5),position+Vector3.new(0,7,-18),Color3.fromRGB(255,200,70))
 		bar.CanCollide=false
@@ -213,7 +258,7 @@ function WorldService.Init(context: any?)
 			for x = -4, 3 do for z = -4, 3 do
 				part(zone, "Tile", Vector3.new(25, 1, 25), center + Vector3.new(x * 25 + 12.5, -0.5, z * 25 + 12.5), colors[(x + z) % 2 + 1])
 			end end
-			protectArea(zone, center, Vector3.new(Layout.ZoneSize, 1, Layout.ZoneSize), center + Vector3.new(0, 4, 35))
+			protectArea(zone, center, Vector3.new(Layout.ZoneSize, 1, Layout.ZoneSize), center + Vector3.new(0, 4, 35), colors[2])
 		end
 		local destination = id
 		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
@@ -232,7 +277,7 @@ function WorldService.Init(context: any?)
 	end
 	station(folder, "TradingPortal", Vector3.new(-134, 0.8, 122), Color3.fromRGB(74,193,255), "PRAÇA DE TROCAS\nNÍVEL 15", function(player) if ctx and ctx.Biomes then ctx.Biomes.Travel(player, "TradingPlaza") end end)
 	local tradingFloor = part(folder, "TradingFloor", Vector3.new(85, 1, 85), Layout.TradingPosition + Vector3.new(0, -0.5, 0), Color3.fromRGB(43,117,154))
-	protectArea(tradingFloor, tradingFloor.Position, tradingFloor.Size, Layout.TradingPosition + Vector3.new(0, 4, 13))
+	protectArea(tradingFloor, tradingFloor.Position, tradingFloor.Size, Layout.TradingPosition + Vector3.new(0, 4, 13), tradingFloor.Color)
 	station(folder, "TradingDesk", Layout.TradingPosition, Color3.fromRGB(255,212,63), "TROCAS E LEILÕES", function(player)
 		local remote = ctx and ctx.Remotes:FindFirstChild("OpenPanel")
 		if remote then remote:FireClient(player, "Trocas") end
@@ -242,6 +287,11 @@ function WorldService.Init(context: any?)
 end
 
 function WorldService.GetSanctuary(player: Player): Model? return if owners[player] then lots[owners[player]] else nil end
+function WorldService.GetSanctuaryReturnPosition(player: Player): Vector3?
+	local lot = WorldService.GetSanctuary(player)
+	local platform = lot and lot.PrimaryPart
+	return if platform then platform.Position + Vector3.new(0, 4, 23) else nil
+end
 function WorldService.IsAtSanctuary(player: Player): boolean
 	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 	local lot = WorldService.GetSanctuary(player)
@@ -310,18 +360,41 @@ end
 local machineColors = {
     Color3.fromRGB(255, 193, 85), Color3.fromRGB(255, 121, 82), Color3.fromRGB(89, 204, 235),
     Color3.fromRGB(161, 106, 255), Color3.fromRGB(240, 114, 224),
+    Color3.fromRGB(255, 113, 63), Color3.fromRGB(144, 160, 255), Color3.fromRGB(255, 224, 113),
 }
 
 function WorldService.UpdateTrainingMachine(player: Player, tier: number, name: string)
     local lot = WorldService.GetSanctuary(player)
     if not lot then return end
     local bar = lot:FindFirstChild("GymBar")
-    if bar and bar:IsA("BasePart") then
-        bar.Color = machineColors[tier]
-        bar.Material = if tier >= 4 then Enum.Material.Neon else Enum.Material.SmoothPlastic
-    end
     local anchor = lot:FindFirstChild("PersonalTraining")
-    local billboard = anchor and anchor:FindFirstChild("Label")
+    if not anchor or anchor:GetAttribute("MachineTier") == tier then return end
+    anchor:SetAttribute("MachineTier", tier)
+    if bar and bar:IsA("BasePart") then
+        local color = machineColors[tier]
+        bar.Color = color
+        bar.Material = if tier >= 6 then Enum.Material.Neon else Enum.Material.SmoothPlastic
+        local previous = lot:FindFirstChild("MachineUpgradeArt")
+        if previous then previous:Destroy() end
+        local details = Instance.new("Folder")
+        details.Name, details.Parent = "MachineUpgradeArt", lot
+        for _, side in {-1, 1} do
+            local plateCount = math.ceil(tier / 2)
+            for index = 1, plateCount do
+                local diameter = 1.4 + tier * .12 - index * .16
+                local plate = part(details, "TrainingPlate", Vector3.new(.23, diameter, diameter),
+                    bar.Position + Vector3.new(side * (2.18 + (index - 1) * .28), 0, 0), if index == 1 then color else color:Lerp(Color3.new(), index * .14))
+                plate.Shape, plate.CanCollide, plate.CanQuery, plate.CanTouch = Enum.PartType.Cylinder, false, false, false
+                plate.TopSurface = Enum.SurfaceType.Smooth
+            end
+            if tier >= 4 then
+                local upright = part(details, "MachineLight", Vector3.new(.14, 4.5, .18),
+                    bar.Position + Vector3.new(side * 3, -3, .4), color)
+                upright.Material, upright.CanCollide, upright.CanTouch, upright.CanQuery = Enum.Material.Neon, false, false, false
+            end
+        end
+    end
+    local billboard = anchor:FindFirstChild("Label")
     local caption = billboard and billboard:FindFirstChildWhichIsA("TextLabel")
     if caption then caption.Text = name .. " • Nv. " .. tier end
 end
@@ -375,6 +448,10 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 		local model = Instance.new("Model")
 		model.Name = record.CreatureId
 		model:SetAttribute("CaptureUID", uid)
+		model:SetAttribute("Mutation", record.Mutation)
+		for _, variant in Config.Sizes do
+			if variant.Name == record.Size then model:SetAttribute("ArtScale", variant.Scale); break end
+		end
 		model:SetAttribute("PenHome", home)
 		model:SetAttribute("WalkPhase", (slot * 2.399963) % (2 * math.pi))
 		local function shape(name: string, size: Vector3, offset: Vector3, color: Color3): Part

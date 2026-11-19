@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 15:05 — Brasília (UTC−3). Mapa, pista, orbes e academia revisados.** O hub, a praça de trocas e os biomas de visita ganharam uma base de terra e muros altos de peças com relevo. A pista tem asfalto em placas, acostamentos, placas de sinalização e enfeites próprios para cada bioma. As orbes têm modelos distintos conforme a evolução, com a mesma arte no menu, na mão, no voo e na revelação.
+
+A academia agora tem oito estágios. A primeira subida leva três repetições, a Barra Reforçada custa $120 e abre no nível 2, e cada evolução dá mais força, XP e uma repetição mais rápida. A barra mostra o XP atual e o necessário, e o menu compara os ganhos da máquina atual com a próxima. O progresso salvo mantém nível, força e máquina. O XP acumulado que já alcança uma nova meta passa adiante com o saldo.
+
+O arremesso usa a força treinada e o acerto na barra. A distância do pouso define o bioma do encontro. Após a revelação, o jogador pode arremessar outra vez ou voltar ao próprio santuário. O build local com arte inclui os 23 modelos da equipe, com tamanhos por espécie e paletas do Blender onde disponíveis.
+
+**Validação e próximo trabalho.** Compilação Luau, testes com mocks e build Rojo aprovados. Em Play local, conferi a subida de nível, o desafio 2×, a primeira evolução da máquina, a pista, os modelos 3D das orbes e as duas escolhas após a captura. Faltam sessões com oito jogadores, teste de desempenho em celulares físicos e DataStore publicado. Consulte o [relatório de validação](docs/reviews/2026-11-19-terra-firme-academia.md).
+
+**No outro PC**, atualize o Git e abra `game/ThrowASphere.rbxlx` para testar o build público. Para jogar com os modelos da equipe, gere e abra `build/ThrowASphere-ComModelos.rbxlx`. O código continua em `src/`. [Como gerar a versão com arte](docs/CREATURE_ART.md).
+
+### Checkpoint anterior — câmera, captura e primeiras malhas
+
 **19/11/2026, 12:10 — Brasília (UTC−3). Câmera de treino, arremesso e revelação revisados.** Na academia, a câmera enquadra o avatar de frente e de lado. Na faixa amarela, o personagem fica parado enquanto o jogador escolhe a força. A câmera acompanha a saída da orbe da mão, o voo e a revelação. Movimento e câmera voltam ao normal depois do resultado, inclusive em cancelamentos. Para arremessar de novo, saia da faixa e volte.
 
 A captura tem pouso, balançadas conforme o resultado do servidor, silhueta e efeitos crescentes pela raridade. O build local com arte carrega as malhas Blender originais de **Sproutling, Leviathorn e Ignisovereign** nas aparições selvagens, no cercado e na revelação. O código e o build público estão no GitHub. O build com arte está em `build/ThrowASphere-ComModelos.rbxlx` neste PC. O repositório de origem da arte é privado. Consulte [como gerar o build local em outro PC](docs/CREATURE_ART.md) e o [relatório de validação](docs/reviews/2026-11-19-camera-captura-modelos.md).

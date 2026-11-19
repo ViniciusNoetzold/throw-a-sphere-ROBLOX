@@ -8,6 +8,8 @@ local delayed={}
 local Vector3={}
 local vm={}
 function Vector3.new(x,y,z) return setmetatable({X=x,Y=y,Z=z},vm) end
+Vector3.zero=Vector3.new(0,0,0)
+local CFrame={new=function(position)return position end,lookAt=function(position)return position end}
 vm.__add=function(a,b) return Vector3.new(a.X+b.X,a.Y+b.Y,a.Z+b.Z) end
 vm.__sub=function(a,b) return Vector3.new(a.X-b.X,a.Y-b.Y,a.Z-b.Z) end
 vm.__mul=function(a,b) return Vector3.new(a.X*b,a.Y*b,a.Z*b) end
@@ -20,6 +22,7 @@ local player={Parent=true,CharacterRemoving=signal(),attributes={}}
 function player:SetAttribute(k,v) self.attributes[k]=v end
 local root={Parent=true,Anchored=false,Position=Vector3.new(0,0,0),IsA=function()return true end}
 local character={FindFirstChild=function()return root end,FindFirstChildOfClass=function()return {Health=100} end}
+function character:PivotTo(position) root.Position=position end
 player.Character=character
 local profile
 local busy=false
@@ -31,7 +34,8 @@ local results={}
 local serial=0
 local rngRoll=0
 local Config={Orbs={Comum={Power=10,Color="blue",Tier=1},Mestre={Power=1000,IsMaster=true},Prismatica={Power=25,IsPrismatic=true}},
- Creatures={Sproutling={Name="Sproutling",Biome="PradariaSolar",Rarity="Comum",Difficulty=1,BaseXP=25,BaseIncomePerSec=8}},
+ Creatures={Sproutling={Name="Sproutling",Biome="PradariaSolar",Rarity="Comum",Difficulty=1,BaseXP=25,BaseIncomePerSec=8},
+ Glowshroom={Name="Glowshroom",Biome="FlorestaNeon",Rarity="Comum",Difficulty=1,BaseXP=25,BaseIncomePerSec=8}},
  Mutations={{Name="Normal",Multiplier=1}},Sizes={{Name="Normal",Multiplier=1}},Constants={MaxInventoryCreatures=500},
  CalculateShakeProbability=function()return 1 end}
 local rules={LaunchOrigin=Vector3.new(0,0,0),Direction=Vector3.new(0,0,-1),LinePosition=Vector3.new(0,0,0),LineWidth=42,LineDepth=7,MeterPeriod=1.6,ChargeTimeout=12,PerfectThreshold=.94,ZoneLength=300,WindupSeconds=.55,MinFlightSeconds=3.5,MaxFlightSeconds=7}
@@ -49,12 +53,13 @@ local Flight=(function()
 end)()
 local benefits={}
 local remotes={}
-for _,name in {"PrepareThrow","LaunchThrow","CancelThrow"} do remotes[name]={OnServerEvent=signal()} end
+for _,name in {"PrepareThrow","LaunchThrow","CancelThrow","ChooseAfterThrow"} do remotes[name]={OnServerEvent=signal()} end
 remotes.FlightUpdate={FireClient=function(_,_,data)table.insert(messages,data)end}
 remotes.ActionFeedback={FireClient=function()end}
 remotes.ThrowWindup={FireAllClients=function()end}
 remotes.ThrowResult={FireAllClients=function(_,data)table.insert(results,data)end}
 local ctx={Remotes=remotes,Layout={BiomeOrder={"PradariaSolar","FlorestaNeon"}},
+ World={GetSanctuaryReturnPosition=function()return Vector3.new(91,4,23) end},
  Data={Get=function()return profile end,IsLoaded=function()return profile~=nil end,IsBusy=function()return busy end,
  TryLock=function()if busy then return false end;busy=true;return true end,Unlock=function()busy=false end,
  MarkDirty=function()end,Sync=function()synced+=1 end,SaveNow=function()return saved end,
@@ -76,7 +81,7 @@ end
 local count=0
 local function test(name,f)
  profile={Coins=150,Level=1,ThrowStrength=10,EquippedOrb="Comum",Orbs={Comum=25,Mestre=1},UnlockedBiomes={PradariaSolar=true},CapturedCreatures={},ComboStreak=0,PityBonus=0,TotalCaptures=0,XP=0}
- busy,saved,frozen=false,true,false;benefits={};messages={};results={};rngRoll=.5;player.Character=character
+ busy,saved,frozen=false,true,false;benefits={};messages={};results={};rngRoll=.5;player.Character=character;root.Position=Vector3.zero
  f();players.PlayerRemoving:Fire(player);delayed={};now+=20;count+=1;print("PASS "..name)
 end
 local function prepare()
@@ -116,7 +121,7 @@ test("full inventory rejects preparation",function()for i=1,500 do profile.Captu
 test("transaction lock rejects preparation",function()busy=true;assert(not Flight.Prepare(player))end)
 test("prepare rejects a player outside the launch area",function()root.Position=Vector3.new(1000,0,0);assert(not Flight.Prepare(player));root.Position=Vector3.new(0,0,0)end)
 test("launch rechecks departure from the launch area",function()local id=prepare();advance(.4);root.Position=Vector3.new(1000,0,0);assert(not Flight.Launch(player,id));assert(profile.Orbs.Comum==25);root.Position=Vector3.new(0,0,0)end)
-test("extra client arguments cannot select power or biome",function()local id=prepare();advance(.3);remotes.LaunchThrow.OnServerEvent:Fire(player,id,true,math.huge,"VazioCosmico");local m=messages[#messages];assert(math.abs(m.Power-Math.Power(.3,1.6))<1e-9 and m.BiomeId=="PradariaSolar")end)
+test("extra client arguments cannot select power or biome",function()local id=prepare();advance(.3);remotes.LaunchThrow.OnServerEvent:Fire(player,id,true,math.huge,"VazioCosmico");local m=messages[#messages];assert(math.abs(m.Power-Math.Power(.3,1.6))<1e-9 and m.BiomeId==Math.Zone(m.Distance,ctx.Layout.BiomeOrder,rules.ZoneLength))end)
 test("forged premium orb is rejected",function()profile.EquippedOrb="Prismatica";profile.Orbs.Prismatica=100;assert(not Flight.Prepare(player))end)
 test("a permanent evolution launches with zero consumable stock", function()
     profile.OrbTier = 1
@@ -136,6 +141,28 @@ assert(Math.Power(0,1.6)==0)
 assert(math.abs(Math.Power(.4,1.6)-1)<1e-9)
 assert(math.abs(Math.Power(1.6,1.6))<1e-9)
 assert(Math.Distance(100,20,25,1)>Math.Distance(100,20,25,0))
-local distance,biome=Math.Reachable(1400,{PradariaSolar=true,VazioCosmico=true},{"PradariaSolar","FlorestaNeon","VazioCosmico"},300)
-assert(distance==299 and biome=="PradariaSolar")
-print("FlightService: "..count.." lifecycle/security scenarios plus meter/distance/gate checks passed")
+assert(Math.Distance(35,1,10,.75)>Math.Distance(10,1,10,.75))
+local order={"PradariaSolar","FlorestaNeon","CanionVulcanico"}
+assert(Math.Zone(299.9,order,300)=="PradariaSolar" and Math.Zone(300,order,300)=="FlorestaNeon")
+local pool={A={Biome="PradariaSolar",Rarity="Comum"},B={Biome="PradariaSolar",Rarity="Rara"},C={Biome="FlorestaNeon",Rarity="Rara"}}
+local weights={Comum=55,Rara=12}
+local _, weakOdds=Math.Species(pool,"PradariaSolar",weights,.99,0)
+local _, strongOdds=Math.Species(pool,"PradariaSolar",weights,.99,1)
+local _, diverseOdds=Math.Species(pool,"PradariaSolar",weights,.99,0,"A")
+assert(strongOdds>weakOdds and diverseOdds>weakOdds)
+test("a strong throw enters the next biome before buying travel access",function()
+ local id=prepare();advance(.4);assert(Flight.Launch(player,id));advance(8)
+ assert(not profile.UnlockedBiomes.FlorestaNeon and results[1].Distance>=300 and results[1].CreatureId=="Glowshroom")
+end)
+test("result offers retry once the reveal ends without spending another orb",function()
+ local id=prepare();advance(.4);assert(Flight.Launch(player,id));advance(8)
+ assert(not Flight.Choose(player,id,"Retry"));advance(10)
+ assert(not Flight.Choose(player,"forged","Retry") and Flight.Choose(player,id,"Retry"))
+ assert(not Flight.Choose(player,id,"Retry") and profile.Orbs.Comum==24 and Flight.Prepare(player))
+end)
+test("return after a result teleports only to the player's own sanctuary",function()
+ local id=prepare();advance(.4);assert(Flight.Launch(player,id));advance(8);advance(10)
+ assert(not Flight.Choose(player,id,"other") and Flight.Choose(player,id,"Base"))
+ assert(root.Position.X==91 and root.Position.Z==23 and not root.Anchored and profile.Orbs.Comum==24)
+end)
+print("FlightService: "..count.." lifecycle/security scenarios plus meter, biome and encounter checks passed")

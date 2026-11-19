@@ -17,6 +17,11 @@ def read_mesh(path):
     limits = [len(vertices) // 3] * 3 + [len(colors) // 3]
     if any(type(n) is not int or not 1 <= n <= limits[i % 4] for i, n in enumerate(faces)):
         raise ValueError(f"Invalid triangle index: {path.name}")
+    for name, palette in data.get("Palettes", {}).items():
+        if name not in {"Dourada", "ArcoIris"} or len(palette) != len(colors) or any(
+            type(channel) not in (int, float) or not 0 <= channel <= 1 for channel in palette
+        ):
+            raise ValueError(f"Invalid material palette: {path.name} {name}")
     return json.dumps(data, separators=(",", ":"))
 
 

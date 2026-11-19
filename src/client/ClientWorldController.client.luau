@@ -21,7 +21,6 @@ local function observe(model: Instance)
     local root = model.PrimaryPart
     if not root then return end
     local scale = model:GetAttribute("ArtScale") or 1
-    CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
     local item: any = {}
     local rarity = definition.Rarity
     if rarity == "Epica" then
@@ -48,6 +47,7 @@ local function observe(model: Instance)
         item.Peak, item.Beam = peak, beam
     end
     tracked[model] = item
+    task.defer(CreatureArt.ShowOn, model, id, scale, 1.1 * scale)
 end
 local function observeWildFolder(folder: Instance)
     folder.ChildAdded:Connect(observe)
@@ -105,7 +105,9 @@ task.spawn(function()
             if item.Sparkles and root then item.Sparkles.Enabled = root.LocalTransparencyModifier < 1 end
             if model:GetAttribute("Mutation") == "ArcoIris" then
                 local color = Color3.fromHSV(hue, 0.8, 1)
-                for _, descendant in model:GetDescendants() do if descendant:IsA("BasePart") and descendant.Name ~= "Eye" then descendant.Color = color end end
+                for _, descendant in model:GetDescendants() do
+                    if descendant:IsA("BasePart") and descendant.Name ~= "Eye" and not descendant:GetAttribute("ArtPalette") then descendant.Color = color end
+                end
                 if item.Glow then item.Glow.OutlineColor = color end
             end
         end

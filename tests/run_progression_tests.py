@@ -17,7 +17,10 @@ def main():
         executable = next((str(path) for path in (root / ".tools/luau/luau.exe", root / ".tools/luau/luau") if path.is_file()), None)
     if not executable:
         parser.error("Luau CLI not found. Pass --luau PATH.")
-    paths = {name: root / "src/shared" / f"{name}.luau" for name in ("Config", "ConfigGameplay", "CaptureMath", "ConfigOrbes", "ConfigCriaturas", "ConfigBiomas", "ConfigMutacoes", "ConfigProgression", "ConfigRecompensas", "GameplayMath")}
+    paths = {name: root / "src/shared" / f"{name}.luau" for name in (
+        "Config", "ConfigGameplay", "CaptureMath", "ConfigOrbes", "ConfigCriaturas", "ConfigBiomas",
+        "ConfigMutacoes", "ConfigProgression", "ConfigRecompensas", "GameplayMath", "ConfigTraining", "TrainingMath",
+    )}
     paths.update({name: root / "src/server/Services" / f"{name}.luau" for name in ("ProgressionService", "SanctuaryService", "FusionService", "RewardService", "AutomationService")})
     sources = []
     for name, path in paths.items():

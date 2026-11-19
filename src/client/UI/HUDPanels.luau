@@ -3,11 +3,13 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local meshFolder = Shared:WaitForChild("CreatureMeshes")
 local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local W = require(script.Parent:WaitForChild("HUDWidgets"))
 local Icons = require(script.Parent:WaitForChild("HUDIcons"))
 local Gameplay = require(script.Parent:WaitForChild("GameplayPanels"))
+local OrbVisual = require(script.Parent.Parent:WaitForChild("Throw"):WaitForChild("OrbVisual"))
 local C = W.Colors
 
 local Panels = {}
@@ -146,8 +148,10 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         local ordered = {}
         local discovered = 0
         for _, definition in Config.Creatures do
+            local own = state and state.Bestiary and state.Bestiary[definition.Id]
+            if definition.RequiresArt and not own and not meshFolder:FindFirstChild(definition.Id) then continue end
             table.insert(ordered, definition)
-            if state and state.Bestiary and state.Bestiary[definition.Id] then discovered += 1 end
+            if own then discovered += 1 end
         end
         table.sort(ordered, function(a, b) return a.Difficulty < b.Difficulty end)
         hint(parent, string.format("%d / %d descobertas • Explore biomas, eventos e evoluções por fusão.", discovered, #ordered))
@@ -238,21 +242,24 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         W.Label(current, "Gain", "Máquina " .. tier .. " · +" .. data.Gain .. " força e +" .. data.XPPerRep .. " XP / repetição", UDim2.fromOffset(14, 35), UDim2.new(1, -28, 0, 23), 12, C.Green)
         local start = W.Button(current, "Start", "COMEÇAR TREINO", UDim2.fromOffset(12, 61), UDim2.new(1, -24, 0, 43), C.Orange, 13)
         start.Activated:Connect(function() actions.Close(); actions.Send("StartTraining") end)
-        local upgrade = card(list, "NextMachine", 147, C.Blue)
+        local upgrade = card(list, "NextMachine", 157, C.Blue)
         upgrade.LayoutOrder = 2
         local nextMachine = Panels.Machines[tier + 1]
-        W.Label(upgrade, "Level", "Academia nível " .. data.Level, UDim2.fromOffset(14, 5), UDim2.new(1, -28, 0, 23), 14, C.Blue)
+        local maxed = data.Level >= data.MaxLevel
+        local xp = if maxed then "NÍVEL MÁXIMO" else Numbers.Format(data.XP) .. " / " .. Numbers.Format(data.RequiredXP) .. " XP"
+        W.Label(upgrade, "Level", "Nv. " .. data.Level .. "  ·  " .. xp, UDim2.fromOffset(14, 5), UDim2.new(1, -28, 0, 23), 14, C.Blue)
         local progress = W.Frame(upgrade, "XP", UDim2.fromOffset(14, 31), UDim2.new(1, -28, 0, 9), C.Ink)
-        local fraction = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(data.RequiredXP, 1), 0, 1)
+        local fraction = if maxed then 1 else math.clamp(data.XP / math.max(data.RequiredXP, 1), 0, 1)
         W.Frame(progress, "Fill", UDim2.new(), UDim2.fromScale(fraction, 1), C.Blue)
-        if nextMachine then
+        local stats = data.NextMachineStats
+        if nextMachine and stats then
             W.Label(upgrade, "Next", nextMachine.Name .. " · Nv. " .. nextMachine.Level, UDim2.fromOffset(14, 46), UDim2.new(1, -28, 0, 21), 14)
-            W.Label(upgrade, "Gain", "+" .. (nextMachine.Force - Panels.Machines[tier].Force) .. " força base · " .. nextMachine.XP .. " XP / repetição", UDim2.fromOffset(14, 68), UDim2.new(1, -28, 0, 20), 12, C.Green)
+            W.Label(upgrade, "Gain", "Força " .. data.Gain .. " → " .. stats.Force .. "  ·  XP " .. data.XPPerRep .. " → " .. stats.XP .. " / rep", UDim2.fromOffset(14, 68), UDim2.new(1, -28, 0, 20), 12, C.Green)
             local ready = data.Level >= nextMachine.Level and state.Coins >= nextMachine.Cost
             local title = if data.Level < nextMachine.Level then "LIBERA NO NÍVEL " .. nextMachine.Level
                 elseif not ready then "FALTAM MOEDAS · $" .. Numbers.Format(nextMachine.Cost)
                 else "EVOLUIR · $" .. Numbers.Format(nextMachine.Cost)
-            local button = W.Button(upgrade, "Upgrade", title, UDim2.fromOffset(12, 94), UDim2.new(1, -24, 0, 43), if ready then C.Green else C.Card, 12)
+            local button = W.Button(upgrade, "Upgrade", title, UDim2.fromOffset(12, 103), UDim2.new(1, -24, 0, 43), if ready then C.Green else C.Card, 12)
             button.Active, button.Selectable = ready, ready
             button.Activated:Connect(function() if ready then actions.Send("UpgradeTrainingMachine", tier + 1) end end)
         else
@@ -277,7 +284,18 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             local canEquip = permanent or orb.IsPrismatic or count > 0
             local row = card(list, id, 124, orb.Color)
             row.LayoutOrder = index
-            badge(row, orb.Color, "Orb")
+            local medallion = badge(row, orb.Color, "Orb")
+            local pictogram = medallion:FindFirstChild("Pictogram")
+            if pictogram then pictogram:Destroy() end
+            local preview = Instance.new("ViewportFrame")
+            preview.Name, preview.Size = "OrbModel", UDim2.fromScale(1, 1)
+            preview.BackgroundTransparency, preview.Parent = 1, medallion
+            preview.Ambient, preview.LightColor = Color3.fromRGB(175, 187, 204), Color3.new(1, 1, 1)
+            local camera = Instance.new("Camera")
+            camera.FieldOfView, camera.CFrame, camera.Parent = 35, CFrame.lookAt(Vector3.new(1.14, .96, -1.65), Vector3.zero), preview
+            preview.CurrentCamera = camera
+            local model = OrbVisual.Create(orb.Color, 1, id)
+            model.Parent = preview
             W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
             local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
             W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 21), 12, C.Muted)

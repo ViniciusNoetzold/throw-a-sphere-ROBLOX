@@ -41,7 +41,7 @@ local ctx={DisableLoops=true,Remotes=remotes,Data={Get=function()return profile 
  MarkDirty=function()end,Sync=function()end,AddSnapshotProvider=function()end,
  TryLock=function()return not busy end,Unlock=function()end,SaveNow=function()savedTier=profile.TrainingMachine;return true end},
  World={UpdateTrainingMachine=function(_,tier)worldTier=tier end,GetSanctuary=function()return {FindFirstChild=function()return anchor end}end},Flight={IsActive=function()return flight end},
- Monetization={GetBenefits=function()return benefits end},Progression={GrantXP=function(_,xp)profile.XP+=xp end}}
+ Monetization={GetBenefits=function()return benefits end},Progression={GrantXP=function(_,xp)profile.XP+=xp;return false,xp end}}
 Training.Init(ctx)
 local function advance(seconds)now+=seconds;Training.Tick()end
 local count=0
@@ -52,15 +52,22 @@ local function test(name,f)
 end
 local function three()for _=1,3 do advance(Rules.RepSeconds+.01)end end
 local function qte()for i=#messages,1,-1 do if messages[i].State=='QTE' then return messages[i]end end;error('missing QTE')end
-test('automatic cycles grant server strength and both XP tracks',function()assert(Training.Start(player,true));advance(1);assert(profile.ThrowStrength==10);advance(1);assert(profile.ThrowStrength==11 and profile.TrainingXP==10 and profile.XP==1)end)
+test('automatic cycles grant server strength and both XP tracks',function()
+    assert(Training.Start(player,true));advance(1);assert(profile.ThrowStrength==10);advance(1)
+    assert(profile.ThrowStrength==11 and profile.TrainingXP==8 and profile.XP==3)
+    assert(messages[#messages].XPAwarded==8 and messages[#messages].PlayerXPAwarded==3)
+end)
 test('duplicate start cannot create double rewards',function()assert(Training.Start(player,true));assert(not Training.Start(player,true));advance(2);assert(profile.ThrowStrength==11)end)
 test('QTE appears only on each third repetition',function()Training.Start(player,true);advance(2);advance(2);for _,m in messages do assert(m.State~='QTE')end;advance(2);assert(qte().Id)end)
-test('successful QTE doubles exactly its own repetition',function()Training.Start(player,true);three();assert(profile.ThrowStrength==13);assert(Training.HitQTE(player,qte().Id));assert(profile.ThrowStrength==14 and profile.TrainingXP==40 and profile.XP==4)end)
+test('successful QTE doubles exactly its own repetition across a level up',function()
+    Training.Start(player,true);three();assert(profile.ThrowStrength==13 and profile.TrainingLevel==2)
+    assert(Training.HitQTE(player,qte().Id));assert(profile.ThrowStrength==14 and profile.TrainingXP==8 and profile.XP==12)
+end)
 test('replayed and malformed tokens cannot grant rewards',function()Training.Start(player,true);three();local id=qte().Id;assert(not Training.HitQTE(player,{}));assert(not Training.HitQTE(player,'forged'));assert(Training.HitQTE(player,id));assert(not Training.HitQTE(player,id));assert(profile.ThrowStrength==14)end)
 test('expired challenge preserves automatic progress',function()Training.Start(player,true);three();local id=qte().Id;advance(2.1);assert(not Training.HitQTE(player,id));assert(Training.IsTraining(player) and profile.ThrowStrength==14)end)
 test('challenge positions vary between groups of repetitions',function()Training.Start(player,true);three();local first=qte();three();local second=qte();assert(first.X~=second.X and first.Id~=second.Id)end)
-test('level up consumes threshold and preserves excess XP',function()profile.TrainingXP=55;Training.Start(player,true);advance(2);assert(profile.TrainingLevel==2 and profile.TrainingXP==5)end)
-test('level gain improves at configured milestones',function()assert(Math.Gain(1,false,Rules)==1 and Math.Gain(6,false,Rules)==2);assert(Math.Gain(6,true,Rules)==4)end)
+test('level up consumes threshold and preserves excess XP',function()profile.TrainingXP=21;Training.Start(player,true);advance(2);assert(profile.TrainingLevel==2 and profile.TrainingXP==5)end)
+test('level gain improves at configured milestones',function()assert(Math.Gain(1,false,Rules)==1 and Math.Gain(3,false,Rules)==2);assert(Math.Gain(3,true,Rules)==4)end)
 test('busy profiles and active flight reject start',function()busy=true;assert(not Training.Start(player,true));busy=false;flight=true;assert(not Training.Start(player,true))end)
 test('busy transaction pauses cycles without catchup burst',function()Training.Start(player,true);busy=true;advance(100);assert(profile.ThrowStrength==10);busy=false;advance(.21);assert(profile.ThrowStrength==11)end)
 test('station interaction validates distance',function()root.Position=Vector3.new(500,0,0);assert(not Training.Start(player,false))end)
@@ -78,11 +85,26 @@ test("machine upgrade checks level and persists the paid tier before upgrading r
     advance(.5)
     profile.TrainingLevel = 2
     assert(Training.Upgrade(player, 2))
-    assert(profile.Coins == 100 and savedTier == 2 and worldTier == 2)
+    assert(profile.Coins == 380 and savedTier == 2 and worldTier == 2)
     advance(.5)
     assert(not Training.Upgrade(player, 2))
     assert(Training.Start(player, true))
-    advance(2)
-    assert(profile.ThrowStrength == 12 and profile.TrainingXP == 13)
+    advance(1.76)
+    assert(profile.ThrowStrength == 12 and profile.TrainingXP == 12)
+    assert(messages[#messages].Interval < Rules.RepSeconds)
+end)
+test("each new machine increases force and XP while reducing repetition time", function()
+    for tier = 2, #Rules.Machines do
+        local level = Rules.Machines[tier].Level
+        local before, after = Math.Repetition(level, tier - 1, false, Rules), Math.Repetition(level, tier, false, Rules)
+        assert(after.Force > before.Force and after.XP > before.XP and after.PlayerXP > before.PlayerXP and after.Interval < before.Interval)
+    end
+end)
+test("early academy levels are quick and later XP targets outgrow rewards", function()
+    local function repetitions(level, tier)
+        return math.ceil(Math.RequiredXP(level, Rules) / Math.Repetition(level, tier, false, Rules).XP)
+    end
+    assert(repetitions(1, 1) == 3 and repetitions(2, 2) <= 4)
+    assert(repetitions(52, 8) > repetitions(14, 5) and repetitions(99, 8) > repetitions(52, 8))
 end)
 print('TrainingService: '..count..' progression/security/lifecycle scenarios passed')

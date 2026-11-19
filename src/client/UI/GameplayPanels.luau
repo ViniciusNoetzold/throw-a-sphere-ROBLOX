@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local meshFolder = Shared:WaitForChild("CreatureMeshes")
 local Rewards = require(Shared:WaitForChild("ConfigRecompensas"))
 local Progression = require(Shared:WaitForChild("ConfigProgression"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
@@ -313,7 +314,9 @@ local function renderBestiaryRewards(parent: GuiObject, state: any, actions: any
     for index, id in biomeOrder do
         local total, discovered = 0, 0
         for creatureId, definition in Config.Creatures do
-            if definition.Biome == id then total += 1; if state and (state.Bestiary or {})[creatureId] then discovered += 1 end end
+            if definition.Biome ~= id or (definition.RequiresArt and not meshFolder:FindFirstChild(creatureId)) then continue end
+            total += 1
+            if state and (state.Bestiary or {})[creatureId] then discovered += 1 end
         end
         local claimed = state and (state.BestiaryRewardClaimed or {})[id]
         local row = card(list, id, 146, C.Gold)
@@ -334,7 +337,7 @@ local function renderRanking(parent: GuiObject, state: any, actions: any)
     local entries = (board.Boards or {})[selected] or {}
     if #entries == 0 then hint(list, "Aguardando a primeira atualização do placar..."); return end
     for index, entry in entries do
-        local value = if selected == "Coins" then "$" .. Numbers.Format(entry.Coins) elseif selected == "Capture" then "$" .. Numbers.Format(entry.Capture) .. "/s" elseif selected == "Level" then "NV. " .. Numbers.Format(entry.ActualLevel or 1) .. " • " .. Numbers.Format(entry.Rebirths or 0) .. " rebirths" else Numbers.Format(entry.Bestiary) .. "/30 espécies"
+        local value = if selected == "Coins" then "$" .. Numbers.Format(entry.Coins) elseif selected == "Capture" then "$" .. Numbers.Format(entry.Capture) .. "/s" elseif selected == "Level" then "NV. " .. Numbers.Format(entry.ActualLevel or 1) .. " • " .. Numbers.Format(entry.Rebirths or 0) .. " rebirths" else Numbers.Format(entry.Bestiary) .. " espécies descobertas"
         local row = card(list, "Rank_" .. index, 91, if index == 1 then C.Gold else C.Blue)
         row.LayoutOrder = index
         heading(row, "#" .. index .. "  " .. entry.DisplayName, value, "Trophy", if index == 1 then C.Gold else C.Blue)

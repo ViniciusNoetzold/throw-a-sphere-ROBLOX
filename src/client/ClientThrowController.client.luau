@@ -181,7 +181,7 @@ local function flight(data: any)
     local hand = character and (character:FindFirstChild("RightHand") or character:FindFirstChild("Right Arm"))
     local folder = Instance.new("Folder")
     folder.Name, folder.Parent = "FlightLocalEffects", Workspace
-    local orb, core = OrbVisual.Create(data.Color, 1.8)
+    local orb, core = OrbVisual.Create(data.Color, 1.8, data.OrbId)
     orb.Parent = folder
     local trail = Instance.new("Trail")
     local left, right = Instance.new("Attachment"), Instance.new("Attachment")
@@ -195,7 +195,7 @@ local function flight(data: any)
     light.Color, light.Brightness, light.Range, light.Parent = data.Color, 2, 15, core
     local extras: {Model} = {}
     for _ = 2, data.Count or 1 do
-        local extra = OrbVisual.Create(data.Color, 1.45)
+        local extra = OrbVisual.Create(data.Color, 1.45, data.OrbId)
         extra.Parent = folder
         table.insert(extras, extra)
     end
@@ -223,22 +223,24 @@ local function flight(data: any)
             else
                 local alpha = math.clamp((elapsed - Rules.WindupSeconds) / (data.Duration - Rules.WindupSeconds), 0, 1)
                 local travel = 1 - (1 - alpha) ^ 1.4
-                local pos = release:Lerp(data.EndPos, travel) + Vector3.new(0, math.sin(alpha * math.pi) * math.min(45, 10 + data.Distance * .025), 0)
+                local arc = math.min(15, 7 + data.Distance * .013)
+                local pos = release:Lerp(data.EndPos, travel) + Vector3.new(0, math.sin(alpha * math.pi) * arc, 0)
                 trail.Enabled = true
                 orb:PivotTo(CFrame.new(pos) * CFrame.Angles(alpha * 20, alpha * 8, alpha * 3))
                 for index, extra in extras do
                     local side = if index == 1 then -1 else 1
                     extra:PivotTo(orb:GetPivot() + Vector3.new(side * 3.6, math.sin(elapsed * 6 + index) * .85, 2))
                 end
-                local zoneIndex = math.clamp(math.floor(data.Distance * travel / Rules.ZoneLength) + 1, 1, #Layout.BiomeOrder)
+                local traveled = math.clamp((pos - Rules.LaunchOrigin):Dot(Rules.Direction), 0, data.Distance)
+                local biomeId, zoneIndex = Math.Zone(traveled, Layout.BiomeOrder, Rules.ZoneLength)
                 if zoneIndex ~= previousZone then zoneTime = now; previousZone = zoneIndex end
                 local pulse = math.max(0, 1 - (now - zoneTime) * 3)
                 local acceleration = math.sin(alpha * math.pi)
                 local offset = Vector3.new(if reduced then 0 else math.sin(alpha * math.pi) * 3.5, 4.8, 12 + acceleration * 6)
                 local shot = CFrame.lookAt(pos + offset, pos + Vector3.new(0, 0, -10))
                 Focus.Frame("Throw", shot, if reduced then 64 else 64 + acceleration * 13 + pulse * 4, delta, 16)
-                top.Text = Numbers.Format(data.Distance * travel) .. " STUDS"
-                zone.Text = Config.Biomes[Layout.BiomeOrder[zoneIndex]].Name
+                top.Text = Numbers.Format(traveled) .. " STUDS"
+                zone.Text = Config.Biomes[biomeId].Name
             end
             if elapsed > data.Duration + 10 then error("Resultado do servidor não chegou") end
             delta = Run.RenderStepped:Wait()
@@ -246,7 +248,16 @@ local function flight(data: any)
         if alive() and session and session.Result then
             folder:Destroy()
             top.Text, zone.Text = "", ""
-            Reveal.Play(gui, session.Result, alive)
+            local entry = session
+            local actions = if entry.Automatic then nil else {
+                Ready = function() return entry.Ready == true and not entry.ChoicePending end,
+                Submit = function(choice: string)
+                    entry.ChoicePending = true
+                    remotes.ChooseAfterThrow:FireServer(entry.Id, choice)
+                end,
+            }
+            Reveal.Play(gui, entry.Result, alive, actions)
+            if actions and alive() then error("A revelação foi interrompida antes da escolha") end
         end
     end)
     if not ok then
@@ -273,10 +284,17 @@ end
   session=data
   title.Text=string.format("FORÇA CONFIRMADA: %d%%",math.floor(data.Power*100))
   task.spawn(flight,data)
- elseif data.State=="Landed" and session and data.Id==session.Id then session.State,session.Result="Revealing",data.Result
- elseif (data.State=="Cancelled" or data.State=="Ready") and session and data.Id==session.Id then
-  suppressUntilExit = atLine()
-  idle()
+ elseif session and data.Id==session.Id then
+  if data.State=="Landed" then
+   session.State,session.Result,session.Automatic="Revealing",data.Result,data.Automatic
+  elseif data.State=="Ready" and not session.Automatic then
+   session.Ready = true
+  elseif data.State=="ChoiceRejected" then
+   session.ChoicePending = false
+  elseif data.State=="ChoiceAccepted" or data.State=="Cancelled" or data.State=="Ready" then
+   suppressUntilExit = data.Choice ~= "Retry" and atLine()
+   idle()
+  end
  end
 end)
 ;(remotes:WaitForChild("ThrowWindup")::RemoteEvent).OnClientEvent:Connect(function(data:any)

@@ -30,7 +30,7 @@ def main():
             separator += "="
         literal = f"[{separator}[\n{source}\n]{separator}]"
         template = template.replace(f"__{module.upper()}_SOURCE__", literal)
-    for module in ("GameplayMath", "ConfigProgression"):
+    for module in ("GameplayMath", "ConfigProgression", "TrainingMath", "ConfigTraining"):
         source = (root / "src/shared" / f"{module}.luau").read_text(encoding="utf-8")
         separator = "===="
         while f"]{separator}]" in source:

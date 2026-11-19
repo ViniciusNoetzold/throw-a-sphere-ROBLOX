@@ -14,17 +14,19 @@ local upgradeRequests: {[Player]: number} = {}
 local function machine(profile: any): any
     return Rules.Machines[profile.TrainingMachine or 1]
 end
-local function gain(player: Player, profile: any): number
-    return Math.Gain(profile.TrainingLevel, ctx.Monetization.GetBenefits(player).TitanArms == true, Rules, machine(profile))
-end
 function Training.IsTraining(player:Player):boolean return sessions[player]~=nil end
 local function snapshot(player:Player):any
     local p=ctx.Data.Get(player)
     if not p then return {} end
     local s=sessions[player]
+    local tier = p.TrainingMachine or 1
+    local titan = ctx.Monetization.GetBenefits(player).TitanArms == true
+    local stats = Math.Repetition(p.TrainingLevel, tier, titan, Rules)
+    local nextStats = if Rules.Machines[tier + 1] then Math.Repetition(p.TrainingLevel, tier + 1, titan, Rules) else nil
     return {Active=s~=nil,Level=p.TrainingLevel,XP=p.TrainingXP,RequiredXP=Math.RequiredXP(p.TrainingLevel,Rules),
-        Gain=gain(player, p), Reps=if s then s.Reps else 0, Interval=Rules.RepSeconds, NextRepAt=if s then s.NextAt else nil,
-        MachineTier=p.TrainingMachine or 1, MachineName=machine(p).Name, XPPerRep=machine(p).XP}
+        MaxLevel = Rules.MaxLevel, Strength = p.ThrowStrength, Gain = stats.Force, XPPerRep = stats.XP,
+        Reps = if s then s.Reps else 0, Interval = if s then s.Interval else stats.Interval, NextRepAt = if s then s.NextAt else nil,
+        MachineTier = tier, MachineName = machine(p).Name, NextMachineStats = nextStats}
 end
 local function send(player:Player,state:string,extra:any?)
     local data=snapshot(player)
@@ -45,7 +47,8 @@ function Training.Stop(player:Player)
 end
 function Training.Start(player:Player,travel:boolean?):boolean
     local now=Workspace:GetServerTimeNow()
-    if now<(requests[player] or 0) or sessions[player] or ctx.Data.IsBusy(player) or not ctx.Data.IsLoaded(player) or (ctx.Flight and ctx.Flight.IsActive(player)) then return false end
+    local profile = ctx.Data.Get(player)
+    if now<(requests[player] or 0) or sessions[player] or ctx.Data.IsBusy(player) or not ctx.Data.IsLoaded(player) or not profile or (ctx.Flight and ctx.Flight.IsActive(player)) then return false end
     requests[player]=now+Rules.RequestCooldown
     local lot=ctx.World.GetSanctuary(player)
     local anchor=lot and lot:FindFirstChild("PersonalTraining")
@@ -54,24 +57,27 @@ function Training.Start(player:Player,travel:boolean?):boolean
     local humanoid=character and character:FindFirstChildOfClass("Humanoid")
     if not anchor or not anchor:IsA("BasePart") or not root or not root:IsA("BasePart") or not humanoid or humanoid.Health<=0 then return false end
     if not travel and (root.Position-anchor.Position).Magnitude>16 then return false end
+    local interval = Rules.RepSeconds - machine(profile).Speed
     local s={Character=character,Root=root,Humanoid=humanoid,Anchored=root.Anchored,Speed=humanoid.WalkSpeed,AutoRotate=humanoid.AutoRotate,
-        Anchor=anchor,Reps=0,StartedAt=now,NextAt=now+Rules.RepSeconds,QTE=nil}
+        Anchor=anchor,Reps=0,StartedAt=now,Interval=interval,NextAt=now+interval,QTE=nil}
     sessions[player]=s
     character:PivotTo(CFrame.lookAt(anchor.Position+Vector3.new(0,3,0),anchor.Position+Vector3.new(0,3,-10)))
     root.Anchored,humanoid.WalkSpeed,humanoid.AutoRotate=true,0,false
     player:SetAttribute("TrainingActive",true)
-    ctx.Remotes.TrainingPose:FireAllClients({Player=player,Active=true,StartedAt=now,Interval=Rules.RepSeconds})
+    ctx.Remotes.TrainingPose:FireAllClients({Player=player,Active=true,StartedAt=now,Interval=interval})
     send(player,"Started")
     return true
 end
-local function award(player:Player,gain:number,xp:number)
+local function award(player: Player, stats: any): any
     local p=ctx.Data.Get(player)
-    if not p then return end
-    p.ThrowStrength=math.min(Rules.MaxStrength,p.ThrowStrength+gain)
-    Math.AddXP(p,xp,Rules)
-    ctx.Progression.GrantXP(player,Rules.PlayerXPPerRep)
+    if not p then return {} end
+    local appliedForce = math.min(stats.Force, math.max(0, Rules.MaxStrength - p.ThrowStrength))
+    p.ThrowStrength += appliedForce
+    local leveled, academyXP = Math.AddXP(p, stats.XP, Rules)
+    local _, gainedPlayerXP = ctx.Progression.GrantXP(player, stats.PlayerXP)
     ctx.Data.MarkDirty(player)
     ctx.Data.Sync(player)
+    return {GainAwarded = appliedForce, XPAwarded = academyXP, PlayerXPAwarded = gainedPlayerXP or 0, LeveledUp = leveled}
 end
 function Training.Tick()
     local now=Workspace:GetServerTimeNow()
@@ -82,14 +88,13 @@ function Training.Tick()
         if s.QTE and now>s.QTE.ExpiresAt then s.QTE=nil;send(player,"Missed") end
         if now>=s.NextAt then
             -- Never catch up a paused server with a large burst of rewards.
-            s.NextAt=now+Rules.RepSeconds;s.Reps+=1
-            local strength, xp = gain(player, p), machine(p).XP
-            award(player, strength, xp)
-            send(player, "Rep", {GainAwarded = strength})
+            s.NextAt=now+s.Interval;s.Reps+=1
+            local stats = Math.Repetition(p.TrainingLevel, p.TrainingMachine or 1, ctx.Monetization.GetBenefits(player).TitanArms == true, Rules)
+            send(player, "Rep", award(player, stats))
             if s.Reps%Rules.QTEEvery==0 then
                 local locations={{.23,.3},{.73,.45},{.29,.64},{.71,.27}}
                 local point=locations[(math.floor(s.Reps/Rules.QTEEvery)-1)%#locations+1]
-                s.QTE={Id=Http:GenerateGUID(false),ExpiresAt=now+Rules.QTESeconds,Gain=strength,XP=xp}
+                s.QTE={Id=Http:GenerateGUID(false),ExpiresAt=now+Rules.QTESeconds,Stats=stats}
                 send(player,"QTE",{Id=s.QTE.Id,ExpiresAt=s.QTE.ExpiresAt,X=point[1],Y=point[2]})
             end
         end
@@ -100,10 +105,9 @@ function Training.HitQTE(player:Player,id:any):boolean
     local s=sessions[player]
     local now=Workspace:GetServerTimeNow()
     if not s or player.Character~=s.Character or not s.QTE or s.QTE.Id~=id or now>s.QTE.ExpiresAt or not s.Root.Parent or (s.Root.Position-s.Anchor.Position).Magnitude>10 or s.Humanoid.Health<=0 then return false end
-    local strength, xp = s.QTE.Gain, s.QTE.XP
+    local stats = s.QTE.Stats
     s.QTE=nil -- Consume before any callback: one bonus per three repetitions.
-    award(player, strength, xp)
-    send(player, "Perfect", {GainAwarded = strength})
+    send(player, "Perfect", award(player, stats))
     return true
 end
 function Training.Upgrade(player: Player, expectedTier: any): (boolean, string)

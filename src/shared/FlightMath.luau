@@ -14,24 +14,24 @@ function FlightMath.ThrowStyle(power: number): string
     return if power<0.35 then "Weak" elseif power<0.8 then "Medium" else "Strong"
 end
 function FlightMath.Distance(strength: number, level: number, orbPower: number, power: number, titan: boolean?): number
-    local base = 120 + math.clamp(strength, 0, 10000) * 7 + math.clamp(level, 1, 100) * 4
-        + math.log10(math.clamp(orbPower, 1, 18000) + 1) * 60
-    return math.clamp(base * (0.35 + 0.9 * math.clamp(power, 0, 1)) * (if titan then 1.35 else 1), 60, 1800)
+    local strengthDistance = 250 * math.log(1 + math.clamp(strength, 0, 10000) / 26)
+    local base = 135 + strengthDistance + math.clamp(level, 1, 100) * 4
+        + math.log10(math.clamp(orbPower, 1, 18000) + 1) * 65
+    return math.max(60, base * (0.38 + math.clamp(power, 0, 1)) * (if titan then 1.35 else 1))
 end
-function FlightMath.Reachable(distance: number, unlocked: {[string]: boolean}, order: {string}, zoneLength: number): (number, string)
-    local last = 1
-    for index = 2, #order do
-        if unlocked[order[index]] ~= true then break end
-        last = index
-    end
-    local limited = math.min(distance, last * zoneLength - 1)
-    return limited, order[math.clamp(math.floor(limited / zoneLength) + 1, 1, last)]
+function FlightMath.Zone(distance: number, order: {string}, zoneLength: number): (string, number, number)
+    local band = math.clamp(math.floor(distance / zoneLength) + 1, 1, #order)
+    local progress = math.clamp((distance - (band - 1) * zoneLength) / zoneLength, 0, 1)
+    return order[band], band, progress
 end
-function FlightMath.Species(creatures: {[string]: any}, biome: string, weights: {[string]: number}, roll: number): (string?, number)
+local rarityRanks: {[string]: number} = {Comum = 0, Incomum = 1, Rara = 2, Epica = 3, Mitica = 4, Lendaria = 5}
+function FlightMath.Species(creatures: {[string]: any}, biome: string, weights: {[string]: number}, roll: number, quality: number?, previous: string?): (string?, number)
     local pool, total = {}, 0
+    local boost = 1 + .55 * math.clamp(quality or 0, 0, 1)
     for id, definition in creatures do
         if definition.Biome == biome then
-            local weight = weights[definition.Rarity] or 0
+            local weight = (weights[definition.Rarity] or 0) * boost ^ (rarityRanks[definition.Rarity] or 0)
+            if id == previous then weight *= .25 end
             if weight > 0 then table.insert(pool, {Id = id, Weight = weight}); total += weight end
         end
     end

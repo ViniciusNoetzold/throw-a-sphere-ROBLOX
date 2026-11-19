@@ -14,6 +14,8 @@ local Flight = {}
 local ctx: any
 local sessions: {[Player]: any} = {}
 local requests: {[Player]: number} = {}
+local lastEncounters: {[Player]: string} = {}
+local decisions: {[Player]: string} = {}
 local rng = Random.new()
 function Flight.IsActive(player: Player): boolean return sessions[player] ~= nil end
 
@@ -72,11 +74,13 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
         Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now,
         Character = character, Root = root, WasAnchored = root.Anchored,
         Humanoid = humanoid, WasAutoRotate = humanoid.AutoRotate,
+        Automatic = automatic == true,
     }
     root.AssemblyLinearVelocity, root.AssemblyAngularVelocity = Vector3.zero, Vector3.zero
     root.Anchored, humanoid.AutoRotate = true, false
     if CFrame then character:PivotTo(CFrame.lookAt(root.Position, root.Position + Rules.Direction)) end
     sessions[player] = entry
+    decisions[player] = nil
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
     return true
@@ -107,15 +111,19 @@ local function finish(player: Player, entry: any)
     local ok, result = pcall(function()
         local benefits = ctx.Monetization.GetBenefits(player)
         local bundle, best, totalXP = {}, nil, 0
+        local previous = lastEncounters[player]
+        local quality = entry.Power * .55 + entry.ZoneProgress * .45
         for _ = 1, entry.Count do
             -- Species is rolled here, after the flight. Never accepted from a client.
             local secret = rng:NextNumber() < Events.SecretSpawnChance
-            local id, chance = Math.Species(Config.Creatures, entry.BiomeId, Events.SpeciesWeights, rng:NextNumber())
+            local id, chance = Math.Species(ctx.EncounterCreatures or Config.Creatures, entry.BiomeId, Events.SpeciesWeights, rng:NextNumber(), quality, previous)
             if secret then id, chance = "Omnisfera", Events.SecretSpawnChance else chance *= 1 - Events.SecretSpawnChance end
             assert(id, "Biome has no eligible creatures")
+            previous = id
             local definition = Config.Creatures[id]
             local orb = Config.Orbs[entry.OrbId]
-            local aim = if entry.Perfect then 1.5 else 1 + entry.Power * 0.25
+            local strengthBonus = math.min(.6, entry.Strength / (20 + entry.ZoneIndex * 14) * .32)
+            local aim = 1 + entry.Power * .35 + entry.ZoneProgress * .15 + strengthBonus + (if entry.Perfect then .2 else 0)
             local luck = ctx.Gameplay.GetLuck(profile, benefits, ctx.Weather.GetLuckMultiplier(), os.time())
             local elemental = if (entry.OrbId == "Rubi" and definition.Element == "Fogo") or (entry.OrbId == "Safira" and (definition.Element == "Agua" or definition.Element == "Gelo")) then 1.1 else 1
             local probability = Config.CalculateShakeProbability(orb.Power * elemental, aim, luck, definition.Difficulty, orb.IsMaster)
@@ -150,7 +158,7 @@ local function finish(player: Player, entry: any)
         best = table.clone(best)
         best.Bundle, best.XPGained = bundle, totalXP
         best.FlightId, best.HitPos, best.StartPos = entry.Id, entry.EndPos, entry.StartPos
-        best.OrbColor, best.Distance, best.BiomeId = entry.Color, entry.Distance, entry.BiomeId
+        best.OrbColor, best.Distance, best.BiomeId, best.OrbId = entry.Color, entry.Distance, entry.BiomeId, entry.OrbId
         best.IsCritical, best.IsLongShot = entry.Perfect, false
         best.NewLevel, best.LeveledUp = profile.Level, profile.Level > entry.Level
         best.PresentationDuration = 2.1 + Reveals[best.Rarity].Duration
@@ -175,6 +183,7 @@ local function finish(player: Player, entry: any)
         send(player, {State = "Cancelled", Id = entry.Id})
         return
     end
+    lastEncounters[player] = result.CreatureId
     ctx.Data.Unlock(player, entry.Owner)
     entry.State = "Revealing"
     for _, record in drops do
@@ -182,12 +191,13 @@ local function finish(player: Player, entry: any)
         if not dropped then warn("[FlightService] Drop visual failed:", problem) end
     end
     ctx.Data.Sync(player)
-    send(player, {State = "Landed", Id = entry.Id, Result = result})
+    send(player, {State = "Landed", Id = entry.Id, Result = result, Automatic = entry.Automatic})
     ctx.Remotes.ThrowResult:FireAllClients(result)
     task.delay(result.PresentationDuration + 0.3, function()
         if sessions[player] == entry then
             sessions[player] = nil
             releaseStance(entry)
+            if not entry.Automatic then decisions[player] = entry.Id end
             send(player, {State = "Ready", Id = entry.Id})
         end
     end)
@@ -210,9 +220,11 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local capacity = Config.Constants.MaxInventoryCreatures - ctx.Data.GetInventoryCount(profile)
     local count = math.min(if benefits.TripleThrow then 3 else 1, capacity, if infinite then 3 else profile.Orbs[orbId])
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
-    local distance, biome = Math.Reachable(Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms), profile.UnlockedBiomes, ctx.Layout.BiomeOrder, Rules.ZoneLength)
+    local distance = math.min(Rules.MaxDistance or Rules.ZoneLength * #ctx.Layout.BiomeOrder, Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms))
+    local biome, zoneIndex, zoneProgress = Math.Zone(distance, ctx.Layout.BiomeOrder, Rules.ZoneLength)
     entry.State, entry.Owner, entry.OrbId, entry.Consumed, entry.Count = "Flying", owner, orbId, not infinite, count
     entry.Power, entry.Perfect, entry.Distance, entry.BiomeId = power, power >= Rules.PerfectThreshold, distance, biome
+    entry.Strength, entry.ZoneIndex, entry.ZoneProgress = profile.ThrowStrength, zoneIndex, zoneProgress
     entry.StartPos, entry.EndPos, entry.Color = root.Position + Vector3.new(0, 2, 0), Rules.LaunchOrigin + Rules.Direction * distance, orb.Color
     entry.Level = profile.Level
     entry.Duration = Rules.WindupSeconds + math.clamp(3.5 + distance / 500, Rules.MinFlightSeconds, Rules.MaxFlightSeconds)
@@ -222,7 +234,7 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     ctx.Data.MarkDirty(player)
     ctx.Data.Sync(player, true)
     send(player, {State = "Flying", Id = id, StartedAt = now, Duration = entry.Duration, StartPos = entry.StartPos,
-        EndPos = entry.EndPos, Power = power, Perfect = entry.Perfect, Distance = distance, BiomeId = biome, Color = orb.Color, Count = count})
+        EndPos = entry.EndPos, Power = power, Perfect = entry.Perfect, Distance = distance, BiomeId = biome, Color = orb.Color, OrbId = orbId, Count = count})
     ctx.Remotes.ThrowWindup:FireAllClients({Thrower=player,Power=power,Style=Math.ThrowStyle(power),StartedAt=now})
     task.delay(entry.Duration, function() finish(player, entry) end)
     return true
@@ -232,6 +244,23 @@ function Flight.AutoThrow(player: Player): boolean
     if not Flight.Prepare(player, true) then return false end
     local entry = sessions[player]
     task.delay(0.2, function() if sessions[player] == entry then Flight.Launch(player, entry.Id, true) end end)
+    return true
+end
+function Flight.Choose(player: Player, id: any, choice: any): boolean
+    if type(id) ~= "string" or #id > 80 or decisions[player] ~= id or sessions[player] then return false end
+    if choice ~= "Retry" and choice ~= "Base" then return false end
+    local profile, root = ready(player)
+    if not profile or not root or ctx.Data.IsBusy(player) or (ctx.Training and ctx.Training.IsTraining(player)) then return false end
+    if not Math.AtLine(root.Position, Rules.LinePosition, Rules.LineWidth, Rules.LineDepth) then return false end
+    if choice == "Base" then
+        local position = ctx.World.GetSanctuaryReturnPosition(player)
+        if not position or not player.Character then return false end
+        player.Character:PivotTo(CFrame.new(position))
+        root.AssemblyLinearVelocity, root.AssemblyAngularVelocity = Vector3.zero, Vector3.zero
+        player:SetAttribute("CurrentBiome", "Hub")
+    end
+    decisions[player] = nil
+    send(player, {State = "ChoiceAccepted", Id = id, Choice = choice})
     return true
 end
 function Flight.Init(context: any)
@@ -244,15 +273,24 @@ function Flight.Init(context: any)
         -- Flight cannot be cancelled/refunded remotely after launch.
         if entry and entry.State == "Charging" then Flight.Cancel(player, id) end
     end)
+    ctx.Remotes.ChooseAfterThrow.OnServerEvent:Connect(function(player, id, choice)
+        if decisions[player] == id and id ~= nil and not Flight.Choose(player, id, choice) then
+            send(player, {State = "ChoiceRejected", Id = id})
+        end
+    end)
     local function bind(player: Player)
-        player.CharacterRemoving:Connect(function() local entry = sessions[player]; if entry then Flight.Cancel(player, entry.Id) end end)
+        player.CharacterRemoving:Connect(function()
+            decisions[player] = nil
+            local entry = sessions[player]
+            if entry then Flight.Cancel(player, entry.Id) end
+        end)
     end
     Players.PlayerAdded:Connect(bind)
     for _, player in Players:GetPlayers() do bind(player) end
     Players.PlayerRemoving:Connect(function(player)
         local entry = sessions[player]
         if entry then Flight.Cancel(player, entry.Id) end
-        requests[player] = nil
+        requests[player], decisions[player], lastEncounters[player] = nil, nil, nil
     end)
 end
 return Flight

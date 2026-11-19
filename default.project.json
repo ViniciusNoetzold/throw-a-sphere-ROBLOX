@@ -108,6 +108,9 @@
         "CancelThrow": {
           "$className": "RemoteEvent"
         },
+        "ChooseAfterThrow": {
+          "$className": "RemoteEvent"
+        },
         "FlightUpdate": {
           "$className": "RemoteEvent"
         },

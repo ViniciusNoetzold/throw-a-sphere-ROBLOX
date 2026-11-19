@@ -1,15 +1,18 @@
 --!strict
 -- All effects are local and bounded. No reward decisions or external asset IDs live here.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiService = game:GetService("GuiService")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local SoundService = game:GetService("SoundService")
+local UserInputService = game:GetService("UserInputService")
 local Config = require(ReplicatedStorage.Shared.Config)
 local Reveals = require(ReplicatedStorage.Shared.ConfigReveal)
 local Numbers = require(ReplicatedStorage.Shared.NumberFormatter)
 local CreatureArt = require(script.Parent.Parent:WaitForChild("CreatureArt"))
 local OrbVisual = require(script.Parent:WaitForChild("OrbVisual"))
 local Director = {}
+type Actions = {Ready: () -> boolean, Submit: (string) -> ()}
 
 local function label(parent: Instance, text: string, y: number, height: number, size: number, color: Color3): TextLabel
     local item = Instance.new("TextLabel")
@@ -21,7 +24,7 @@ local function label(parent: Instance, text: string, y: number, height: number, 
     item.ZIndex, item.Parent = 8, parent
     return item
 end
-local function preview(id: string): Model
+local function preview(id: string, mutation: string?): Model
     local definition = Config.Creatures[id]
     local collection = ReplicatedStorage:FindFirstChild("CreatureModels")
     local existing = collection and collection:FindFirstChild(id)
@@ -34,7 +37,7 @@ local function preview(id: string): Model
         clone:PivotTo(CFrame.new())
         return clone
     end
-    local mesh = CreatureArt.Get(id)
+    local mesh = CreatureArt.Get(id, mutation)
     if mesh then
         local model = Instance.new("Model")
         mesh.CFrame = CFrame.new()
@@ -59,7 +62,7 @@ local function preview(id: string): Model
     end
     return model
 end
-function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
+function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actions: Actions?)
     local tier = Reveals[data.Rarity] or Reveals.Comum
     local reduced = parent:GetAttribute("ReducedMotion") == true
     local overlay = Instance.new("Frame")
@@ -73,14 +76,17 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
     grade.TintColor = tier.Color:Lerp(Color3.new(1,1,1), 0.85)
     bloom.Parent, blur.Parent, grade.Parent = Lighting, Lighting, Lighting
     local viewport = Instance.new("ViewportFrame")
-    viewport.Name, viewport.Size, viewport.Position = "CreatureReveal", UDim2.fromScale(0.74,0.64), UDim2.fromScale(0.13,0.15)
+    viewport.Name, viewport.Size, viewport.Position = "CreatureReveal", UDim2.fromScale(.74,.53), UDim2.fromScale(.13,.12)
     viewport.BackgroundTransparency, viewport.ZIndex, viewport.Parent = 1, 7, overlay
     viewport.Ambient, viewport.LightColor, viewport.LightDirection = Color3.new(0.5,0.5,0.5), Color3.new(1,1,1), Vector3.new(-1,-1,-1)
     local world = Instance.new("WorldModel")
     world.Parent = viewport
     local camera = Instance.new("Camera")
     camera.FieldOfView, camera.Parent, viewport.CurrentCamera = 35, viewport, camera
-    local creature = preview(data.CreatureId)
+    local creature = preview(data.CreatureId, data.MutationName)
+    for _, size in Config.Sizes do
+        if size.Name == data.SizeName then creature:ScaleTo(size.Scale); break end
+    end
     creature.Parent = world
     local colors: {[BasePart]: Color3} = {}
     local transparencies: {[BasePart]: number} = {}
@@ -88,7 +94,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
     local bounds, size = creature:GetBoundingBox()
     local target = bounds.Position
     local radius = math.max(size.X,size.Y,size.Z) * 2.2
-    local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5))
+    local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5), data.OrbId)
     captureOrb.Parent = world
     local burst: {Frame} = {}
     for i = 1, (if reduced then 0 else 5 + tier.Rank * 4) do
@@ -135,8 +141,8 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
         table.insert(rings,ring)
     end
     local title = label(overlay, "CONEXÃO COM A ORBE",0.06,50,40,tier.Color)
-    local name = label(overlay,"? ? ?",0.73,60,52,Color3.new(1,1,1))
-    local detail = label(overlay,"Três balançadas. Um encontro.",0.84,35,20,tier.Color)
+    local name = label(overlay,"? ? ?",.61,36,34,Color3.new(1,1,1))
+    local detail = label(overlay,"",.71,24,18,tier.Color)
     local bundle = data.Bundle or {data}
     local captures = 0
     for _, item in bundle do if item.Captured then captures += 1 end end
@@ -192,7 +198,9 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
                     else "ESCAPOU • +" .. Numbers.Format(data.XPGained or 0) .. " XP de consolação"
                 if #bundle > 1 then detail.Text ..= "   |   " .. captures .. "/" .. #bundle .. " capturas" end
                 local chance = data.SpawnChance or 1
-                label(overlay,"ENCONTRO: 1 EM " .. Numbers.Format(math.max(1,math.floor(1/math.max(chance,1e-12)))),0.92,25,16,tier.Color)
+                local stats = "ENCONTRO: 1 EM " .. Numbers.Format(math.max(1,math.floor(1/math.max(chance,1e-12))))
+                if data.Distance then stats = Numbers.Format(data.Distance) .. " STUDS   •   " .. stats end
+                label(overlay,stats,.78,21,14,tier.Color)
             end
             local anticipation = if opened and not reduced then math.max(0, 1 - after * 3) else 0
             if opened then
@@ -235,7 +243,46 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
     end)
     captureOrb:Destroy()
     for _, item in sounds do item:Destroy() end
-    bloom:Destroy(); blur:Destroy(); grade:Destroy(); overlay:Destroy()
+    bloom:Destroy(); blur:Destroy(); grade:Destroy()
+    if ok and actions and alive() then
+        for _, item in burst do item:Destroy() end
+        pulse:Destroy()
+        local bar = Instance.new("Frame")
+        bar.Name, bar.AnchorPoint, bar.Position = "ThrowOptions", Vector2.new(.5, 1), UDim2.new(.5, 0, 1, -10)
+        bar.Size, bar.BackgroundTransparency, bar.Parent = UDim2.new(.94, 0, 0, 44), 1, overlay
+        local limit = Instance.new("UISizeConstraint")
+        limit.MaxSize, limit.Parent = Vector2.new(460, 44), bar
+        local buttons: {TextButton} = {}
+        local options = {
+            {Id = "Retry", Caption = "JOGAR DE NOVO", Color = Color3.fromRGB(93, 231, 138)},
+            {Id = "Base", Caption = "VOLTAR À BASE", Color = Color3.fromRGB(134, 196, 255)},
+        }
+        for index, option in options do
+            local button = Instance.new("TextButton")
+            button.Name, button.Text, button.Font = "Choose" .. option.Id, option.Caption, Enum.Font.GothamBlack
+            button.Position, button.Size = UDim2.fromScale((index - 1) * .52, 0), UDim2.fromScale(.48, 1)
+            button.BackgroundColor3, button.TextColor3 = option.Color, Color3.fromRGB(17, 29, 43)
+            button.TextSize, button.ZIndex, button.Parent = 14, 9, bar
+            local rounded = Instance.new("UICorner")
+            rounded.CornerRadius, rounded.Parent = UDim.new(0, 10), button
+            button.Activated:Connect(function() if actions.Ready() then actions.Submit(option.Id) end end)
+            table.insert(buttons, button)
+        end
+        local wasEnabled = false
+        while alive() do
+            local enabled = actions.Ready()
+            for _, button in buttons do
+                button.Active, button.Selectable, button.AutoButtonColor = enabled, enabled, enabled
+                button.BackgroundTransparency = if enabled then 0 else .35
+            end
+            if enabled and not wasEnabled and UserInputService:GetLastInputType().Name:match("^Gamepad") then
+                GuiService.SelectedObject = buttons[1]
+            end
+            wasEnabled = enabled
+            task.wait(.1)
+        end
+    end
+    overlay:Destroy()
     if not ok then warn("[RevealDirector]", errorMessage) end
 end
 return Director

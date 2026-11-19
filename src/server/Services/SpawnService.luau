@@ -119,7 +119,7 @@ function SpawnService.ChooseSpecies(biomeId: string): (string?, number?)
 	local secretChance = settings and settings.SecretSpawnChance or 0
 	if secretChance > 0 and random:NextNumber() < secretChance then return "Omnisfera", secretChance end
 	local pool, total = {}, 0
-	for id, definition in Config.Creatures do
+	for id, definition in (ctx and ctx.EncounterCreatures) or Config.Creatures do
 		if definition.Biome == biomeId then
 			local weight = settings.SpeciesWeights[definition.Rarity] or 1
 			total += weight
@@ -149,8 +149,14 @@ function SpawnService.Init(worldOrContext: any, context: any?)
 		local layout = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
 		for _, biomeId in layout.BiomeOrder do
 			local species = {}
-			for id, definition in Config.Creatures do if definition.Biome == biomeId then table.insert(species, id) end end
-			table.sort(species)
+			for id, definition in ctx.EncounterCreatures or Config.Creatures do
+				if definition.Biome == biomeId then table.insert(species, id) end
+			end
+			local authored = ctx.AuthoredCreatures or {}
+			table.sort(species, function(a, b)
+				if authored[a] ~= authored[b] then return authored[a] == true end
+				return a < b
+			end)
 			for index, position in ctx.World.GetSpawnPoints(biomeId) do
 				if #species > 0 then SpawnService.Spawn(species[(index - 1) % #species + 1], position, {BiomeId = biomeId}) end
 			end

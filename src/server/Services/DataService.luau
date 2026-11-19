@@ -223,14 +223,15 @@ local function decode(envelope: any): Profile
 	if data.FirstJoinedAt == nil then result.FirstJoinedAt = result.LastSeen end
 	assert(result.Level >= 1 and result.Level <= Settings.MaxLevel, "Invalid saved level")
 	assert(result.Level % 1 == 0, "Non-integral saved level")
-	assert(result.TrainingLevel>=1 and result.TrainingLevel<=100 and result.TrainingLevel%1==0 and result.TrainingXP<1e8,"Invalid academy progression")
+	assert(result.TrainingLevel >= 1 and result.TrainingLevel <= Settings.MaxTrainingLevel and result.TrainingLevel % 1 == 0 and result.TrainingXP < 1e8, "Invalid academy progression")
+	Config.ReconcileTrainingXP(result)
 	assert(type(Config.Orbs[result.EquippedOrb]) == "table", "Unknown equipped orb")
 	for orbId, quantity in pairs(result.Orbs) do
 		assert(type(orbId) == "string" and Config.Orbs[orbId] ~= nil, "Unknown saved orb")
 		assert(finite(quantity) and quantity >= 0 and quantity % 1 == 0, "Invalid orb quantity")
 	end
 	assert(result.OrbTier >= 1 and result.OrbTier <= 7 and result.OrbTier % 1 == 0, "Invalid orb evolution")
-	assert(result.TrainingMachine >= 1 and result.TrainingMachine <= 5 and result.TrainingMachine % 1 == 0, "Invalid training machine")
+	assert(result.TrainingMachine >= 1 and result.TrainingMachine <= Settings.MaxTrainingMachine and result.TrainingMachine % 1 == 0, "Invalid training machine")
 	if data.OrbTier == nil then
 		for orbId, quantity in result.Orbs do
 			local tier = Config.Orbs[orbId].Tier

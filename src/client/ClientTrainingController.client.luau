@@ -6,16 +6,17 @@ local Input=game:GetService("UserInputService")
 local Workspace=game:GetService("Workspace")
 local Debris=game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
+local Numbers = require(RS.Shared.NumberFormatter)
 local Focus = require(script.Parent:WaitForChild("CameraFocus"))
 local player=Players.LocalPlayer
 local remotes=RS:WaitForChild("Remotes")
 local gui=Instance.new("ScreenGui")
 gui.Name,gui.ResetOnSpawn,gui.DisplayOrder,gui.Parent="AcademyHUD",false,75,player:WaitForChild("PlayerGui")
 local card=Instance.new("Frame")
-card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-25),UDim2.new(.85,0,0,144)
+card.Name,card.AnchorPoint,card.Position,card.Size="TrainingCard",Vector2.new(.5,1),UDim2.new(.5,0,1,-20),UDim2.new(.92,0,0,163)
 card.BackgroundColor3,card.Visible,card.Parent=Color3.fromRGB(45,43,71),false,gui
 local max=Instance.new("UISizeConstraint")
-max.MinSize,max.MaxSize,max.Parent=Vector2.new(0,144),Vector2.new(355,144),card
+max.MinSize,max.MaxSize,max.Parent=Vector2.new(0,163),Vector2.new(369,163),card
 local round=Instance.new("UICorner");round.CornerRadius,round.Parent=UDim.new(0,14),card
 local accent = Instance.new("UIStroke")
 accent.Color, accent.Thickness, accent.Parent = Color3.fromRGB(255, 194, 103), 2, card
@@ -32,6 +33,10 @@ track.Name,track.Position,track.Size,track.BackgroundColor3,track.Parent="XPTrac
 local fill=Instance.new("Frame")
 fill.Name,fill.Size,fill.BackgroundColor3,fill.BorderSizePixel,fill.Parent="XPFill",UDim2.fromScale(0,1),Color3.fromRGB(70,220,255),0,track
 local reps=text("RepInfo",69,19,12)
+local reward = text("RepReward", 90, 20, 12)
+local rewardLimit = Instance.new("UITextSizeConstraint")
+rewardLimit.MinTextSize, rewardLimit.MaxTextSize, rewardLimit.Parent = 8, 12, reward
+reward.TextScaled, reward.TextColor3 = true, Color3.fromRGB(133, 244, 175)
 local cadence = Instance.new("Frame")
 cadence.Name, cadence.Size, cadence.Position = "RepProgress", UDim2.new(1, -32, 0, 4), UDim2.fromOffset(16, 63)
 cadence.BackgroundColor3, cadence.BorderSizePixel, cadence.Parent = Color3.fromRGB(73, 70, 102), 0, card
@@ -63,6 +68,7 @@ local function show(value:boolean)
  if value==active then return end
  active=value;card.Visible=value
  if value then
+  reward.Text = ""
   Focus.Begin("Academy")
   gui:SetAttribute("ModalOpen", true)
   for _,screen in player.PlayerGui:GetChildren() do if screen~=gui and screen:IsA("ScreenGui") then hidden[screen]=screen.Enabled;screen.Enabled=false end end
@@ -86,14 +92,18 @@ Input.InputBegan:Connect(function(input,processed)
 end)
 local function render(data:any)
  title.Text = (data.MachineName or "Academia") .. "  ·  Nv. " .. tostring(data.Level or 1)
- xp.Text = if data.Level >= 100 then "Nível máximo" else data.XP .. " / " .. data.RequiredXP .. " XP"
+ local maxed = data.Level >= data.MaxLevel
+ xp.Text = if maxed then "Nível máximo" else Numbers.Format(data.XP) .. " / " .. Numbers.Format(data.RequiredXP) .. " XP"
  if xpTween then xpTween:Cancel() end
- local fillAmount = if data.Level >= 100 then 1 else math.clamp(data.XP / math.max(1, data.RequiredXP), 0, 1)
+ local fillAmount = if maxed then 1 else math.clamp(data.XP / math.max(1, data.RequiredXP), 0, 1)
  xpTween = TweenService:Create(fill, TweenInfo.new(.18), {Size = UDim2.fromScale(fillAmount, 1)})
  xpTween:Play()
  nextRepAt, interval = data.NextRepAt or 0, data.Interval or 1.8
- reps.Text = data.Reps .. " reps  ·  +" .. data.Gain .. " força  ·  +" .. data.XPPerRep .. " XP"
-
+ reps.Text = "Força " .. Numbers.Format(data.Strength) .. "  ·  +" .. Numbers.Format(data.Gain) .. " força / rep  ·  +" .. Numbers.Format(data.XPPerRep) .. " XP / rep"
+ if data.GainAwarded then
+  local prefix = if data.LeveledUp then "NV. " .. data.Level .. "!  " elseif data.State == "Perfect" then "2×  " else ""
+  reward.Text = prefix .. "+" .. data.GainAwarded .. " força  ·  +" .. data.XPAwarded .. " XP  ·  +" .. data.PlayerXPAwarded .. " XP jogador"
+ end
 end
 (remotes:WaitForChild("TrainingUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
@@ -102,7 +112,7 @@ end
  render(data)
  if data.State=="QTE" then current=data;qte.Position=UDim2.fromScale(data.X,data.Y);qte.Visible=true
  elseif data.State=="Perfect" then
-  current=nil;qte.Visible=false;reps.Text="PERFEITO! 2× FORÇA E XP"
+  current=nil;qte.Visible=false
   local sound=Instance.new("Sound")
   sound.SoundId,sound.Volume,sound.PlaybackSpeed,sound.Parent="rbxasset://sounds/volume_slider.ogg",.15,1.5,game:GetService("SoundService")
   sound:Play();Debris:AddItem(sound,3)

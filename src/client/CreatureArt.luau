@@ -3,9 +3,11 @@
 local AssetService = game:GetService("AssetService")
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local sources = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("CreatureMeshes")
+local shared = ReplicatedStorage:WaitForChild("Shared")
+local sources = shared:WaitForChild("CreatureMeshes")
+local variants = require(shared.ConfigMutacoes)
 
-type MeshData = {Vertices: {number}, Faces: {number}, Colors: {number}}
+type MeshData = {Vertices: {number}, Faces: {number}, Colors: {number}, Palettes: {[string]: {number}}?}
 type Template = {Part: MeshPart, RetainedMesh: EditableMesh?}
 local CreatureArt = {}
 local templates: {[string]: Template} = {}
@@ -13,12 +15,15 @@ local attempted: {[string]: boolean} = {}
 local loaded = Instance.new("BindableEvent")
 CreatureArt.Loaded = loaded.Event
 
-local function load(source: ModuleScript)
-    if attempted[source.Name] then return end
-    attempted[source.Name] = true
+local function load(source: ModuleScript, palette: string?)
+    local key = if palette then source.Name .. ":" .. palette else source.Name
+    if attempted[key] then return end
+    attempted[key] = true
     local mesh: EditableMesh? = nil
     local ok, problem = pcall(function()
         local data: MeshData = HttpService:JSONDecode(require(source))
+        local paletteColors = if palette and data.Palettes then data.Palettes[palette] else nil
+        if palette and not paletteColors then return end
         local editable = AssetService:CreateEditableMesh()
         if not editable then error("Mesh memory unavailable") end
         mesh = editable
@@ -28,8 +33,9 @@ local function load(source: ModuleScript)
             table.insert(positions, position)
             table.insert(vertices, editable:AddVertex(position))
         end
-        for i = 1, #data.Colors, 3 do
-            table.insert(colors, editable:AddColor(Color3.new(data.Colors[i], data.Colors[i + 1], data.Colors[i + 2]), 1))
+        local rgb = paletteColors or data.Colors
+        for i = 1, #rgb, 3 do
+            table.insert(colors, editable:AddColor(Color3.new(rgb[i], rgb[i + 1], rgb[i + 2]), 1))
         end
         local normals: {[Vector3]: number} = {}
         for i = 1, #data.Faces, 4 do
@@ -56,11 +62,12 @@ local function load(source: ModuleScript)
         end
         local template = part or AssetService:CreateMeshPartAsync(content, options)
         template.Name = "OriginalMesh"
+        template:SetAttribute("ArtPalette", palette)
         template.Color = Color3.new(1, 1, 1)
         template.Material = Enum.Material.SmoothPlastic
         template.Anchored = true
         template.CanCollide, template.CanQuery, template.CanTouch = false, false, false
-        templates[source.Name] = {Part = template, RetainedMesh = mesh}
+        templates[key] = {Part = template, RetainedMesh = mesh}
         loaded:Fire(source.Name)
     end)
     if not ok then
@@ -69,16 +76,39 @@ local function load(source: ModuleScript)
     end
 end
 
-function CreatureArt.Get(id: string): MeshPart?
-    local template = templates[id]
-    return if template then template.Part:Clone() else nil
+function CreatureArt.Get(id: string, mutation: string?): MeshPart?
+    local normal = templates[id]
+    if not normal then return nil end
+    local source = sources:FindFirstChild(id)
+    if not source or not source:IsA("ModuleScript") then return nil end
+    local variantPart: Template? = nil
+    if mutation == "Dourada" or mutation == "ArcoIris" then
+        load(source, mutation)
+        variantPart = templates[id .. ":" .. mutation]
+    end
+    local template = variantPart or normal
+    local mesh = template.Part:Clone()
+    if not variantPart and mutation and mutation ~= "Normal" then
+        for _, style in variants.Mutations do
+            if style.Name == mutation then mesh.Color = Color3.new(1, 1, 1):Lerp(style.Color, .55); break end
+        end
+    end
+    return mesh
 end
 
-function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight: number): MeshPart?
+function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight: number, maxExtent: number?): MeshPart?
     local root = model.PrimaryPart
-    if not root or not model.Parent or model:FindFirstChild("OriginalMesh") then return nil end
-    local mesh = CreatureArt.Get(id)
+    if not root or not model.Parent then return nil end
+    local mutation = model:GetAttribute("Mutation")
+    local mesh = CreatureArt.Get(id, if typeof(mutation) == "string" then mutation else nil)
     if not mesh then return nil end
+    local existing = model:FindFirstChild("OriginalMesh")
+    if not model.Parent or (existing and existing:GetAttribute("ArtPalette") == mesh:GetAttribute("ArtPalette")) then
+        mesh:Destroy()
+        return nil
+    end
+    if existing then existing:Destroy() end
+    if maxExtent then scale = math.min(scale, maxExtent / math.max(mesh.Size.X, mesh.Size.Y, mesh.Size.Z)) end
     mesh.Size *= scale
     mesh.CFrame = root.CFrame * CFrame.new(0, mesh.Size.Y / 2 - rootHeight, 0)
     for _, part in model:GetDescendants() do
