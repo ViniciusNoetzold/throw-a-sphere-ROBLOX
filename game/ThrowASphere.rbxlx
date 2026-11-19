@@ -373,6 +373,131 @@ local Creatures: { [string]: CreatureDef } = {
 	Gustfinch = { Id = "Gustfinch", Name = "Gustfinch", Element = "Vento", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 26, BaseIncomePerSec = 11, BaseXP = 25, BodyColor = Color3.fromRGB(163, 117, 77), HeadOffsetY = 2.1, RequiresArt = true },
 	Skytalon = { Id = "Skytalon", Name = "Skytalon", Element = "Vento", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 154, BaseIncomePerSec = 144, BaseXP = 160, BodyColor = Color3.fromRGB(168, 117, 71), HeadOffsetY = 2.7, RequiresArt = true },
 	Galehawk = { Id = "Galehawk", Name = "Galehawk", Element = "Vento", Rarity = "Epica", Biome = "PradariaSolar", Difficulty = 704, BaseIncomePerSec = 692, BaseXP = 480, BodyColor = Color3.fromRGB(173, 122, 71), HeadOffsetY = 3.1, RequiresArt = true },
+	Fangmouse = { Id = "Fangmouse", Name = "Fangmouse", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 11, BaseIncomePerSec = 14, BaseXP = 25, BodyColor = Color3.fromRGB(153, 102, 199), HeadOffsetY = 1.7, RequiresArt = true },
+	Gnawbeast = { Id = "Gnawbeast", Name = "Gnawbeast", Element = "Normal", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 160, BaseIncomePerSec = 150, BaseXP = 160, BodyColor = Color3.fromRGB(194, 143, 77), HeadOffsetY = 2.6, RequiresArt = true },
+	Beakdart = { Id = "Beakdart", Name = "Beakdart", Element = "Vento", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 13, BaseIncomePerSec = 16, BaseXP = 25, BodyColor = Color3.fromRGB(168, 107, 71), HeadOffsetY = 2.2, RequiresArt = true },
+	Skybeak = { Id = "Skybeak", Name = "Skybeak", Element = "Vento", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 164, BaseIncomePerSec = 154, BaseXP = 160, BodyColor = Color3.fromRGB(148, 97, 61), HeadOffsetY = 2.9, RequiresArt = true },
+	Coilsnake = { Id = "Coilsnake", Name = "Coilsnake", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 15, BaseIncomePerSec = 18, BaseXP = 25, BodyColor = Color3.fromRGB(158, 87, 173), HeadOffsetY = 2.5, RequiresArt = true },
+	Cobracrest = { Id = "Cobracrest", Name = "Cobracrest", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 168, BaseIncomePerSec = 158, BaseXP = 160, BodyColor = Color3.fromRGB(148, 92, 173), HeadOffsetY = 3.4, RequiresArt = true },
+	Voltpika = { Id = "Voltpika", Name = "Voltpika", Element = "Raio", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 170, BaseIncomePerSec = 160, BaseXP = 160, BodyColor = Color3.fromRGB(250, 214, 36), HeadOffsetY = 2.3, RequiresArt = true },
+	Thunderrat = { Id = "Thunderrat", Name = "Thunderrat", Element = "Raio", Rarity = "Epica", Biome = "PradariaSolar", Difficulty = 728, BaseIncomePerSec = 724, BaseXP = 480, BodyColor = Color3.fromRGB(240, 148, 41), HeadOffsetY = 2.9, RequiresArt = true },
+	Duneclaw = { Id = "Duneclaw", Name = "Duneclaw", Element = "Terra", Rarity = "Comum", Biome = "CanionVulcanico", Difficulty = 19, BaseIncomePerSec = 10, BaseXP = 25, BodyColor = Color3.fromRGB(230, 199, 102), HeadOffsetY = 2.2, RequiresArt = true },
+	Quilldig = { Id = "Quilldig", Name = "Quilldig", Element = "Terra", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 176, BaseIncomePerSec = 166, BaseXP = 160, BodyColor = Color3.fromRGB(242, 214, 107), HeadOffsetY = 2.6, RequiresArt = true },
+	PinbunnyF = { Id = "PinbunnyF", Name = "PinbunnyF", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 21, BaseIncomePerSec = 12, BaseXP = 25, BodyColor = Color3.fromRGB(168, 199, 235), HeadOffsetY = 1.8, RequiresArt = true },
+	Thornhare = { Id = "Thornhare", Name = "Thornhare", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 180, BaseIncomePerSec = 170, BaseXP = 160, BodyColor = Color3.fromRGB(122, 194, 224), HeadOffsetY = 2.4, RequiresArt = true },
+	Armorqueen = { Id = "Armorqueen", Name = "Armorqueen", Element = "Veneno", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 743, BaseIncomePerSec = 744, BaseXP = 480, BodyColor = Color3.fromRGB(87, 168, 214), HeadOffsetY = 3.8, RequiresArt = true },
+	PinbunnyM = { Id = "PinbunnyM", Name = "PinbunnyM", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 24, BaseIncomePerSec = 15, BaseXP = 25, BodyColor = Color3.fromRGB(194, 112, 184), HeadOffsetY = 1.7, RequiresArt = true },
+	Hornhare = { Id = "Hornhare", Name = "Hornhare", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 186, BaseIncomePerSec = 176, BaseXP = 160, BodyColor = Color3.fromRGB(173, 107, 189), HeadOffsetY = 2.1, RequiresArt = true },
+	Armorking = { Id = "Armorking", Name = "Armorking", Element = "Veneno", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 752, BaseIncomePerSec = 756, BaseXP = 480, BodyColor = Color3.fromRGB(148, 92, 189), HeadOffsetY = 4.0, RequiresArt = true },
+	Moonpuff = { Id = "Moonpuff", Name = "Moonpuff", Element = "Fada", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 190, BaseIncomePerSec = 180, BaseXP = 160, BodyColor = Color3.fromRGB(250, 196, 217), HeadOffsetY = 2.4, RequiresArt = true },
+	Starfairy = { Id = "Starfairy", Name = "Starfairy", Element = "Cosmico", Rarity = "Epica", Biome = "VazioCosmico", Difficulty = 23100, BaseIncomePerSec = 28770, BaseXP = 1596, BodyColor = Color3.fromRGB(233, 148, 191), HeadOffsetY = 2.4, RequiresArt = true },
+	Sixember = { Id = "Sixember", Name = "Sixember", Element = "Fogo", Rarity = "Comum", Biome = "CanionVulcanico", Difficulty = 185, BaseIncomePerSec = 210, BaseXP = 135, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Solarfox = { Id = "Solarfox", Name = "Solarfox", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 407, BaseIncomePerSec = 462, BaseXP = 297, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Melodyorb = { Id = "Melodyorb", Name = "Melodyorb", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Plushchant = { Id = "Plushchant", Name = "Plushchant", Element = "Normal", Rarity = "Epica", Biome = "PradariaSolar", Difficulty = 50, BaseIncomePerSec = 37, BaseXP = 105, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Sonarbat = { Id = "Sonarbat", Name = "Sonarbat", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Fangbat = { Id = "Fangbat", Name = "Fangbat", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Radishsprout = { Id = "Radishsprout", Name = "Radishsprout", Element = "Planta", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Nectarbloom = { Id = "Nectarbloom", Name = "Nectarbloom", Element = "Planta", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Rafflesia = { Id = "Rafflesia", Name = "Rafflesia", Element = "Planta", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 285, BaseIncomePerSec = 273, BaseXP = 378, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Sporecrab = { Id = "Sporecrab", Name = "Sporecrab", Element = "Inseto", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Mycohost = { Id = "Mycohost", Name = "Mycohost", Element = "Inseto", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Fuzzmoth = { Id = "Fuzzmoth", Name = "Fuzzmoth", Element = "Inseto", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Dustwing = { Id = "Dustwing", Name = "Dustwing", Element = "Inseto", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Molepod = { Id = "Molepod", Name = "Molepod", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Trimole = { Id = "Trimole", Name = "Trimole", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Coinpurr = { Id = "Coinpurr", Name = "Coinpurr", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Velvetlynx = { Id = "Velvetlynx", Name = "Velvetlynx", Element = "Normal", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 26, BaseIncomePerSec = 19, BaseXP = 55, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Dazepond = { Id = "Dazepond", Name = "Dazepond", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Aquakappa = { Id = "Aquakappa", Name = "Aquakappa", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Ragemonk = { Id = "Ragemonk", Name = "Ragemonk", Element = "Luta", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Furyape = { Id = "Furyape", Name = "Furyape", Element = "Luta", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Cinderpup = { Id = "Cinderpup", Name = "Cinderpup", Element = "Fogo", Rarity = "Comum", Biome = "CanionVulcanico", Difficulty = 185, BaseIncomePerSec = 210, BaseXP = 135, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Blazelion = { Id = "Blazelion", Name = "Blazelion", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 407, BaseIncomePerSec = 462, BaseXP = 297, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Swirltad = { Id = "Swirltad", Name = "Swirltad", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Vortexfrog = { Id = "Vortexfrog", Name = "Vortexfrog", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Tidebrawler = { Id = "Tidebrawler", Name = "Tidebrawler", Element = "Agua", Rarity = "Epica", Biome = "AbismoGlacial", Difficulty = 3360, BaseIncomePerSec = 3780, BaseXP = 882, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Mindfox = { Id = "Mindfox", Name = "Mindfox", Element = "Cosmico", Rarity = "Comum", Biome = "VazioCosmico", Difficulty = 5500, BaseIncomePerSec = 6850, BaseXP = 380, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Spoonmage = { Id = "Spoonmage", Name = "Spoonmage", Element = "Cosmico", Rarity = "Rara", Biome = "VazioCosmico", Difficulty = 12100, BaseIncomePerSec = 15070, BaseXP = 836, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Psysage = { Id = "Psysage", Name = "Psysage", Element = "Cosmico", Rarity = "Epica", Biome = "VazioCosmico", Difficulty = 23100, BaseIncomePerSec = 28770, BaseXP = 1596, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Ironkid = { Id = "Ironkid", Name = "Ironkid", Element = "Luta", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Titanflex = { Id = "Titanflex", Name = "Titanflex", Element = "Luta", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Quadfist = { Id = "Quadfist", Name = "Quadfist", Element = "Luta", Rarity = "Epica", Biome = "RuinasAncestrais", Difficulty = 9240, BaseIncomePerSec = 11340, BaseXP = 1218, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Vinebell = { Id = "Vinebell", Name = "Vinebell", Element = "Planta", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Pitcherpod = { Id = "Pitcherpod", Name = "Pitcherpod", Element = "Planta", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Flytrap = { Id = "Flytrap", Name = "Flytrap", Element = "Planta", Rarity = "Epica", Biome = "FlorestaNeon", Difficulty = 285, BaseIncomePerSec = 273, BaseXP = 378, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Jellygem = { Id = "Jellygem", Name = "Jellygem", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Krakenorb = { Id = "Krakenorb", Name = "Krakenorb", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Bouldefist = { Id = "Bouldefist", Name = "Bouldefist", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Cragroller = { Id = "Cragroller", Name = "Cragroller", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Megaboulder = { Id = "Megaboulder", Name = "Megaboulder", Element = "Terra", Rarity = "Epica", Biome = "RuinasAncestrais", Difficulty = 9240, BaseIncomePerSec = 11340, BaseXP = 1218, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Blazecolt = { Id = "Blazecolt", Name = "Blazecolt", Element = "Fogo", Rarity = "Comum", Biome = "CanionVulcanico", Difficulty = 185, BaseIncomePerSec = 210, BaseXP = 135, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Solarsteed = { Id = "Solarsteed", Name = "Solarsteed", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 407, BaseIncomePerSec = 462, BaseXP = 297, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Dazepig = { Id = "Dazepig", Name = "Dazepig", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Shellhermit = { Id = "Shellhermit", Name = "Shellhermit", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Voltmagnet = { Id = "Voltmagnet", Name = "Voltmagnet", Element = "Raio", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Trimagent = { Id = "Trimagent", Name = "Trimagent", Element = "Raio", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Leekduck = { Id = "Leekduck", Name = "Leekduck", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Twobird = { Id = "Twobird", Name = "Twobird", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Triostrich = { Id = "Triostrich", Name = "Triostrich", Element = "Normal", Rarity = "Rara", Biome = "PradariaSolar", Difficulty = 26, BaseIncomePerSec = 19, BaseXP = 55, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Frostseal = { Id = "Frostseal", Name = "Frostseal", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Sireseal = { Id = "Sireseal", Name = "Sireseal", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Sludgeblob = { Id = "Sludgeblob", Name = "Sludgeblob", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Toxictide = { Id = "Toxictide", Name = "Toxictide", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Bivalve = { Id = "Bivalve", Name = "Bivalve", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Abyssshell = { Id = "Abyssshell", Name = "Abyssshell", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Phantasmorb = { Id = "Phantasmorb", Name = "Phantasmorb", Element = "Cosmico", Rarity = "Comum", Biome = "VazioCosmico", Difficulty = 5500, BaseIncomePerSec = 6850, BaseXP = 380, BodyColor = Color3.fromRGB(143, 106, 184), HeadOffsetY = 2.4, RequiresArt = true },
+	Shadeclaw = { Id = "Shadeclaw", Name = "Shadeclaw", Element = "Cosmico", Rarity = "Rara", Biome = "VazioCosmico", Difficulty = 12100, BaseIncomePerSec = 15070, BaseXP = 836, BodyColor = Color3.fromRGB(143, 106, 184), HeadOffsetY = 2.4, RequiresArt = true },
+	Grinshade = { Id = "Grinshade", Name = "Grinshade", Element = "Cosmico", Rarity = "Mitica", Biome = "VazioCosmico", Difficulty = 40150, BaseIncomePerSec = 50005, BaseXP = 2774, BodyColor = Color3.fromRGB(143, 106, 184), HeadOffsetY = 2.4, RequiresArt = true },
+	Cragwyrm = { Id = "Cragwyrm", Name = "Cragwyrm", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Dreamtapir = { Id = "Dreamtapir", Name = "Dreamtapir", Element = "Cosmico", Rarity = "Comum", Biome = "VazioCosmico", Difficulty = 5500, BaseIncomePerSec = 6850, BaseXP = 380, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Pendulummage = { Id = "Pendulummage", Name = "Pendulummage", Element = "Cosmico", Rarity = "Rara", Biome = "VazioCosmico", Difficulty = 12100, BaseIncomePerSec = 15070, BaseXP = 836, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Pinchcrab = { Id = "Pinchcrab", Name = "Pinchcrab", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Clawking = { Id = "Clawking", Name = "Clawking", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Sparkorb = { Id = "Sparkorb", Name = "Sparkorb", Element = "Raio", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Blastorb = { Id = "Blastorb", Name = "Blastorb", Element = "Raio", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Eggcluster = { Id = "Eggcluster", Name = "Eggcluster", Element = "Planta", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Palmtree = { Id = "Palmtree", Name = "Palmtree", Element = "Planta", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Bonecub = { Id = "Bonecub", Name = "Bonecub", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Skullknight = { Id = "Skullknight", Name = "Skullknight", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Springkick = { Id = "Springkick", Name = "Springkick", Element = "Luta", Rarity = "Incomum", Biome = "RuinasAncestrais", Difficulty = 3080, BaseIncomePerSec = 3779, BaseXP = 406, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Ironboxer = { Id = "Ironboxer", Name = "Ironboxer", Element = "Luta", Rarity = "Incomum", Biome = "RuinasAncestrais", Difficulty = 3080, BaseIncomePerSec = 3779, BaseXP = 406, BodyColor = Color3.fromRGB(210, 114, 78), HeadOffsetY = 2.4, RequiresArt = true },
+	Tonguetoad = { Id = "Tonguetoad", Name = "Tonguetoad", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Smogorb = { Id = "Smogorb", Name = "Smogorb", Element = "Veneno", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Twinsmog = { Id = "Twinsmog", Name = "Twinsmog", Element = "Veneno", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(168, 91, 193), HeadOffsetY = 2.4, RequiresArt = true },
+	Ironrhino = { Id = "Ironrhino", Name = "Ironrhino", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Drillrhino = { Id = "Drillrhino", Name = "Drillrhino", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(212, 161, 87), HeadOffsetY = 2.4, RequiresArt = true },
+	Nurseegg = { Id = "Nurseegg", Name = "Nurseegg", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Vineball = { Id = "Vineball", Name = "Vineball", Element = "Planta", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(92, 183, 98), HeadOffsetY = 2.4, RequiresArt = true },
+	Pouchrex = { Id = "Pouchrex", Name = "Pouchrex", Element = "Normal", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 16, BaseIncomePerSec = 12, BaseXP = 35, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Bubblehorse = { Id = "Bubblehorse", Name = "Bubblehorse", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Spikehorse = { Id = "Spikehorse", Name = "Spikehorse", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Fingold = { Id = "Fingold", Name = "Fingold", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Hornkoi = { Id = "Hornkoi", Name = "Hornkoi", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Starcore = { Id = "Starcore", Name = "Starcore", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Prismstar = { Id = "Prismstar", Name = "Prismstar", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Barrierjester = { Id = "Barrierjester", Name = "Barrierjester", Element = "Cosmico", Rarity = "Comum", Biome = "VazioCosmico", Difficulty = 5500, BaseIncomePerSec = 6850, BaseXP = 380, BodyColor = Color3.fromRGB(225, 123, 180), HeadOffsetY = 2.4, RequiresArt = true },
+	Mantisblade = { Id = "Mantisblade", Name = "Mantisblade", Element = "Inseto", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Frostdiva = { Id = "Frostdiva", Name = "Frostdiva", Element = "Gelo", Rarity = "Incomum", Biome = "AbismoGlacial", Difficulty = 1120, BaseIncomePerSec = 1260, BaseXP = 294, BodyColor = Color3.fromRGB(154, 217, 238), HeadOffsetY = 2.4, RequiresArt = true },
+	Voltbeast = { Id = "Voltbeast", Name = "Voltbeast", Element = "Raio", Rarity = "Comum", Biome = "FlorestaNeon", Difficulty = 68, BaseIncomePerSec = 65, BaseXP = 90, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Magmabird = { Id = "Magmabird", Name = "Magmabird", Element = "Fogo", Rarity = "Comum", Biome = "CanionVulcanico", Difficulty = 185, BaseIncomePerSec = 210, BaseXP = 135, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Pincerbeetle = { Id = "Pincerbeetle", Name = "Pincerbeetle", Element = "Inseto", Rarity = "Incomum", Biome = "FlorestaNeon", Difficulty = 95, BaseIncomePerSec = 91, BaseXP = 125, BodyColor = Color3.fromRGB(137, 196, 73), HeadOffsetY = 2.4, RequiresArt = true },
+	Stampbull = { Id = "Stampbull", Name = "Stampbull", Element = "Normal", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 16, BaseIncomePerSec = 12, BaseXP = 35, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Splashcarp = { Id = "Splashcarp", Name = "Splashcarp", Element = "Agua", Rarity = "Comum", Biome = "AbismoGlacial", Difficulty = 800, BaseIncomePerSec = 900, BaseXP = 210, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Tempestwyrm = { Id = "Tempestwyrm", Name = "Tempestwyrm", Element = "Agua", Rarity = "Mitica", Biome = "AbismoGlacial", Difficulty = 5840, BaseIncomePerSec = 6570, BaseXP = 1533, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Glacierness = { Id = "Glacierness", Name = "Glacierness", Element = "Agua", Rarity = "Epica", Biome = "AbismoGlacial", Difficulty = 3360, BaseIncomePerSec = 3780, BaseXP = 882, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Morphgel = { Id = "Morphgel", Name = "Morphgel", Element = "Normal", Rarity = "Incomum", Biome = "PradariaSolar", Difficulty = 16, BaseIncomePerSec = 12, BaseXP = 35, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Adaptfox = { Id = "Adaptfox", Name = "Adaptfox", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Aquavulp = { Id = "Aquavulp", Name = "Aquavulp", Element = "Agua", Rarity = "Rara", Biome = "AbismoGlacial", Difficulty = 1760, BaseIncomePerSec = 1980, BaseXP = 462, BodyColor = Color3.fromRGB(76, 166, 229), HeadOffsetY = 2.4, RequiresArt = true },
+	Voltspike = { Id = "Voltspike", Name = "Voltspike", Element = "Raio", Rarity = "Rara", Biome = "FlorestaNeon", Difficulty = 149, BaseIncomePerSec = 143, BaseXP = 198, BodyColor = Color3.fromRGB(244, 199, 72), HeadOffsetY = 2.4, RequiresArt = true },
+	Emberpelt = { Id = "Emberpelt", Name = "Emberpelt", Element = "Fogo", Rarity = "Rara", Biome = "CanionVulcanico", Difficulty = 407, BaseIncomePerSec = 462, BaseXP = 297, BodyColor = Color3.fromRGB(245, 120, 54), HeadOffsetY = 2.4, RequiresArt = true },
+	Polyvoxel = { Id = "Polyvoxel", Name = "Polyvoxel", Element = "Normal", Rarity = "Comum", Biome = "PradariaSolar", Difficulty = 12, BaseIncomePerSec = 9, BaseXP = 25, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
+	Ammonite = { Id = "Ammonite", Name = "Ammonite", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Spirefossil = { Id = "Spirefossil", Name = "Spirefossil", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Trilocap = { Id = "Trilocap", Name = "Trilocap", Element = "Terra", Rarity = "Comum", Biome = "RuinasAncestrais", Difficulty = 2200, BaseIncomePerSec = 2700, BaseXP = 290, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Scythefossil = { Id = "Scythefossil", Name = "Scythefossil", Element = "Terra", Rarity = "Rara", Biome = "RuinasAncestrais", Difficulty = 4840, BaseIncomePerSec = 5940, BaseXP = 638, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Skywyvern = { Id = "Skywyvern", Name = "Skywyvern", Element = "Terra", Rarity = "Epica", Biome = "RuinasAncestrais", Difficulty = 9240, BaseIncomePerSec = 11340, BaseXP = 1218, BodyColor = Color3.fromRGB(183, 163, 121), HeadOffsetY = 2.4, RequiresArt = true },
+	Slumberbear = { Id = "Slumberbear", Name = "Slumberbear", Element = "Normal", Rarity = "Epica", Biome = "PradariaSolar", Difficulty = 50, BaseIncomePerSec = 37, BaseXP = 105, BodyColor = Color3.fromRGB(186, 153, 118), HeadOffsetY = 2.4, RequiresArt = true },
 }
 return Creatures
 ]]></string>
@@ -415,17 +540,12 @@ return {
     MeterPeriod = 3.8, ChargeTimeout = 30, PerfectThreshold = 0.94,
     ZoneLength = 300, MaxDistance = 1800, MinFlightSeconds = 3.5, MaxFlightSeconds = 7,
     Milestones = {
-        {Level = 1, Strength = 0}, {Level = 4, Strength = 35}, {Level = 11, Strength = 180},
+        {Level = 1, Strength = 0}, {Level = 2, Strength = 25}, {Level = 11, Strength = 180},
         {Level = 20, Strength = 580}, {Level = 33, Strength = 1500}, {Level = 50, Strength = 4000},
     },
     -- Check the rarest tier first. The ordinary encounter uses the remaining probability.
     RarityDenominators = {Incomum = 9, Rara = 80, Epica = 5000, Mitica = 2500000, Lendaria = 10000000000, Secreta = 1000000000000000},
-    RegionalArt = {
-        CanionVulcanico = {"Gustfinch", "Sproutling"},
-        AbismoGlacial = {"Silkworm", "Stinglarva"},
-        RuinasAncestrais = {"Gustfinch", "Stinglarva", "Chrysalid", "Ambercocoon", "Lancewasp", "Ignisovereign"},
-        VazioCosmico = {"Sproutling", "Silkworm", "Skytalon", "Galehawk", "Hydrocannon", "Leviathorn"},
-    },
+    RegionalArt = {},
     LaunchOrigin = Vector3.new(0, 2, -130), Direction = Vector3.new(0, 0, -1),
     LinePosition = Vector3.new(0, 2, -120), LineWidth = 58, LineDepth = 22,
     WindupSeconds = 0.55,
@@ -1618,6 +1738,28 @@ function Biomes.GetCurrentBiome(player: Player): string
     return if root and root:IsA("BasePart") then ctx.World.GetBiomeAtPosition(root.Position) else "Hub"
 end
 function Biomes.IsInTradingPlaza(player: Player): boolean return Biomes.CanAccess(player, "TradingPlaza") and Biomes.GetCurrentBiome(player) == "TradingPlaza" end
+function Biomes.ClaimNeonResearch(player: Player): boolean
+    if not Biomes.CanAccess(player, "FlorestaNeon") or Biomes.GetCurrentBiome(player) ~= "FlorestaNeon" then return false end
+    local profile = ctx.Data.Get(player)
+    local key = "NeonResearch"
+    if profile.OneTimeGrants[key] then
+        feedback(player, "Pesquisa concluída. As criaturas daqui são para observação. Arremesse na faixa para capturar.")
+        return false
+    end
+    if not ctx.Data.TryLock(player, key) then return false end
+    profile.OneTimeGrants[key] = true
+    local strength = math.min(20, math.max(0, 10000 - profile.ThrowStrength))
+    profile.ThrowStrength += strength
+    local _, gained = ctx.Progression.GrantXP(player, 80)
+    ctx.Data.MarkDirty(player)
+    local saved = ctx.Data.SaveNow(player)
+    if not saved then ctx.Data.Freeze(player, "Salvamento da pesquisa indisponível.") end
+    ctx.Data.Unlock(player, key)
+    if not saved then return false end
+    ctx.Data.Sync(player)
+    feedback(player, "Pesquisa Neon concluída • +" .. strength .. " força e +" .. gained .. " XP. Volte à faixa para capturar.")
+    return true
+end
 -- Internal rebirth hook: its caller already owns the profile transaction lock.
 function Biomes.ReturnToMeadow(player: Player): boolean
     local character = player.Character
@@ -2918,7 +3060,12 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     if CFrame then character:PivotTo(CFrame.lookAt(root.Position, root.Position + Rules.Direction)) end
     sessions[player] = entry
     decisions[player] = nil
-    send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
+    local order = ctx.Layout.BiomeOrder
+    local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
+    local _, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod,
+        NextBiome = order[unlocked + 1], Goal = Rules.Milestones and Rules.Milestones[unlocked + 1],
+        Level = profile.Level, Strength = profile.ThrowStrength, Unlocked = unlocked})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
     return true
 end
@@ -3195,7 +3342,7 @@ function World.Init(ctx: any)
         Rules.LaunchOrigin + Vector3.new(0, -29, 10 - (Rules.MaxDistance + 30) / 2), Color3.fromRGB(106, 75, 52))
     for step = 0, 7 do
         for _, side in {-1, 1} do
-            part("LaunchPathTile", Vector3.new(14.8, .34, 14.8), Vector3.new(side * 7.5, -.07, -98 + step * 15),
+            part("LaunchPathTile", Vector3.new(14.8, .34, 14.8), Vector3.new(side * 7.5, -.01, -98 + step * 15),
                 if (step + side) % 3 == 0 then stone:Lerp(charcoal, .24) else stone)
         end
     end
@@ -4810,7 +4957,14 @@ function SpawnService.Init(worldOrContext: any, context: any?)
 		for _, biomeId in layout.BiomeOrder do
 			local species = {}
 			if ctx.EncounterPools then
-				species = ctx.EncounterPools[biomeId].Comum or {}
+				local groups = ctx.EncounterPools[biomeId]
+				if biomeId == "FlorestaNeon" then
+					-- Display a representative cross-section, including large silhouettes.
+					for _, id in {"Floradine", "Flutterwing", "Lancewasp", "Jungleking", "Velvetlynx", "Dustwing"} do
+						if ctx.AuthoredCreatures[id] then table.insert(species, id) end
+					end
+				end
+				if #species == 0 then species = groups.Comum or {} end
 			else
 				for id, definition in Config.Creatures do
 					if definition.Biome == biomeId then table.insert(species, id) end
@@ -5895,8 +6049,15 @@ function WorldService.Init(context: any?)
 			end end
 			protectArea(zone, center, Vector3.new(Layout.ZoneSize, 1, Layout.ZoneSize), center + Vector3.new(0, 4, 35), colors[2])
 		end
+		if id == "FlorestaNeon" then
+			station(zone, "NeonResearch", center + Vector3.new(0, .8, 15), Color3.fromRGB(98, 232, 183),
+				"PESQUISA NEON\n+20 FORÇA E +80 XP NA PRIMEIRA VISITA", function(player)
+					if ctx and ctx.Biomes then ctx.Biomes.ClaimNeonResearch(player) end
+				end)
+		end
 		local destination = id
-		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
+		local purpose = if id == "FlorestaNeon" then " • Pesquisa" else ""
+		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. purpose .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
 			if not ctx or not ctx.Biomes then return end
 			if ctx.Biomes.CanAccess(player, destination) or ctx.Biomes.Unlock(player, destination) then ctx.Biomes.Travel(player, destination) end
 		end)
@@ -5947,6 +6108,7 @@ function WorldService.GetBiomeAtPosition(position: Vector3): string
 	return "Hub"
 end
 function WorldService.GetSpawnPoints(id: string): {Vector3}
+	if id == "PradariaSolar" then return {} end
 	local center, points = Layout.Biomes[id].Position, {}
 	for _, offset in {Vector3.new(-30,0.15,5), Vector3.new(0,0.15,-5), Vector3.new(30,0.15,5), Vector3.new(-42,0.15,-28), Vector3.new(0,0.15,-38), Vector3.new(42,0.15,-28)} do table.insert(points, center + offset) end
 	return points
@@ -6985,13 +7147,13 @@ end
 local ink = Color3.fromRGB(34, 39, 66)
 local panel = Instance.new("Frame")
 panel.Name, panel.AnchorPoint, panel.Position = "ForcePanel", Vector2.new(.5, 1), UDim2.new(.5, 0, 1, -76)
-panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 76), Color3.fromRGB(49, 57, 89)
+panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 94), Color3.fromRGB(49, 57, 89)
 panel.Visible, panel.Parent = false, gui
 round(panel)
 local edge = Instance.new("UIStroke")
 edge.Color, edge.Thickness, edge.Parent = Color3.fromRGB(255, 225, 126), 2, panel
 local limits = Instance.new("UISizeConstraint")
-limits.MaxSize, limits.Parent = Vector2.new(288, 76), panel
+limits.MaxSize, limits.Parent = Vector2.new(330, 94), panel
 local title = label(panel, "PowerLabel", "FORÇA", UDim2.fromOffset(7, 2), UDim2.new(1, -14, 0, 22), 15)
 local meter = Instance.new("Frame")
 meter.Name, meter.Position, meter.Size = "PowerMeter", UDim2.fromOffset(15, 28), UDim2.new(1, -30, 0, 19)
@@ -7021,6 +7183,8 @@ local button = Instance.new("TextButton")
 button.Name, button.Position, button.Size = "LaunchButton", UDim2.fromOffset(6, 50), UDim2.new(1, -12, 0, 24)
 button.Text, button.TextSize, button.Font = "CLIQUE OU TOQUE  ·  R2", 11, Enum.Font.GothamBold
 button.BackgroundTransparency, button.TextColor3, button.Parent = 1, Color3.fromRGB(255, 242, 213), panel
+local goal = label(panel, "NextBiomeGoal", "", UDim2.fromOffset(5, 73), UDim2.new(1, -10, 0, 17), 10)
+goal.TextColor3 = Color3.fromRGB(190, 220, 250)
 local top=label(gui,"Distance","",UDim2.new(0.5,0,0,70),UDim2.new(0.6,0,0,60),32)
 top.AnchorPoint=Vector2.new(0.5,0)
 local zone=label(gui,"Biome","",UDim2.new(0.5,0,0,130),UDim2.new(0.6,0,0,36),23)
@@ -7228,11 +7392,18 @@ end
    return
   end
   Focus.Begin("Throw")
+  if data.Goal and data.NextBiome then
+   goal.Text = Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. data.Level .. "/" .. data.Goal.Level
+    .. "  ·  Força " .. Numbers.Format(data.Strength) .. "/" .. Numbers.Format(data.Goal.Strength)
+  elseif data.Unlocked then
+   goal.Text = "TODOS OS BIOMAS LIBERADOS NA PISTA"
+  end
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
   title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
  elseif data.State=="Blocked" then
   blockingMessage=data.Message or "CONFIRA SUA ORBE E A COLEÇÃO"
+  goal.Text=""
   retryAt=os.clock()+1
  elseif data.State=="Flying" then
   session=data
@@ -7584,12 +7755,14 @@ local shared = ReplicatedStorage:WaitForChild("Shared")
 local sources = shared:WaitForChild("CreatureMeshes")
 local variants = require(shared.ConfigMutacoes)
 
-type MeshData = {Vertices: {number}, Faces: {number}, Colors: {number}, Palettes: {[string]: {number}}?, Scales: {[string]: number}?}
+type Geometry = {Vertices: {number}, Faces: {number}, Colors: {number}}
+type MeshData = Geometry & {Palettes: {[string]: {number}}?, Shapes: {[string]: Geometry}?, Scales: {[string]: number}?, ReferenceScale: number?}
 type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage}
 local CreatureArt = {}
 local templates: {[string]: Template} = {}
 local attempted: {[string]: boolean} = {}
 local scales: {[string]: {[string]: number}} = {}
+local referenceScales: {[string]: number} = {}
 local loaded = Instance.new("BindableEvent")
 CreatureArt.Loaded = loaded.Event
 
@@ -7630,26 +7803,28 @@ local function load(source: ModuleScript, palette: string?)
     local ok, problem = pcall(function()
         local data: MeshData = HttpService:JSONDecode(require(source))
         scales[source.Name] = data.Scales or {}
+        referenceScales[source.Name] = data.ReferenceScale
+        local geometry = (if palette and data.Shapes then data.Shapes[palette] else nil) or data
         local paletteColors = if palette and data.Palettes then data.Palettes[palette] else nil
-        if palette and not paletteColors then return end
+        if palette and geometry == data and not paletteColors then return end
         local editable = AssetService:CreateEditableMesh()
         if not editable then error("Mesh memory unavailable") end
         mesh = editable
         local vertices: {number}, positions: {Vector3} = {}, {}
-        for i = 1, #data.Vertices, 3 do
-            local position = Vector3.new(data.Vertices[i], data.Vertices[i + 1], data.Vertices[i + 2])
+        for i = 1, #geometry.Vertices, 3 do
+            local position = Vector3.new(geometry.Vertices[i], geometry.Vertices[i + 1], geometry.Vertices[i + 2])
             table.insert(positions, position)
             table.insert(vertices, editable:AddVertex(position))
         end
-        local rgb = paletteColors or data.Colors
+        local rgb = paletteColors or geometry.Colors
         local grid = math.ceil(math.sqrt(#rgb / 3))
         local texture = AssetService:CreateEditableImage({Size = Vector2.one * grid * 8})
         if not texture then error("Texture memory unavailable") end
         image = texture
         local uvs = atlas(editable, texture, rgb, grid)
         local normals: {[Vector3]: number} = {}
-        for i = 1, #data.Faces, 4 do
-            local a, b, c, material = data.Faces[i], data.Faces[i + 1], data.Faces[i + 2], data.Faces[i + 3]
+        for i = 1, #geometry.Faces, 4 do
+            local a, b, c, material = geometry.Faces[i], geometry.Faces[i + 1], geometry.Faces[i + 2], geometry.Faces[i + 3]
             local normal = (positions[b] - positions[a]):Cross(positions[c] - positions[a])
             if normal.Magnitude < 1e-8 then continue end
             local unit = normal.Unit
@@ -7687,16 +7862,22 @@ local function load(source: ModuleScript, palette: string?)
     end
 end
 
-function CreatureArt.Size(id: string, name: any, fallback: number): number
+function CreatureArt.Size(id: string, name: any, fallback: number, mutation: any?): number
     local authored = scales[id]
+    local reference = referenceScales[id]
+    if name == "Enorme" or mutation == "Dourada" or mutation == "ArcoIris" then
+        return reference or (authored and authored.Enorme) or math.max(1.85, fallback)
+    end
+    if name == "Titanica" and reference then return math.max(reference * 1.2, fallback) end
     return if authored and type(name) == "string" then authored[name] or fallback else fallback
 end
 
 function CreatureArt.Get(id: string, mutation: string?): MeshPart?
-    local normal = templates[id]
-    if not normal then return nil end
     local source = sources:FindFirstChild(id)
     if not source or not source:IsA("ModuleScript") then return nil end
+    if not templates[id] then load(source) end
+    local normal = templates[id]
+    if not normal then return nil end
     local variantPart: Template? = nil
     if mutation == "Dourada" or mutation == "ArcoIris" then
         load(source, mutation)
@@ -7724,7 +7905,7 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
         return nil
     end
     if existing then existing:Destroy() end
-    scale = CreatureArt.Size(id, model:GetAttribute("Size"), scale)
+    scale = CreatureArt.Size(id, model:GetAttribute("Size"), scale, mutation)
     if maxExtent then scale = math.min(scale, maxExtent / math.max(mesh.Size.X, mesh.Size.Y, mesh.Size.Z)) end
     mesh.Size *= scale
     mesh.CFrame = root.CFrame * CFrame.new(0, mesh.Size.Y / 2 - rootHeight, 0)
@@ -7738,13 +7919,6 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
     mesh.Parent = model
     return mesh
 end
-
-task.defer(function()
-    for _, source in sources:GetChildren() do
-        if source:IsA("ModuleScript") then load(source) end
-        task.wait()
-    end
-end)
 
 return CreatureArt
 ]]></string>
@@ -7888,7 +8062,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     local creature = preview(data.CreatureId, data.MutationName)
     for _, size in Config.Sizes do
         if size.Name == data.SizeName and creature.PrimaryPart then
-            creature:ScaleTo(CreatureArt.Size(data.CreatureId, data.SizeName, size.Scale))
+            creature:ScaleTo(CreatureArt.Size(data.CreatureId, data.SizeName, size.Scale, data.MutationName))
             break
         end
     end
@@ -8838,7 +9012,7 @@ local function renderCodes(parent: GuiObject, state: any, actions: any)
 end
 local function renderBiomes(parent: GuiObject, state: any, actions: any)
     local profile = state or {}
-    hint(parent, "Desbloqueios usam moedas e descobertas do Bestiário. A viagem é validada no servidor.")
+    hint(parent, "Visite a Floresta Neon para observar criaturas e resgatar XP e força. Faça as capturas na faixa amarela.")
     local list = W.List(parent, "BiomeList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
     for index, id in biomeOrder do
         local definition = Config.Biomes[id]

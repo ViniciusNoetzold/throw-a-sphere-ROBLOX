@@ -32,13 +32,13 @@ end
 local ink = Color3.fromRGB(34, 39, 66)
 local panel = Instance.new("Frame")
 panel.Name, panel.AnchorPoint, panel.Position = "ForcePanel", Vector2.new(.5, 1), UDim2.new(.5, 0, 1, -76)
-panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 76), Color3.fromRGB(49, 57, 89)
+panel.Size, panel.BackgroundColor3 = UDim2.new(.77, 0, 0, 94), Color3.fromRGB(49, 57, 89)
 panel.Visible, panel.Parent = false, gui
 round(panel)
 local edge = Instance.new("UIStroke")
 edge.Color, edge.Thickness, edge.Parent = Color3.fromRGB(255, 225, 126), 2, panel
 local limits = Instance.new("UISizeConstraint")
-limits.MaxSize, limits.Parent = Vector2.new(288, 76), panel
+limits.MaxSize, limits.Parent = Vector2.new(330, 94), panel
 local title = label(panel, "PowerLabel", "FORÇA", UDim2.fromOffset(7, 2), UDim2.new(1, -14, 0, 22), 15)
 local meter = Instance.new("Frame")
 meter.Name, meter.Position, meter.Size = "PowerMeter", UDim2.fromOffset(15, 28), UDim2.new(1, -30, 0, 19)
@@ -68,6 +68,8 @@ local button = Instance.new("TextButton")
 button.Name, button.Position, button.Size = "LaunchButton", UDim2.fromOffset(6, 50), UDim2.new(1, -12, 0, 24)
 button.Text, button.TextSize, button.Font = "CLIQUE OU TOQUE  ·  R2", 11, Enum.Font.GothamBold
 button.BackgroundTransparency, button.TextColor3, button.Parent = 1, Color3.fromRGB(255, 242, 213), panel
+local goal = label(panel, "NextBiomeGoal", "", UDim2.fromOffset(5, 73), UDim2.new(1, -10, 0, 17), 10)
+goal.TextColor3 = Color3.fromRGB(190, 220, 250)
 local top=label(gui,"Distance","",UDim2.new(0.5,0,0,70),UDim2.new(0.6,0,0,60),32)
 top.AnchorPoint=Vector2.new(0.5,0)
 local zone=label(gui,"Biome","",UDim2.new(0.5,0,0,130),UDim2.new(0.6,0,0,36),23)
@@ -275,11 +277,18 @@ end
    return
   end
   Focus.Begin("Throw")
+  if data.Goal and data.NextBiome then
+   goal.Text = Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. data.Level .. "/" .. data.Goal.Level
+    .. "  ·  Força " .. Numbers.Format(data.Strength) .. "/" .. Numbers.Format(data.Goal.Strength)
+  elseif data.Unlocked then
+   goal.Text = "TODOS OS BIOMAS LIBERADOS NA PISTA"
+  end
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
   title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
  elseif data.State=="Blocked" then
   blockingMessage=data.Message or "CONFIRA SUA ORBE E A COLEÇÃO"
+  goal.Text=""
   retryAt=os.clock()+1
  elseif data.State=="Flying" then
   session=data

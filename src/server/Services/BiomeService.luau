@@ -69,6 +69,28 @@ function Biomes.GetCurrentBiome(player: Player): string
     return if root and root:IsA("BasePart") then ctx.World.GetBiomeAtPosition(root.Position) else "Hub"
 end
 function Biomes.IsInTradingPlaza(player: Player): boolean return Biomes.CanAccess(player, "TradingPlaza") and Biomes.GetCurrentBiome(player) == "TradingPlaza" end
+function Biomes.ClaimNeonResearch(player: Player): boolean
+    if not Biomes.CanAccess(player, "FlorestaNeon") or Biomes.GetCurrentBiome(player) ~= "FlorestaNeon" then return false end
+    local profile = ctx.Data.Get(player)
+    local key = "NeonResearch"
+    if profile.OneTimeGrants[key] then
+        feedback(player, "Pesquisa concluída. As criaturas daqui são para observação. Arremesse na faixa para capturar.")
+        return false
+    end
+    if not ctx.Data.TryLock(player, key) then return false end
+    profile.OneTimeGrants[key] = true
+    local strength = math.min(20, math.max(0, 10000 - profile.ThrowStrength))
+    profile.ThrowStrength += strength
+    local _, gained = ctx.Progression.GrantXP(player, 80)
+    ctx.Data.MarkDirty(player)
+    local saved = ctx.Data.SaveNow(player)
+    if not saved then ctx.Data.Freeze(player, "Salvamento da pesquisa indisponível.") end
+    ctx.Data.Unlock(player, key)
+    if not saved then return false end
+    ctx.Data.Sync(player)
+    feedback(player, "Pesquisa Neon concluída • +" .. strength .. " força e +" .. gained .. " XP. Volte à faixa para capturar.")
+    return true
+end
 -- Internal rebirth hook: its caller already owns the profile transaction lock.
 function Biomes.ReturnToMeadow(player: Player): boolean
     local character = player.Character

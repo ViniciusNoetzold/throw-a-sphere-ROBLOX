@@ -41,7 +41,7 @@ function World.Init(ctx: any)
         Rules.LaunchOrigin + Vector3.new(0, -29, 10 - (Rules.MaxDistance + 30) / 2), Color3.fromRGB(106, 75, 52))
     for step = 0, 7 do
         for _, side in {-1, 1} do
-            part("LaunchPathTile", Vector3.new(14.8, .34, 14.8), Vector3.new(side * 7.5, -.07, -98 + step * 15),
+            part("LaunchPathTile", Vector3.new(14.8, .34, 14.8), Vector3.new(side * 7.5, -.01, -98 + step * 15),
                 if (step + side) % 3 == 0 then stone:Lerp(charcoal, .24) else stone)
         end
     end

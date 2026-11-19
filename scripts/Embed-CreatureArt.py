@@ -7,16 +7,25 @@ import sys
 from xml.etree import ElementTree
 
 
-def read_mesh(path):
-    data = json.loads(path.read_text(encoding="utf-8"))
+def validate_geometry(data, name):
     vertices, faces, colors = (data[key] for key in ("Vertices", "Faces", "Colors"))
     if len(vertices) % 3 or len(colors) % 3 or len(faces) % 4 or len(faces) > 80000:
-        raise ValueError(f"Malformed mesh: {path.name}")
+        raise ValueError(f"Malformed mesh: {name}")
     if not vertices or not faces or any(type(n) not in (int, float) or not math.isfinite(n) for n in vertices + colors):
-        raise ValueError(f"Invalid vertex data: {path.name}")
+        raise ValueError(f"Invalid vertex data: {name}")
     limits = [len(vertices) // 3] * 3 + [len(colors) // 3]
     if any(type(n) is not int or not 1 <= n <= limits[i % 4] for i, n in enumerate(faces)):
-        raise ValueError(f"Invalid triangle index: {path.name}")
+        raise ValueError(f"Invalid triangle index: {name}")
+
+
+def read_mesh(path):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    validate_geometry(data, path.name)
+    for variant, geometry in data.get("Shapes", {}).items():
+        if variant not in {"Dourada", "ArcoIris"}:
+            raise ValueError(f"Invalid variant: {path.name} {variant}")
+        validate_geometry(geometry, f"{path.name} {variant}")
+    colors = data["Colors"]
     for name, palette in data.get("Palettes", {}).items():
         if name not in {"Dourada", "ArcoIris"} or len(palette) != len(colors) or any(
             type(channel) not in (int, float) or not 0 <= channel <= 1 for channel in palette
@@ -25,6 +34,9 @@ def read_mesh(path):
     for name, scale in data.get("Scales", {}).items():
         if name not in {"Grande", "Enorme", "Titanica"} or type(scale) not in (int, float) or not 1 <= scale <= 4:
             raise ValueError(f"Invalid authored scale: {path.name} {name}")
+    reference = data.get("ReferenceScale", 1)
+    if type(reference) not in (int, float) or not 0 < reference <= 20:
+        raise ValueError(f"Invalid Pokédex scale: {path.name}")
     return json.dumps(data, separators=(",", ":"))
 
 

@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 16:18 — Brasília (UTC−3). Novo lote de arte, Pesquisa Neon e início do arremesso.** A revisão `13572c5` da equipe adicionou 125 espécies, totalizando 148 modelos texturizados distribuídos pelos seis biomas. Enorme, Shiny e Dourada usam as dimensões de referência da Pokédex quando disponíveis. No curral, o limite visual de espaço continua valendo.
+
+O centro da ilha ficou livre das criaturas selvagens. O caminho entre o pódio e a faixa amarela passou a ficar 0,06 stud acima da grama, corrigindo a sobreposição. O arremesso chega à Floresta Neon a partir do **nível 2 com 25 de força**, se a barra der alcance suficiente. A interface de força acompanha os requisitos. As demais metas da pista foram preservadas.
+
+A viagem à Floresta Neon continua exigindo **quatro espécies descobertas e $2.500**. O local agora tem criaturas para observação e um posto de pesquisa. O primeiro uso concede até **+20 força e +80 XP base**, com registro no save. A captura continua na faixa amarela.
+
+**Validação e próximo trabalho.** `scripts/Test.ps1` aprovou a compilação, os testes com mocks e o build Rojo. A exportação validou os 148 modelos, 290 variantes de cor ou geometria e a cobertura dos seis biomas. Faltam o Play do lote completo, o teste em celulares físicos e a validação em DataStore publicado.
+
+**No outro PC**, atualize o Git e gere `build/ThrowASphere-ComModelos.rbxlx` com o novo commit da origem privada. [Como gerar o build com arte](docs/CREATURE_ART.md).
+
+### Checkpoint anterior — curral, chance de raros e texturas
+
 **19/11/2026, 15:50 — Brasília (UTC−3). Texturas, chance de raros e inventário do curral.** O arremesso usa exclusivamente as espécies com arte disponível. Os 23 modelos da equipe recebem texturas UV geradas das paletas originais do Blender. A revelação mostra absorção da silhueta, abertura da orbe e balançadas com efeitos conforme o resultado.
 
 **Progressão.** A distância aumenta a Chance de raros e a evolução de cada orbe acrescenta seu próprio multiplicador. A revelação mostra a chance da combinação de espécie, cor e tamanho. O nível e a força destravam trechos da pista. No nível 6, mesmo com força alta, o arremesso termina até a Floresta Neon. O Vazio Cósmico exige nível 50 e força 4.000.

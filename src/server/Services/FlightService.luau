@@ -86,7 +86,12 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     if CFrame then character:PivotTo(CFrame.lookAt(root.Position, root.Position + Rules.Direction)) end
     sessions[player] = entry
     decisions[player] = nil
-    send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
+    local order = ctx.Layout.BiomeOrder
+    local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
+    local _, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod,
+        NextBiome = order[unlocked + 1], Goal = Rules.Milestones and Rules.Milestones[unlocked + 1],
+        Level = profile.Level, Strength = profile.ThrowStrength, Unlocked = unlocked})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
     return true
 end

@@ -7,12 +7,14 @@ local shared = ReplicatedStorage:WaitForChild("Shared")
 local sources = shared:WaitForChild("CreatureMeshes")
 local variants = require(shared.ConfigMutacoes)
 
-type MeshData = {Vertices: {number}, Faces: {number}, Colors: {number}, Palettes: {[string]: {number}}?, Scales: {[string]: number}?}
+type Geometry = {Vertices: {number}, Faces: {number}, Colors: {number}}
+type MeshData = Geometry & {Palettes: {[string]: {number}}?, Shapes: {[string]: Geometry}?, Scales: {[string]: number}?, ReferenceScale: number?}
 type Template = {Part: MeshPart, RetainedMesh: EditableMesh?, Texture: EditableImage}
 local CreatureArt = {}
 local templates: {[string]: Template} = {}
 local attempted: {[string]: boolean} = {}
 local scales: {[string]: {[string]: number}} = {}
+local referenceScales: {[string]: number} = {}
 local loaded = Instance.new("BindableEvent")
 CreatureArt.Loaded = loaded.Event
 
@@ -53,26 +55,28 @@ local function load(source: ModuleScript, palette: string?)
     local ok, problem = pcall(function()
         local data: MeshData = HttpService:JSONDecode(require(source))
         scales[source.Name] = data.Scales or {}
+        referenceScales[source.Name] = data.ReferenceScale
+        local geometry = (if palette and data.Shapes then data.Shapes[palette] else nil) or data
         local paletteColors = if palette and data.Palettes then data.Palettes[palette] else nil
-        if palette and not paletteColors then return end
+        if palette and geometry == data and not paletteColors then return end
         local editable = AssetService:CreateEditableMesh()
         if not editable then error("Mesh memory unavailable") end
         mesh = editable
         local vertices: {number}, positions: {Vector3} = {}, {}
-        for i = 1, #data.Vertices, 3 do
-            local position = Vector3.new(data.Vertices[i], data.Vertices[i + 1], data.Vertices[i + 2])
+        for i = 1, #geometry.Vertices, 3 do
+            local position = Vector3.new(geometry.Vertices[i], geometry.Vertices[i + 1], geometry.Vertices[i + 2])
             table.insert(positions, position)
             table.insert(vertices, editable:AddVertex(position))
         end
-        local rgb = paletteColors or data.Colors
+        local rgb = paletteColors or geometry.Colors
         local grid = math.ceil(math.sqrt(#rgb / 3))
         local texture = AssetService:CreateEditableImage({Size = Vector2.one * grid * 8})
         if not texture then error("Texture memory unavailable") end
         image = texture
         local uvs = atlas(editable, texture, rgb, grid)
         local normals: {[Vector3]: number} = {}
-        for i = 1, #data.Faces, 4 do
-            local a, b, c, material = data.Faces[i], data.Faces[i + 1], data.Faces[i + 2], data.Faces[i + 3]
+        for i = 1, #geometry.Faces, 4 do
+            local a, b, c, material = geometry.Faces[i], geometry.Faces[i + 1], geometry.Faces[i + 2], geometry.Faces[i + 3]
             local normal = (positions[b] - positions[a]):Cross(positions[c] - positions[a])
             if normal.Magnitude < 1e-8 then continue end
             local unit = normal.Unit
@@ -110,16 +114,22 @@ local function load(source: ModuleScript, palette: string?)
     end
 end
 
-function CreatureArt.Size(id: string, name: any, fallback: number): number
+function CreatureArt.Size(id: string, name: any, fallback: number, mutation: any?): number
     local authored = scales[id]
+    local reference = referenceScales[id]
+    if name == "Enorme" or mutation == "Dourada" or mutation == "ArcoIris" then
+        return reference or (authored and authored.Enorme) or math.max(1.85, fallback)
+    end
+    if name == "Titanica" and reference then return math.max(reference * 1.2, fallback) end
     return if authored and type(name) == "string" then authored[name] or fallback else fallback
 end
 
 function CreatureArt.Get(id: string, mutation: string?): MeshPart?
-    local normal = templates[id]
-    if not normal then return nil end
     local source = sources:FindFirstChild(id)
     if not source or not source:IsA("ModuleScript") then return nil end
+    if not templates[id] then load(source) end
+    local normal = templates[id]
+    if not normal then return nil end
     local variantPart: Template? = nil
     if mutation == "Dourada" or mutation == "ArcoIris" then
         load(source, mutation)
@@ -147,7 +157,7 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
         return nil
     end
     if existing then existing:Destroy() end
-    scale = CreatureArt.Size(id, model:GetAttribute("Size"), scale)
+    scale = CreatureArt.Size(id, model:GetAttribute("Size"), scale, mutation)
     if maxExtent then scale = math.min(scale, maxExtent / math.max(mesh.Size.X, mesh.Size.Y, mesh.Size.Z)) end
     mesh.Size *= scale
     mesh.CFrame = root.CFrame * CFrame.new(0, mesh.Size.Y / 2 - rootHeight, 0)
@@ -161,12 +171,5 @@ function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight:
     mesh.Parent = model
     return mesh
 end
-
-task.defer(function()
-    for _, source in sources:GetChildren() do
-        if source:IsA("ModuleScript") then load(source) end
-        task.wait()
-    end
-end)
 
 return CreatureArt

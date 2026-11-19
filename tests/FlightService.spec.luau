@@ -152,7 +152,11 @@ local _, weakOdds=Math.Species(pool,"PradariaSolar",weights,.99,0)
 local _, strongOdds=Math.Species(pool,"PradariaSolar",weights,.99,1)
 local _, diverseOdds=Math.Species(pool,"PradariaSolar",weights,.99,0,"A")
 assert(strongOdds>weakOdds and diverseOdds>weakOdds)
-local milestones={{Level=1,Strength=0},{Level=4,Strength=35},{Level=11,Strength=180}}
+local milestones={{Level=1,Strength=0},{Level=2,Strength=25},{Level=11,Strength=180}}
+local starterRange = Math.Distance(25,2,10,.65)
+assert(Math.Limit(starterRange,order,300,900,1,25,milestones)==299)
+assert(Math.Limit(starterRange,order,300,900,2,24,milestones)==299)
+assert(Math.Limit(starterRange,order,300,900,2,25,milestones)>=300)
 assert(Math.Limit(1800,order,300,900,6,1200,milestones)==599)
 assert(Math.Limit(1800,order,300,900,11,179,milestones)==599)
 assert(Math.Limit(1800,order,300,900,11,180,milestones)==900)

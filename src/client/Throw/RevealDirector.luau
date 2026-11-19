@@ -60,7 +60,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     local creature = preview(data.CreatureId, data.MutationName)
     for _, size in Config.Sizes do
         if size.Name == data.SizeName and creature.PrimaryPart then
-            creature:ScaleTo(CreatureArt.Size(data.CreatureId, data.SizeName, size.Scale))
+            creature:ScaleTo(CreatureArt.Size(data.CreatureId, data.SizeName, size.Scale, data.MutationName))
             break
         end
     end

@@ -260,8 +260,15 @@ function WorldService.Init(context: any?)
 			end end
 			protectArea(zone, center, Vector3.new(Layout.ZoneSize, 1, Layout.ZoneSize), center + Vector3.new(0, 4, 35), colors[2])
 		end
+		if id == "FlorestaNeon" then
+			station(zone, "NeonResearch", center + Vector3.new(0, .8, 15), Color3.fromRGB(98, 232, 183),
+				"PESQUISA NEON\n+20 FORÇA E +80 XP NA PRIMEIRA VISITA", function(player)
+					if ctx and ctx.Biomes then ctx.Biomes.ClaimNeonResearch(player) end
+				end)
+		end
 		local destination = id
-		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
+		local purpose = if id == "FlorestaNeon" then " • Pesquisa" else ""
+		station(folder, "Portal_" .. id, Vector3.new(-78 + (index - 1) * 31, 0.8, 116), colors[2], Config.Biomes[id].Name .. purpose .. "\n$" .. NumberFormatter.Format(Config.Biomes[id].Cost) .. " • " .. Config.Biomes[id].RequiredBestiary .. " espécies", function(player)
 			if not ctx or not ctx.Biomes then return end
 			if ctx.Biomes.CanAccess(player, destination) or ctx.Biomes.Unlock(player, destination) then ctx.Biomes.Travel(player, destination) end
 		end)
@@ -312,6 +319,7 @@ function WorldService.GetBiomeAtPosition(position: Vector3): string
 	return "Hub"
 end
 function WorldService.GetSpawnPoints(id: string): {Vector3}
+	if id == "PradariaSolar" then return {} end
 	local center, points = Layout.Biomes[id].Position, {}
 	for _, offset in {Vector3.new(-30,0.15,5), Vector3.new(0,0.15,-5), Vector3.new(30,0.15,5), Vector3.new(-42,0.15,-28), Vector3.new(0,0.15,-38), Vector3.new(42,0.15,-28)} do table.insert(points, center + offset) end
 	return points

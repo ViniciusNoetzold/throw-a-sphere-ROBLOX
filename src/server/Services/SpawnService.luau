@@ -153,7 +153,14 @@ function SpawnService.Init(worldOrContext: any, context: any?)
 		for _, biomeId in layout.BiomeOrder do
 			local species = {}
 			if ctx.EncounterPools then
-				species = ctx.EncounterPools[biomeId].Comum or {}
+				local groups = ctx.EncounterPools[biomeId]
+				if biomeId == "FlorestaNeon" then
+					-- Display a representative cross-section, including large silhouettes.
+					for _, id in {"Floradine", "Flutterwing", "Lancewasp", "Jungleking", "Velvetlynx", "Dustwing"} do
+						if ctx.AuthoredCreatures[id] then table.insert(species, id) end
+					end
+				end
+				if #species == 0 then species = groups.Comum or {} end
 			else
 				for id, definition in Config.Creatures do
 					if definition.Biome == biomeId then table.insert(species, id) end

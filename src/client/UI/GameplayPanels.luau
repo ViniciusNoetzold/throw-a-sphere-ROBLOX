@@ -285,7 +285,7 @@ local function renderCodes(parent: GuiObject, state: any, actions: any)
 end
 local function renderBiomes(parent: GuiObject, state: any, actions: any)
     local profile = state or {}
-    hint(parent, "Desbloqueios usam moedas e descobertas do Bestiário. A viagem é validada no servidor.")
+    hint(parent, "Visite a Floresta Neon para observar criaturas e resgatar XP e força. Faça as capturas na faixa amarela.")
     local list = W.List(parent, "BiomeList", UDim2.fromOffset(0, 46), UDim2.new(1, 0, 1, -46))
     for index, id in biomeOrder do
         local definition = Config.Biomes[id]
