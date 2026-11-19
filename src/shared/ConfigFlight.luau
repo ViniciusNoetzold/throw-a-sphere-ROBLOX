@@ -3,8 +3,7 @@ return {
     MeterPeriod = 3.8, ChargeTimeout = 30, PerfectThreshold = 0.94,
     ZoneLength = 300, MaxDistance = 1800, MinFlightSeconds = 3.5, MaxFlightSeconds = 7,
     Milestones = {
-        {Level = 1, Strength = 0}, {Level = 2, Strength = 25}, {Level = 11, Strength = 180},
-        {Level = 20, Strength = 580}, {Level = 33, Strength = 1500}, {Level = 50, Strength = 4000},
+        {Level = 1}, {Level = 12}, {Level = 25}, {Level = 50}, {Level = 80}, {Level = 100},
     },
     -- Check the rarest tier first. The ordinary encounter uses the remaining probability.
     RarityDenominators = {Incomum = 9, Rara = 80, Epica = 5000, Mitica = 2500000, Lendaria = 10000000000, Secreta = 1000000000000000},

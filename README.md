@@ -4,6 +4,23 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 16:23 — Brasília (UTC−3). Marcos da pista, cargos e nível máximo 1.000.** O nível do jogador define o último bioma que a orbe pode atingir. A força, o poder da orbe e o acerto na barra determinam a distância efetiva. A barra mostra o teto atual e o nível que abre o próximo trecho.
+
+| Nível do jogador | Último bioma liberado | Teto da pista |
+| --- | --- | ---: |
+| 1–11 | Pradaria Solar | 299 studs |
+| 12–24 | Floresta Neon | 599 studs |
+| 25–49 | Cânion Vulcânico | 899 studs |
+| 50–79 | Abismo Glacial | 1.199 studs |
+| 80–99 | Ruínas Ancestrais | 1.499 studs |
+| 100–1.000 | Vazio Cósmico | 1.800 studs |
+
+O HUD exibe o cargo do jogador. Os marcos são Iniciante (1), Aprendiz (12), Treinador (25), Veterano (50), Mestre (80), Grão-Mestre (100), Treinador Supremo (250), Lenda das Orbes (500) e Lenda Suprema (1.000).
+
+**Validação e próximo trabalho.** Testes com mocks cobrem os marcos, a distância calculada e o limite de XP em 1.000. O build Rojo e a versão local com 148 modelos foram gerados. A conferência desse build em Play e a validação de DataStore publicado ficam pendentes.
+
+### Checkpoint anterior — lote de arte e Pesquisa Neon
+
 **19/11/2026, 16:18 — Brasília (UTC−3). Novo lote de arte, Pesquisa Neon e início do arremesso.** A revisão `13572c5` da equipe adicionou 125 espécies, totalizando 148 modelos texturizados distribuídos pelos seis biomas. Enorme, Shiny e Dourada usam as dimensões de referência da Pokédex quando disponíveis. No curral, o limite visual de espaço continua valendo.
 
 O centro da ilha ficou livre das criaturas selvagens. O caminho entre o pódio e a faixa amarela passou a ficar 0,06 stud acima da grama, corrigindo a sobreposição. O arremesso chega à Floresta Neon a partir do **nível 2 com 25 de força**, se a barra der alcance suficiente. A interface de força acompanha os requisitos. As demais metas da pista foram preservadas.

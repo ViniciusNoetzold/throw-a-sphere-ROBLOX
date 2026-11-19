@@ -19,16 +19,19 @@ function FlightMath.Distance(strength: number, level: number, orbPower: number, 
         + math.log10(math.clamp(orbPower, 1, 18000) + 1) * 48
     return math.max(60, base * (0.38 + math.clamp(power, 0, 1)) * (if titan then 1.35 else 1))
 end
-function FlightMath.Limit(raw: number, order: {string}, length: number, maximum: number, level: number, strength: number, milestones: {any}?, pools: {[string]: any}?): (number, number)
+function FlightMath.Limit(raw: number, order: {string}, length: number, maximum: number, level: number, milestones: {any}?, pools: {[string]: any}?): (number, number)
     local last = 1
     for index = 2, #order do
         local goal = milestones and milestones[index]
-        if goal and (level < goal.Level or strength < goal.Strength) then break end
+        if goal and level < goal.Level then break end
         if pools and (not pools[order[index]] or not pools[order[index]].Comum) then break end
         last = index
     end
     local boundary = if last == #order then maximum else last * length - 1
     return math.min(raw, boundary), last
+end
+function FlightMath.LevelDistance(unlockedBand: number, zoneLength: number, power: number): number
+    return (unlockedBand - 1) * zoneLength * (.25 + .75 * math.clamp(power, 0, 1))
 end
 function FlightMath.Zone(distance: number, order: {string}, zoneLength: number): (string, number, number)
     local band = math.clamp(math.floor(distance / zoneLength) + 1, 1, #order)

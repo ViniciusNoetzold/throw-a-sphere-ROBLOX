@@ -118,14 +118,14 @@ test("XP applies rebirth and pass once", function()
     assert(leveled and gained == 300 and f.Profile.Level == 2 and f.Profile.XP == 200)
 end)
 test("XP cap reports effective zero", function()
-    local f = fixture(); f.Profile.Level = 100
+    local f = fixture(); f.Profile.Level = 1000
     local leveled, gained = f.Progression.GrantXP(f.Player, 1000)
     assert(not leveled and gained == 0 and f.Profile.XP == 0)
 end)
 test("Huge XP clamps to remaining progress", function()
-    local f = fixture(); f.Profile.Level = 99
+    local f = fixture(); f.Profile.Level = 999
     local _, gained = f.Progression.GrantXP(f.Player, 1e25)
-    assert(gained == f.Config.GetXPRequiredForLevel(99) and f.Profile.Level == 100)
+    assert(gained == f.Config.GetXPRequiredForLevel(999) and f.Profile.Level == 1000)
 end)
 test("Training multiplier and shared cooldown", function()
     local f = fixture({Benefits = {TitanArms = true}})

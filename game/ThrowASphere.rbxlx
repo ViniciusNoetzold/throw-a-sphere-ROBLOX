@@ -240,9 +240,10 @@
           <string name="Source"><![CDATA[--!strict
 -- Pure rules, runnable in the official Luau CLI without Roblox services.
 local CaptureMath = {}
+CaptureMath.MaxLevel = 1000
 
 function CaptureMath.GetXPRequiredForLevel(level: number): number
-	return math.floor(100 * math.clamp(level, 1, 100) ^ 1.6)
+	return math.floor(100 * math.clamp(level, 1, CaptureMath.MaxLevel) ^ 1.6)
 end
 
 function CaptureMath.GetMaxThrowRange(strength: number, level: number): number
@@ -288,7 +289,7 @@ return {
 		TrainingMath.AddXP(profile, 0, TrainingRules)
 	end,
 	Constants = {
-		MaxLevel = 100, BaseSanctuarySlots = GameplayMath.BaseSanctuarySlots, MaxOfflineSeconds = 28800,
+		MaxLevel = Math.MaxLevel, BaseSanctuarySlots = GameplayMath.BaseSanctuarySlots, MaxOfflineSeconds = 28800,
 		DataStoreName = "ThrowASphere_v1", StudioPersistence = false,
 		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
@@ -540,8 +541,7 @@ return {
     MeterPeriod = 3.8, ChargeTimeout = 30, PerfectThreshold = 0.94,
     ZoneLength = 300, MaxDistance = 1800, MinFlightSeconds = 3.5, MaxFlightSeconds = 7,
     Milestones = {
-        {Level = 1, Strength = 0}, {Level = 2, Strength = 25}, {Level = 11, Strength = 180},
-        {Level = 20, Strength = 580}, {Level = 33, Strength = 1500}, {Level = 50, Strength = 4000},
+        {Level = 1}, {Level = 12}, {Level = 25}, {Level = 50}, {Level = 80}, {Level = 100},
     },
     -- Check the rarest tier first. The ordinary encounter uses the remaining probability.
     RarityDenominators = {Incomum = 9, Rara = 80, Epica = 5000, Mitica = 2500000, Lendaria = 10000000000, Secreta = 1000000000000000},
@@ -677,12 +677,26 @@ local ConfigProgression = {
     ExtraSlotCostGrowth = 2,
     MaxSanctuarySlots = 24,
     AutomationTickSeconds = 0.5,
+    TrainerRanks = {
+        {Level = 1, Name = "Iniciante"}, {Level = 12, Name = "Aprendiz"}, {Level = 25, Name = "Treinador"},
+        {Level = 50, Name = "Veterano"}, {Level = 80, Name = "Mestre"}, {Level = 100, Name = "Grão-Mestre"},
+        {Level = 250, Name = "Treinador Supremo"}, {Level = 500, Name = "Lenda das Orbes"},
+        {Level = 1000, Name = "Lenda Suprema"},
+    },
     FusionRecipes = {
         Normal = { Mutation = "Dourada", Multiplier = 3, Stage = 1 },
         Dourada = { Mutation = "Cristal", Multiplier = 6, Stage = 2 },
         Cristal = { Mutation = "ArcoIris", Multiplier = 15, Stage = 3 },
     },
 }
+
+function ConfigProgression.GetTrainerRank(level: number): string
+    local ranks = ConfigProgression.TrainerRanks
+    for index = #ranks, 2, -1 do
+        if level >= ranks[index].Level then return ranks[index].Name end
+    end
+    return ranks[1].Name
+end
 
 function ConfigProgression.GetExtraSlotCost(purchasedSlots: number): number
     return math.floor(ConfigProgression.ExtraSlotBaseCost * ConfigProgression.ExtraSlotCostGrowth ^ math.clamp(purchasedSlots, 0, 24))
@@ -835,16 +849,19 @@ function FlightMath.Distance(strength: number, level: number, orbPower: number, 
         + math.log10(math.clamp(orbPower, 1, 18000) + 1) * 48
     return math.max(60, base * (0.38 + math.clamp(power, 0, 1)) * (if titan then 1.35 else 1))
 end
-function FlightMath.Limit(raw: number, order: {string}, length: number, maximum: number, level: number, strength: number, milestones: {any}?, pools: {[string]: any}?): (number, number)
+function FlightMath.Limit(raw: number, order: {string}, length: number, maximum: number, level: number, milestones: {any}?, pools: {[string]: any}?): (number, number)
     local last = 1
     for index = 2, #order do
         local goal = milestones and milestones[index]
-        if goal and (level < goal.Level or strength < goal.Strength) then break end
+        if goal and level < goal.Level then break end
         if pools and (not pools[order[index]] or not pools[order[index]].Comum) then break end
         last = index
     end
     local boundary = if last == #order then maximum else last * length - 1
     return math.min(raw, boundary), last
+end
+function FlightMath.LevelDistance(unlockedBand: number, zoneLength: number, power: number): number
+    return (unlockedBand - 1) * zoneLength * (.25 + .75 * math.clamp(power, 0, 1))
 end
 function FlightMath.Zone(distance: number, order: {string}, zoneLength: number): (string, number, number)
     local band = math.clamp(math.floor(distance / zoneLength) + 1, 1, #order)
@@ -3062,10 +3079,10 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     decisions[player] = nil
     local order = ctx.Layout.BiomeOrder
     local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
-    local _, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    local reach, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, Rules.Milestones, ctx.EncounterPools)
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod,
         NextBiome = order[unlocked + 1], Goal = Rules.Milestones and Rules.Milestones[unlocked + 1],
-        Level = profile.Level, Strength = profile.ThrowStrength, Unlocked = unlocked})
+        Level = profile.Level, Reach = reach})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
     return true
 end
@@ -3213,8 +3230,10 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
     local raw = Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms)
     local order = ctx.Layout.BiomeOrder
-    local distance, unlocked = Math.Limit(raw, order, Rules.ZoneLength, Rules.MaxDistance or Rules.ZoneLength * #order,
-        profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
+    local reach, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, Rules.Milestones, ctx.EncounterPools)
+    local levelDistance = if Rules.Milestones then Math.LevelDistance(unlocked, Rules.ZoneLength, power) else 0
+    local distance = math.min(reach, raw + levelDistance)
     local biome, zoneIndex, zoneProgress = Math.Zone(distance, ctx.Layout.BiomeOrder, Rules.ZoneLength)
     entry.State, entry.Owner, entry.OrbId, entry.Consumed, entry.Count = "Flying", owner, orbId, not infinite, count
     entry.Power, entry.Perfect, entry.Distance, entry.BiomeId = power, power >= Rules.PerfectThreshold, distance, biome
@@ -4013,6 +4032,10 @@ local sanctuaryService: any
 local context: any = nil
 local lastActions: {[Player]: {[string]: number}} = {}
 local remotes: any
+local xpUntilCap: {[number]: number} = {[Config.Constants.MaxLevel] = 0}
+for level = Config.Constants.MaxLevel - 1, 1, -1 do
+    xpUntilCap[level] = xpUntilCap[level + 1] + Config.GetXPRequiredForLevel(level)
+end
 local function benefits(player: Player): any
     return if context and context.Monetization then context.Monetization.GetBenefits(player) else {}
 end
@@ -4056,8 +4079,7 @@ function ProgressionService.GrantXP(player: Player, amount: number): (boolean, n
     local multiplier = if GameplayMath.GetXPMultiplier then GameplayMath.GetXPMultiplier(profile, benefits(player), os.time()) else 1
     local requested = math.floor(amount * multiplier)
     if requested ~= requested or requested == math.huge then return false, 0 end
-    local remaining = -(profile.XP or 0)
-    for level = profile.Level, Config.Constants.MaxLevel - 1 do remaining += Config.GetXPRequiredForLevel(level) end
+    local remaining = xpUntilCap[profile.Level] - (profile.XP or 0)
     local gained = math.min(requested, math.max(0, remaining))
     profile.XP += gained
     local leveled = false
@@ -6308,6 +6330,7 @@ local Debris = game:GetService("Debris")
 local player = Players.LocalPlayer
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local Progression = require(Shared:WaitForChild("ConfigProgression"))
 local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local UI = script.Parent:WaitForChild("UI")
@@ -6460,7 +6483,7 @@ navigation.Activated:Connect(function() openPanel("Menu") end)
 local rewardsButton = W.Button(root, "Rewards", "RESGATES", UDim2.fromOffset(96, 4), UDim2.fromOffset(100, 44), C.Green, 12)
 rewardsButton.Activated:Connect(function() openPanel("Resgates") end)
 
-local stats = W.Frame(root, "Stats", UDim2.new(0, 12, 1, -12), UDim2.fromOffset(238, 160), C.Panel)
+local stats = W.Frame(root, "Stats", UDim2.new(0, 12, 1, -12), UDim2.fromOffset(238, 178), C.Panel)
 stats.AnchorPoint = Vector2.new(0, 1)
 W.Outline(stats, 1.5, C.Blue)
 local statsScale = Instance.new("UIScale")
@@ -6508,6 +6531,7 @@ W.Pattern(xpFill, C.Blue, 8, 1)
 local xpLabel = W.Label(xpBar, "Level", "NV. 1  •  0% XP", UDim2.fromOffset(4, 0), UDim2.new(1, -8, 1, 0), 12)
 xpLabel.TextXAlignment = Enum.TextXAlignment.Center
 local luckLabel = W.Label(stats, "Luck", "SORTE ×1.00", UDim2.fromOffset(12, 137), UDim2.fromOffset(214, 18), 10, C.Muted, true)
+local rankLabel = W.Label(stats, "TrainerRank", "Iniciante", UDim2.fromOffset(12, 155), UDim2.fromOffset(214, 18), 11, C.Gold)
 
 local hotbar = W.Frame(root, "Hotbar", UDim2.new(0.5, 0, 1, -12), UDim2.fromOffset(460, 86), C.Panel)
 hotbar.AnchorPoint = Vector2.new(0.5, 1)
@@ -6809,7 +6833,8 @@ stateUpdate.OnClientEvent:Connect(function(snapshot: any)
     incomeLabel.Text = "+$" .. Numbers.Format(snapshot.IncomePerSec or 0) .. " /s NO SANTUÁRIO"
     strengthLabel.Text = "FORÇA " .. Numbers.Format(snapshot.ThrowStrength or 10)
     gemsLabel.Text = Numbers.Format(snapshot.Gems or 0) .. " GEMAS  •  " .. Numbers.Format(snapshot.Rebirths or 0) .. " REBIRTHS"
-    xpLabel.Text = "NV. " .. Numbers.Format(level) .. (if level >= Config.Constants.MaxLevel then "  •  NÍVEL MÁXIMO" else "  •  " .. math.floor(percent * 100) .. "% XP")
+    xpLabel.Text = "NV. " .. level .. (if level >= Config.Constants.MaxLevel then "  •  NÍVEL MÁXIMO" else "  •  " .. math.floor(percent * 100) .. "% XP")
+    rankLabel.Text = Progression.GetTrainerRank(level)
     TweenService:Create(xpFill, TweenInfo.new(0.2), {Size = UDim2.fromScale(percent, 1)}):Play()
     local luck = snapshot.EffectiveLuck or 1
     luckLabel.Text = string.format("SORTE ×%.2f", luck)
@@ -7393,10 +7418,9 @@ end
   end
   Focus.Begin("Throw")
   if data.Goal and data.NextBiome then
-   goal.Text = Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. data.Level .. "/" .. data.Goal.Level
-    .. "  ·  Força " .. Numbers.Format(data.Strength) .. "/" .. Numbers.Format(data.Goal.Strength)
-  elseif data.Unlocked then
-   goal.Text = "TODOS OS BIOMAS LIBERADOS NA PISTA"
+   goal.Text = "Até " .. Numbers.Format(data.Reach) .. " studs  ·  " .. Config.Biomes[data.NextBiome].Name .. " no Nv. " .. data.Goal.Level
+  elseif data.Reach then
+   goal.Text = "Até " .. Numbers.Format(data.Reach) .. " studs  ·  Pista completa"
   end
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
@@ -8234,7 +8258,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
                     bonus.Position = UDim2.new(.03, 0, 0, 44)
                     if data.NextBiome and data.NextMilestone then
                         local gate = data.NextMilestone
-                        local nextBiome = label(overlay, Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. gate.Level .. "  ·  Força " .. Numbers.Format(gate.Strength),
+                        local nextBiome = label(overlay, Config.Biomes[data.NextBiome].Name .. "  ·  Desbloqueia no Nv. " .. gate.Level,
                             0, 18, 13, Color3.fromRGB(211, 222, 255))
                         nextBiome.Position = UDim2.new(.03, 0, 0, 63)
                     end

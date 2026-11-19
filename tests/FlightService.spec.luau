@@ -152,14 +152,16 @@ local _, weakOdds=Math.Species(pool,"PradariaSolar",weights,.99,0)
 local _, strongOdds=Math.Species(pool,"PradariaSolar",weights,.99,1)
 local _, diverseOdds=Math.Species(pool,"PradariaSolar",weights,.99,0,"A")
 assert(strongOdds>weakOdds and diverseOdds>weakOdds)
-local milestones={{Level=1,Strength=0},{Level=2,Strength=25},{Level=11,Strength=180}}
-local starterRange = Math.Distance(25,2,10,.65)
-assert(Math.Limit(starterRange,order,300,900,1,25,milestones)==299)
-assert(Math.Limit(starterRange,order,300,900,2,24,milestones)==299)
-assert(Math.Limit(starterRange,order,300,900,2,25,milestones)>=300)
-assert(Math.Limit(1800,order,300,900,6,1200,milestones)==599)
-assert(Math.Limit(1800,order,300,900,11,179,milestones)==599)
-assert(Math.Limit(1800,order,300,900,11,180,milestones)==900)
+local course = {"PradariaSolar","FlorestaNeon","CanionVulcanico","AbismoGlacial","RuinasAncestrais","VazioCosmico"}
+local milestones={{Level=1},{Level=12},{Level=25},{Level=50},{Level=80},{Level=100}}
+assert(Math.Limit(1800,course,300,1800,10,milestones)==299)
+assert(Math.Limit(1800,course,300,1800,12,milestones)==599)
+assert(Math.Limit(1800,course,300,1800,99,milestones)==1499)
+assert(Math.Limit(1800,course,300,1800,100,milestones)==1800)
+for index, milestone in milestones do
+ local baseline = Math.Distance(10,milestone.Level,10,.65) + Math.LevelDistance(index,300,.65)
+ assert(baseline >= (index-1)*300)
+end
 local artPools = Math.BuildPools(pool, order, {FlorestaNeon={"A","missing"} })
 assert(artPools.FlorestaNeon.Comum[1]=="A" and artPools.FlorestaNeon.Rara[1]=="C")
 local rareGroups = {Comum={"A"},Mitica={"B"}}

@@ -12,6 +12,7 @@ local Debris = game:GetService("Debris")
 local player = Players.LocalPlayer
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
+local Progression = require(Shared:WaitForChild("ConfigProgression"))
 local GameplayMath = require(Shared:WaitForChild("GameplayMath"))
 local Numbers = require(Shared:WaitForChild("NumberFormatter"))
 local UI = script.Parent:WaitForChild("UI")
@@ -164,7 +165,7 @@ navigation.Activated:Connect(function() openPanel("Menu") end)
 local rewardsButton = W.Button(root, "Rewards", "RESGATES", UDim2.fromOffset(96, 4), UDim2.fromOffset(100, 44), C.Green, 12)
 rewardsButton.Activated:Connect(function() openPanel("Resgates") end)
 
-local stats = W.Frame(root, "Stats", UDim2.new(0, 12, 1, -12), UDim2.fromOffset(238, 160), C.Panel)
+local stats = W.Frame(root, "Stats", UDim2.new(0, 12, 1, -12), UDim2.fromOffset(238, 178), C.Panel)
 stats.AnchorPoint = Vector2.new(0, 1)
 W.Outline(stats, 1.5, C.Blue)
 local statsScale = Instance.new("UIScale")
@@ -212,6 +213,7 @@ W.Pattern(xpFill, C.Blue, 8, 1)
 local xpLabel = W.Label(xpBar, "Level", "NV. 1  •  0% XP", UDim2.fromOffset(4, 0), UDim2.new(1, -8, 1, 0), 12)
 xpLabel.TextXAlignment = Enum.TextXAlignment.Center
 local luckLabel = W.Label(stats, "Luck", "SORTE ×1.00", UDim2.fromOffset(12, 137), UDim2.fromOffset(214, 18), 10, C.Muted, true)
+local rankLabel = W.Label(stats, "TrainerRank", "Iniciante", UDim2.fromOffset(12, 155), UDim2.fromOffset(214, 18), 11, C.Gold)
 
 local hotbar = W.Frame(root, "Hotbar", UDim2.new(0.5, 0, 1, -12), UDim2.fromOffset(460, 86), C.Panel)
 hotbar.AnchorPoint = Vector2.new(0.5, 1)
@@ -513,7 +515,8 @@ stateUpdate.OnClientEvent:Connect(function(snapshot: any)
     incomeLabel.Text = "+$" .. Numbers.Format(snapshot.IncomePerSec or 0) .. " /s NO SANTUÁRIO"
     strengthLabel.Text = "FORÇA " .. Numbers.Format(snapshot.ThrowStrength or 10)
     gemsLabel.Text = Numbers.Format(snapshot.Gems or 0) .. " GEMAS  •  " .. Numbers.Format(snapshot.Rebirths or 0) .. " REBIRTHS"
-    xpLabel.Text = "NV. " .. Numbers.Format(level) .. (if level >= Config.Constants.MaxLevel then "  •  NÍVEL MÁXIMO" else "  •  " .. math.floor(percent * 100) .. "% XP")
+    xpLabel.Text = "NV. " .. level .. (if level >= Config.Constants.MaxLevel then "  •  NÍVEL MÁXIMO" else "  •  " .. math.floor(percent * 100) .. "% XP")
+    rankLabel.Text = Progression.GetTrainerRank(level)
     TweenService:Create(xpFill, TweenInfo.new(0.2), {Size = UDim2.fromScale(percent, 1)}):Play()
     local luck = snapshot.EffectiveLuck or 1
     luckLabel.Text = string.format("SORTE ×%.2f", luck)

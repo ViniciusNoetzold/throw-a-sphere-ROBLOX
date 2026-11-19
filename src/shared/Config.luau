@@ -19,7 +19,7 @@ return {
 		TrainingMath.AddXP(profile, 0, TrainingRules)
 	end,
 	Constants = {
-		MaxLevel = 100, BaseSanctuarySlots = GameplayMath.BaseSanctuarySlots, MaxOfflineSeconds = 28800,
+		MaxLevel = Math.MaxLevel, BaseSanctuarySlots = GameplayMath.BaseSanctuarySlots, MaxOfflineSeconds = 28800,
 		DataStoreName = "ThrowASphere_v1", StudioPersistence = false,
 		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,

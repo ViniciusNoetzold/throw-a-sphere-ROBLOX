@@ -12,6 +12,10 @@ local sanctuaryService: any
 local context: any = nil
 local lastActions: {[Player]: {[string]: number}} = {}
 local remotes: any
+local xpUntilCap: {[number]: number} = {[Config.Constants.MaxLevel] = 0}
+for level = Config.Constants.MaxLevel - 1, 1, -1 do
+    xpUntilCap[level] = xpUntilCap[level + 1] + Config.GetXPRequiredForLevel(level)
+end
 local function benefits(player: Player): any
     return if context and context.Monetization then context.Monetization.GetBenefits(player) else {}
 end
@@ -55,8 +59,7 @@ function ProgressionService.GrantXP(player: Player, amount: number): (boolean, n
     local multiplier = if GameplayMath.GetXPMultiplier then GameplayMath.GetXPMultiplier(profile, benefits(player), os.time()) else 1
     local requested = math.floor(amount * multiplier)
     if requested ~= requested or requested == math.huge then return false, 0 end
-    local remaining = -(profile.XP or 0)
-    for level = profile.Level, Config.Constants.MaxLevel - 1 do remaining += Config.GetXPRequiredForLevel(level) end
+    local remaining = xpUntilCap[profile.Level] - (profile.XP or 0)
     local gained = math.min(requested, math.max(0, remaining))
     profile.XP += gained
     local leveled = false

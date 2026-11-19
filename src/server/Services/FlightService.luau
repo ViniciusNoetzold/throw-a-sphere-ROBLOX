@@ -88,10 +88,10 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     decisions[player] = nil
     local order = ctx.Layout.BiomeOrder
     local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
-    local _, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    local reach, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, Rules.Milestones, ctx.EncounterPools)
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod,
         NextBiome = order[unlocked + 1], Goal = Rules.Milestones and Rules.Milestones[unlocked + 1],
-        Level = profile.Level, Strength = profile.ThrowStrength, Unlocked = unlocked})
+        Level = profile.Level, Reach = reach})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
     return true
 end
@@ -239,8 +239,10 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
     local raw = Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms)
     local order = ctx.Layout.BiomeOrder
-    local distance, unlocked = Math.Limit(raw, order, Rules.ZoneLength, Rules.MaxDistance or Rules.ZoneLength * #order,
-        profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
+    local maximum = Rules.MaxDistance or Rules.ZoneLength * #order
+    local reach, unlocked = Math.Limit(maximum, order, Rules.ZoneLength, maximum, profile.Level, Rules.Milestones, ctx.EncounterPools)
+    local levelDistance = if Rules.Milestones then Math.LevelDistance(unlocked, Rules.ZoneLength, power) else 0
+    local distance = math.min(reach, raw + levelDistance)
     local biome, zoneIndex, zoneProgress = Math.Zone(distance, ctx.Layout.BiomeOrder, Rules.ZoneLength)
     entry.State, entry.Owner, entry.OrbId, entry.Consumed, entry.Count = "Flying", owner, orbId, not infinite, count
     entry.Power, entry.Perfect, entry.Distance, entry.BiomeId = power, power >= Rules.PerfectThreshold, distance, biome

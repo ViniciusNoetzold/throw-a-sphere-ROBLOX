@@ -1,9 +1,10 @@
 --!strict
 -- Pure rules, runnable in the official Luau CLI without Roblox services.
 local CaptureMath = {}
+CaptureMath.MaxLevel = 1000
 
 function CaptureMath.GetXPRequiredForLevel(level: number): number
-	return math.floor(100 * math.clamp(level, 1, 100) ^ 1.6)
+	return math.floor(100 * math.clamp(level, 1, CaptureMath.MaxLevel) ^ 1.6)
 end
 
 function CaptureMath.GetMaxThrowRange(strength: number, level: number): number

@@ -278,10 +278,9 @@ end
   end
   Focus.Begin("Throw")
   if data.Goal and data.NextBiome then
-   goal.Text = Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. data.Level .. "/" .. data.Goal.Level
-    .. "  ·  Força " .. Numbers.Format(data.Strength) .. "/" .. Numbers.Format(data.Goal.Strength)
-  elseif data.Unlocked then
-   goal.Text = "TODOS OS BIOMAS LIBERADOS NA PISTA"
+   goal.Text = "Até " .. Numbers.Format(data.Reach) .. " studs  ·  " .. Config.Biomes[data.NextBiome].Name .. " no Nv. " .. data.Goal.Level
+  elseif data.Reach then
+   goal.Text = "Até " .. Numbers.Format(data.Reach) .. " studs  ·  Pista completa"
   end
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end

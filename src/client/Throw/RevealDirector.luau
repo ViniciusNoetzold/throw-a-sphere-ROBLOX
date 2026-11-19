@@ -232,7 +232,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
                     bonus.Position = UDim2.new(.03, 0, 0, 44)
                     if data.NextBiome and data.NextMilestone then
                         local gate = data.NextMilestone
-                        local nextBiome = label(overlay, Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. gate.Level .. "  ·  Força " .. Numbers.Format(gate.Strength),
+                        local nextBiome = label(overlay, Config.Biomes[data.NextBiome].Name .. "  ·  Desbloqueia no Nv. " .. gate.Level,
                             0, 18, 13, Color3.fromRGB(211, 222, 255))
                         nextBiome.Position = UDim2.new(.03, 0, 0, 63)
                     end
