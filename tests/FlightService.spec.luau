@@ -153,12 +153,16 @@ local _, strongOdds=Math.Species(pool,"PradariaSolar",weights,.99,1)
 local _, diverseOdds=Math.Species(pool,"PradariaSolar",weights,.99,0,"A")
 assert(strongOdds>weakOdds and diverseOdds>weakOdds)
 local course = {"PradariaSolar","FlorestaNeon","CanionVulcanico","AbismoGlacial","RuinasAncestrais","VazioCosmico"}
-local milestones={{Level=1},{Level=12},{Level=25},{Level=50},{Level=80},{Level=100}}
+local milestones={{Level=1},{Level=50},{Level=200},{Level=400},{Level=650},{Level=900}}
 assert(Math.Limit(1800,course,300,1800,10,milestones)==299)
-assert(Math.Limit(1800,course,300,1800,12,milestones)==599)
-assert(Math.Limit(1800,course,300,1800,99,milestones)==1499)
-assert(Math.Limit(1800,course,300,1800,100,milestones)==1800)
+assert(Math.Limit(1800,course,300,1800,100,milestones)==599)
+assert(Math.Limit(1800,course,300,1800,1000,milestones)==1800)
 for index, milestone in milestones do
+ local ceiling = if index == #course then 1800 else index*300-1
+ assert(Math.Limit(1800,course,300,1800,milestone.Level,milestones)==ceiling)
+ if index > 1 then
+  assert(Math.Limit(1800,course,300,1800,milestone.Level-1,milestones)==(index-1)*300-1)
+ end
  local baseline = Math.Distance(10,milestone.Level,10,.65) + Math.LevelDistance(index,300,.65)
  assert(baseline >= (index-1)*300)
 end

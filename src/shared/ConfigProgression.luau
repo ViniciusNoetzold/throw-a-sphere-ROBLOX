@@ -14,9 +14,9 @@ local ConfigProgression = {
     MaxSanctuarySlots = 24,
     AutomationTickSeconds = 0.5,
     TrainerRanks = {
-        {Level = 1, Name = "Iniciante"}, {Level = 12, Name = "Aprendiz"}, {Level = 25, Name = "Treinador"},
-        {Level = 50, Name = "Veterano"}, {Level = 80, Name = "Mestre"}, {Level = 100, Name = "Grão-Mestre"},
-        {Level = 250, Name = "Treinador Supremo"}, {Level = 500, Name = "Lenda das Orbes"},
+        {Level = 1, Name = "Iniciante"}, {Level = 20, Name = "Aprendiz"}, {Level = 50, Name = "Treinador"},
+        {Level = 125, Name = "Veterano"}, {Level = 200, Name = "Mestre"}, {Level = 400, Name = "Grão-Mestre"},
+        {Level = 650, Name = "Treinador Supremo"}, {Level = 900, Name = "Lenda das Orbes"},
         {Level = 1000, Name = "Lenda Suprema"},
     },
     FusionRecipes = {

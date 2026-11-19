@@ -4,6 +4,21 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 16:27 — Brasília (UTC−3). Biomas e cargos distribuídos até o fim da progressão.** O jogador começa na Pradaria Solar e passa a liberar os novos trechos durante toda a progressão até o nível 1.000.
+
+| Nível | Último bioma liberado | Teto da pista |
+| --- | --- | ---: |
+| 1–49 | Pradaria Solar | 299 studs |
+| 50–199 | Floresta Neon | 599 studs |
+| 200–399 | Cânion Vulcânico | 899 studs |
+| 400–649 | Abismo Glacial | 1.199 studs |
+| 650–899 | Ruínas Ancestrais | 1.499 studs |
+| 900–1.000 | Vazio Cósmico | 1.800 studs |
+
+Os cargos acompanham os novos marcos, com Grão-Mestre no 400, Treinador Supremo no 650 e Lenda Suprema no 1.000. `scripts/Test.ps1` aprovou a compilação, os testes com mocks e o build Rojo. Os testes conferem os limites imediatamente antes e depois de cada desbloqueio. A versão local com os 148 modelos também foi gerada. O próximo trabalho é ajustar o ritmo do treino e o XP ganho. O Play desta versão fica pendente.
+
+### Checkpoint anterior — marcos iniciais da pista e cargos
+
 **19/11/2026, 16:23 — Brasília (UTC−3). Marcos da pista, cargos e nível máximo 1.000.** O nível do jogador define o último bioma que a orbe pode atingir. A força, o poder da orbe e o acerto na barra determinam a distância efetiva. A barra mostra o teto atual e o nível que abre o próximo trecho.
 
 | Nível do jogador | Último bioma liberado | Teto da pista |
