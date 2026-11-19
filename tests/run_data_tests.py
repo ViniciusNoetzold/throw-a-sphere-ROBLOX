@@ -30,6 +30,13 @@ def main():
             separator += "="
         literal = f"[{separator}[\n{source}\n]{separator}]"
         template = template.replace(f"__{module.upper()}_SOURCE__", literal)
+    for module in ("GameplayMath", "ConfigProgression"):
+        source = (root / "src/shared" / f"{module}.luau").read_text(encoding="utf-8")
+        separator = "===="
+        while f"]{separator}]" in source:
+            separator += "="
+        literal = f"[{separator}[\n{source}\n]{separator}]"
+        template = template.replace(f"__{module.upper()}_SOURCE__", literal)
     with tempfile.TemporaryDirectory(prefix="throw-a-sphere-tests-") as temporary:
         script = Path(temporary) / "services.luau"
         script.write_text(template, encoding="utf-8")

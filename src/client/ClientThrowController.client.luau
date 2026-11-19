@@ -126,8 +126,21 @@ local function pointerOverControls(input: InputObject): boolean
     return false
 end
 
+-- A modal consumes world input even when aiming with R2 or outside its panel.
+local function modalOpen(): boolean
+    local playerGui = player:FindFirstChildOfClass("PlayerGui")
+    if not playerGui then return false end
+    for _, screen in playerGui:GetChildren() do
+        if screen:IsA("ScreenGui") and screen.Enabled and screen:GetAttribute("ModalOpen") == true then
+            return true
+        end
+    end
+    return false
+end
+
 RunService.RenderStepped:Connect(function()
     if not activeInput then return end
+    if modalOpen() then activeInput = nil; hideAim(); return end
     local root = getRoot()
     local position, target, critical = aimTarget()
     if not root or not position then hideAim(); return end
@@ -157,6 +170,7 @@ end
 
 UserInputService.InputBegan:Connect(function(input: InputObject, processed: boolean)
     if processed or activeInput or not isThrowInput(input) or UserInputService:GetFocusedTextBox() then return end
+    if modalOpen() then return end
     if pointerOverControls(input) then return end
     activeInput = input
     inputMode = if input.UserInputType == Enum.UserInputType.Touch then "Touch"
@@ -165,7 +179,7 @@ end)
 
 UserInputService.InputEnded:Connect(function(input: InputObject)
     if input ~= activeInput then return end
-    if pointerOverControls(input) then
+    if modalOpen() or pointerOverControls(input) then
         activeInput = nil
         hideAim()
         return

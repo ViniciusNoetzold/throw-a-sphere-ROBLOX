@@ -10,18 +10,21 @@ local Color3 = {new = function() return color end, fromRGB = function() return c
 local Enum = {SurfaceType = {Studs = "Studs", Smooth = "Smooth"}, Font = {GothamBold = "GothamBold"}}
 local UDim2 = {fromOffset = function() return {} end, fromScale = function() return {} end}
 local scheduled = {}
-local task = {delay = function(seconds, callback) table.insert(scheduled, {Seconds = seconds, Run = callback}) end}
+local task = {wait = function() end, delay = function(seconds, callback) table.insert(scheduled, {Seconds = seconds, Run = callback}) end}
 local models = {}
+local labels = {}
 local Instance = {new = function(class)
 	local object = {ClassName = class, Attributes = {}, Destroyed = false}
 	object.SetAttribute = function(self, name, value) self.Attributes[name] = value end
 	object.Destroy = function(self) self.Destroyed = true; self.Parent = nil end
 	if class == "Model" then table.insert(models, object) end
+	if class == "TextLabel" then table.insert(labels, object) end
 	return object
 end}
 local now = 100
 local workspace = {GetServerTimeNow = function() return now end}
-local replicated = {WaitForChild = function(self) return self end}
+local shared = {WaitForChild = function(_, name) return name end}
+local replicated = {WaitForChild = function() return shared end}
 local game = {GetService = function(_, name) return if name == "Workspace" then workspace else replicated end}
 local Config = {
 	Constants = {CaptureLockSeconds = 4.5},
@@ -30,13 +33,25 @@ local Config = {
 	Creatures = {},
 }
 for _, id in ipairs({"Sproutling", "Pyrokit", "Aquapup", "Voltmouse", "Fluffhop", "Buzzleaf"}) do
-	Config.Creatures[id] = {Name = id, BodyColor = color, Rarity = "Comum", BaseIncomePerSec = 10}
+	Config.Creatures[id] = {Name = id, BodyColor = color, Rarity = "Comum", BaseIncomePerSec = 10, Biome = "PradariaSolar"}
 end
-local require = function() return Config end
-local Random = {new = function() return {NextNumber = function() return 0.5 end} end}
-local SpawnService = (function()
---[[INJECT_SPAWN_SERVICE]]
+local NumberFormatter = (function()
+--[[INJECT_NUMBER_FORMATTER]]
 end)()
+local require = function(module)
+	if module == "Config" then return Config end
+	if module == "NumberFormatter" then return NumberFormatter end
+	if module == "ConfigEvents" then return {SecretSpawnChance = 1e-6, SpeciesWeights = {Comum = 55}} end
+	if module == "ConfigWorld" then return {BiomeOrder = {"PradariaSolar"}} end
+	if module == "GameplayMath" then return {} end
+	error("Unexpected dependency: " .. tostring(module))
+end
+local rolls = {}
+local Random = {new = function() return {NextNumber = function() return if #rolls > 0 then table.remove(rolls, 1) else 0.5 end} end}
+local function productionSpawn()
+--[[INJECT_SPAWN_SERVICE]]
+end
+local SpawnService = productionSpawn()
 
 SpawnService.Init({})
 assert(#models == 6, "initial blockout must contain six starter creatures")
@@ -87,4 +102,29 @@ assert(respawn.Seconds == 2)
 respawn.Run()
 assert(#models == 7 and SpawnService.Get(models[7]).CreatureId == "Pyrokit")
 print("PASS success eligibility, animation lifetime, and delayed respawn")
-print("SpawnService: 6 lifecycle regression tests passed.")
+Config.Creatures.Sproutling.BaseIncomePerSec = 5e56
+local highIncome = SpawnService.Spawn("Sproutling", Vector3.new(0, 0, 0))
+assert(SpawnService.Get(highIncome).IncomePerSec == highIncome.Attributes.IncomePerSec)
+assert(labels[#labels].Text:find("$1.5Ocd/s", 1, true), "large wild income must use the real Big Number formatter")
+assert(labels[1].Text:find("$30/s", 1, true), "small income must remain legible")
+print("PASS production formatter abbreviates large billboard income without changing numeric attributes")
+local expiring = SpawnService.Spawn("Pyrokit", Vector3.new(0,0,0), {EventId = "event-test", NoRespawn = true})
+assert(SpawnService.Lock(expiring, 111))
+SpawnService.RemoveEvent("event-test")
+assert(not expiring.Destroyed and SpawnService.Get(expiring) == nil, "expired locked event must stop accepting requests but preserve its animation")
+local retire = scheduled[#scheduled]
+now += 5
+retire.Run()
+assert(expiring.Destroyed, "event retires after its catch lock expires")
+print("PASS event expiry respects an active catch lock")
+
+local modern = productionSpawn()
+modern.Init({Data = {}, DisableLoops = true, World = {GetSpawnPoints = function() return {Vector3.new(0,0,0)} end}})
+rolls = {0.0000005}
+local secretId, secretChance = modern.ChooseSpecies("PradariaSolar")
+assert(secretId == "Omnisfera" and secretChance == 1e-6, "secret roll and reported probability must match")
+rolls = {1e-6, 0.5}
+local normalId, normalChance = modern.ChooseSpecies("PradariaSolar")
+assert(normalId ~= "Omnisfera" and math.abs(normalChance - (1 - 1e-6) / 6) < 1e-12, "secret threshold must be exclusive; normal weights must be normalized")
+print("PASS real one-in-a-million replacement roll and normalized species chance")
+print("SpawnService: 9 lifecycle/display/event regression tests passed.")

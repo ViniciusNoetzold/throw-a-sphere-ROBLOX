@@ -4,30 +4,132 @@
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
-      "Shared": { "$path": "src/shared" },
+      "Shared": {
+        "$path": "src/shared"
+      },
       "Remotes": {
         "$className": "Folder",
-        "RequestThrow": { "$className": "RemoteEvent" },
-        "ThrowResult": { "$className": "RemoteEvent" },
-        "RequestState": { "$className": "RemoteEvent" },
-        "StateUpdate": { "$className": "RemoteEvent" },
-        "ActionFeedback": { "$className": "RemoteEvent" },
-        "BuyOrb": { "$className": "RemoteEvent" },
-        "EquipOrb": { "$className": "RemoteEvent" },
-        "EquipToSanctuary": { "$className": "RemoteEvent" },
-        "TrainThrowPower": { "$className": "RemoteEvent" }
+        "RequestThrow": {
+          "$className": "RemoteEvent"
+        },
+        "ThrowResult": {
+          "$className": "RemoteEvent"
+        },
+        "RequestState": {
+          "$className": "RemoteEvent"
+        },
+        "StateUpdate": {
+          "$className": "RemoteEvent"
+        },
+        "ActionFeedback": {
+          "$className": "RemoteEvent"
+        },
+        "BuyOrb": {
+          "$className": "RemoteEvent"
+        },
+        "EquipOrb": {
+          "$className": "RemoteEvent"
+        },
+        "EquipToSanctuary": {
+          "$className": "RemoteEvent"
+        },
+        "TrainThrowPower": {
+          "$className": "RemoteEvent"
+        },
+        "RebirthRequest": {
+          "$className": "RemoteEvent"
+        },
+        "BuySanctuarySlot": {
+          "$className": "RemoteEvent"
+        },
+        "FuseCreatures": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimDailyReward": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimPlaytimeReward": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimMissionReward": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimBestiaryReward": {
+          "$className": "RemoteEvent"
+        },
+        "RedeemCode": {
+          "$className": "RemoteEvent"
+        },
+        "UseConsumable": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimGroupReward": {
+          "$className": "RemoteEvent"
+        },
+        "ClaimVIPReward": {
+          "$className": "RemoteEvent"
+        },
+        "SetAutoMode": {
+          "$className": "RemoteEvent"
+        },
+        "UnlockBiome": {
+          "$className": "RemoteEvent"
+        },
+        "TravelToBiome": {
+          "$className": "RemoteEvent"
+        },
+        "WorldStateUpdate": {
+          "$className": "RemoteEvent"
+        },
+        "OpenPanel": {
+          "$className": "RemoteEvent"
+        },
+        "RequestWorldState": {
+          "$className": "RemoteEvent"
+        },
+        "TradeAction": {
+          "$className": "RemoteEvent"
+        },
+        "AuctionAction": {
+          "$className": "RemoteEvent"
+        },
+        "CraftOrbFragments": {
+          "$className": "RemoteEvent"
+        },
+        "CollectDrop": {
+          "$className": "RemoteEvent"
+        }
       }
     },
-    "ServerScriptService": { "$path": "src/server" },
+    "ServerScriptService": {
+      "$path": "src/server"
+    },
     "StarterPlayer": {
-      "StarterPlayerScripts": { "$path": "src/client" }
+      "StarterPlayerScripts": {
+        "$path": "src/client"
+      }
     },
     "Workspace": {
-      "$properties": { "Gravity": 196.2, "FallenPartsDestroyHeight": -100 }
+      "$properties": {
+        "Gravity": 196.2,
+        "FallenPartsDestroyHeight": -100
+      }
     },
     "Lighting": {
-      "$properties": { "ClockTime": 14, "Brightness": 2, "Ambient": [0.5, 0.5, 0.5] }
+      "$properties": {
+        "ClockTime": 14,
+        "Brightness": 2,
+        "Ambient": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
     },
-    "SoundService": { "$properties": { "RespectFilteringEnabled": true } }
+    "SoundService": {
+      "$properties": {
+        "RespectFilteringEnabled": true
+      }
+    }
   }
 }

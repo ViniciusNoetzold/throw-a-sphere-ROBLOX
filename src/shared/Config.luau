@@ -7,6 +7,7 @@ return {
 	Biomes = require(script.Parent.ConfigBiomas),
 	Mutations = Variants.Mutations,
 	Sizes = Variants.Sizes,
+	Gameplay = require(script.Parent.ConfigGameplay),
 	GetXPRequiredForLevel = Math.GetXPRequiredForLevel,
 	GetMaxThrowRange = Math.GetMaxThrowRange,
 	CalculateShakeProbability = Math.CalculateShakeProbability,
@@ -18,5 +19,6 @@ return {
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
 		CaptureLockSeconds = 4.5, ThrowCooldownSeconds = 4.5,
 		TrainingCoins = 5, TrainingStrength = 1,
+		MaxInventoryCreatures = 500, MaxSanctuarySlots = 24,
 	},
 }

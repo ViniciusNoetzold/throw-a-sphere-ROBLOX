@@ -4,6 +4,12 @@
 local CaptureMath = (function()
 --[[INJECT_CAPTURE_MATH]]
 end)()
+local GameplayMath = (function()
+--[[INJECT_GAMEPLAY_MATH]]
+end)()
+local VariantMath = (function()
+--[[INJECT_CAPTURE_VARIANTS]]
+end)()
 
 local Vector3 = {}
 local vectorMeta = {}
@@ -17,6 +23,7 @@ vectorMeta.__div = function(a, b) return Vector3.new(a.X / b, a.Y / b, a.Z / b) 
 vectorMeta.__index = function(value, key)
 	if key == "Magnitude" then return math.sqrt(value.X ^ 2 + value.Y ^ 2 + value.Z ^ 2) end
 	if key == "Unit" then return value / value.Magnitude end
+	if key == "Dot" then return function(a, b) return a.X * b.X + a.Y * b.Y + a.Z * b.Z end end
 	return nil
 end
 local function typeof(value: any): string
@@ -33,8 +40,10 @@ end
 local current: any = {}
 local serial = 0
 local Config = {
-	Orbs = {Comum = {Power = 10, Color = "Blue"}, Mestre = {Power = 1, Color = "Gold", IsMaster = true}},
-	Creatures = {Pyrokit = {Name = "Pyrokit", Difficulty = 20, BaseXP = 40}},
+	Orbs = {Comum = {Power = 10, Color = "Blue"}, Mestre = {Power = 1, Color = "Gold", IsMaster = true}, Rubi = {Power = 10, Color = "Red"}, Prismatica = {Power = 25, Color = "Violet", IsPrismatic = true}},
+	Creatures = {Pyrokit = {Name = "Pyrokit", Difficulty = 20, BaseXP = 40, BaseIncomePerSec = 12, Element = "Fogo"}},
+	Mutations = {{Name="Normal",Weight=80,Multiplier=1},{Name="Dourada",Weight=15,Multiplier=2},{Name="Cristal",Weight=5,Multiplier=3.5}},
+	Sizes = {{Name="Normal",Weight=80,Multiplier=1},{Name="Grande",Weight=20,Multiplier=1.5}},
 	Constants = {CaptureLockSeconds = 4.5, ThrowCooldownSeconds = 4.5},
 	GetMaxThrowRange = CaptureMath.GetMaxThrowRange,
 	CalculateShakeProbability = CaptureMath.CalculateShakeProbability,
@@ -55,7 +64,7 @@ local serviceMap: any = {
 	ReplicatedStorage = {WaitForChild = function(self) return self end},
 	Workspace = {Raycast = function()
 		current.Raycasts += 1
-		return current.RaycastResult
+		return if current.RaycastSequence then current.RaycastSequence[current.Raycasts] else current.RaycastResult
 	end},
 	HttpService = {GenerateGUID = function() serial += 1; return "uid-" .. serial end},
 }
@@ -74,25 +83,38 @@ local data = {
 	Get = function(player) return if player == current.Player then current.Profile else nil end,
 	Sync = function() current.Syncs += 1 end,
 	MarkDirty = function() current.Dirties += 1 end,
+	IsBusy = function() return current.Busy == true end,
 }
 local spawn = {
 	Get = function(target)
-		return if target == current.Target and not current.Wild.PendingCaptured then current.Wild else nil
+		if target == current.Target and not current.Wild.PendingCaptured then return current.Wild end
+		for _, entry in current.Extras or {} do if entry.Model == target and not entry.Record.PendingCaptured then return entry.Record end end
+		return nil
 	end,
 	Lock = function(_target, _userId)
 		current.LockCalls += 1
-		if current.Locked then return false end
-		current.Locked = true
+		if _target == current.Target then
+			if current.Locked then return false end
+			current.Locked = true
+		end
 		return true
 	end,
 	Resolve = function(_target, captured)
-		current.Wild.PendingCaptured = captured
+		if _target == current.Target then current.Wild.PendingCaptured = captured end
+		for _, entry in current.Extras or {} do if entry.Model == _target then entry.Record.PendingCaptured = captured end end
 		table.insert(current.Resolved, captured)
+	end,
+	GetAll = function()
+		local result = {{Model = current.Target, Record = current.Wild}}
+		for _, entry in current.Extras or {} do table.insert(result, entry) end
+		return result
 	end,
 }
 local progression = {GrantXP = function(_player, amount)
+	if current.ApplyXPBenefits then amount = math.floor(amount * GameplayMath.GetXPMultiplier(current.Profile, current.Benefits, 1800000000)) end
 	current.Profile.XP += amount
 	if current.Profile.XP >= 100 then current.Profile.Level += 1; current.Profile.XP -= 100 end
+	return false, amount
 end}
 local sanctuary = {
 	CanCapture = function() return not current.InventoryFull end,
@@ -102,7 +124,13 @@ local sanctuary = {
 		return true
 	end,
 }
-CaptureService.Init(data, spawn, progression, sanctuary, remotes)
+CaptureService.Init(data, spawn, progression, sanctuary, remotes, {
+	Gameplay = GameplayMath, Variants = VariantMath, Data = data,
+	Biomes = {CanAccess = function() return not current.BiomeLocked end},
+	Monetization = {GetBenefits = function() return current.Benefits or {} end},
+	Weather = {GetLuckMultiplier = function() return current.GlobalLuck or 1 end},
+	Rewards = {OnProgress = function(_, kind, amount) table.insert(current.ProgressEvents, {Kind = kind, Amount = amount}) end},
+})
 
 local function setup(): any
 	serial += 1
@@ -121,11 +149,11 @@ local function setup(): any
 	current = {
 		Now = 100, Player = {UserId = serial, Character = character}, Target = target,
 		Profile = {Coins = 150, XP = 0, Level = 1, Rebirths = 0, ThrowStrength = 10, PityBonus = 0,
-			ComboStreak = 0, EquippedOrb = "Comum", Orbs = {Comum = 3, Mestre = 1}},
+			ComboStreak = 0, EquippedOrb = "Comum", Orbs = {Comum = 3, Mestre = 1, Rubi = 3, Prismatica = 0}},
 		Wild = {CreatureId = "Pyrokit", Mutation = "Dourada", Size = "Grande", IncomePerSec = 36, PendingCaptured = false},
 		Hit = Vector3.new(0, 3, -20), RaycastResult = {Instance = hitPart, Position = Vector3.new(0, 3, -20)},
 		Humanoid = humanoid, Rolls = {}, RandomCalls = 0, Raycasts = 0, LockCalls = 0,
-		Locked = false, Results = {}, Feedback = {}, Resolved = {}, Captures = {}, Syncs = 0, Dirties = 0,
+		Locked = false, Results = {}, Feedback = {}, Resolved = {}, Captures = {}, ProgressEvents = {}, Syncs = 0, Dirties = 0,
 	}
 	return current
 end
@@ -239,6 +267,55 @@ end)
 check("failed inventory insertion refunds consumed orb", function()
 	current.AddRejected = true; fire(current.Target, current.Hit)
 	unchanged(); assert(current.Resolved[1] == false and current.Syncs == 1)
+end)
+
+check("busy transaction rejects capture before lock or consumption", function()
+	current.Busy = true; fire(current.Target, current.Hit); unchanged(); assert(current.LockCalls == 0 and current.Raycasts == 0)
+end)
+check("locked biome rejects capture before lock or consumption", function()
+	current.BiomeLocked = true; fire(current.Target, current.Hit); unchanged(); assert(current.LockCalls == 0 and current.Raycasts == 0)
+end)
+check("Prismatic requires verified benefit even if inventory is spoofed", function()
+	current.Profile.EquippedOrb = "Prismatica"; current.Profile.Orbs.Prismatica = 999
+	fire(current.Target, current.Hit); unchanged(); assert(current.Profile.Orbs.Prismatica == 999 and current.LockCalls == 0)
+end)
+check("verified eternal Prismatic consumes no stock", function()
+	current.Profile.EquippedOrb = "Prismatica"; current.Benefits = {EternalPrism = true}
+	fire(current.Target, current.Hit)
+	assert(current.Profile.Orbs.Prismatica == 0 and #current.Captures == 1 and current.Results[1].Probability == 1)
+end)
+check("Rubi applies ten percent against fire", function()
+	current.Profile.EquippedOrb = "Rubi"; fire(current.Target, current.Hit)
+	near(current.Results[1].Probability, 0.825 ^ (1 / 3))
+end)
+check("premium variant bonus grants actual upgraded income without rewriting the shared target",function()
+	current.Benefits={DoubleLuck=true}
+	current.Wild.MutationRoll,current.Wild.SizeRoll,current.Wild.VariantLuck=0.94,0.9,1
+	fire(current.Target,current.Hit)
+	assert(current.Captures[1].Mutation=="Cristal" and current.Captures[1].IncomePerSec==63)
+	assert(current.Wild.Mutation=="Dourada" and current.Results[1].MutationName=="Cristal" and current.Results[1].VariantBonus.MutationFrom=="Dourada")
+end)
+check("Fever and XP benefits are applied once each", function()
+	current.Profile.ComboStreak = 10; current.Benefits = {FusionXP = true}; current.ApplyXPBenefits = true
+	fire(current.Target, current.Hit)
+	assert(current.Results[1].XPGained == 160 and current.Profile.TotalCaptures == 1)
+	assert(current.ProgressEvents[1].Kind == "Captures" and current.ProgressEvents[2].Kind == "Criticals")
+end)
+check("Triple Throw validates and consumes at most three targets in one cooldown", function()
+	current.Benefits = {TripleThrow = true}
+	current.Extras, current.RaycastSequence = {}, {current.RaycastResult}
+	for _, x in {-5, 5, 7} do
+		local model = {__type = "Instance", Parent = {}, PrimaryPart = {Position = Vector3.new(x, 1, -20)}}
+		model.IsA = function(_, class) return class == "Model" end
+		model.GetBoundingBox = function() return {PointToObjectSpace = function(_, point) return point - model.PrimaryPart.Position end}, Vector3.new(4,6,4) end
+		local part = {Name = "Body", IsDescendantOf = function(_, candidate) return candidate == model end}
+		table.insert(current.Extras, {Model = model, Record = {CreatureId = "Pyrokit", Mutation = "Normal", Size = "Normal", IncomePerSec = 12}})
+		table.insert(current.RaycastSequence, {Instance = part, Position = model.PrimaryPart.Position})
+	end
+	fire(current.Target, current.Hit)
+	assert(current.Profile.Orbs.Comum == 0 and #current.Results == 3 and #current.Captures == 3)
+	current.Now += 0.2; fire(current.Target, current.Hit)
+	assert(#current.Results == 3, "burst cooldown must also apply to the next manual request")
 end)
 
 print(string.format("CaptureService: %d meaningful handler tests passed.", total))

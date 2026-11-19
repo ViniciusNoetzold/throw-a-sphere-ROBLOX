@@ -4,6 +4,8 @@ local sources = {
 	DataService = __DATASERVICE_SOURCE__,
 	SanctuaryService = __SANCTUARYSERVICE_SOURCE__,
 	ProgressionService = __PROGRESSIONSERVICE_SOURCE__,
+	GameplayMath = __GAMEPLAYMATH_SOURCE__,
+	ConfigProgression = __CONFIGPROGRESSION_SOURCE__,
 }
 
 local function clone(value)
@@ -138,6 +140,9 @@ local function engine(options)
 	local storage = object("ReplicatedStorage")
 	local shared = object("Folder", "Shared"); shared.Parent = storage
 	local configNode = object("ModuleScript", "Config"); configNode.Parent = shared
+	for _, name in {"GameplayMath", "ConfigProgression"} do
+		local node = object("ModuleScript", name); node.Parent = shared
+	end
 	local remotes = object("Folder", "Remotes"); remotes.Parent = storage
 	for _, name in ipairs({ "StateUpdate", "RequestState", "EquipToSanctuary", "ActionFeedback", "BuyOrb", "EquipOrb", "TrainThrowPower" }) do
 		local remote = object("RemoteEvent", name)
@@ -147,9 +152,18 @@ local function engine(options)
 		remote.Parent = remotes
 	end
 	local store = options.Store or createStore()
+	local nextStoreDelay = 0
+	local storeProxy = {UpdateAsync = function(_, key, transform)
+		if nextStoreDelay > 0 then
+			local delay = nextStoreDelay
+			nextStoreDelay = 0
+			taskMock.wait(delay)
+		end
+		return store:UpdateAsync(key, transform)
+	end}
 	local services = {
 		Players = players, ReplicatedStorage = storage,
-		DataStoreService = { GetDataStore = function() return store end },
+		DataStoreService = { GetDataStore = function() return storeProxy end },
 		RunService = { IsStudio = function() return options.Studio == true end },
 		HttpService = { GenerateGUID = function() return "mock-guid" end },
 	}
@@ -157,17 +171,25 @@ local function engine(options)
 	function gameMock:GetService(name) assert(services[name], name); return services[name] end
 	function gameMock:BindToClose(callback) table.insert(self.Closers, callback) end
 	local osMock = setmetatable({ time = function() return epoch + math.floor(now) end, clock = function() return now end }, { __index = os })
+	local loadModule
+	local cache = {}
 	local environment = setmetatable({
 		game = gameMock, task = taskMock, os = osMock,
 		Instance = { new = function(kind) return object(kind) end },
-		require = function(node) assert(node == configNode, "Unexpected mocked require"); return Config end,
+		require = function(node)
+			if node == configNode then return Config end
+			assert(node and sources[node.Name], "Unexpected mocked require")
+			return loadModule(node.Name)
+		end,
 		warn = function() end,
 	}, { __index = getfenv() })
-	local function loadModule(name)
+	loadModule = function(name)
+		if cache[name] then return cache[name] end
 		local chunk, err = loadstring(sources[name], name)
 		assert(chunk, err)
 		setfenv(chunk, environment)
-		return chunk()
+		cache[name] = chunk()
+		return cache[name]
 	end
 	local data = loadModule("DataService")
 	local sanctuary = loadModule("SanctuaryService")
@@ -179,6 +201,8 @@ local function engine(options)
 	end
 	data.Init(remotes)
 	local context = { Data = data, Sanctuary = sanctuary, Progression = progression, Store = store, Remotes = remotes, Advance = advance }
+	function context.DelayNextStore(seconds) nextStoreDelay = seconds end
+	function context.Run(callback) spawn(callback); advance(0) end
 	function context.AddPlayer(id)
 		local player = object("Player", "Player" .. tostring(id))
 		player.UserId = id
@@ -264,7 +288,7 @@ end)
 
 test("corrupt or future-version data is preserved and rejected", function()
 	for _, saved in ipairs({
-		{ SchemaVersion = 2, Data = {} },
+		{ SchemaVersion = 999, Data = {} },
 		{ SchemaVersion = 1, Data = { Coins = 999 } },
 	}) do
 		local store = createStore()
@@ -436,6 +460,188 @@ test("XP rollover advances levels and caps at level 100", function()
 	e.Data.Get(p).XP = 0
 	e.Progression.GrantXP(p, 1000000000)
 	assert(e.Data.Get(p).Level == 100 and e.Data.Get(p).XP == 0)
+end)
+
+test("v1 saves migrate in place without losing balance, records or equipped UIDs", function()
+	local first = engine()
+	local p = first.AddPlayer(101)
+	local profile = first.Data.Get(p)
+	profile.Coins = 4321
+	profile.CapturedCreatures = {record("legacy-uid", "Pyrokit", 120)}
+	profile.SanctuarySlots = {"legacy-uid"}
+	first.RemovePlayer(p)
+	local saved = first.Store.Records.Player_101
+	saved.SchemaVersion = 1
+	for _, key in {"TotalCoinsEarned", "TotalCaptures", "FirstJoinedAt", "DailyStreak", "Boosts", "PendingTransactions", "ProcessedReceipts"} do saved.Data[key] = nil end
+	local second = engine({Store = first.Store, JobId = "migration-server"})
+	local rejoined = second.AddPlayer(101)
+	local migrated = assert(second.Data.Get(rejoined))
+	assert(migrated.Coins == 4321 and migrated.Orbs.Comum == 25)
+	assert(migrated.CapturedCreatures[1].Uid == "legacy-uid" and migrated.SanctuarySlots[1] == "legacy-uid")
+	assert(migrated.TotalCoinsEarned == 4321 and migrated.TotalCaptures == 1)
+	assert(migrated.DailyStreak == 0 and next(migrated.ProcessedReceipts) == nil)
+	assert(second.Store.Records.Player_101.SchemaVersion == 2)
+end)
+
+test("new progression, receipt and pending escrow fields survive a real save/load cycle", function()
+	local first = engine()
+	local p = first.AddPlayer(102)
+	local profile = first.Data.Get(p)
+	profile.DailyStreak = 7; profile.LastDailyClaim = 1700000000
+	profile.PlaytimeClaimed["1"] = true; profile.MissionCounters.Captures = 15
+	profile.MissionClaimed.Capture15 = true; profile.BestiaryRewardClaimed.PradariaSolar = true
+	profile.ProcessedReceipts["purchase-id"] = true; profile.AppliedTransactions["completed-trade"] = true
+	profile.AutomationSettings.Train = true; profile.WeeklyPets = 2
+	profile.Boosts.Luck = {Multiplier = 2, ExpiresAt = 1700000600}
+	profile.PendingTransactions["auction-id"] = {Kind = "Auction", CoordinatorKey = "auction-id", ReservedSlots = 1, Receive = {record("escrow", "Aquapup", 15)}}
+	assert(first.Data.TryLock(p, "save-claims")); assert(first.Data.SaveNow(p)); first.Data.Unlock(p, "save-claims")
+	first.RemovePlayer(p)
+	local second = engine({Store = first.Store, JobId = "claims-server"})
+	local rejoined = second.AddPlayer(102)
+	local loaded = assert(second.Data.Get(rejoined))
+	assert(loaded.DailyStreak == 7 and loaded.PlaytimeClaimed["1"])
+	assert(loaded.ProcessedReceipts["purchase-id"] and loaded.AppliedTransactions["completed-trade"])
+	assert(loaded.MissionCounters.Captures == 15 and loaded.MissionClaimed.Capture15)
+	assert(loaded.Boosts.Luck.Multiplier == 2 and loaded.WeeklyPets == 2)
+	assert(loaded.PendingTransactions["auction-id"].Receive[1].Uid == "escrow")
+	assert(second.Data.GetReservedSlots(loaded) == 1)
+end)
+
+test("nested corrupt boosts, ledgers and escrow records are rejected without overwriting saves", function()
+	local first = engine(); local p = first.AddPlayer(103); first.RemovePlayer(p)
+	local original = clone(first.Store.Records.Player_103)
+	local corruptions = {
+		function(data) data.Boosts.Luck = {Multiplier = "bad", ExpiresAt = 1700000500} end,
+		function(data) data.ProcessedReceipts["receipt"] = "yes" end,
+		function(data) data.PendingTransactions["auction"] = {ReservedSlots = -1} end,
+		function(data) data.PendingTransactions["auction"] = {Receive = {record("bad", "UnknownCreature", 15)}} end,
+	}
+	for _, corrupt in corruptions do
+		local store = createStore(); store.Records.Player_103 = clone(original); corrupt(store.Records.Player_103.Data)
+		local e = engine({Store = store, JobId = "corrupt-server"}); local rejected = e.AddPlayer(103); e.Advance(7)
+		assert(rejected.Kicked and e.Data.Get(rejected) == nil and store.Writes == 0)
+	end
+end)
+
+test("public snapshots omit receipt and transaction journals while exposing aggregate capacity", function()
+	local e = engine({Studio = true}); local p = e.AddPlayer(104); local profile = e.Data.Get(p)
+	profile.ProcessedReceipts.secret = true; profile.OneTimeGrants.starter = true
+	profile.PendingTransactions.escrow = {ReservedSlots = 2, Receive = {}}
+	e.Data.AddSnapshotProvider(function() return {Benefits = {GoldenVIP = true}} end)
+	e.Data.Sync(p)
+	local messages = e.Remotes:FindFirstChild("StateUpdate").Messages
+	local snapshot = messages[#messages].Data
+	assert(snapshot.ProcessedReceipts == nil and snapshot.PendingTransactions == nil and snapshot.OneTimeGrants == nil)
+	assert(snapshot.AppliedTransactions == nil and snapshot.InventoryReservedSlots == 2 and snapshot.InventoryCapacity == 500)
+	assert(snapshot.Benefits.GoldenVIP and snapshot.Coins == 150)
+end)
+
+test("operation ownership blocks remotes and snapshots without blocking the trusted lock owner", function()
+	local e = engine({Studio = true, WithEconomy = true}); local p = e.AddPlayer(105)
+	assert(e.Data.TryLock(p, "receipt")); assert(not e.Data.TryLock(p, "other"))
+	e.Data.Unlock(p, "wrong-owner"); assert(e.Data.IsBusy(p))
+	local remote = e.Remotes:FindFirstChild("StateUpdate"); local count = #remote.Messages
+	e.Request("TrainThrowPower", p); e.Request("BuyOrb", p, "Comum", 1)
+	assert(e.Data.Get(p).Coins == 150 and e.Data.Get(p).Orbs.Comum == 25)
+	assert(e.Data.AddCoins(p, 5)); e.Data.Sync(p); assert(#remote.Messages == count)
+	e.Data.Unlock(p, "receipt"); e.Data.Sync(p)
+	assert(not e.Data.IsBusy(p) and #remote.Messages == count + 1 and e.Data.Get(p).TotalCoinsEarned == 155)
+end)
+
+test("auction reservations prevent new captures from consuming refund capacity", function()
+	local e = engine({Studio = true, WithEconomy = true}); local p = e.AddPlayer(106); local profile = e.Data.Get(p)
+	for index = 1, 499 do table.insert(profile.CapturedCreatures, record("owned-" .. index, "Pyrokit", 10)) end
+	profile.PendingTransactions.auction = {ReservedSlots = 1, Receive = {record("escrow", "Aquapup", 20)}}
+	assert(e.Data.GetInventoryCount(profile) == 500 and not e.Sanctuary.CanCapture(p))
+	assert(not e.Sanctuary.AddCapture(p, record("overflow", "Pyrokit", 10)))
+	table.remove(profile.CapturedCreatures)
+	assert(e.Sanctuary.AddCapture(p, record("fits", "Pyrokit", 10)))
+	assert(e.Data.GetInventoryCount(profile) == 500)
+end)
+
+test("a later load callback failure preserves a prior durable transaction reconciliation", function()
+	local e = engine()
+	e.Data.OnLoaded(function(player, profile)
+		profile.Coins = 777; profile.AppliedTransactions.recovered = true
+		assert(e.Data.TryLock(player, "recover")); assert(e.Data.SaveNow(player)); e.Data.Unlock(player, "recover")
+	end)
+	e.Data.OnLoaded(function() error("Later subsystem initialization failed") end)
+	local p = e.AddPlayer(107)
+	assert(p.Kicked and e.Data.Get(p) == nil)
+	assert(e.Store.Records.Player_107.Data.Coins == 777 and e.Store.Records.Player_107.Data.AppliedTransactions.recovered)
+	assert(e.Store.Records.Player_107.Session == nil)
+	assert(#e.Remotes:FindFirstChild("StateUpdate").Messages == 0)
+	local second = engine({Store = e.Store, JobId = "recovery-server"}); local rejoined = second.AddPlayer(107)
+	assert(second.Data.Get(rejoined).Coins == 777)
+end)
+
+test("serialized saves cannot overwrite a receipt with an older autosave snapshot", function()
+	local e = engine(); local p = e.AddPlayer(108)
+	e.DelayNextStore(2); e.Advance(60) -- autosave holds its old snapshot in flight
+	e.Run(function()
+		assert(e.Data.TryLock(p, "receipt")); local profile = e.Data.Get(p)
+		assert(e.Data.AddCoins(p, 100)); profile.ProcessedReceipts["concurrent-receipt"] = true
+		assert(e.Data.SaveNow(p)); e.Data.Unlock(p, "receipt")
+	end)
+	e.Advance(3)
+	assert(e.Store.Records.Player_108.Data.Coins == 250)
+	assert(e.Store.Records.Player_108.Data.ProcessedReceipts["concurrent-receipt"])
+	e.Advance(61)
+	assert(e.Store.Records.Player_108.Data.ProcessedReceipts["concurrent-receipt"])
+end)
+
+test("failed critical saves can freeze all further mutations without exposing a writable fallback", function()
+	local e = engine(); local p = e.AddPlayer(109)
+	e.Store.Fail = true
+	e.Run(function()
+		assert(e.Data.TryLock(p, "claim")); e.Data.Get(p).Coins = 999
+		assert(not e.Data.SaveNow(p)); e.Data.Freeze(p, "Test save protection")
+	end)
+	e.Advance(4)
+	assert(p.Kicked and e.Data.Get(p) == nil and not e.Data.AddCoins(p, 10))
+	assert(e.Store.Records.Player_109.Data.Coins == 150)
+end)
+
+test("load callbacks see the latest validated replacement after transaction recovery", function()
+	local e = engine()
+	e.Data.OnLoaded(function(player, profile)
+		assert(e.Data.TryLock(player, "recover"))
+		local replacement = clone(profile); replacement.Coins = 700
+		assert(e.Data.Replace(player, replacement)); assert(e.Data.SaveNow(player)); e.Data.Unlock(player, "recover")
+	end)
+	e.Data.OnLoaded(function(player, profile)
+		assert(profile == e.Data.Get(player) and profile.Coins == 700)
+		profile.Gems = 5
+	end)
+	local p = e.AddPlayer(110)
+	assert(e.Data.IsLoaded(p) and e.Data.Get(p).Gems == 5)
+end)
+
+test("explicit busy review snapshots retain public filtering and a server timestamp", function()
+	local e = engine({Studio = true}); local p = e.AddPlayer(111)
+	assert(e.Data.TryLock(p, "TradeReview"))
+	e.Data.Get(p).ProcessedReceipts.secret = true
+	local messages = e.Remotes:FindFirstChild("StateUpdate").Messages; local before = #messages
+	e.Data.Sync(p, true)
+	assert(#messages == before + 1 and type(messages[#messages].Data.ServerTime) == "number")
+	assert(messages[#messages].Data.ProcessedReceipts == nil and e.Data.IsBusy(p))
+	e.Data.Unlock(p, "TradeReview")
+end)
+
+test("departure waits for the owned durable refund and rejects new operation locks", function()
+	local e = engine(); local p = e.AddPlayer(112)
+	e.DelayNextStore(2)
+	e.Run(function()
+		assert(e.Data.TryLock(p, "consume")); e.Data.Get(p).Coins = 100
+		assert(e.Data.SaveNow(p))
+		-- Simulate a room effect refusing after the durable debit.
+		e.Data.Get(p).Coins = 150; assert(e.Data.SaveNow(p)); e.Data.Unlock(p, "consume")
+	end)
+	e.RemovePlayer(p)
+	assert(not e.Data.IsLoaded(p) and not e.Data.TryLock(p, "new-request"))
+	e.Advance(3)
+	assert(e.Store.Records.Player_112.Data.Coins == 150 and e.Store.Records.Player_112.Session == nil)
+	assert(e.Data.Get(p) == nil)
 end)
 
 print(string.format("All %d service scenarios passed.", tests))

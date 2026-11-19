@@ -1,0 +1,51 @@
+--!strict
+-- Daily contents/milestone times come from the GDD. Quantities for playtime,
+-- missions and bestiary coins are explicit new balancing values, not old promises.
+return {
+    DailyIntervalSeconds = 86400,
+    StreakBreakSeconds = 172800,
+    MissionLevel = 5,
+    VIP = {IntervalSeconds = 86400, Reward = {Coins = 10000, Orbs = {Esmeralda = 3}, XP = 100}},
+    Daily = {
+        { Coins = 500, Orbs = { Comum = 10 }, XP = 100 },
+        { Coins = 2500, Orbs = { Esmeralda = 5 }, Consumables = { PotionLuck2 = 1 } },
+        { Coins = 15000, Orbs = { Rubi = 5 }, XP = 500 },
+        { Creature = { Id = "Voltmouse", Mutation = "Dourada", Size = "Normal" }, Consumables = { PotionCoins2 = 1 } },
+        { Coins = 250000, Orbs = { Runica = 3 }, XP = 1500 },
+        { Consumables = { GlobalLuckTotem = 1 }, Orbs = { Hextech = 3 } },
+        { Orbs = { Mestre = 1 }, WeeklyPets = 1, Gems = 5, Titles = { Fiel = true } },
+    },
+    Playtime = {
+        { Seconds = 120, Coins = 500, ScaleCoinsWithLevel = true, Orbs = { Comum = 10 } },
+        { Seconds = 300, Coins = 1000, ScaleCoinsWithLevel = true, Orbs = { Esmeralda = 3 } },
+        { Seconds = 600, Coins = 2500, ScaleCoinsWithLevel = true, XP = 250 },
+        { Seconds = 900, Coins = 5000, ScaleCoinsWithLevel = true, Orbs = { Rubi = 3 } },
+        { Seconds = 1200, Coins = 10000, ScaleCoinsWithLevel = true, Consumables = { PotionLuck2 = 1 } },
+        { Seconds = 1800, Coins = 25000, ScaleCoinsWithLevel = true, Orbs = { Safira = 2 } },
+        { Seconds = 2400, Coins = 50000, ScaleCoinsWithLevel = true, XP = 500 },
+        { Seconds = 3000, Coins = 75000, ScaleCoinsWithLevel = true, Orbs = { Runica = 1 } },
+        { Seconds = 3600, Coins = 100000, ScaleCoinsWithLevel = true, Consumables = { PotionCoins2 = 1 } },
+        { Seconds = 4500, Coins = 150000, ScaleCoinsWithLevel = true, Orbs = { Hextech = 1 } },
+        { Seconds = 5400, Coins = 250000, ScaleCoinsWithLevel = true, Consumables = { PotionLuck2 = 1 } },
+        { Seconds = 7200, Coins = 500000, ScaleCoinsWithLevel = true, Orbs = { Cosmica = 1 } },
+    },
+    Missions = {
+        Capture15 = { Name = "Capture 15 criaturas", Counter = "Captures", Target = 15, OrbQuantity = 3, XP = 250, Gems = 1 },
+        Critical3 = { Name = "Acerte 3 arremessos críticos", Counter = "Criticals", Target = 3, OrbQuantity = 2, XP = 300, Gems = 1 },
+        Fusion1 = { Name = "Faça 1 fusão", Counter = "Fusions", Target = 1, RequiredLevel = 10, OrbQuantity = 2, XP = 500, Gems = 2 },
+    },
+    BiomeOrbs = { PradariaSolar = "Comum", FlorestaNeon = "Esmeralda", CanionVulcanico = "Rubi", AbismoGlacial = "Safira", RuinasAncestrais = "Runica", VazioCosmico = "Cosmica" },
+    BestiaryCoins = { PradariaSolar = 1000, FlorestaNeon = 10000, CanionVulcanico = 50000, AbismoGlacial = 250000, RuinasAncestrais = 2000000, VazioCosmico = 10000000 },
+    Consumables = {
+        PotionLuck2 = { Stat = "Luck", Multiplier = 2, Duration = 600 },
+        PotionCoins2 = { Stat = "Coins", Multiplier = 2, Duration = 900 },
+        PotionLuck3 = { Stat = "Luck", Multiplier = 3, Duration = 1800 },
+        PotionCoins3 = { Stat = "Coins", Multiplier = 3, Duration = 1800 },
+        GlobalLuckTotem = { Kind = "GlobalLuck", Multiplier = 5, Duration = 900 },
+        SummonEvent = { Kind = "SummonEvent" },
+        SkipFusion = { Kind = "SkipFusion" },
+        SanctuarySlot = { Kind = "SanctuarySlot" },
+    },
+    -- Add real promotional codes here intentionally; no invented active codes.
+    Codes = {},
+}

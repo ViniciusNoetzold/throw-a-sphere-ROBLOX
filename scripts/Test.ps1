@@ -12,7 +12,11 @@ try {
     }
     & $runtimePath tests/CaptureMath.spec.luau
     if ($LASTEXITCODE -ne 0) { throw 'Teste de captura falhou.' }
-    foreach ($runnerPath in @('tests/run_capture_tests.py', 'tests/run_data_tests.py')) {
+    & $runtimePath tests/NumberFormatter.spec.luau
+    if ($LASTEXITCODE -ne 0) { throw 'Teste de Big Numbers falhou.' }
+    & $runtimePath tests/GameplayMath.spec.luau
+    if ($LASTEXITCODE -ne 0) { throw 'Teste de multiplicadores falhou.' }
+    foreach ($runnerPath in (Get-ChildItem -LiteralPath 'tests' -Filter 'run_*_tests.py' | Sort-Object Name | ForEach-Object FullName)) {
         if (Test-Path -LiteralPath $runnerPath) {
             python $runnerPath --luau $runtimePath
             if ($LASTEXITCODE -ne 0) { throw "Teste falhou: $runnerPath" }

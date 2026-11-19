@@ -27,7 +27,8 @@ jobs:
       - name: Test capture rules and server flows
         run: |
           .tools/luau/luau tests/CaptureMath.spec.luau
-          python3 tests/run_capture_tests.py --luau .tools/luau/luau
-          python3 tests/run_data_tests.py --luau .tools/luau/luau
+          .tools/luau/luau tests/NumberFormatter.spec.luau
+          .tools/luau/luau tests/GameplayMath.spec.luau
+          for runner in tests/run_*_tests.py; do python3 "$runner" --luau .tools/luau/luau; done
       - name: Build Roblox place
         run: .tools/rojo/rojo build default.project.json -o build/ThrowASphere.rbxlx

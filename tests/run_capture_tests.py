@@ -23,12 +23,29 @@ def main() -> int:
         parser.error("Luau CLI not found; pass --luau PATH or install the pinned toolchain.")
 
     suites = (
+        ("DropService", (
+            ("INJECT_DROP_CONFIG", root / "src" / "shared" / "ConfigDrops.luau"),
+            ("INJECT_VARIANT_RULES", root / "src" / "shared" / "ConfigMutacoes.luau"),
+            ("INJECT_VARIANTS", root / "src" / "shared" / "VariantMath.luau"),
+            ("INJECT_DROPS", root / "src" / "server" / "Services" / "DropService.luau"),
+        )),
         ("CaptureService", (
             ("INJECT_CAPTURE_MATH", root / "src" / "shared" / "CaptureMath.luau"),
+            ("INJECT_GAMEPLAY_MATH", root / "src" / "shared" / "GameplayMath.luau"),
+            ("INJECT_CAPTURE_VARIANTS", root / "src" / "shared" / "VariantMath.luau"),
             ("INJECT_CAPTURE_SERVICE", root / "src" / "server" / "Services" / "CaptureService.luau"),
         )),
         ("SpawnService", (
+            ("INJECT_NUMBER_FORMATTER", root / "src" / "shared" / "NumberFormatter.luau"),
             ("INJECT_SPAWN_SERVICE", root / "src" / "server" / "Services" / "SpawnService.luau"),
+        )),
+        ("WorldServices", (
+            ("INJECT_WORLD_NUMBERS", root / "src" / "shared" / "NumberFormatter.luau"),
+            ("INJECT_EVENT_CONFIG", root / "src" / "shared" / "ConfigEvents.luau"),
+            ("INJECT_BIOMES", root / "src" / "server" / "Services" / "BiomeService.luau"),
+            ("INJECT_WEATHER", root / "src" / "server" / "Services" / "WeatherEventService.luau"),
+            ("INJECT_BOSS", root / "src" / "server" / "Services" / "BossService.luau"),
+            ("INJECT_RANKINGS", root / "src" / "server" / "Services" / "LeaderboardPodiumService.luau"),
         )),
     )
     for suite_name, modules in suites:
