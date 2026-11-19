@@ -2,6 +2,7 @@
 local CollectionService = game:GetService("CollectionService")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
+local CreatureArt = require(script.Parent:WaitForChild("CreatureArt"))
 
 type Walker = {
     Home: Vector3,
@@ -20,6 +21,7 @@ local function observe(instance: Instance)
     local caption = board and board:FindFirstChildWhichIsA("TextLabel")
     if typeof(home) ~= "Vector3" or typeof(phase) ~= "number" or not caption or not instance.PrimaryPart then return end
     local left, right = instance:FindFirstChild("LeftFoot"), instance:FindFirstChild("RightFoot")
+    CreatureArt.ShowOn(instance, instance.Name, 1, 1)
     walkers[instance] = {
         Home = home,
         Phase = phase,
@@ -33,6 +35,21 @@ for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model)
 CollectionService:GetInstanceAddedSignal("SanctuaryWalker"):Connect(function(model) task.defer(observe, model) end)
 CollectionService:GetInstanceRemovedSignal("SanctuaryWalker"):Connect(function(model)
     if model:IsA("Model") then walkers[model] = nil end
+end)
+
+CreatureArt.Loaded:Connect(function(id: string)
+    for model in walkers do
+        if model.Name == id then CreatureArt.ShowOn(model, id, 1, 1) end
+    end
+end)
+
+task.spawn(function()
+    while script.Parent do
+        task.wait(.6)
+        for _, model in CollectionService:GetTagged("SanctuaryWalker") do
+            if model:IsA("Model") and not walkers[model] then observe(model) end
+        end
+    end
 end)
 
 local elapsed = 0

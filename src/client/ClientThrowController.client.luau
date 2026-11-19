@@ -12,6 +12,8 @@ local Math=require(RS.Shared.FlightMath)
 local Numbers=require(RS.Shared.NumberFormatter)
 local Reveal=require(script.Parent:WaitForChild("Throw"):WaitForChild("RevealDirector"))
 local Pose=require(script.Parent:WaitForChild("Throw"):WaitForChild("ThrowPose"))
+local Focus = require(script.Parent:WaitForChild("CameraFocus"))
+local OrbVisual = require(script.Parent:WaitForChild("Throw"):WaitForChild("OrbVisual"))
 local remotes=RS:WaitForChild("Remotes")
 local player=Players.LocalPlayer
 local gui=Instance.new("ScreenGui")
@@ -96,6 +98,7 @@ local function modal():boolean
 end
 local function restore()
  generation+=1
+ Focus.Release("Throw")
  if cleanup then cleanup();cleanup=nil end
  for screen,enabled in chargeHidden do if screen.Parent then screen.Enabled=enabled end end
  chargeHidden={}
@@ -128,7 +131,7 @@ Input.InputBegan:Connect(function(input)
     end
 end)
 
-Run.RenderStepped:Connect(function()
+Run.RenderStepped:Connect(function(delta)
     local near = atLine()
     local inModal = modal()
     local training = player:GetAttribute("TrainingActive") == true
@@ -137,8 +140,10 @@ Run.RenderStepped:Connect(function()
         if not session and panel.Visible then idle() end
     end
     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-    hint.Visible = not near and not session and not inModal and not training and root ~= nil
-        and (root.Position - Rules.LinePosition).Magnitude < 50
+    hint.Text = if near and suppressUntilExit then "Saia da faixa e volte para arremessar de novo"
+        else "Encoste na faixa amarela para arremessar"
+    hint.Visible = (not near or suppressUntilExit) and not session and not inModal and not training and root ~= nil
+        and (root.Position - Rules.LinePosition).Magnitude < 35
     if not session and near and not suppressUntilExit and not inModal and not training
         and player:GetAttribute("DataLoaded") == true then
         panel.Visible = true
@@ -158,78 +163,97 @@ Run.RenderStepped:Connect(function()
             idle()
             return
         end
+        if root and root:IsA("BasePart") then
+            local target = root.Position + root.CFrame.LookVector * 3 + Vector3.new(0, 1.2, 0)
+            local viewpoint = root.Position - root.CFrame.LookVector * 10 + Vector3.new(5.8, 4, 0)
+            Focus.Frame("Throw", CFrame.lookAt(viewpoint, target), 59, delta, 9)
+        end
         local elapsed = Workspace:GetServerTimeNow() - session.StartedAt
         local power = Math.Power(elapsed, session.Period)
         pointer.Position = UDim2.fromScale(Math.MeterPosition(elapsed, session.Period), .5)
         title.Text = if power >= Rules.PerfectThreshold then "PERFEITO!" else "FORÇA " .. math.floor(power * 100) .. "%"
     end
 end)
-local function flight(data:any)
- restore()
- local myGeneration=generation
- local camera=Workspace.CurrentCamera
- if not camera then idle();return end
- local oldType,oldSubject,oldFOV=camera.CameraType,camera.CameraSubject,camera.FieldOfView
- local character=player.Character
- local humanoid=character and character:FindFirstChildOfClass("Humanoid")
- local speed=humanoid and humanoid.WalkSpeed
- local hidden:{[ScreenGui]:boolean}={}
- for _,screen in player.PlayerGui:GetChildren() do
-  if screen~=gui and screen:IsA("ScreenGui") then hidden[screen]=screen.Enabled;screen.Enabled=false end
- end
- if humanoid then humanoid.WalkSpeed=0 end
- camera.CameraType=Enum.CameraType.Scriptable
- local folder=Instance.new("Folder");folder.Name,folder.Parent="FlightLocalEffects",Workspace
- local orb=Instance.new("Part")
- orb.Name,orb.Shape,orb.Size,orb.Anchored="FlyingOrb",Enum.PartType.Ball,Vector3.new(1.8,1.8,1.8),true
- orb.Material,orb.Color,orb.CanCollide,orb.CanTouch,orb.CanQuery=Enum.Material.Neon,data.Color,false,false,false
- orb.Parent=folder
- local a,b,trail,light=Instance.new("Attachment"),Instance.new("Attachment"),Instance.new("Trail"),Instance.new("PointLight")
- a.Position,b.Position,a.Parent,b.Parent=Vector3.new(0,0.65,0),Vector3.new(0,-0.65,0),orb,orb
- trail.Attachment0,trail.Attachment1,trail.Color,trail.Lifetime,trail.Parent=a,b,ColorSequence.new(data.Color),0.65,orb
- light.Color,light.Brightness,light.Range,light.Parent=data.Color,2,15,orb
- local extras:{Part}={}
- for _=2,data.Count or 1 do local extra=orb:Clone();extra.Parent=folder;table.insert(extras,extra) end
- cleanup=function()
-  folder:Destroy()
-  for screen,enabled in hidden do if screen.Parent then screen.Enabled=enabled end end
-  if humanoid and humanoid.Parent and speed then humanoid.WalkSpeed=speed end
-  local current=Workspace.CurrentCamera
-  if current then
-   current.FieldOfView=oldFOV;current.CameraType=if current==camera then oldType else Enum.CameraType.Custom
-   local live=player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-   current.CameraSubject=live or oldSubject
-  end
- end
- gui:SetAttribute("ModalOpen",true);panel.Visible=false
- local function alive():boolean return generation==myGeneration and gui.Parent~=nil end
- local ok,problem=pcall(function()
-  while alive() and session and session.State=="Flying" do
-   local elapsed=Workspace:GetServerTimeNow()-data.StartedAt
-   local alpha=math.clamp((elapsed-Rules.WindupSeconds)/(data.Duration-Rules.WindupSeconds),0,1)
-   local travel=1-(1-alpha)^1.4
-   local pos=data.StartPos:Lerp(data.EndPos,travel)+Vector3.new(0,math.sin(alpha*math.pi)*math.min(45,10+data.Distance*0.025),0)
-   orb.CFrame=CFrame.new(pos)*CFrame.Angles(alpha*20,alpha*8,0)
-   for index,extra in extras do extra.CFrame=orb.CFrame*CFrame.new((if index==1 then -1 else 1)*4,0,2) end
-   local reduced=gui:GetAttribute("ReducedMotion")==true
-   if elapsed<Rules.WindupSeconds then
-    camera.CFrame=CFrame.lookAt(data.StartPos+Vector3.new(7,4,9),data.StartPos)
-    top.Text=if data.Perfect then "PERFEITO!" else "FORÇA "..math.floor(data.Power*100).."%"
-    zone.Text="PREPARANDO O ARREMESSO"
-   else
-    camera.CFrame=CFrame.lookAt(pos+Vector3.new(if reduced then 0 else math.sin(alpha*math.pi)*3,5,15),pos+Vector3.new(0,0,-14))
-    camera.FieldOfView=if reduced then oldFOV else oldFOV+math.sin(alpha*math.pi)*14
-    top.Text=Numbers.Format(data.Distance*travel).." STUDS"
-    local biome=Layout.BiomeOrder[math.clamp(math.floor(data.Distance*travel/Rules.ZoneLength)+1,1,#Layout.BiomeOrder)]
-    zone.Text=Config.Biomes[biome].Name
-   end
-   if elapsed>data.Duration+10 then error("Resultado do servidor não chegou") end
-   Run.RenderStepped:Wait()
-  end
-  if alive() and session and session.Result then top.Text,zone.Text="","";Reveal.Play(gui,session.Result,alive) end
- end)
- if alive() then restore();panel.Visible=false end
- if not ok then warn("[FlightController]",problem);idle() end
+local function flight(data: any)
+    Focus.Begin("Throw")
+    local myGeneration = generation
+    local character = player.Character
+    local hand = character and (character:FindFirstChild("RightHand") or character:FindFirstChild("Right Arm"))
+    local folder = Instance.new("Folder")
+    folder.Name, folder.Parent = "FlightLocalEffects", Workspace
+    local orb, core = OrbVisual.Create(data.Color, 1.8)
+    orb.Parent = folder
+    local trail = Instance.new("Trail")
+    local left, right = Instance.new("Attachment"), Instance.new("Attachment")
+    left.Position, right.Position = Vector3.new(0, .62, 0), Vector3.new(0, -.62, 0)
+    left.Parent, right.Parent = core, core
+    trail.Attachment0, trail.Attachment1 = left, right
+    trail.Color = ColorSequence.new(data.Color:Lerp(Color3.new(1, 1, 1), .45), data.Color)
+    trail.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, .03), NumberSequenceKeypoint.new(1, 1)})
+    trail.LightEmission, trail.Lifetime, trail.Enabled, trail.Parent = .85, .42, false, core
+    local light = Instance.new("PointLight")
+    light.Color, light.Brightness, light.Range, light.Parent = data.Color, 2, 15, core
+    local extras: {Model} = {}
+    for _ = 2, data.Count or 1 do
+        local extra = OrbVisual.Create(data.Color, 1.45)
+        extra.Parent = folder
+        table.insert(extras, extra)
+    end
+    cleanup = function() folder:Destroy() end
+    gui:SetAttribute("ModalOpen", true)
+    panel.Visible = false
+    local function alive(): boolean return generation == myGeneration and gui.Parent ~= nil end
+    local ok, problem = pcall(function()
+        local delta = 1 / 60
+        local release = data.StartPos
+        local previousZone = 0
+        local zoneTime = 0
+        while alive() and session and session.State == "Flying" do
+            local now = Workspace:GetServerTimeNow()
+            local elapsed = now - data.StartedAt
+            local reduced = gui:GetAttribute("ReducedMotion") == true
+            if elapsed < Rules.WindupSeconds then
+                if hand and hand:IsA("BasePart") then release = hand.Position end
+                orb:PivotTo(CFrame.new(release) * CFrame.Angles(.25, elapsed * 2.4, 0))
+                for _, extra in extras do extra:PivotTo(orb:GetPivot()) end
+                local subject = data.StartPos + Vector3.new(0, -.6, 0)
+                Focus.Frame("Throw", CFrame.lookAt(subject + Vector3.new(7, 2.4, -5.6), subject), 53, delta, 8)
+                top.Text = if data.Perfect then "PERFEITO!" else "FORÇA " .. math.floor(data.Power * 100) .. "%"
+                zone.Text = ""
+            else
+                local alpha = math.clamp((elapsed - Rules.WindupSeconds) / (data.Duration - Rules.WindupSeconds), 0, 1)
+                local travel = 1 - (1 - alpha) ^ 1.4
+                local pos = release:Lerp(data.EndPos, travel) + Vector3.new(0, math.sin(alpha * math.pi) * math.min(45, 10 + data.Distance * .025), 0)
+                trail.Enabled = true
+                orb:PivotTo(CFrame.new(pos) * CFrame.Angles(alpha * 20, alpha * 8, alpha * 3))
+                for index, extra in extras do
+                    local side = if index == 1 then -1 else 1
+                    extra:PivotTo(orb:GetPivot() + Vector3.new(side * 3.6, math.sin(elapsed * 6 + index) * .85, 2))
+                end
+                local zoneIndex = math.clamp(math.floor(data.Distance * travel / Rules.ZoneLength) + 1, 1, #Layout.BiomeOrder)
+                if zoneIndex ~= previousZone then zoneTime = now; previousZone = zoneIndex end
+                local pulse = math.max(0, 1 - (now - zoneTime) * 3)
+                local acceleration = math.sin(alpha * math.pi)
+                local offset = Vector3.new(if reduced then 0 else math.sin(alpha * math.pi) * 3.5, 4.8, 12 + acceleration * 6)
+                local shot = CFrame.lookAt(pos + offset, pos + Vector3.new(0, 0, -10))
+                Focus.Frame("Throw", shot, if reduced then 64 else 64 + acceleration * 13 + pulse * 4, delta, 16)
+                top.Text = Numbers.Format(data.Distance * travel) .. " STUDS"
+                zone.Text = Config.Biomes[Layout.BiomeOrder[zoneIndex]].Name
+            end
+            if elapsed > data.Duration + 10 then error("Resultado do servidor não chegou") end
+            delta = Run.RenderStepped:Wait()
+        end
+        if alive() and session and session.Result then
+            folder:Destroy()
+            top.Text, zone.Text = "", ""
+            Reveal.Play(gui, session.Result, alive)
+        end
+    end)
+    if not ok then
+        warn("[FlightController]", problem)
+        suppressUntilExit = true
+        idle()
+    end
 end
 (remotes:WaitForChild("FlightUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
@@ -238,6 +262,7 @@ end
    remotes.CancelThrow:FireServer(data.Id)
    return
   end
+  Focus.Begin("Throw")
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
   title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
@@ -249,7 +274,10 @@ end
   title.Text=string.format("FORÇA CONFIRMADA: %d%%",math.floor(data.Power*100))
   task.spawn(flight,data)
  elseif data.State=="Landed" and session and data.Id==session.Id then session.State,session.Result="Revealing",data.Result
- elseif (data.State=="Cancelled" or data.State=="Ready") and session and data.Id==session.Id then idle() end
+ elseif (data.State=="Cancelled" or data.State=="Ready") and session and data.Id==session.Id then
+  suppressUntilExit = atLine()
+  idle()
+ end
 end)
 ;(remotes:WaitForChild("ThrowWindup")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)=="table" and typeof(data.Thrower)=="Instance" and data.Thrower:IsA("Player") and data.Thrower.Character then

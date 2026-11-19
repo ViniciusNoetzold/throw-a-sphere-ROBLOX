@@ -899,13 +899,18 @@ return Variants
 ]]></string>
         </Properties>
       </Item>
+      <Item class="Folder" referent="65">
+        <Properties>
+          <string name="Name">CreatureMeshes</string>
+        </Properties>
+      </Item>
     </Item>
   </Item>
-  <Item class="ServerScriptService" referent="65">
+  <Item class="ServerScriptService" referent="66">
     <Properties>
       <string name="Name">ServerScriptService</string>
     </Properties>
-    <Item class="Script" referent="66">
+    <Item class="Script" referent="67">
       <Properties>
         <string name="Name">Bootstrap</string>
         <token name="RunContext">0</token>
@@ -971,11 +976,11 @@ print("[ThrowASphere] Base integrada: captura, progressão, recompensas, mundo e
 ]]></string>
       </Properties>
     </Item>
-    <Item class="Folder" referent="67">
+    <Item class="Folder" referent="68">
       <Properties>
         <string name="Name">Services</string>
       </Properties>
-      <Item class="ModuleScript" referent="68">
+      <Item class="ModuleScript" referent="69">
         <Properties>
           <string name="Name">AuctionService</string>
           <string name="Source"><![CDATA[--!strict
@@ -1280,7 +1285,7 @@ return Auction
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="69">
+      <Item class="ModuleScript" referent="70">
         <Properties>
           <string name="Name">AutomationService</string>
           <string name="Source"><![CDATA[--!strict
@@ -1365,7 +1370,7 @@ return AutomationService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="70">
+      <Item class="ModuleScript" referent="71">
         <Properties>
           <string name="Name">BiomeService</string>
           <string name="Source"><![CDATA[--!strict
@@ -1461,7 +1466,7 @@ return Biomes
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="71">
+      <Item class="ModuleScript" referent="72">
         <Properties>
           <string name="Name">BossService</string>
           <string name="Source"><![CDATA[--!strict
@@ -1566,7 +1571,7 @@ return Boss
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="72">
+      <Item class="ModuleScript" referent="73">
         <Properties>
           <string name="Name">CaptureService</string>
           <string name="Source"><![CDATA[--!strict
@@ -1775,7 +1780,7 @@ return CaptureService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="73">
+      <Item class="ModuleScript" referent="74">
         <Properties>
           <string name="Name">DataService</string>
           <string name="Source"><![CDATA[--!strict
@@ -2498,7 +2503,7 @@ return DataService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="74">
+      <Item class="ModuleScript" referent="75">
         <Properties>
           <string name="Name">DropService</string>
           <string name="Source"><![CDATA[--!strict
@@ -2646,7 +2651,7 @@ return Drops
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="75">
+      <Item class="ModuleScript" referent="76">
         <Properties>
           <string name="Name">FlightService</string>
           <string name="Source"><![CDATA[--!strict
@@ -2690,6 +2695,17 @@ local function eligible(player: Player, profile: any): (boolean, any)
     if not isReusable(profile, orb, benefits) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
     return ctx.Sanctuary.CanCapture(player), benefits
 end
+local function releaseStance(entry: any)
+    local root = entry.Root
+    if root and root.Parent then
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        root.Anchored = entry.WasAnchored
+    end
+    local humanoid = entry.Humanoid
+    if humanoid and humanoid.Parent then humanoid.AutoRotate = entry.WasAutoRotate end
+end
+
 function Flight.Prepare(player: Player, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     if now < (requests[player] or 0) then return false end
@@ -2705,7 +2721,17 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     end
     if not automatic and profile.AutomationSettings and profile.AutomationSettings.Throw
         and ctx.Monetization.GetBenefits(player).AutoThrow then return false end
-    local entry = {Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now, Character = player.Character}
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if not character or not humanoid then return false end
+    local entry = {
+        Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now,
+        Character = character, Root = root, WasAnchored = root.Anchored,
+        Humanoid = humanoid, WasAutoRotate = humanoid.AutoRotate,
+    }
+    root.AssemblyLinearVelocity, root.AssemblyAngularVelocity = Vector3.zero, Vector3.zero
+    root.Anchored, humanoid.AutoRotate = true, false
+    if CFrame then character:PivotTo(CFrame.lookAt(root.Position, root.Position + Rules.Direction)) end
     sessions[player] = entry
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
@@ -2724,6 +2750,7 @@ function Flight.Cancel(player: Player, id: any): boolean
         ctx.Data.Sync(player)
     elseif entry.State == "Resolving" then return false end
     sessions[player] = nil
+    releaseStance(entry)
     send(player, {State = "Cancelled", Id = id})
     return true
 end
@@ -2789,6 +2816,7 @@ local function finish(player: Player, entry: any)
     if not ok then
         -- A partial award must never be refunded or retried. Preserve it and freeze writes.
         sessions[player] = nil
+        releaseStance(entry)
         ctx.Data.Freeze(player, "Não foi possível concluir a revelação com segurança. Entre novamente.")
         send(player, {State = "Cancelled", Id = entry.Id})
         warn("[FlightService] Resolution failed:", result)
@@ -2798,6 +2826,7 @@ local function finish(player: Player, entry: any)
     local saved = ctx.Data.SaveNow(player)
     if not saved then
         sessions[player] = nil
+        releaseStance(entry)
         ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso.")
         send(player, {State = "Cancelled", Id = entry.Id})
         return
@@ -2812,7 +2841,11 @@ local function finish(player: Player, entry: any)
     send(player, {State = "Landed", Id = entry.Id, Result = result})
     ctx.Remotes.ThrowResult:FireAllClients(result)
     task.delay(result.PresentationDuration + 0.3, function()
-        if sessions[player] == entry then sessions[player] = nil; send(player, {State = "Ready", Id = entry.Id}) end
+        if sessions[player] == entry then
+            sessions[player] = nil
+            releaseStance(entry)
+            send(player, {State = "Ready", Id = entry.Id})
+        end
     end)
 end
 function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
@@ -2882,7 +2915,7 @@ return Flight
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="76">
+      <Item class="ModuleScript" referent="77">
         <Properties>
           <string name="Name">FlightWorldService</string>
           <string name="Source"><![CDATA[--!strict
@@ -3014,7 +3047,7 @@ return World
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="77">
+      <Item class="ModuleScript" referent="78">
         <Properties>
           <string name="Name">FusionService</string>
           <string name="Source"><![CDATA[--!strict
@@ -3137,7 +3170,7 @@ return FusionService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="78">
+      <Item class="ModuleScript" referent="79">
         <Properties>
           <string name="Name">LeaderboardPodiumService</string>
           <string name="Source"><![CDATA[--!strict
@@ -3327,7 +3360,7 @@ return Rankings
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="79">
+      <Item class="ModuleScript" referent="80">
         <Properties>
           <string name="Name">MonetizationService</string>
           <string name="Source"><![CDATA[--!strict
@@ -3496,7 +3529,7 @@ return Monetization
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="80">
+      <Item class="ModuleScript" referent="81">
         <Properties>
           <string name="Name">ProgressionService</string>
           <string name="Source"><![CDATA[--!strict
@@ -3677,7 +3710,7 @@ return ProgressionService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="81">
+      <Item class="ModuleScript" referent="82">
         <Properties>
           <string name="Name">RewardService</string>
           <string name="Source"><![CDATA[--!strict
@@ -4024,7 +4057,7 @@ return RewardService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="82">
+      <Item class="ModuleScript" referent="83">
         <Properties>
           <string name="Name">SanctuaryService</string>
           <string name="Source"><![CDATA[--!strict
@@ -4206,7 +4239,7 @@ return SanctuaryService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="83">
+      <Item class="ModuleScript" referent="84">
         <Properties>
           <string name="Name">SpawnService</string>
           <string name="Source"><![CDATA[--!strict
@@ -4296,6 +4329,7 @@ function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?
 		MutationRoll = mutationRoll, SizeRoll = sizeRoll, VariantLuck = luck,
 	}
 	model:SetAttribute("CreatureId", creatureId)
+	model:SetAttribute("ArtScale", scale)
 	model:SetAttribute("Mutation", mutation.Name)
 	model:SetAttribute("Size", size.Name)
 	model:SetAttribute("IncomePerSec", income)
@@ -4489,7 +4523,7 @@ return SpawnService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="84">
+      <Item class="ModuleScript" referent="85">
         <Properties>
           <string name="Name">TradeService</string>
           <string name="Source"><![CDATA[--!strict
@@ -4911,7 +4945,7 @@ return Trade
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="85">
+      <Item class="ModuleScript" referent="86">
         <Properties>
           <string name="Name">TrainingService</string>
           <string name="Source"><![CDATA[--!strict
@@ -5072,7 +5106,7 @@ return Training
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="86">
+      <Item class="ModuleScript" referent="87">
         <Properties>
           <string name="Name">WeatherEventService</string>
           <string name="Source"><![CDATA[--!strict
@@ -5170,7 +5204,7 @@ return Weather
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="87">
+      <Item class="ModuleScript" referent="88">
         <Properties>
           <string name="Name">WorldService</string>
           <string name="Source"><![CDATA[--!strict
@@ -5581,21 +5615,21 @@ return WorldService
       </Item>
     </Item>
   </Item>
-  <Item class="SoundService" referent="88">
+  <Item class="SoundService" referent="89">
     <Properties>
       <string name="Name">SoundService</string>
       <bool name="RespectFilteringEnabled">true</bool>
     </Properties>
   </Item>
-  <Item class="StarterPlayer" referent="89">
+  <Item class="StarterPlayer" referent="90">
     <Properties>
       <string name="Name">StarterPlayer</string>
     </Properties>
-    <Item class="StarterPlayerScripts" referent="90">
+    <Item class="StarterPlayerScripts" referent="91">
       <Properties>
         <string name="Name">StarterPlayerScripts</string>
       </Properties>
-      <Item class="LocalScript" referent="91">
+      <Item class="LocalScript" referent="92">
         <Properties>
           <string name="Name">BaseHUD</string>
           <string name="Source"><![CDATA[--!strict
@@ -6270,13 +6304,73 @@ requestState:FireServer()
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="92">
+      <Item class="ModuleScript" referent="93">
+        <Properties>
+          <string name="Name">CameraFocus</string>
+          <string name="Source"><![CDATA[--!strict
+local ContextActionService = game:GetService("ContextActionService")
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+local ACTION = "ThrowASphereGameplayFocus"
+local CameraFocus = {}
+local owner: string? = nil
+local original: {Camera: Camera, Type: Enum.CameraType, Subject: Instance?, CFrame: CFrame, FOV: number}? = nil
+
+function CameraFocus.Release(key: string)
+    if key ~= owner then return end
+    owner = nil
+    ContextActionService:UnbindAction(ACTION)
+    local previous = original
+    original = nil
+    local camera = Workspace.CurrentCamera
+    if not previous or not camera then return end
+    local player = Players.LocalPlayer
+    local currentHumanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    camera.CameraSubject = if previous.Subject and previous.Subject.Parent then previous.Subject else currentHumanoid
+    camera.CFrame = previous.CFrame
+    camera.FieldOfView = previous.FOV
+    camera.CameraType = if camera == previous.Camera then previous.Type else Enum.CameraType.Custom
+end
+
+function CameraFocus.Begin(key: string)
+    if key == owner then return end
+    if owner then CameraFocus.Release(owner) end
+    local camera = Workspace.CurrentCamera
+    if not camera then return end
+    owner = key
+    original = {Camera = camera, Type = camera.CameraType, Subject = camera.CameraSubject, CFrame = camera.CFrame, FOV = camera.FieldOfView}
+    camera.CameraType = Enum.CameraType.Scriptable
+    ContextActionService:BindActionAtPriority(ACTION, function()
+        return Enum.ContextActionResult.Sink
+    end, false, Enum.ContextActionPriority.High.Value + 10,
+        Enum.PlayerActions.CharacterForward, Enum.PlayerActions.CharacterBackward,
+        Enum.PlayerActions.CharacterLeft, Enum.PlayerActions.CharacterRight,
+        Enum.PlayerActions.CharacterJump, Enum.KeyCode.Thumbstick1, Enum.KeyCode.ButtonA)
+end
+
+function CameraFocus.Frame(key: string, target: CFrame, fov: number, delta: number, response: number)
+    local camera = Workspace.CurrentCamera
+    if key ~= owner or not camera then return end
+    local alpha = 1 - math.exp(-math.max(0, delta) * response)
+    camera.CameraType = Enum.CameraType.Scriptable
+    camera.CFrame = camera.CFrame:Lerp(target, alpha)
+    camera.FieldOfView += (fov - camera.FieldOfView) * alpha
+    camera.Focus = CFrame.new(camera.CFrame.Position + camera.CFrame.LookVector * 12)
+end
+
+return CameraFocus
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="LocalScript" referent="94">
         <Properties>
           <string name="Name">ClientSanctuaryController</string>
           <string name="Source"><![CDATA[--!strict
 local CollectionService = game:GetService("CollectionService")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
+local CreatureArt = require(script.Parent:WaitForChild("CreatureArt"))
 
 type Walker = {
     Home: Vector3,
@@ -6295,6 +6389,7 @@ local function observe(instance: Instance)
     local caption = board and board:FindFirstChildWhichIsA("TextLabel")
     if typeof(home) ~= "Vector3" or typeof(phase) ~= "number" or not caption or not instance.PrimaryPart then return end
     local left, right = instance:FindFirstChild("LeftFoot"), instance:FindFirstChild("RightFoot")
+    CreatureArt.ShowOn(instance, instance.Name, 1, 1)
     walkers[instance] = {
         Home = home,
         Phase = phase,
@@ -6308,6 +6403,21 @@ for _, model in CollectionService:GetTagged("SanctuaryWalker") do observe(model)
 CollectionService:GetInstanceAddedSignal("SanctuaryWalker"):Connect(function(model) task.defer(observe, model) end)
 CollectionService:GetInstanceRemovedSignal("SanctuaryWalker"):Connect(function(model)
     if model:IsA("Model") then walkers[model] = nil end
+end)
+
+CreatureArt.Loaded:Connect(function(id: string)
+    for model in walkers do
+        if model.Name == id then CreatureArt.ShowOn(model, id, 1, 1) end
+    end
+end)
+
+task.spawn(function()
+    while script.Parent do
+        task.wait(.6)
+        for _, model in CollectionService:GetTagged("SanctuaryWalker") do
+            if model:IsA("Model") and not walkers[model] then observe(model) end
+        end
+    end
 end)
 
 local elapsed = 0
@@ -6337,7 +6447,7 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="93">
+      <Item class="LocalScript" referent="95">
         <Properties>
           <string name="Name">ClientThrowController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6354,6 +6464,8 @@ local Math=require(RS.Shared.FlightMath)
 local Numbers=require(RS.Shared.NumberFormatter)
 local Reveal=require(script.Parent:WaitForChild("Throw"):WaitForChild("RevealDirector"))
 local Pose=require(script.Parent:WaitForChild("Throw"):WaitForChild("ThrowPose"))
+local Focus = require(script.Parent:WaitForChild("CameraFocus"))
+local OrbVisual = require(script.Parent:WaitForChild("Throw"):WaitForChild("OrbVisual"))
 local remotes=RS:WaitForChild("Remotes")
 local player=Players.LocalPlayer
 local gui=Instance.new("ScreenGui")
@@ -6438,6 +6550,7 @@ local function modal():boolean
 end
 local function restore()
  generation+=1
+ Focus.Release("Throw")
  if cleanup then cleanup();cleanup=nil end
  for screen,enabled in chargeHidden do if screen.Parent then screen.Enabled=enabled end end
  chargeHidden={}
@@ -6470,7 +6583,7 @@ Input.InputBegan:Connect(function(input)
     end
 end)
 
-Run.RenderStepped:Connect(function()
+Run.RenderStepped:Connect(function(delta)
     local near = atLine()
     local inModal = modal()
     local training = player:GetAttribute("TrainingActive") == true
@@ -6479,8 +6592,10 @@ Run.RenderStepped:Connect(function()
         if not session and panel.Visible then idle() end
     end
     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-    hint.Visible = not near and not session and not inModal and not training and root ~= nil
-        and (root.Position - Rules.LinePosition).Magnitude < 50
+    hint.Text = if near and suppressUntilExit then "Saia da faixa e volte para arremessar de novo"
+        else "Encoste na faixa amarela para arremessar"
+    hint.Visible = (not near or suppressUntilExit) and not session and not inModal and not training and root ~= nil
+        and (root.Position - Rules.LinePosition).Magnitude < 35
     if not session and near and not suppressUntilExit and not inModal and not training
         and player:GetAttribute("DataLoaded") == true then
         panel.Visible = true
@@ -6500,78 +6615,97 @@ Run.RenderStepped:Connect(function()
             idle()
             return
         end
+        if root and root:IsA("BasePart") then
+            local target = root.Position + root.CFrame.LookVector * 3 + Vector3.new(0, 1.2, 0)
+            local viewpoint = root.Position - root.CFrame.LookVector * 10 + Vector3.new(5.8, 4, 0)
+            Focus.Frame("Throw", CFrame.lookAt(viewpoint, target), 59, delta, 9)
+        end
         local elapsed = Workspace:GetServerTimeNow() - session.StartedAt
         local power = Math.Power(elapsed, session.Period)
         pointer.Position = UDim2.fromScale(Math.MeterPosition(elapsed, session.Period), .5)
         title.Text = if power >= Rules.PerfectThreshold then "PERFEITO!" else "FORÇA " .. math.floor(power * 100) .. "%"
     end
 end)
-local function flight(data:any)
- restore()
- local myGeneration=generation
- local camera=Workspace.CurrentCamera
- if not camera then idle();return end
- local oldType,oldSubject,oldFOV=camera.CameraType,camera.CameraSubject,camera.FieldOfView
- local character=player.Character
- local humanoid=character and character:FindFirstChildOfClass("Humanoid")
- local speed=humanoid and humanoid.WalkSpeed
- local hidden:{[ScreenGui]:boolean}={}
- for _,screen in player.PlayerGui:GetChildren() do
-  if screen~=gui and screen:IsA("ScreenGui") then hidden[screen]=screen.Enabled;screen.Enabled=false end
- end
- if humanoid then humanoid.WalkSpeed=0 end
- camera.CameraType=Enum.CameraType.Scriptable
- local folder=Instance.new("Folder");folder.Name,folder.Parent="FlightLocalEffects",Workspace
- local orb=Instance.new("Part")
- orb.Name,orb.Shape,orb.Size,orb.Anchored="FlyingOrb",Enum.PartType.Ball,Vector3.new(1.8,1.8,1.8),true
- orb.Material,orb.Color,orb.CanCollide,orb.CanTouch,orb.CanQuery=Enum.Material.Neon,data.Color,false,false,false
- orb.Parent=folder
- local a,b,trail,light=Instance.new("Attachment"),Instance.new("Attachment"),Instance.new("Trail"),Instance.new("PointLight")
- a.Position,b.Position,a.Parent,b.Parent=Vector3.new(0,0.65,0),Vector3.new(0,-0.65,0),orb,orb
- trail.Attachment0,trail.Attachment1,trail.Color,trail.Lifetime,trail.Parent=a,b,ColorSequence.new(data.Color),0.65,orb
- light.Color,light.Brightness,light.Range,light.Parent=data.Color,2,15,orb
- local extras:{Part}={}
- for _=2,data.Count or 1 do local extra=orb:Clone();extra.Parent=folder;table.insert(extras,extra) end
- cleanup=function()
-  folder:Destroy()
-  for screen,enabled in hidden do if screen.Parent then screen.Enabled=enabled end end
-  if humanoid and humanoid.Parent and speed then humanoid.WalkSpeed=speed end
-  local current=Workspace.CurrentCamera
-  if current then
-   current.FieldOfView=oldFOV;current.CameraType=if current==camera then oldType else Enum.CameraType.Custom
-   local live=player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-   current.CameraSubject=live or oldSubject
-  end
- end
- gui:SetAttribute("ModalOpen",true);panel.Visible=false
- local function alive():boolean return generation==myGeneration and gui.Parent~=nil end
- local ok,problem=pcall(function()
-  while alive() and session and session.State=="Flying" do
-   local elapsed=Workspace:GetServerTimeNow()-data.StartedAt
-   local alpha=math.clamp((elapsed-Rules.WindupSeconds)/(data.Duration-Rules.WindupSeconds),0,1)
-   local travel=1-(1-alpha)^1.4
-   local pos=data.StartPos:Lerp(data.EndPos,travel)+Vector3.new(0,math.sin(alpha*math.pi)*math.min(45,10+data.Distance*0.025),0)
-   orb.CFrame=CFrame.new(pos)*CFrame.Angles(alpha*20,alpha*8,0)
-   for index,extra in extras do extra.CFrame=orb.CFrame*CFrame.new((if index==1 then -1 else 1)*4,0,2) end
-   local reduced=gui:GetAttribute("ReducedMotion")==true
-   if elapsed<Rules.WindupSeconds then
-    camera.CFrame=CFrame.lookAt(data.StartPos+Vector3.new(7,4,9),data.StartPos)
-    top.Text=if data.Perfect then "PERFEITO!" else "FORÇA "..math.floor(data.Power*100).."%"
-    zone.Text="PREPARANDO O ARREMESSO"
-   else
-    camera.CFrame=CFrame.lookAt(pos+Vector3.new(if reduced then 0 else math.sin(alpha*math.pi)*3,5,15),pos+Vector3.new(0,0,-14))
-    camera.FieldOfView=if reduced then oldFOV else oldFOV+math.sin(alpha*math.pi)*14
-    top.Text=Numbers.Format(data.Distance*travel).." STUDS"
-    local biome=Layout.BiomeOrder[math.clamp(math.floor(data.Distance*travel/Rules.ZoneLength)+1,1,#Layout.BiomeOrder)]
-    zone.Text=Config.Biomes[biome].Name
-   end
-   if elapsed>data.Duration+10 then error("Resultado do servidor não chegou") end
-   Run.RenderStepped:Wait()
-  end
-  if alive() and session and session.Result then top.Text,zone.Text="","";Reveal.Play(gui,session.Result,alive) end
- end)
- if alive() then restore();panel.Visible=false end
- if not ok then warn("[FlightController]",problem);idle() end
+local function flight(data: any)
+    Focus.Begin("Throw")
+    local myGeneration = generation
+    local character = player.Character
+    local hand = character and (character:FindFirstChild("RightHand") or character:FindFirstChild("Right Arm"))
+    local folder = Instance.new("Folder")
+    folder.Name, folder.Parent = "FlightLocalEffects", Workspace
+    local orb, core = OrbVisual.Create(data.Color, 1.8)
+    orb.Parent = folder
+    local trail = Instance.new("Trail")
+    local left, right = Instance.new("Attachment"), Instance.new("Attachment")
+    left.Position, right.Position = Vector3.new(0, .62, 0), Vector3.new(0, -.62, 0)
+    left.Parent, right.Parent = core, core
+    trail.Attachment0, trail.Attachment1 = left, right
+    trail.Color = ColorSequence.new(data.Color:Lerp(Color3.new(1, 1, 1), .45), data.Color)
+    trail.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, .03), NumberSequenceKeypoint.new(1, 1)})
+    trail.LightEmission, trail.Lifetime, trail.Enabled, trail.Parent = .85, .42, false, core
+    local light = Instance.new("PointLight")
+    light.Color, light.Brightness, light.Range, light.Parent = data.Color, 2, 15, core
+    local extras: {Model} = {}
+    for _ = 2, data.Count or 1 do
+        local extra = OrbVisual.Create(data.Color, 1.45)
+        extra.Parent = folder
+        table.insert(extras, extra)
+    end
+    cleanup = function() folder:Destroy() end
+    gui:SetAttribute("ModalOpen", true)
+    panel.Visible = false
+    local function alive(): boolean return generation == myGeneration and gui.Parent ~= nil end
+    local ok, problem = pcall(function()
+        local delta = 1 / 60
+        local release = data.StartPos
+        local previousZone = 0
+        local zoneTime = 0
+        while alive() and session and session.State == "Flying" do
+            local now = Workspace:GetServerTimeNow()
+            local elapsed = now - data.StartedAt
+            local reduced = gui:GetAttribute("ReducedMotion") == true
+            if elapsed < Rules.WindupSeconds then
+                if hand and hand:IsA("BasePart") then release = hand.Position end
+                orb:PivotTo(CFrame.new(release) * CFrame.Angles(.25, elapsed * 2.4, 0))
+                for _, extra in extras do extra:PivotTo(orb:GetPivot()) end
+                local subject = data.StartPos + Vector3.new(0, -.6, 0)
+                Focus.Frame("Throw", CFrame.lookAt(subject + Vector3.new(7, 2.4, -5.6), subject), 53, delta, 8)
+                top.Text = if data.Perfect then "PERFEITO!" else "FORÇA " .. math.floor(data.Power * 100) .. "%"
+                zone.Text = ""
+            else
+                local alpha = math.clamp((elapsed - Rules.WindupSeconds) / (data.Duration - Rules.WindupSeconds), 0, 1)
+                local travel = 1 - (1 - alpha) ^ 1.4
+                local pos = release:Lerp(data.EndPos, travel) + Vector3.new(0, math.sin(alpha * math.pi) * math.min(45, 10 + data.Distance * .025), 0)
+                trail.Enabled = true
+                orb:PivotTo(CFrame.new(pos) * CFrame.Angles(alpha * 20, alpha * 8, alpha * 3))
+                for index, extra in extras do
+                    local side = if index == 1 then -1 else 1
+                    extra:PivotTo(orb:GetPivot() + Vector3.new(side * 3.6, math.sin(elapsed * 6 + index) * .85, 2))
+                end
+                local zoneIndex = math.clamp(math.floor(data.Distance * travel / Rules.ZoneLength) + 1, 1, #Layout.BiomeOrder)
+                if zoneIndex ~= previousZone then zoneTime = now; previousZone = zoneIndex end
+                local pulse = math.max(0, 1 - (now - zoneTime) * 3)
+                local acceleration = math.sin(alpha * math.pi)
+                local offset = Vector3.new(if reduced then 0 else math.sin(alpha * math.pi) * 3.5, 4.8, 12 + acceleration * 6)
+                local shot = CFrame.lookAt(pos + offset, pos + Vector3.new(0, 0, -10))
+                Focus.Frame("Throw", shot, if reduced then 64 else 64 + acceleration * 13 + pulse * 4, delta, 16)
+                top.Text = Numbers.Format(data.Distance * travel) .. " STUDS"
+                zone.Text = Config.Biomes[Layout.BiomeOrder[zoneIndex]].Name
+            end
+            if elapsed > data.Duration + 10 then error("Resultado do servidor não chegou") end
+            delta = Run.RenderStepped:Wait()
+        end
+        if alive() and session and session.Result then
+            folder:Destroy()
+            top.Text, zone.Text = "", ""
+            Reveal.Play(gui, session.Result, alive)
+        end
+    end)
+    if not ok then
+        warn("[FlightController]", problem)
+        suppressUntilExit = true
+        idle()
+    end
 end
 (remotes:WaitForChild("FlightUpdate")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)~="table" then return end
@@ -6580,6 +6714,7 @@ end
    remotes.CancelThrow:FireServer(data.Id)
    return
   end
+  Focus.Begin("Throw")
   session=data;panel.Visible=true;pointer.Visible=true;hint.Visible=false
   if not next(chargeHidden) then hideChargeHUD() end
   title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
@@ -6591,7 +6726,10 @@ end
   title.Text=string.format("FORÇA CONFIRMADA: %d%%",math.floor(data.Power*100))
   task.spawn(flight,data)
  elseif data.State=="Landed" and session and data.Id==session.Id then session.State,session.Result="Revealing",data.Result
- elseif (data.State=="Cancelled" or data.State=="Ready") and session and data.Id==session.Id then idle() end
+ elseif (data.State=="Cancelled" or data.State=="Ready") and session and data.Id==session.Id then
+  suppressUntilExit = atLine()
+  idle()
+ end
 end)
 ;(remotes:WaitForChild("ThrowWindup")::RemoteEvent).OnClientEvent:Connect(function(data:any)
  if typeof(data)=="table" and typeof(data.Thrower)=="Instance" and data.Thrower:IsA("Player") and data.Thrower.Character then
@@ -6602,7 +6740,7 @@ player.CharacterRemoving:Connect(idle)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="94">
+      <Item class="LocalScript" referent="96">
         <Properties>
           <string name="Name">ClientTrainingController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6613,6 +6751,7 @@ local Input=game:GetService("UserInputService")
 local Workspace=game:GetService("Workspace")
 local Debris=game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
+local Focus = require(script.Parent:WaitForChild("CameraFocus"))
 local player=Players.LocalPlayer
 local remotes=RS:WaitForChild("Remotes")
 local gui=Instance.new("ScreenGui")
@@ -6669,8 +6808,12 @@ local function show(value:boolean)
  if value==active then return end
  active=value;card.Visible=value
  if value then
+  Focus.Begin("Academy")
+  gui:SetAttribute("ModalOpen", true)
   for _,screen in player.PlayerGui:GetChildren() do if screen~=gui and screen:IsA("ScreenGui") then hidden[screen]=screen.Enabled;screen.Enabled=false end end
  else
+  Focus.Release("Academy")
+  gui:SetAttribute("ModalOpen", false)
   for screen,enabled in hidden do if screen.Parent then screen.Enabled=enabled end end
   hidden={};current=nil;qte.Visible=false
  end
@@ -6710,7 +6853,15 @@ end
   sound:Play();Debris:AddItem(sound,3)
  elseif data.State=="Missed" then current=nil;qte.Visible=false end
 end)
-Run.RenderStepped:Connect(function()
+Run.RenderStepped:Connect(function(delta)
+ if active then
+  local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+  if root and root:IsA("BasePart") then
+   local target = root.Position + Vector3.new(0, 1.1, 0)
+   local position = target + root.CFrame.RightVector * 9 + root.CFrame.LookVector * 9 + Vector3.new(0, 2.3, 0)
+   Focus.Frame("Academy", CFrame.lookAt(position, target), 56, delta, 8)
+  end
+ end
  if active and nextRepAt > 0 then
   local fraction = 1 - math.clamp((nextRepAt - Workspace:GetServerTimeNow()) / interval, 0, 1)
   progress.Size = UDim2.fromScale(fraction, 1)
@@ -6737,9 +6888,9 @@ end
  local joints={}
  for _,joint in character:GetDescendants() do
   local name=joint.Name:gsub(" ",""):lower()
-  if (joint:IsA("Motor6D") or joint.ClassName=="AnimationConstraint") and (name=="rightshoulder" or name=="leftshoulder" or name=="waist" or name=="rootjoint") then
+  if (joint:IsA("Motor6D") or joint.ClassName=="AnimationConstraint") and (name=="rightshoulder" or name=="leftshoulder" or name=="waist" or name=="rootjoint" or name=="root" or name=="rightelbow" or name=="leftelbow") then
    local ok,value=pcall(function()return (joint::any).Transform end)
-   if ok then table.insert(joints,{Joint=joint,Name=name,Original=value})end
+   if ok and typeof(value)=="CFrame" then table.insert(joints,{Joint=joint,Name=name,Original=value})end
   end
  end
  local connection
@@ -6751,7 +6902,9 @@ end
    local value
    if item.Name=="rightshoulder" then value=CFrame.Angles(-2.5+lift*.7,0,.15)
    elseif item.Name=="leftshoulder" then value=CFrame.Angles(-2.5+lift*.7,0,-.15)
-   else value=CFrame.new(0,lift*.55,0)*CFrame.Angles(-lift*.05,0,0)end
+   elseif item.Name=="rightelbow" or item.Name=="leftelbow" then value=CFrame.Angles(-lift*.9,0,0)
+   elseif item.Name=="waist" then value=CFrame.Angles(-lift*.11,0,0)
+   else value=CFrame.new(0,lift*.72,0)*CFrame.Angles(-lift*.05,0,0)end
    if item.Joint.Parent then pcall(function()item.Joint.Transform=item.Original*value end)end
   end
  end)
@@ -6762,7 +6915,7 @@ Players.PlayerRemoving:Connect(stopPose)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="LocalScript" referent="95">
+      <Item class="LocalScript" referent="97">
         <Properties>
           <string name="Name">ClientWorldController</string>
           <string name="Source"><![CDATA[--!strict
@@ -6771,6 +6924,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Lighting = game:GetService("Lighting")
+local CreatureArt = require(script.Parent:WaitForChild("CreatureArt"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 local Events = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigEvents"))
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
@@ -6786,6 +6940,8 @@ local function observe(model: Instance)
     if not definition then return end
     local root = model.PrimaryPart
     if not root then return end
+    local scale = model:GetAttribute("ArtScale") or 1
+    CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
     local item: any = {}
     local rarity = definition.Rarity
     if rarity == "Epica" then
@@ -6828,6 +6984,14 @@ else
         observeWildFolder(child)
     end)
 end
+CreatureArt.Loaded:Connect(function(id: string)
+    for model in tracked do
+        if model:GetAttribute("CreatureId") == id then
+            local scale = model:GetAttribute("ArtScale") or 1
+            CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
+        end
+    end
+end)
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value
@@ -6842,10 +7006,19 @@ if request then (request :: RemoteEvent):FireServer() end
 task.spawn(function()
     while player.Parent do
         task.wait(0.2)
+        local wild = Workspace:FindFirstChild("CriaturasSelvagens")
+        if wild then
+            for _, model in wild:GetChildren() do observe(model) end
+        end
         local hue = (Workspace:GetServerTimeNow() * 0.12) % 1
         for model, item in tracked do
             if not model.Parent then if item.Peak then item.Peak:Destroy() end; tracked[model] = nil; continue end
-            local root = model.PrimaryPart
+            local originalMesh = model:FindFirstChild("OriginalMesh")
+            if originalMesh and originalMesh:IsA("BasePart") and model.PrimaryPart then
+                local scale = model:GetAttribute("ArtScale") or 1
+                originalMesh.CFrame = model.PrimaryPart.CFrame * CFrame.new(0, originalMesh.Size.Y / 2 - 1.1 * scale, 0)
+            end
+            local root = if originalMesh and originalMesh:IsA("BasePart") then originalMesh else model.PrimaryPart
             if item.Peak and root then item.Peak.Position = root.Position + Vector3.new(0, 42, 0) end
             if item.Beam and root then item.Beam.Enabled = root.LocalTransparencyModifier < 1 end
             if item.Glow and root then item.Glow.Enabled = root.LocalTransparencyModifier < 1 end
@@ -6863,11 +7036,156 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="Folder" referent="96">
+      <Item class="ModuleScript" referent="98">
+        <Properties>
+          <string name="Name">CreatureArt</string>
+          <string name="Source"><![CDATA[--!strict
+-- Local copies share one original Blender mesh per species, including in ViewportFrames.
+local AssetService = game:GetService("AssetService")
+local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local sources = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("CreatureMeshes")
+
+type MeshData = {Vertices: {number}, Faces: {number}, Colors: {number}}
+type Template = {Part: MeshPart, RetainedMesh: EditableMesh?}
+local CreatureArt = {}
+local templates: {[string]: Template} = {}
+local attempted: {[string]: boolean} = {}
+local loaded = Instance.new("BindableEvent")
+CreatureArt.Loaded = loaded.Event
+
+local function load(source: ModuleScript)
+    if attempted[source.Name] then return end
+    attempted[source.Name] = true
+    local mesh: EditableMesh? = nil
+    local ok, problem = pcall(function()
+        local data: MeshData = HttpService:JSONDecode(require(source))
+        local editable = AssetService:CreateEditableMesh()
+        if not editable then error("Mesh memory unavailable") end
+        mesh = editable
+        local vertices: {number}, positions: {Vector3}, colors: {number} = {}, {}, {}
+        for i = 1, #data.Vertices, 3 do
+            local position = Vector3.new(data.Vertices[i], data.Vertices[i + 1], data.Vertices[i + 2])
+            table.insert(positions, position)
+            table.insert(vertices, editable:AddVertex(position))
+        end
+        for i = 1, #data.Colors, 3 do
+            table.insert(colors, editable:AddColor(Color3.new(data.Colors[i], data.Colors[i + 1], data.Colors[i + 2]), 1))
+        end
+        local normals: {[Vector3]: number} = {}
+        for i = 1, #data.Faces, 4 do
+            local a, b, c, material = data.Faces[i], data.Faces[i + 1], data.Faces[i + 2], data.Faces[i + 3]
+            local normal = (positions[b] - positions[a]):Cross(positions[c] - positions[a])
+            if normal.Magnitude < 1e-8 then continue end
+            local unit = normal.Unit
+            local normalId = normals[unit]
+            if not normalId then normalId = editable:AddNormal(unit); normals[unit] = normalId end
+            local triangle = editable:AddTriangle(vertices[a], vertices[b], vertices[c])
+            local colorId = colors[material]
+            editable:SetFaceColors(triangle, {colorId, colorId, colorId})
+            editable:SetFaceNormals(triangle, {normalId, normalId, normalId})
+        end
+        local content = Content.fromObject(editable)
+        local baked, result, opaque = pcall(function()
+            return AssetService:CreateDataModelContentAsync(content)
+        end)
+        local options = {CollisionFidelity = Enum.CollisionFidelity.Box}
+        local part: MeshPart? = nil
+        if baked and result == Enum.CreateContentResult.Success then
+            local success, value = pcall(function() return AssetService:CreateMeshPartAsync(opaque, options) end)
+            if success then part = value; editable:Destroy(); mesh = nil end
+        end
+        local template = part or AssetService:CreateMeshPartAsync(content, options)
+        template.Name = "OriginalMesh"
+        template.Color = Color3.new(1, 1, 1)
+        template.Material = Enum.Material.SmoothPlastic
+        template.Anchored = true
+        template.CanCollide, template.CanQuery, template.CanTouch = false, false, false
+        templates[source.Name] = {Part = template, RetainedMesh = mesh}
+        loaded:Fire(source.Name)
+    end)
+    if not ok then
+        if mesh then mesh:Destroy() end
+        warn("[CreatureArt]", source.Name, problem)
+    end
+end
+
+function CreatureArt.Get(id: string): MeshPart?
+    local template = templates[id]
+    return if template then template.Part:Clone() else nil
+end
+
+function CreatureArt.ShowOn(model: Model, id: string, scale: number, rootHeight: number): MeshPart?
+    local root = model.PrimaryPart
+    if not root or not model.Parent or model:FindFirstChild("OriginalMesh") then return nil end
+    local mesh = CreatureArt.Get(id)
+    if not mesh then return nil end
+    mesh.Size *= scale
+    mesh.CFrame = root.CFrame * CFrame.new(0, mesh.Size.Y / 2 - rootHeight, 0)
+    for _, part in model:GetDescendants() do
+        if part:IsA("BasePart") then part.LocalTransparencyModifier = 1 end
+        if part:IsA("BillboardGui") then
+            part.Adornee = mesh
+            part.StudsOffset = Vector3.new(0, mesh.Size.Y / 2 + .7, 0)
+        end
+    end
+    mesh.Parent = model
+    return mesh
+end
+
+task.defer(function()
+    for _, source in sources:GetChildren() do
+        if source:IsA("ModuleScript") then load(source) end
+        task.wait()
+    end
+end)
+
+return CreatureArt
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="99">
         <Properties>
           <string name="Name">Throw</string>
         </Properties>
-        <Item class="ModuleScript" referent="97">
+        <Item class="ModuleScript" referent="100">
+          <Properties>
+            <string name="Name">OrbVisual</string>
+            <string name="Source"><![CDATA[--!strict
+local OrbVisual = {}
+
+function OrbVisual.Create(color: Color3, diameter: number): (Model, BasePart)
+    local model = Instance.new("Model")
+    model.Name = "Orb"
+    local function shape(name: string, kind: Enum.PartType, size: Vector3, frame: CFrame, tint: Color3, material: Enum.Material): Part
+        local part = Instance.new("Part")
+        part.Name, part.Shape, part.Size, part.CFrame = name, kind, size * diameter, frame
+        part.Color, part.Material, part.Anchored = tint, material, true
+        part.CanCollide, part.CanQuery, part.CanTouch, part.CastShadow = false, false, false, false
+        part.TopSurface, part.BottomSurface = Enum.SurfaceType.Smooth, Enum.SurfaceType.Smooth
+        part.Parent = model
+        return part
+    end
+    local pale = color:Lerp(Color3.fromRGB(247, 248, 255), .62)
+    local rim = color:Lerp(Color3.fromRGB(32, 41, 73), .57)
+    local core = shape("Shell", Enum.PartType.Ball, Vector3.one, CFrame.new(), pale, Enum.Material.SmoothPlastic)
+    shape("MagneticRing", Enum.PartType.Cylinder, Vector3.new(.15, 1.06, 1.06),
+        CFrame.Angles(0, 0, 1.02), rim, Enum.Material.SmoothPlastic)
+    shape("LightBand", Enum.PartType.Cylinder, Vector3.new(.037, 1.075, 1.075),
+        CFrame.Angles(0, 0, 1.02), color, Enum.Material.Neon)
+    local lens = Vector3.new(0, .08, -.433) * diameter
+    shape("CaptureLens", Enum.PartType.Ball, Vector3.new(.26, .26, .17), CFrame.new(lens), rim, Enum.Material.SmoothPlastic)
+    shape("CoreGlow", Enum.PartType.Ball, Vector3.new(.14, .14, .11),
+        CFrame.new(lens + Vector3.new(0, 0, -.063 * diameter)), pale, Enum.Material.Neon)
+    model.PrimaryPart = core
+    return model, core
+end
+
+return OrbVisual
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="101">
           <Properties>
             <string name="Name">RevealDirector</string>
             <string name="Source"><![CDATA[--!strict
@@ -6879,6 +7197,8 @@ local SoundService = game:GetService("SoundService")
 local Config = require(ReplicatedStorage.Shared.Config)
 local Reveals = require(ReplicatedStorage.Shared.ConfigReveal)
 local Numbers = require(ReplicatedStorage.Shared.NumberFormatter)
+local CreatureArt = require(script.Parent.Parent:WaitForChild("CreatureArt"))
+local OrbVisual = require(script.Parent:WaitForChild("OrbVisual"))
 local Director = {}
 
 local function label(parent: Instance, text: string, y: number, height: number, size: number, color: Color3): TextLabel
@@ -6903,6 +7223,14 @@ local function preview(id: string): Model
         end
         clone:PivotTo(CFrame.new())
         return clone
+    end
+    local mesh = CreatureArt.Get(id)
+    if mesh then
+        local model = Instance.new("Model")
+        mesh.CFrame = CFrame.new()
+        mesh.Parent = model
+        model.PrimaryPart = mesh
+        return model
     end
     -- Original blockout, automatically replaced by an imported CreatureModels/<id> model.
     local model = Instance.new("Model")
@@ -6950,13 +7278,36 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
     local bounds, size = creature:GetBoundingBox()
     local target = bounds.Position
     local radius = math.max(size.X,size.Y,size.Z) * 2.2
-    local captureOrb=Instance.new("Part")
-    captureOrb.Shape,captureOrb.Size,captureOrb.Anchored=Enum.PartType.Ball,Vector3.new(2,2,2),true
-    captureOrb.Color,captureOrb.Material,captureOrb.Parent=data.OrbColor or tier.Color,Enum.Material.Neon,world
+    local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5))
+    captureOrb.Parent = world
+    local burst: {Frame} = {}
+    for i = 1, (if reduced then 0 else 5 + tier.Rank * 4) do
+        local piece = Instance.new("Frame")
+        piece.AnchorPoint = Vector2.new(.5, .5)
+        piece.Position = UDim2.fromScale(.5, .46)
+        piece.Size = UDim2.fromOffset(6 + (i % 4) * 2, 6 + (i % 4) * 2)
+        piece.Rotation = 45
+        piece.BorderSizePixel = 0
+        piece.BackgroundColor3 = tier.Color:Lerp(Color3.new(1, 1, 1), (i % 3) * .22)
+        piece.Visible = false
+        piece.ZIndex = 7
+        piece.Parent = overlay
+        table.insert(burst, piece)
+    end
+    local pulse = Instance.new("Frame")
+    pulse.AnchorPoint = Vector2.new(.5, .5)
+    pulse.Position = UDim2.fromScale(.5, .46)
+    pulse.BackgroundTransparency = 1
+    pulse.ZIndex = 6
+    pulse.Parent = overlay
+    local pulseCorner = Instance.new("UICorner")
+    pulseCorner.CornerRadius, pulseCorner.Parent = UDim.new(1, 0), pulse
+    local pulseEdge = Instance.new("UIStroke")
+    pulseEdge.Color, pulseEdge.Thickness, pulseEdge.Transparency, pulseEdge.Parent = tier.Color, 4, 1, pulse
     local rays: {Frame} = {}
     for index = 1, (if reduced then 6 else tier.Rays) do
         local ray = Instance.new("Frame")
-        ray.AnchorPoint, ray.Position, ray.Size = Vector2.new(0.5,0), UDim2.fromScale(0.5,0.5), UDim2.new(0,3 + tier.Rank,0.8,0)
+        ray.AnchorPoint, ray.Position, ray.Size = Vector2.new(0.5,0.5), UDim2.fromScale(0.5,0.46), UDim2.new(0,3 + tier.Rank,0.38,0)
         ray.Rotation, ray.BackgroundColor3, ray.BackgroundTransparency = index * 360 / tier.Rays, tier.Color, 0.8
         ray.BorderSizePixel, ray.ZIndex, ray.Parent = 0, 5, overlay
         local fade = Instance.new("UIGradient")
@@ -6982,6 +7333,8 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
     local start = os.clock()
     local revealed = false
     local lastShake = 0
+    local passed = data.ShakesPassed or 0
+    local attempted = math.min(3, passed + (if data.Captured then 0 else 1))
     local sounds: {Sound} = {}
     local function sound(asset: string, volume: number, pitch: number)
         local item = Instance.new("Sound")
@@ -6995,13 +7348,25 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
             local after = math.max(0,elapsed-revealAt)
             local opened = elapsed >= revealAt
             if elapsed < 2.1 then
-                local shake = math.min(3,math.floor(elapsed / 0.7)+1)
-                if shake ~= lastShake then lastShake = shake; sound("rbxasset://sounds/volume_slider.ogg",0.12,0.8+shake*0.15) end
-                title.Text = "BALANÇADA " .. shake .. " / 3"
-                detail.Text = if shake <= (data.ShakesPassed or 0) then "ENERGIA ESTABILIZADA" else "SINAL INSTÁVEL..."
-                captureOrb.CFrame=CFrame.new(target)*CFrame.Angles(0,0,if reduced then 0 else math.sin(elapsed/0.7*math.pi*2)*0.38)
+                local beat = math.max(0, elapsed - .32)
+                local shake = math.min(attempted, math.floor(beat / .56) + 1)
+                local phase = math.clamp((beat - (shake - 1) * .56) / .56, 0, 1)
+                local landed = elapsed >= .32
+                local successful = shake <= passed
+                if landed and shake ~= lastShake then
+                    lastShake = shake
+                    sound("rbxasset://sounds/volume_slider.ogg", .15, if successful then .8 + shake * .19 else .65)
+                end
+                title.Text = if landed then "BALANÇADA " .. shake .. " / 3" else "A ORBE POUSOU"
+                detail.Text = if not landed then "" elseif successful then "ENERGIA ESTABILIZADA" else "A CRIATURA RESISTIU!"
+                local drop = if reduced or landed then 0 else 1.15 * (1 - elapsed / .32) ^ 2
+                local accent = if reduced then 0 else math.sin(phase * math.pi) * (if successful then .25 else .4)
+                local swing = if reduced or not landed then 0 else math.sin(phase * math.pi * 2) * (.17 + shake * .055) * (1 - phase)
+                captureOrb:PivotTo(CFrame.new(target + Vector3.new(0, drop + accent, 0)) * CFrame.Angles(0, -.23, swing))
+                pulse.Size = UDim2.fromOffset(50 + phase * 120, 50 + phase * 120)
+                pulseEdge.Transparency = if landed and not reduced then .57 + .43 * phase else 1
             elseif not opened then
-                captureOrb.Transparency=1
+                if captureOrb.Parent then captureOrb.Parent = nil end
                 for part,value in transparencies do part.Transparency=value end
                 title.Text = if tier.Rank >= 5 then "UMA PRESENÇA EXTRAORDINÁRIA..." else "QUEM ESTÁ AÍ?"
                 detail.Text = "REVELANDO O ENCONTRO"
@@ -7010,6 +7375,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
                 sound("rbxasset://sounds/volume_slider.ogg",0.18,1.3+tier.Rank*0.1)
                 if tier.Rank >= 4 then sound("rbxasset://sounds/impact_explosion_03.mp3",0.12,1.1) end
                 for p,color in colors do p.Color = color end
+                pulseEdge.Color = tier.Color:Lerp(Color3.new(1, 1, 1), .4)
                 title.Text = string.upper(data.Rarity or "Comum") .. (if data.Captured then "!" else " • ENCONTRADA")
                 name.Text = data.CreatureName or data.CreatureId
                 detail.Text = if data.Captured then tostring(data.MutationName) .. " • " .. tostring(data.SizeName) .. " • $" .. Numbers.Format(data.IncomePerSec or 0) .. "/s"
@@ -7018,15 +7384,35 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
                 local chance = data.SpawnChance or 1
                 label(overlay,"ENCONTRO: 1 EM " .. Numbers.Format(math.max(1,math.floor(1/math.max(chance,1e-12)))),0.92,25,16,tier.Color)
             end
-            local anticipation = if opened then math.max(0,1-after*3) else 0
+            local anticipation = if opened and not reduced then math.max(0, 1 - after * 3) else 0
+            if opened then
+                local sweep = math.clamp(after * 1.8, 0, 1)
+                pulse.Size = UDim2.fromOffset(90 + sweep * (190 + tier.Rank * 42), 90 + sweep * (190 + tier.Rank * 42))
+                pulseEdge.Transparency = if reduced then 1 else .32 + sweep * .68
+                for index, piece in burst do
+                    local rate = math.clamp(after * (1 + index % 5 * .13), 0, 1)
+                    local angle = index * 2.399963
+                    local distance = rate * (.18 + tier.Rank * .023 + index % 4 * .04)
+                    piece.Position = UDim2.fromScale(.5 + math.cos(angle) * distance, .46 + math.sin(angle) * distance - rate * .07)
+                    piece.Rotation = 45 + after * ((index % 3) - 1) * 120
+                    piece.Visible = rate < 1
+                    piece.BackgroundTransparency = .12 + rate * .88
+                end
+            end
             local rotation = if reduced then 0.15 else (if opened then math.min(after*0.6,1.8) else math.sin(elapsed*3)*0.15)
-            local zoom = if opened then 1-0.18*anticipation else 1.15
-            camera.CFrame = CFrame.lookAt(target + Vector3.new(math.sin(rotation)*radius*zoom, radius*0.17, -math.cos(rotation)*radius*zoom),target)
-            creature:PivotTo(CFrame.new(0,if reduced then 0 else math.sin(elapsed*2)*0.1,0))
+            local zoom = if opened then 1 - .18 * anticipation elseif elapsed >= 2.1 then 1.24 else 1.06
+            local height = if opened then .17 else .24
+            camera.CFrame = CFrame.lookAt(target + Vector3.new(math.sin(rotation)*radius*zoom, radius*height, -math.cos(rotation)*radius*zoom),target)
+            local lift = if reduced or not opened then 0 else math.sin(after * 3.1) * .10 + anticipation * .28
+            local yaw = if reduced then 0 else math.sin(after * 2) * .13
+            creature:PivotTo(CFrame.new(0, lift, 0) * CFrame.Angles(0, yaw, 0))
             bloom.Intensity = math.min(1.5,0.3+tier.Rank*0.1+anticipation*0.5)
             overlay.BackgroundColor3 = if tier.Rank == 7 then Color3.fromHSV((elapsed*0.04)%1,0.5,0.055) else Color3.fromRGB(4,6,20)
             for index, ray in rays do
-                ray.Rotation = index*360/#rays + (if reduced then 0 else elapsed*(5+tier.Rank))
+                local angle = index * math.pi * 2 / #rays + (if reduced then 0 else elapsed * (.08 + tier.Rank * .015))
+                local radius = math.min(overlay.AbsoluteSize.X, overlay.AbsoluteSize.Y) * (0.17 + anticipation * .025)
+                ray.Position = UDim2.new(.5, math.cos(angle) * radius, .46, math.sin(angle) * radius)
+                ray.Rotation = math.deg(angle) + 90
                 ray.BackgroundTransparency = if opened then 0.76+math.sin(elapsed*2+index)*0.08 else 0.92
             end
             for index, ring in rings do
@@ -7037,6 +7423,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean)
             RunService.RenderStepped:Wait()
         end
     end)
+    captureOrb:Destroy()
     for _, item in sounds do item:Destroy() end
     bloom:Destroy(); blur:Destroy(); grade:Destroy(); overlay:Destroy()
     if not ok then warn("[RevealDirector]", errorMessage) end
@@ -7045,7 +7432,7 @@ return Director
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="98">
+        <Item class="ModuleScript" referent="102">
           <Properties>
             <string name="Name">ThrowPose</string>
             <string name="Source"><![CDATA[--!strict
@@ -7098,11 +7485,11 @@ return Pose
           </Properties>
         </Item>
       </Item>
-      <Item class="Folder" referent="99">
+      <Item class="Folder" referent="103">
         <Properties>
           <string name="Name">UI</string>
         </Properties>
-        <Item class="ModuleScript" referent="100">
+        <Item class="ModuleScript" referent="104">
           <Properties>
             <string name="Name">CommercePanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -7440,7 +7827,7 @@ return Commerce
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="101">
+        <Item class="ModuleScript" referent="105">
           <Properties>
             <string name="Name">GameplayPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -7867,7 +8254,7 @@ return View
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="102">
+        <Item class="ModuleScript" referent="106">
           <Properties>
             <string name="Name">HUDIcons</string>
             <string name="Source"><![CDATA[--!strict
@@ -8057,7 +8444,7 @@ return Icons
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="103">
+        <Item class="ModuleScript" referent="107">
           <Properties>
             <string name="Name">HUDPanels</string>
             <string name="Source"><![CDATA[--!strict
@@ -8367,7 +8754,7 @@ return Panels
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="104">
+        <Item class="ModuleScript" referent="108">
           <Properties>
             <string name="Name">HUDWidgets</string>
             <string name="Source"><![CDATA[--!strict
@@ -8598,7 +8985,7 @@ return Widgets
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="105">
+        <Item class="ModuleScript" referent="109">
           <Properties>
             <string name="Name">ShopView</string>
             <string name="Source"><![CDATA[--!strict
@@ -9059,7 +9446,7 @@ return ShopView
       </Item>
     </Item>
   </Item>
-  <Item class="Workspace" referent="106">
+  <Item class="Workspace" referent="110">
     <Properties>
       <string name="Name">Workspace</string>
       <float name="FallenPartsDestroyHeight">-100</float>

@@ -5,7 +5,10 @@
     "$className": "DataModel",
     "ReplicatedStorage": {
       "Shared": {
-        "$path": "src/shared"
+        "$path": "src/shared",
+        "CreatureMeshes": {
+          "$className": "Folder"
+        }
       },
       "Remotes": {
         "$className": "Folder",

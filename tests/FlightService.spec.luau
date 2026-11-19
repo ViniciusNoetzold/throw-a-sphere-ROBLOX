@@ -18,7 +18,7 @@ local function signal()
 end
 local player={Parent=true,CharacterRemoving=signal(),attributes={}}
 function player:SetAttribute(k,v) self.attributes[k]=v end
-local root={Position=Vector3.new(0,0,0),IsA=function()return true end}
+local root={Parent=true,Anchored=false,Position=Vector3.new(0,0,0),IsA=function()return true end}
 local character={FindFirstChild=function()return root end,FindFirstChildOfClass=function()return {Health=100} end}
 player.Character=character
 local profile
@@ -82,7 +82,21 @@ end
 local function prepare()
  assert(Flight.Prepare(player));return messages[#messages].Id
 end
-test("prepare never consumes an orb",function()prepare();assert(profile.Orbs.Comum==25 and not busy)end)
+test("preparing locks movement and cancelling releases it without spending",function()
+ local id=prepare()
+ assert(root.Anchored and profile.Orbs.Comum==25 and not busy)
+ assert(Flight.Cancel(player,id))
+ assert(not root.Anchored)
+end)
+test("flight holds the stance through landing and releases after the reveal", function()
+ local id=prepare()
+ advance(.4)
+ assert(Flight.Launch(player,id) and root.Anchored)
+ advance(8)
+ assert(#results==1 and root.Anchored)
+ advance(10)
+ assert(not root.Anchored)
+end)
 test("foreign or forged nonce never launches",function()prepare();advance(.4);assert(not Flight.Launch(player,"forged"));assert(profile.Orbs.Comum==25)end)
 test("server meter fixes power; client extra values are ignored",function()
  local id=prepare();advance(.4);assert(Flight.Launch(player,id));local m=messages[#messages];assert(m.Perfect and math.abs(m.Power-1)<1e-9);assert(profile.Orbs.Comum==24)

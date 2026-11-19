@@ -6,6 +6,7 @@ local Input=game:GetService("UserInputService")
 local Workspace=game:GetService("Workspace")
 local Debris=game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
+local Focus = require(script.Parent:WaitForChild("CameraFocus"))
 local player=Players.LocalPlayer
 local remotes=RS:WaitForChild("Remotes")
 local gui=Instance.new("ScreenGui")
@@ -62,8 +63,12 @@ local function show(value:boolean)
  if value==active then return end
  active=value;card.Visible=value
  if value then
+  Focus.Begin("Academy")
+  gui:SetAttribute("ModalOpen", true)
   for _,screen in player.PlayerGui:GetChildren() do if screen~=gui and screen:IsA("ScreenGui") then hidden[screen]=screen.Enabled;screen.Enabled=false end end
  else
+  Focus.Release("Academy")
+  gui:SetAttribute("ModalOpen", false)
   for screen,enabled in hidden do if screen.Parent then screen.Enabled=enabled end end
   hidden={};current=nil;qte.Visible=false
  end
@@ -103,7 +108,15 @@ end
   sound:Play();Debris:AddItem(sound,3)
  elseif data.State=="Missed" then current=nil;qte.Visible=false end
 end)
-Run.RenderStepped:Connect(function()
+Run.RenderStepped:Connect(function(delta)
+ if active then
+  local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+  if root and root:IsA("BasePart") then
+   local target = root.Position + Vector3.new(0, 1.1, 0)
+   local position = target + root.CFrame.RightVector * 9 + root.CFrame.LookVector * 9 + Vector3.new(0, 2.3, 0)
+   Focus.Frame("Academy", CFrame.lookAt(position, target), 56, delta, 8)
+  end
+ end
  if active and nextRepAt > 0 then
   local fraction = 1 - math.clamp((nextRepAt - Workspace:GetServerTimeNow()) / interval, 0, 1)
   progress.Size = UDim2.fromScale(fraction, 1)
@@ -130,9 +143,9 @@ end
  local joints={}
  for _,joint in character:GetDescendants() do
   local name=joint.Name:gsub(" ",""):lower()
-  if (joint:IsA("Motor6D") or joint.ClassName=="AnimationConstraint") and (name=="rightshoulder" or name=="leftshoulder" or name=="waist" or name=="rootjoint") then
+  if (joint:IsA("Motor6D") or joint.ClassName=="AnimationConstraint") and (name=="rightshoulder" or name=="leftshoulder" or name=="waist" or name=="rootjoint" or name=="root" or name=="rightelbow" or name=="leftelbow") then
    local ok,value=pcall(function()return (joint::any).Transform end)
-   if ok then table.insert(joints,{Joint=joint,Name=name,Original=value})end
+   if ok and typeof(value)=="CFrame" then table.insert(joints,{Joint=joint,Name=name,Original=value})end
   end
  end
  local connection
@@ -144,7 +157,9 @@ end
    local value
    if item.Name=="rightshoulder" then value=CFrame.Angles(-2.5+lift*.7,0,.15)
    elseif item.Name=="leftshoulder" then value=CFrame.Angles(-2.5+lift*.7,0,-.15)
-   else value=CFrame.new(0,lift*.55,0)*CFrame.Angles(-lift*.05,0,0)end
+   elseif item.Name=="rightelbow" or item.Name=="leftelbow" then value=CFrame.Angles(-lift*.9,0,0)
+   elseif item.Name=="waist" then value=CFrame.Angles(-lift*.11,0,0)
+   else value=CFrame.new(0,lift*.72,0)*CFrame.Angles(-lift*.05,0,0)end
    if item.Joint.Parent then pcall(function()item.Joint.Transform=item.Original*value end)end
   end
  end)

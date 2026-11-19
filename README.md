@@ -4,6 +4,14 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 12:10 — Brasília (UTC−3). Câmera de treino, arremesso e revelação revisados.** Na academia, a câmera enquadra o avatar de frente e de lado. Na faixa amarela, o personagem fica parado enquanto o jogador escolhe a força. A câmera acompanha a saída da orbe da mão, o voo e a revelação. Movimento e câmera voltam ao normal depois do resultado, inclusive em cancelamentos. Para arremessar de novo, saia da faixa e volte.
+
+A captura tem pouso, balançadas conforme o resultado do servidor, silhueta e efeitos crescentes pela raridade. O build local com arte carrega as malhas Blender originais de **Sproutling, Leviathorn e Ignisovereign** nas aparições selvagens, no cercado e na revelação. O código e o build público estão no GitHub. O build com arte está em `build/ThrowASphere-ComModelos.rbxlx` neste PC. O repositório de origem da arte é privado. Consulte [como gerar o build local em outro PC](docs/CREATURE_ART.md) e o [relatório de validação](docs/reviews/2026-11-19-camera-captura-modelos.md).
+
+**Validações e próximo trabalho.** Compilação Luau, testes com mocks, integridade das skills e build Rojo aprovados. No Play local, a câmera da academia voltou ao normal ao parar. A tentativa de caminhar na faixa foi bloqueada e o avatar permaneceu travado até o fim de uma captura. As três malhas foram verificadas em cena e a revelação do Ignisovereign foi verificada em prévia. As outras criaturas ainda aguardam a arte correspondente. Faltam validar o lote com oito clientes, em dispositivos físicos e em experiência publicada.
+
+### Checkpoint anterior — pista, academia e santuários
+
 **19/11/2026, 11:49 — Brasília (UTC−3). Pista, academia e santuários revisados.** A faixa amarela ficou mais larga, com resposta mais rápida e uma barra de força menor em estilo cartoon. O ciclo completo do marcador leva 3,8 segundos. As laterais do túnel têm paredes. A praça, os biomas e a área de trocas têm barreiras de borda e retorno seguro em caso de queda.
 
 O HUD ficou mais compacto e o combo foi removido, incluindo seus bônus. As recompensas de captura ficam no menu **Resgates** e podem ser recolhidas longe da pista. Na **Academia**, cinco níveis de máquina dão mais força e XP por repetição. Em **Evoluir orbe**, moedas liberam evoluções permanentes em sequência e fragmentos dão desconto. Estoques antigos são preservados. O mapa tem oito santuários cercados, com criaturas andando e mostrando em verde a própria renda por segundo.

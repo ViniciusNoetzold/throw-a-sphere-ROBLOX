@@ -85,6 +85,7 @@ function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?
 		MutationRoll = mutationRoll, SizeRoll = sizeRoll, VariantLuck = luck,
 	}
 	model:SetAttribute("CreatureId", creatureId)
+	model:SetAttribute("ArtScale", scale)
 	model:SetAttribute("Mutation", mutation.Name)
 	model:SetAttribute("Size", size.Name)
 	model:SetAttribute("IncomePerSec", income)

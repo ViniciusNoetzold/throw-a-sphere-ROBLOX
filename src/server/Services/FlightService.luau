@@ -39,6 +39,17 @@ local function eligible(player: Player, profile: any): (boolean, any)
     if not isReusable(profile, orb, benefits) and (profile.Orbs[profile.EquippedOrb] or 0) < 1 then return false, benefits end
     return ctx.Sanctuary.CanCapture(player), benefits
 end
+local function releaseStance(entry: any)
+    local root = entry.Root
+    if root and root.Parent then
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        root.Anchored = entry.WasAnchored
+    end
+    local humanoid = entry.Humanoid
+    if humanoid and humanoid.Parent then humanoid.AutoRotate = entry.WasAutoRotate end
+end
+
 function Flight.Prepare(player: Player, automatic: boolean?): boolean
     local now = Workspace:GetServerTimeNow()
     if now < (requests[player] or 0) then return false end
@@ -54,7 +65,17 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     end
     if not automatic and profile.AutomationSettings and profile.AutomationSettings.Throw
         and ctx.Monetization.GetBenefits(player).AutoThrow then return false end
-    local entry = {Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now, Character = player.Character}
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if not character or not humanoid then return false end
+    local entry = {
+        Id = HttpService:GenerateGUID(false), State = "Charging", StartedAt = now,
+        Character = character, Root = root, WasAnchored = root.Anchored,
+        Humanoid = humanoid, WasAutoRotate = humanoid.AutoRotate,
+    }
+    root.AssemblyLinearVelocity, root.AssemblyAngularVelocity = Vector3.zero, Vector3.zero
+    root.Anchored, humanoid.AutoRotate = true, false
+    if CFrame then character:PivotTo(CFrame.lookAt(root.Position, root.Position + Rules.Direction)) end
     sessions[player] = entry
     send(player, {State = "Charging", Id = entry.Id, StartedAt = now, Period = Rules.MeterPeriod})
     task.delay(Rules.ChargeTimeout, function() if sessions[player] == entry and entry.State == "Charging" then Flight.Cancel(player, entry.Id) end end)
@@ -73,6 +94,7 @@ function Flight.Cancel(player: Player, id: any): boolean
         ctx.Data.Sync(player)
     elseif entry.State == "Resolving" then return false end
     sessions[player] = nil
+    releaseStance(entry)
     send(player, {State = "Cancelled", Id = id})
     return true
 end
@@ -138,6 +160,7 @@ local function finish(player: Player, entry: any)
     if not ok then
         -- A partial award must never be refunded or retried. Preserve it and freeze writes.
         sessions[player] = nil
+        releaseStance(entry)
         ctx.Data.Freeze(player, "Não foi possível concluir a revelação com segurança. Entre novamente.")
         send(player, {State = "Cancelled", Id = entry.Id})
         warn("[FlightService] Resolution failed:", result)
@@ -147,6 +170,7 @@ local function finish(player: Player, entry: any)
     local saved = ctx.Data.SaveNow(player)
     if not saved then
         sessions[player] = nil
+        releaseStance(entry)
         ctx.Data.Freeze(player, "Não foi possível salvar o resultado do arremesso.")
         send(player, {State = "Cancelled", Id = entry.Id})
         return
@@ -161,7 +185,11 @@ local function finish(player: Player, entry: any)
     send(player, {State = "Landed", Id = entry.Id, Result = result})
     ctx.Remotes.ThrowResult:FireAllClients(result)
     task.delay(result.PresentationDuration + 0.3, function()
-        if sessions[player] == entry then sessions[player] = nil; send(player, {State = "Ready", Id = entry.Id}) end
+        if sessions[player] == entry then
+            sessions[player] = nil
+            releaseStance(entry)
+            send(player, {State = "Ready", Id = entry.Id})
+        end
     end)
 end
 function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean

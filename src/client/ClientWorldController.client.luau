@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Lighting = game:GetService("Lighting")
+local CreatureArt = require(script.Parent:WaitForChild("CreatureArt"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 local Events = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigEvents"))
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
@@ -19,6 +20,8 @@ local function observe(model: Instance)
     if not definition then return end
     local root = model.PrimaryPart
     if not root then return end
+    local scale = model:GetAttribute("ArtScale") or 1
+    CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
     local item: any = {}
     local rarity = definition.Rarity
     if rarity == "Epica" then
@@ -61,6 +64,14 @@ else
         observeWildFolder(child)
     end)
 end
+CreatureArt.Loaded:Connect(function(id: string)
+    for model in tracked do
+        if model:GetAttribute("CreatureId") == id then
+            local scale = model:GetAttribute("ArtScale") or 1
+            CreatureArt.ShowOn(model, id, scale, 1.1 * scale)
+        end
+    end
+end)
 local function setState(value: any)
     if typeof(value) ~= "table" then return end
     state = value
@@ -75,10 +86,19 @@ if request then (request :: RemoteEvent):FireServer() end
 task.spawn(function()
     while player.Parent do
         task.wait(0.2)
+        local wild = Workspace:FindFirstChild("CriaturasSelvagens")
+        if wild then
+            for _, model in wild:GetChildren() do observe(model) end
+        end
         local hue = (Workspace:GetServerTimeNow() * 0.12) % 1
         for model, item in tracked do
             if not model.Parent then if item.Peak then item.Peak:Destroy() end; tracked[model] = nil; continue end
-            local root = model.PrimaryPart
+            local originalMesh = model:FindFirstChild("OriginalMesh")
+            if originalMesh and originalMesh:IsA("BasePart") and model.PrimaryPart then
+                local scale = model:GetAttribute("ArtScale") or 1
+                originalMesh.CFrame = model.PrimaryPart.CFrame * CFrame.new(0, originalMesh.Size.Y / 2 - 1.1 * scale, 0)
+            end
+            local root = if originalMesh and originalMesh:IsA("BasePart") then originalMesh else model.PrimaryPart
             if item.Peak and root then item.Peak.Position = root.Position + Vector3.new(0, 42, 0) end
             if item.Beam and root then item.Beam.Enabled = root.LocalTransparencyModifier < 1 end
             if item.Glow and root then item.Glow.Enabled = root.LocalTransparencyModifier < 1 end

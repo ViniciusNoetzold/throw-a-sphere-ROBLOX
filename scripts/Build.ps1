@@ -1,3 +1,4 @@
+param([switch]$WithCreatureArt)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $rojoPath = Join-Path $projectRoot '.tools/rojo/rojo.exe'
@@ -10,5 +11,10 @@ try {
     New-Item -ItemType Directory -Force -Path 'game' | Out-Null
     Copy-Item -LiteralPath 'build/ThrowASphere.rbxlx' -Destination 'game/ThrowASphere.rbxlx' -Force
     Write-Host "Arquivo pronto: $(Join-Path $projectRoot 'build/ThrowASphere.rbxlx')"
+    if ($WithCreatureArt) {
+        python scripts/Embed-CreatureArt.py build/ThrowASphere.rbxlx art/creatures/local/data build/ThrowASphere-ComModelos.rbxlx
+        if ($LASTEXITCODE -ne 0) { throw 'Falha no build local com os modelos privados.' }
+        Write-Host "Arquivo com modelos: $(Join-Path $projectRoot 'build/ThrowASphere-ComModelos.rbxlx')"
+    }
 } finally { Pop-Location }
 

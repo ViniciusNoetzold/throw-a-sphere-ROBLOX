@@ -1,6 +1,7 @@
 # Local tools and temporary outputs
 .tools/
 build/
+art/creatures/local/
 node_modules/
 .env
 .env.*
