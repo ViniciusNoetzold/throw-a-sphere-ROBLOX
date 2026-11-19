@@ -21,7 +21,7 @@ end
 
 local Config = {
 	Constants = {
-		MaxLevel = 100, BaseSanctuarySlots = 6, MaxOfflineSeconds = 28800,
+		MaxLevel = 100, BaseSanctuarySlots = 10, MaxOfflineSeconds = 28800,
 		DataStoreName = "TestOnly", StudioPersistence = false,
 		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,
@@ -202,7 +202,7 @@ local function engine(options)
 	local progression = loadModule("ProgressionService")
 	local world = { AssignSanctuary = function() end, UpdateSanctuary = function() end, ReleaseSanctuary = function() end }
 	if options.WithEconomy then
-		sanctuary.Init(data, world)
+		sanctuary.Init(data, world, options.AuthoredCreatures and {AuthoredCreatures = options.AuthoredCreatures})
 		progression.Init(data, sanctuary, remotes)
 	end
 	data.Init(remotes)
@@ -393,6 +393,41 @@ test("only equipped creatures generate income; elemental synergy is applied", fu
 	assert(math.abs(e.Sanctuary.CalculateIncome(profile) - 96) < 1e-8)
 	profile.SanctuarySlots = {}
 	assert(e.Sanctuary.CalculateIncome(profile) == 0)
+end)
+
+test("capture overflow, best-income selection, replacement and sale keep inventory consistent", function()
+	local e = engine({ WithEconomy = true })
+	local player = e.AddPlayer(404)
+	local profile = e.Data.Get(player)
+	for index = 1, 12 do
+		assert(e.Sanctuary.AddCapture(player, record("creature-" .. index, "Sproutling", index)))
+	end
+	assert(#profile.SanctuarySlots == 10 and #profile.CapturedCreatures == 12)
+	assert(e.Sanctuary.Manage(player, "Best"))
+	assert(profile.SanctuarySlots[1] == "creature-12" and not table.find(profile.SanctuarySlots, "creature-1"))
+	assert(not e.Sanctuary.Manage(player, "Replace", "not-owned", "creature-12"))
+	assert(e.Sanctuary.Manage(player, "Replace", "creature-2", "creature-12"))
+	assert(profile.SanctuarySlots[1] == "creature-2" and #profile.CapturedCreatures == 12)
+	local balance = profile.Coins
+	assert(not e.Sanctuary.Manage(player, "Sell", "creature-2"))
+	assert(e.Sanctuary.Manage(player, "Sell", "creature-12"))
+	assert(not e.Sanctuary.Manage(player, "Sell", "creature-12"))
+	assert(#profile.CapturedCreatures == 11 and profile.Coins == balance + 720)
+end)
+
+test("older captures without artwork stay owned and leave the pen", function()
+	local first = engine()
+	local oldPlayer = first.AddPlayer(405)
+	local old = first.Data.Get(oldPlayer)
+	old.CapturedCreatures = {record("old-art", "Aquapup", 100), record("ready-art", "Sproutling", 5)}
+	old.SanctuarySlots = {"old-art", "ready-art"}
+	first.RemovePlayer(oldPlayer)
+	local second = engine({Store = first.Store, JobId = "art-migration", WithEconomy = true, AuthoredCreatures = {Sproutling = true}})
+	local player = second.AddPlayer(405)
+	local profile = assert(second.Data.Get(player))
+	assert(#profile.CapturedCreatures == 2 and #profile.SanctuarySlots == 1 and profile.SanctuarySlots[1] == "ready-art")
+	assert(not second.Sanctuary.AddCapture(player, record("missing-art", "Aquapup", 100)))
+	assert(second.Sanctuary.Manage(player, "Best") and profile.SanctuarySlots[1] == "ready-art")
 end)
 
 test("starter trio receives its 40 percent income bonus", function()

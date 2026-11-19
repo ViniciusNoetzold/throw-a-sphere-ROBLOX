@@ -7,9 +7,9 @@ local function equal(actual: number, expected: number)
 end
 local profile: any = {Level = 1, ThrowStrength = 10, Rebirths = 0, PityBonus = 0, ComboStreak = 0,
 	ExtraSanctuarySlots = 0, EquippedOrb = "Comum", BestiaryRewardClaimed = {}, Boosts = {}, LastSeen = 1000}
-equal(Math.GetSlotCapacity(profile, {}), 6)
+equal(Math.GetSlotCapacity(profile, {}), 10)
 profile.Level = 15
-equal(Math.GetSlotCapacity(profile, {GiantSanctuary = true, GroupMember = true}), 17)
+equal(Math.GetSlotCapacity(profile, {GiantSanctuary = true, GroupMember = true}), 21)
 profile.ExtraSanctuarySlots = 100
 equal(Math.GetSlotCapacity(profile, {GiantSanctuary = true}), 24)
 equal(Math.GetTrainingGain(profile, {}), 1)

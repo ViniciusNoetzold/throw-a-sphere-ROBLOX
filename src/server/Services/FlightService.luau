@@ -60,6 +60,11 @@ function Flight.Prepare(player: Player, automatic: boolean?): boolean
     local profile, root = ready(player)
     if not profile or not root then return false end
     if not Math.AtLine(root.Position, Rules.LinePosition, Rules.LineWidth, Rules.LineDepth) then return false end
+    if ctx.EncounterPools and not ctx.EncounterPools[ctx.Layout.BiomeOrder[1]].Comum then
+        requests[player] = now + 2
+        send(player, {State = "Blocked", Message = "Abra a versão com os modelos da equipe."})
+        return false
+    end
     if not eligible(player, profile) then
         requests[player] = now + 1
         send(player, {State = "Blocked", Message = "Confira a orbe equipada e o espaço na coleção."})
@@ -115,9 +120,12 @@ local function finish(player: Player, entry: any)
         local quality = entry.Power * .55 + entry.ZoneProgress * .45
         for _ = 1, entry.Count do
             -- Species is rolled here, after the flight. Never accepted from a client.
-            local secret = rng:NextNumber() < Events.SecretSpawnChance
-            local id, chance = Math.Species(ctx.EncounterCreatures or Config.Creatures, entry.BiomeId, Events.SpeciesWeights, rng:NextNumber(), quality, previous)
-            if secret then id, chance = "Omnisfera", Events.SecretSpawnChance else chance *= 1 - Events.SecretSpawnChance end
+            local id, chance
+            if ctx.EncounterPools then
+                id, chance = Math.Encounter(ctx.EncounterPools[entry.BiomeId], Rules.RarityDenominators, rng, entry.RareBoost, previous)
+            else
+                id, chance = Math.Species(Config.Creatures, entry.BiomeId, Events.SpeciesWeights, rng:NextNumber(), quality, previous)
+            end
             assert(id, "Biome has no eligible creatures")
             previous = id
             local definition = Config.Creatures[id]
@@ -130,13 +138,15 @@ local function finish(player: Player, entry: any)
             local shakes = 0
             for shake = 1, 3 do if probability >= 1 or rng:NextNumber() < probability then shakes = shake else break end end
             local captured = shakes == 3
-            local mutation = Variants.FromQuantile(Config.Mutations, luck, rng:NextNumber())
-            local size = Variants.FromQuantile(Config.Sizes, luck, rng:NextNumber())
+            local variantLuck = luck * math.sqrt(entry.RareBoost)
+            local mutation, mutationChance = Variants.FromQuantile(Config.Mutations, variantLuck, rng:NextNumber())
+            local size, sizeChance = Variants.FromQuantile(Config.Sizes, variantLuck, rng:NextNumber())
+            local combinationChance = chance * (mutationChance or 1) * (sizeChance or 1)
             local income = math.floor(definition.BaseIncomePerSec * mutation.Multiplier * size.Multiplier)
             local xp = if captured then definition.BaseXP else math.max(5, math.floor(definition.BaseXP * 0.35)) + (if entry.Perfect then 15 else 0)
             local fragments = 0
             if captured then
-                local record = {Uid = HttpService:GenerateGUID(false), CreatureId = id, Mutation = mutation.Name, Size = size.Name, IncomePerSec = income, CapturedAt = os.time(), FusionStage = 0}
+                local record = {Uid = HttpService:GenerateGUID(false), CreatureId = id, Mutation = mutation.Name, Size = size.Name, IncomePerSec = income, CapturedAt = os.time(), FusionStage = 0, SpawnChance = combinationChance}
                 assert(ctx.Sanctuary.AddCapture(player, record), "Reserved inventory capacity was lost")
                 table.insert(drops, record)
                 profile.TotalCaptures += 1
@@ -151,7 +161,7 @@ local function finish(player: Player, entry: any)
             totalXP += gained
             local item = {Thrower = player, CreatureId = id, CreatureName = definition.Name, Rarity = definition.Rarity,
                 Captured = captured, ShakesPassed = shakes, MutationName = mutation.Name, SizeName = size.Name,
-                IncomePerSec = income, XPGained = gained, FragmentsGained = fragments, Probability = probability, SpawnChance = chance}
+                IncomePerSec = income, XPGained = gained, FragmentsGained = fragments, Probability = probability, SpawnChance = combinationChance}
             table.insert(bundle, item)
             if not best or Reveals[item.Rarity].Rank > Reveals[best.Rarity].Rank then best = item end
         end
@@ -160,8 +170,10 @@ local function finish(player: Player, entry: any)
         best.FlightId, best.HitPos, best.StartPos = entry.Id, entry.EndPos, entry.StartPos
         best.OrbColor, best.Distance, best.BiomeId, best.OrbId = entry.Color, entry.Distance, entry.BiomeId, entry.OrbId
         best.IsCritical, best.IsLongShot = entry.Perfect, false
+        best.NextBiome, best.NextMilestone = entry.NextBiome, entry.NextMilestone
+        best.RareBoost = entry.RareBoost
         best.NewLevel, best.LeveledUp = profile.Level, profile.Level > entry.Level
-        best.PresentationDuration = 2.1 + Reveals[best.Rarity].Duration
+        best.PresentationDuration = (Rules.CaptureIntroSeconds or 3.1) + Reveals[best.Rarity].Duration
         return best
     end)
     player:SetAttribute("FlightInProgress", false)
@@ -220,11 +232,19 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     local capacity = Config.Constants.MaxInventoryCreatures - ctx.Data.GetInventoryCount(profile)
     local count = math.min(if benefits.TripleThrow then 3 else 1, capacity, if infinite then 3 else profile.Orbs[orbId])
     local power = if automatic then 0.75 else Math.Power(elapsed, Rules.MeterPeriod)
-    local distance = math.min(Rules.MaxDistance or Rules.ZoneLength * #ctx.Layout.BiomeOrder, Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms))
+    local raw = Math.Distance(profile.ThrowStrength, profile.Level, orb.Power, power, benefits.TitanArms)
+    local order = ctx.Layout.BiomeOrder
+    local distance, unlocked = Math.Limit(raw, order, Rules.ZoneLength, Rules.MaxDistance or Rules.ZoneLength * #order,
+        profile.Level, profile.ThrowStrength, Rules.Milestones, ctx.EncounterPools)
     local biome, zoneIndex, zoneProgress = Math.Zone(distance, ctx.Layout.BiomeOrder, Rules.ZoneLength)
     entry.State, entry.Owner, entry.OrbId, entry.Consumed, entry.Count = "Flying", owner, orbId, not infinite, count
     entry.Power, entry.Perfect, entry.Distance, entry.BiomeId = power, power >= Rules.PerfectThreshold, distance, biome
     entry.Strength, entry.ZoneIndex, entry.ZoneProgress = profile.ThrowStrength, zoneIndex, zoneProgress
+    entry.RareBoost = Math.RareBoost(distance, Rules.MaxDistance or Rules.ZoneLength * #order, power, orb.RareBoost)
+    if Rules.Milestones then
+        entry.NextBiome = order[unlocked + 1]
+        entry.NextMilestone = Rules.Milestones[unlocked + 1]
+    end
     entry.StartPos, entry.EndPos, entry.Color = root.Position + Vector3.new(0, 2, 0), Rules.LaunchOrigin + Rules.Direction * distance, orb.Color
     entry.Level = profile.Level
     entry.Duration = Rules.WindupSeconds + math.clamp(3.5 + distance / 500, Rules.MinFlightSeconds, Rules.MaxFlightSeconds)
@@ -234,7 +254,7 @@ function Flight.Launch(player: Player, id: any, automatic: boolean?): boolean
     ctx.Data.MarkDirty(player)
     ctx.Data.Sync(player, true)
     send(player, {State = "Flying", Id = id, StartedAt = now, Duration = entry.Duration, StartPos = entry.StartPos,
-        EndPos = entry.EndPos, Power = power, Perfect = entry.Perfect, Distance = distance, BiomeId = biome, Color = orb.Color, OrbId = orbId, Count = count})
+        EndPos = entry.EndPos, Power = power, Perfect = entry.Perfect, Distance = distance, BiomeId = biome, Color = orb.Color, OrbId = orbId, OrbRareBoost = orb.RareBoost, Count = count})
     ctx.Remotes.ThrowWindup:FireAllClients({Thrower=player,Power=power,Style=Math.ThrowStyle(power),StartedAt=now})
     task.delay(entry.Duration, function() finish(player, entry) end)
     return true

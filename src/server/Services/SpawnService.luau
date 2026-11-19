@@ -55,7 +55,8 @@ local function createPart(model: Model, name: string, size: Vector3, position: V
 	return item
 end
 
-function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?): Model
+function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?): Model?
+	if ctx and ctx.AuthoredCreatures and not ctx.AuthoredCreatures[creatureId] then return nil end
 	options = options or {}
 	local definition = Config.Creatures[creatureId]
 	assert(definition, "Unknown creature: " .. creatureId)
@@ -69,10 +70,7 @@ function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?
 	if mutation.Name ~= "Normal" and mutation.Color then color = color:Lerp(mutation.Color, 0.6) end
 	local body = createPart(model, "Body", Vector3.new(3, 2, 2.5) * scale, position + Vector3.new(0, 1.1 * scale, 0), color)
 	local head = createPart(model, "Head", Vector3.new(1.8, 1.5, 1.8) * scale, position + Vector3.new(0, 2.7 * scale, -0.4 * scale), color:Lerp(Color3.new(1, 1, 1), 0.18))
-	for _, side in ipairs({-1, 1}) do
-		local eye = createPart(model, "Eye", Vector3.new(0.22, 0.28, 0.12) * scale, head.Position + Vector3.new(side * 0.45 * scale, 0.12 * scale, -0.92 * scale), Color3.fromRGB(15, 23, 42))
-		eye.CanQuery = false
-	end
+	body.Transparency, head.Transparency = 1, 1
 	model.PrimaryPart = body
 	local income = math.floor(definition.BaseIncomePerSec * mutation.Multiplier * size.Multiplier)
 	registry[model] = {
@@ -116,6 +114,11 @@ function SpawnService.Spawn(creatureId: string, position: Vector3, options: any?
 end
 
 function SpawnService.ChooseSpecies(biomeId: string): (string?, number?)
+	if ctx and ctx.EncounterPools then
+		local groups = ctx.EncounterPools[biomeId]
+		if not groups then return nil, nil end
+		return ctx.FlightMath.Encounter(groups, ctx.FlightRules.RarityDenominators, random)
+	end
 	local secretChance = settings and settings.SecretSpawnChance or 0
 	if secretChance > 0 and random:NextNumber() < secretChance then return "Omnisfera", secretChance end
 	local pool, total = {}, 0
@@ -149,14 +152,14 @@ function SpawnService.Init(worldOrContext: any, context: any?)
 		local layout = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
 		for _, biomeId in layout.BiomeOrder do
 			local species = {}
-			for id, definition in ctx.EncounterCreatures or Config.Creatures do
-				if definition.Biome == biomeId then table.insert(species, id) end
+			if ctx.EncounterPools then
+				species = ctx.EncounterPools[biomeId].Comum or {}
+			else
+				for id, definition in Config.Creatures do
+					if definition.Biome == biomeId then table.insert(species, id) end
+				end
+				table.sort(species)
 			end
-			local authored = ctx.AuthoredCreatures or {}
-			table.sort(species, function(a, b)
-				if authored[a] ~= authored[b] then return authored[a] == true end
-				return a < b
-			end)
 			for index, position in ctx.World.GetSpawnPoints(biomeId) do
 				if #species > 0 then SpawnService.Spawn(species[(index - 1) % #species + 1], position, {BiomeId = biomeId}) end
 			end

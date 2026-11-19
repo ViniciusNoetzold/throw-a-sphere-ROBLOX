@@ -73,7 +73,8 @@ function RewardService.CanGrant(profile: any, reward: any): (boolean, string)
     if reward.Creature then
         if type(reward.Creature) ~= "table" or not Config.Creatures[reward.Creature.Id] then return false, "Criatura de recompensa indisponível." end
         local count = if context.Data.GetInventoryCount then context.Data.GetInventoryCount(profile) else #profile.CapturedCreatures
-        if count >= (Config.Constants.MaxInventoryCreatures or 500) then return false, "Libere espaço no inventário para receber esta criatura." end
+        local available = not context.AuthoredCreatures or context.AuthoredCreatures[reward.Creature.Id]
+        if available and count >= (Config.Constants.MaxInventoryCreatures or 500) then return false, "Libere espaço no inventário para receber esta criatura." end
         local foundMutation, foundSize = false, false
         for _, item in Config.Mutations do if item.Name == reward.Creature.Mutation then foundMutation = true end end
         for _, item in Config.Sizes do if item.Name == reward.Creature.Size then foundSize = true end end
@@ -98,7 +99,7 @@ function RewardService.GrantReward(player: Player, reward: any): (boolean, strin
     for id, quantity in reward.Orbs or {} do profile.Orbs[id] = (profile.Orbs[id] or 0) + quantity end
     for id, quantity in reward.Consumables or {} do profile.Consumables[id] = (profile.Consumables[id] or 0) + quantity end
     for title in reward.Titles or {} do profile.Titles[title] = true end
-    if reward.Creature then
+    if reward.Creature and (not context.AuthoredCreatures or context.AuthoredCreatures[reward.Creature.Id]) then
         local definition = Config.Creatures[reward.Creature.Id]
         local mutationMultiplier, sizeMultiplier = 1, 1
         for _, item in Config.Mutations do if item.Name == reward.Creature.Mutation then mutationMultiplier = item.Multiplier end end

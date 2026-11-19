@@ -148,7 +148,7 @@ Run.RenderStepped:Connect(function(delta)
         and player:GetAttribute("DataLoaded") == true then
         panel.Visible = true
         pointer.Visible = false
-        title.Text = if blockingMessage then "ORBE INDISPONÍVEL" else "PREPARE SUA ORBE"
+        title.Text = if blockingMessage then "ARREMESSO INDISPONÍVEL" else "PREPARE SUA ORBE"
         button.Text = blockingMessage or "PREPARANDO…"
         if os.clock() >= retryAt then
             retryAt = os.clock() + .18
@@ -240,7 +240,8 @@ local function flight(data: any)
                 local shot = CFrame.lookAt(pos + offset, pos + Vector3.new(0, 0, -10))
                 Focus.Frame("Throw", shot, if reduced then 64 else 64 + acceleration * 13 + pulse * 4, delta, 16)
                 top.Text = Numbers.Format(traveled) .. " STUDS"
-                zone.Text = Config.Biomes[biomeId].Name
+                local rareBonus = Math.RareBoost(traveled, Rules.MaxDistance, data.Power, data.OrbRareBoost)
+                zone.Text = Config.Biomes[biomeId].Name .. "  ·  RAROS ×" .. Numbers.Format(rareBonus)
             end
             if elapsed > data.Duration + 10 then error("Resultado do servidor não chegou") end
             delta = Run.RenderStepped:Wait()
@@ -278,7 +279,7 @@ end
   if not next(chargeHidden) then hideChargeHUD() end
   title.Text,button.Text="PARE NO CENTRO VERDE!","CLIQUE OU TOQUE  ·  R2"
  elseif data.State=="Blocked" then
-  blockingMessage="CONFIRA SUA ORBE E A COLEÇÃO"
+  blockingMessage=data.Message or "CONFIRA SUA ORBE E A COLEÇÃO"
   retryAt=os.clock()+1
  elseif data.State=="Flying" then
   session=data

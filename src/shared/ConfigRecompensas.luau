@@ -10,7 +10,7 @@ return {
         { Coins = 500, Orbs = { Comum = 10 }, XP = 100 },
         { Coins = 2500, Orbs = { Esmeralda = 5 }, Consumables = { PotionLuck2 = 1 } },
         { Coins = 15000, Orbs = { Rubi = 5 }, XP = 500 },
-        { Creature = { Id = "Voltmouse", Mutation = "Dourada", Size = "Normal" }, Consumables = { PotionCoins2 = 1 } },
+        { Creature = { Id = "Sproutling", Mutation = "Dourada", Size = "Normal" }, Consumables = { PotionCoins2 = 1 } },
         { Coins = 250000, Orbs = { Runica = 3 }, XP = 1500 },
         { Consumables = { GlobalLuckTotem = 1 }, Orbs = { Hextech = 3 } },
         { Orbs = { Mestre = 1 }, WeeklyPets = 1, Gems = 5, Titles = { Fiel = true } },

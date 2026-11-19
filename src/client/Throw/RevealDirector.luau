@@ -8,6 +8,7 @@ local SoundService = game:GetService("SoundService")
 local UserInputService = game:GetService("UserInputService")
 local Config = require(ReplicatedStorage.Shared.Config)
 local Reveals = require(ReplicatedStorage.Shared.ConfigReveal)
+local FlightRules = require(ReplicatedStorage.Shared.ConfigFlight)
 local Numbers = require(ReplicatedStorage.Shared.NumberFormatter)
 local CreatureArt = require(script.Parent.Parent:WaitForChild("CreatureArt"))
 local OrbVisual = require(script.Parent:WaitForChild("OrbVisual"))
@@ -25,43 +26,16 @@ local function label(parent: Instance, text: string, y: number, height: number, 
     return item
 end
 local function preview(id: string, mutation: string?): Model
-    local definition = Config.Creatures[id]
-    local collection = ReplicatedStorage:FindFirstChild("CreatureModels")
-    local existing = collection and collection:FindFirstChild(id)
-    if existing and existing:IsA("Model") then
-        local clone = existing:Clone()
-        for _, p in clone:GetDescendants() do
-            if p:IsA("LuaSourceContainer") then p:Destroy()
-            elseif p:IsA("BasePart") then p.Anchored, p.CanCollide = true, false end
-        end
-        clone:PivotTo(CFrame.new())
-        return clone
-    end
+    local model = Instance.new("Model")
     local mesh = CreatureArt.Get(id, mutation)
     if mesh then
-        local model = Instance.new("Model")
         mesh.CFrame = CFrame.new()
         mesh.Parent = model
         model.PrimaryPart = mesh
-        return model
-    end
-    -- Original blockout, automatically replaced by an imported CreatureModels/<id> model.
-    local model = Instance.new("Model")
-    local function part(name: string, size: Vector3, position: Vector3, color: Color3): Part
-        local p = Instance.new("Part")
-        p.Name, p.Size, p.Position, p.Color = name, size, position, color
-        p.Anchored, p.CanCollide, p.TopSurface, p.Parent = true, false, Enum.SurfaceType.Studs, model
-        return p
-    end
-    model.PrimaryPart = part("Body", Vector3.new(3,2,2.5), Vector3.zero, definition.BodyColor)
-    part("Head", Vector3.new(2,1.7,2), Vector3.new(0,1.8,-0.7), definition.BodyColor:Lerp(Color3.new(1,1,1),0.2))
-    for _, side in {-1,1} do
-        part("Eye", Vector3.new(0.2,0.3,0.1), Vector3.new(side*0.5,2,-1.75), Color3.fromRGB(20,25,40))
-        part("Foot", Vector3.new(0.8,0.7,1.1), Vector3.new(side*1.1,-1.2,-0.6), definition.BodyColor)
-        part("Ear", Vector3.new(0.6,1,0.7), Vector3.new(side*0.7,3,-0.5), definition.BodyColor)
     end
     return model
 end
+
 function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actions: Actions?)
     local tier = Reveals[data.Rarity] or Reveals.Comum
     local reduced = parent:GetAttribute("ReducedMotion") == true
@@ -85,17 +59,32 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     camera.FieldOfView, camera.Parent, viewport.CurrentCamera = 35, viewport, camera
     local creature = preview(data.CreatureId, data.MutationName)
     for _, size in Config.Sizes do
-        if size.Name == data.SizeName then creature:ScaleTo(size.Scale); break end
+        if size.Name == data.SizeName and creature.PrimaryPart then
+            creature:ScaleTo(CreatureArt.Size(data.CreatureId, data.SizeName, size.Scale))
+            break
+        end
     end
     creature.Parent = world
     local colors: {[BasePart]: Color3} = {}
     local transparencies: {[BasePart]: number} = {}
     for _, p in creature:GetDescendants() do if p:IsA("BasePart") then colors[p] = p.Color;transparencies[p]=p.Transparency;p.Color = Color3.new();p.Transparency=1 end end
-    local bounds, size = creature:GetBoundingBox()
+    local bounds, size = CFrame.new(), Vector3.one * 2.1
+    if creature.PrimaryPart then bounds, size = creature:GetBoundingBox() end
     local target = bounds.Position
+    local originalScale = creature:GetScale()
     local radius = math.max(size.X,size.Y,size.Z) * 2.2
     local captureOrb = OrbVisual.Create(data.OrbColor or tier.Color, math.clamp(size.Magnitude * .45, 1.65, 2.5), data.OrbId)
     captureOrb.Parent = world
+    local crown = captureOrb:FindFirstChild("Crown") :: BasePart?
+    local prism = captureOrb:FindFirstChild("Prism") :: BasePart?
+    local crownOffset = if crown then captureOrb:GetPivot():ToObjectSpace(crown.CFrame) else CFrame.identity
+    local prismColor = if prism then prism.Color else tier.Color
+    local intro = FlightRules.CaptureIntroSeconds
+    local absorptionEnd = .95
+    local function poseOrb(frame: CFrame, gap: number)
+        captureOrb:PivotTo(frame)
+        if crown then crown.CFrame = frame * crownOffset * CFrame.new(0, gap, 0) * CFrame.Angles(gap * .25, 0, 0) end
+    end
     local burst: {Frame} = {}
     for i = 1, (if reduced then 0 else 5 + tier.Rank * 4) do
         local piece = Instance.new("Frame")
@@ -148,6 +137,7 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
     for _, item in bundle do if item.Captured then captures += 1 end end
     local start = os.clock()
     local revealed = false
+    local revealedFullSize = false
     local lastShake = 0
     local passed = data.ShakesPassed or 0
     local attempted = math.min(3, passed + (if data.Captured then 0 else 1))
@@ -158,32 +148,62 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
         table.insert(sounds, item); item:Play()
     end
     local ok, errorMessage = pcall(function()
-        while alive() and os.clock() - start < 2.1 + tier.Duration do
+        while alive() and os.clock() - start < intro + tier.Duration do
             local elapsed = os.clock() - start
-            local revealAt = 2.1 + tier.Suspense
+            local revealAt = intro + tier.Suspense
             local after = math.max(0,elapsed-revealAt)
             local opened = elapsed >= revealAt
-            if elapsed < 2.1 then
-                local beat = math.max(0, elapsed - .32)
-                local shake = math.min(attempted, math.floor(beat / .56) + 1)
-                local phase = math.clamp((beat - (shake - 1) * .56) / .56, 0, 1)
-                local landed = elapsed >= .32
-                local successful = shake <= passed
-                if landed and shake ~= lastShake then
-                    lastShake = shake
-                    sound("rbxasset://sounds/volume_slider.ogg", .15, if successful then .8 + shake * .19 else .65)
+            if elapsed < absorptionEnd then
+                local phase = math.clamp((elapsed - .18) / (absorptionEnd - .18), 0, 1)
+                local suction = phase ^ 1.7
+                local opening = if reduced then 0 else math.sin(phase * math.pi) * .55
+                local drop = if reduced then 0 else 1.1 * math.max(0, 1 - elapsed / .26) ^ 2
+                poseOrb(CFrame.new(target + Vector3.new(0, drop, 0)) * CFrame.Angles(0, -.23, 0), opening)
+                if prism then prism.Color = prismColor:Lerp(Color3.new(1, 1, 1), (1 - suction) * phase) end
+                if creature.PrimaryPart then
+                    for part, value in transparencies do
+                        part.Transparency = if elapsed < .18 then 1 else math.max(value, suction)
+                    end
+                    creature:ScaleTo(originalScale * math.max(.06, 1 - suction))
+                    creature:PivotTo(CFrame.new(-.45 * (1 - suction), 1.05 * (1 - suction), .2))
                 end
-                title.Text = if landed then "BALANÇADA " .. shake .. " / 3" else "A ORBE POUSOU"
-                detail.Text = if not landed then "" elseif successful then "ENERGIA ESTABILIZADA" else "A CRIATURA RESISTIU!"
-                local drop = if reduced or landed then 0 else 1.15 * (1 - elapsed / .32) ^ 2
-                local accent = if reduced then 0 else math.sin(phase * math.pi) * (if successful then .25 else .4)
-                local swing = if reduced or not landed then 0 else math.sin(phase * math.pi * 2) * (.17 + shake * .055) * (1 - phase)
-                captureOrb:PivotTo(CFrame.new(target + Vector3.new(0, drop + accent, 0)) * CFrame.Angles(0, -.23, swing))
-                pulse.Size = UDim2.fromOffset(50 + phase * 120, 50 + phase * 120)
-                pulseEdge.Transparency = if landed and not reduced then .57 + .43 * phase else 1
+                title.Text = if elapsed < .18 then "A ORBE POUSOU" else "A ORBE ABSORVE A ENERGIA"
+                pulse.Size = UDim2.fromOffset(65 + (1 - suction) * 170, 65 + (1 - suction) * 170)
+                pulseEdge.Transparency = if phase == 0 then 1 else .25 + suction * .55
+                for index, piece in burst do
+                    local angle = index * 2.399963 + phase * 2
+                    local radius = (1 - suction) * (.15 + index % 4 * .032)
+                    piece.Position = UDim2.fromScale(.5 + math.cos(angle) * radius, .43 + math.sin(angle) * radius)
+                    piece.Visible, piece.BackgroundTransparency = phase > 0, .14 + suction * .72
+                end
+            elseif elapsed < intro then
+                for part in transparencies do part.Transparency = 1 end
+                for _, piece in burst do piece.Visible = false end
+                local beat = elapsed - absorptionEnd
+                local shake = math.min(attempted, math.floor(beat / .66) + 1)
+                local phase = math.clamp((beat - (shake - 1) * .66) / .66, 0, 1)
+                local successful = shake <= passed
+                if shake ~= lastShake then
+                    lastShake = shake
+                    sound("rbxasset://sounds/volume_slider.ogg", .18, if successful then .8 + shake * .18 else .58)
+                end
+                title.Text = "BALANÇADA " .. shake .. " / 3"
+                detail.Text = if successful then "A ORBE RESISTIU" else "A CRIATURA ESTÁ SE SOLTANDO"
+                local pulseColor = if successful then Color3.fromRGB(150, 255, 197) else Color3.fromRGB(255, 128, 142)
+                local lift = if reduced then 0 else math.sin(phase * math.pi) * (if successful then .25 + shake * .16 else .5)
+                local swing = if reduced then 0 else math.sin(phase * math.pi * 3) * (if successful then .25 + shake * .12 else .64) * (1 - phase)
+                poseOrb(CFrame.new(target + Vector3.new(swing * .52, lift, 0)) * CFrame.Angles(swing * .33, -.23 + swing * .29, swing), 0)
+                if prism then prism.Color = prismColor:Lerp(pulseColor, if phase < .34 then 1 - phase else .19) end
+                pulseEdge.Color = pulseColor
+                pulse.Size = UDim2.fromOffset(70 + phase * 155, 70 + phase * 155)
+                pulseEdge.Transparency = .54 + .46 * phase
             elseif not opened then
                 if captureOrb.Parent then captureOrb.Parent = nil end
-                for part,value in transparencies do part.Transparency=value end
+                if not revealedFullSize then
+                    revealedFullSize = true
+                    if creature.PrimaryPart then creature:ScaleTo(originalScale) end
+                    for part, value in transparencies do part.Transparency = value end
+                end
                 title.Text = if tier.Rank >= 5 then "UMA PRESENÇA EXTRAORDINÁRIA..." else "QUEM ESTÁ AÍ?"
                 detail.Text = "REVELANDO O ENCONTRO"
             elseif not revealed then
@@ -194,13 +214,29 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
                 pulseEdge.Color = tier.Color:Lerp(Color3.new(1, 1, 1), .4)
                 title.Text = string.upper(data.Rarity or "Comum") .. (if data.Captured then "!" else " • ENCONTRADA")
                 name.Text = data.CreatureName or data.CreatureId
-                detail.Text = if data.Captured then tostring(data.MutationName) .. " • " .. tostring(data.SizeName) .. " • $" .. Numbers.Format(data.IncomePerSec or 0) .. "/s"
-                    else "ESCAPOU • +" .. Numbers.Format(data.XPGained or 0) .. " XP de consolação"
+                local mutation = if data.MutationName == "ArcoIris" then "Shiny" else data.MutationName or "Normal"
+                local sizeName = if data.SizeName == "Titanica" then "Titânica" else data.SizeName or "Normal"
+                local variant = mutation .. " • " .. sizeName
+                detail.Text = if data.Captured then variant .. " • $" .. Numbers.Format(data.IncomePerSec or 0) .. "/s"
+                    else variant .. " • ESCAPOU • +" .. Numbers.Format(data.XPGained or 0) .. " XP"
                 if #bundle > 1 then detail.Text ..= "   |   " .. captures .. "/" .. #bundle .. " capturas" end
-                local chance = data.SpawnChance or 1
-                local stats = "ENCONTRO: 1 EM " .. Numbers.Format(math.max(1,math.floor(1/math.max(chance,1e-12))))
-                if data.Distance then stats = Numbers.Format(data.Distance) .. " STUDS   •   " .. stats end
-                label(overlay,stats,.78,21,14,tier.Color)
+                local stats = if data.Distance then Numbers.Format(data.Distance) .. " STUDS" else ""
+                local chance = data.SpawnChance
+                if type(chance) == "number" and chance > 0 and chance < 1 then
+                    stats ..= (if stats == "" then "" else "   •   ") .. "VARIANTE 1 EM " .. Numbers.Format(math.ceil(1 / chance), 2)
+                end
+                label(overlay, stats, .78, 21, 14, tier.Color)
+                if data.RareBoost then
+                    title.Position, title.Size = UDim2.new(.03, 0, 0, 8), UDim2.new(.94, 0, 0, 35)
+                    local bonus = label(overlay, "CHANCE DE RAROS ×" .. Numbers.Format(data.RareBoost, 2), 0, 18, 14, tier.Color)
+                    bonus.Position = UDim2.new(.03, 0, 0, 44)
+                    if data.NextBiome and data.NextMilestone then
+                        local gate = data.NextMilestone
+                        local nextBiome = label(overlay, Config.Biomes[data.NextBiome].Name .. "  ·  Nv. " .. gate.Level .. "  ·  Força " .. Numbers.Format(gate.Strength),
+                            0, 18, 13, Color3.fromRGB(211, 222, 255))
+                        nextBiome.Position = UDim2.new(.03, 0, 0, 63)
+                    end
+                end
             end
             local anticipation = if opened and not reduced then math.max(0, 1 - after * 3) else 0
             if opened then
@@ -218,12 +254,12 @@ function Director.Play(parent: ScreenGui, data: any, alive: () -> boolean, actio
                 end
             end
             local rotation = if reduced then 0.15 else (if opened then math.min(after*0.6,1.8) else math.sin(elapsed*3)*0.15)
-            local zoom = if opened then 1 - .18 * anticipation elseif elapsed >= 2.1 then 1.24 else 1.06
+            local zoom = if opened then 1 - .18 * anticipation elseif elapsed >= intro then 1.24 else 1.06
             local height = if opened then .17 else .24
             camera.CFrame = CFrame.lookAt(target + Vector3.new(math.sin(rotation)*radius*zoom, radius*height, -math.cos(rotation)*radius*zoom),target)
             local lift = if reduced or not opened then 0 else math.sin(after * 3.1) * .10 + anticipation * .28
             local yaw = if reduced then 0 else math.sin(after * 2) * .13
-            creature:PivotTo(CFrame.new(0, lift, 0) * CFrame.Angles(0, yaw, 0))
+            if elapsed >= absorptionEnd then creature:PivotTo(CFrame.new(0, lift, 0) * CFrame.Angles(0, yaw, 0)) end
             bloom.Intensity = math.min(1.5,0.3+tier.Rank*0.1+anticipation*0.5)
             overlay.BackgroundColor3 = if tier.Rank == 7 then Color3.fromHSV((elapsed*0.04)%1,0.5,0.055) else Color3.fromRGB(4,6,20)
             for index, ray in rays do

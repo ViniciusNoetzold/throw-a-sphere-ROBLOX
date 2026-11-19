@@ -1,5 +1,6 @@
 --!strict
 local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
 local DataStoreService = game:GetService("DataStoreService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -111,12 +112,19 @@ local function displayPodium(entries: {any})
             avatar.Parent = holder
         end
         local definition = entry.Strongest and Config.Creatures[entry.Strongest.CreatureId]
-        if definition then
-            local pet = Instance.new("Part")
-            pet.Name, pet.Anchored, pet.CanCollide = "StrongestCreaturePlaceholder", true, false
-            pet.Size, pet.Color = Vector3.new(2, 2, 2), definition.BodyColor
-            pet.Position, pet.Parent = pedestal.Position + Vector3.new(3, pedestal.Size.Y / 2 + 1.5, 0), holder
-            ctx.World.Label(pet, definition.Name .. "\n" .. entry.Strongest.Mutation .. " • " .. entry.Strongest.Size, Vector3.new(0, 2, 0))
+        if definition and ctx.AuthoredCreatures and ctx.AuthoredCreatures[entry.Strongest.CreatureId] then
+            local pet = Instance.new("Model")
+            pet.Name = "StrongestCreature"
+            pet:SetAttribute("CreatureId", entry.Strongest.CreatureId)
+            pet:SetAttribute("Mutation", entry.Strongest.Mutation)
+            pet:SetAttribute("Size", entry.Strongest.Size)
+            local root = Instance.new("Part")
+            root.Anchored, root.CanCollide, root.CanQuery, root.CanTouch, root.Transparency = true, false, false, false, 1
+            root.Position = pedestal.Position + Vector3.new(3, pedestal.Size.Y / 2 + 1.1, 0)
+            root.Parent = pet
+            pet.PrimaryPart, pet.Parent = root, holder
+            ctx.World.Label(root, definition.Name, Vector3.new(0, 2, 0))
+            CollectionService:AddTag(pet, "PodiumCreature")
         end
         local oldLabel = pedestal:FindFirstChild("Label")
         if oldLabel then oldLabel:Destroy() end

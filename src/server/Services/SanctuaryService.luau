@@ -12,6 +12,30 @@ local function benefits(player: Player): any
 	return if context and context.Monetization then context.Monetization.GetBenefits(player) else {}
 end
 
+function SanctuaryService.HasArt(id: string): boolean
+	return not context or not context.AuthoredCreatures or context.AuthoredCreatures[id] == true
+end
+
+local function recordIndex(records: {any}, uid: any): number?
+	if type(uid) ~= "string" or #uid > 80 then return nil end
+	for index, record in records do
+		if record.Uid == uid then return index end
+	end
+	return nil
+end
+
+local function bestRecords(profile: any): {any}
+	local candidates = {}
+	for _, record in profile.CapturedCreatures do
+		if SanctuaryService.HasArt(record.CreatureId) then table.insert(candidates, record) end
+	end
+	table.sort(candidates, function(a, b)
+		if a.IncomePerSec ~= b.IncomePerSec then return a.IncomePerSec > b.IncomePerSec end
+		return a.Uid < b.Uid
+	end)
+	return candidates
+end
+
 function SanctuaryService.GetSlotCapacity(profile: any, playerBenefits: any?): number
 	if GameplayMath.GetSlotCapacity then return GameplayMath.GetSlotCapacity(profile, playerBenefits or {}) end
 	return Config.Constants.BaseSanctuarySlots + (if profile.Level >= 5 then 1 else 0) + (if profile.Level >= 15 then 1 else 0)
@@ -31,7 +55,7 @@ function SanctuaryService.CalculateBaseIncome(profile: any, playerBenefits: any?
 		end
 		local record = records[uid]
 		local definition = record and Config.Creatures[record.CreatureId]
-		if definition and not seen[uid] then
+		if definition and not seen[uid] and (SanctuaryService.HasArt(record.CreatureId) or (context and context.AuthoredCreatures and not next(context.AuthoredCreatures))) then
 			seen[uid] = true
 			table.insert(equipped, record)
 			elementCounts[definition.Element] = (elementCounts[definition.Element] or 0) + 1
@@ -80,7 +104,7 @@ end
 
 function SanctuaryService.AddCapture(player: Player, record: any): boolean
 	local profile = dataService.Get(player)
-	if not profile or not SanctuaryService.CanCapture(player) then
+	if not profile or not SanctuaryService.HasArt(record.CreatureId) or not SanctuaryService.CanCapture(player) then
 		return false
 	end
 	table.insert(profile.CapturedCreatures, record)
@@ -93,12 +117,75 @@ function SanctuaryService.AddCapture(player: Player, record: any): boolean
 	return true
 end
 
+function SanctuaryService.Manage(player: Player, action: any, uid: any, outgoing: any): (boolean, string)
+	if action ~= "Best" and action ~= "Replace" and action ~= "Sell" then return false, "Ação inválida." end
+	if not dataService.IsLoaded(player) or dataService.IsBusy(player) then return false, "Aguarde a ação atual." end
+	local profile = dataService.Get(player)
+	if not profile then return false, "Carregando suas criaturas." end
+	local slots, records = profile.SanctuarySlots, profile.CapturedCreatures
+	if action == "Best" then
+		local nextSlots = {}
+		local capacity = SanctuaryService.GetSlotCapacity(profile, benefits(player))
+		for index, record in bestRecords(profile) do
+			if index > capacity then break end
+			table.insert(nextSlots, record.Uid)
+		end
+		if #nextSlots == 0 then return false, "Nenhuma criatura com modelo disponível." end
+		profile.SanctuarySlots = nextSlots
+	elseif action == "Replace" then
+		local index = recordIndex(records, uid)
+		local slot = if type(outgoing) == "string" and #outgoing <= 80 then table.find(slots, outgoing) else nil
+		if not index or not slot or table.find(slots, uid) or not SanctuaryService.HasArt(records[index].CreatureId) then
+			return false, "Atualize a seleção e escolha novamente."
+		end
+		slots[slot] = uid
+	else
+		local index = recordIndex(records, uid)
+		if not index or table.find(slots, uid) then return false, "Só é possível vender criaturas do inventário." end
+		local owner = "SellCreature"
+		if not dataService.TryLock(player, owner) then return false, "Aguarde a ação atual." end
+		local price = GameplayMath.GetCreatureSalePrice(records[index].IncomePerSec)
+		if not dataService.AddCoins(player, price) then
+			dataService.Unlock(player, owner)
+			return false, "O saldo não pôde ser atualizado."
+		end
+		table.remove(records, index)
+		dataService.MarkDirty(player)
+		local saved = dataService.SaveNow(player)
+		if not saved then dataService.Freeze(player, "Salvamento da venda indisponível.") end
+		dataService.Unlock(player, owner)
+		if not saved then return false, "Não foi possível confirmar a venda." end
+	end
+	SanctuaryService.Refresh(player)
+	dataService.MarkDirty(player)
+	dataService.Sync(player)
+	return true, if action == "Best" then "Curral atualizado com as melhores rendas." elseif action == "Replace" then "Criatura substituída." else "Criatura vendida."
+end
+
 function SanctuaryService.Init(service: any, world: any, ctx: any?)
 	dataService = service
 	worldService = world
 	context = ctx
 	dataService.OnLoaded(function(player: Player, profile: any)
 		worldService.AssignSanctuary(player)
+		if context and context.AuthoredCreatures and next(context.AuthoredCreatures) then
+			local oldCount = #profile.SanctuarySlots
+			local visible: {[string]: boolean} = {}
+			for _, record in profile.CapturedCreatures do
+				if SanctuaryService.HasArt(record.CreatureId) then visible[record.Uid] = true end
+			end
+			local slots = profile.SanctuarySlots
+			for index = #slots, 1, -1 do
+				if not visible[slots[index]] then table.remove(slots, index) end
+			end
+			if #slots < oldCount then
+				local target = math.min(oldCount, SanctuaryService.GetSlotCapacity(profile, benefits(player)))
+				for _, record in bestRecords(profile) do
+					if #slots >= target then break end
+					if not table.find(slots, record.Uid) then table.insert(slots, record.Uid) end
+				end
+			end
+		end
 		local playerBenefits = benefits(player)
 		profile.IncomePerSec = SanctuaryService.CalculateIncome(profile, playerBenefits)
 		local elapsed = math.clamp(os.time() - profile.LastSeen, 0, Config.Constants.MaxOfflineSeconds)
@@ -113,6 +200,17 @@ function SanctuaryService.Init(service: any, world: any, ctx: any?)
 	end)
 	local remoteFolder = ReplicatedStorage:WaitForChild("Remotes")
 	local lastEquip: { [Player]: number } = {}
+	local manage = remoteFolder:FindFirstChild("ManageCreature")
+	if manage and manage:IsA("RemoteEvent") then
+		manage.OnServerEvent:Connect(function(player, action, uid, outgoing)
+			local now = os.clock()
+			if now - (lastEquip[player] or -math.huge) < .3 then return end
+			lastEquip[player] = now
+			local ok, message = SanctuaryService.Manage(player, action, uid, outgoing)
+			local feedback = remoteFolder:WaitForChild("ActionFeedback") :: RemoteEvent
+			feedback:FireClient(player, {Message = message, Kind = if ok then "Success" else "Error"})
+		end)
+	end
 	(remoteFolder:WaitForChild("EquipToSanctuary") :: RemoteEvent).OnServerEvent:Connect(function(player: Player, uid: any)
 		if typeof(uid) ~= "string" or #uid > 80 then
 			return
@@ -127,23 +225,17 @@ function SanctuaryService.Init(service: any, world: any, ctx: any?)
 		if not profile then
 			return
 		end
-		local exists = false
-		for _, record in ipairs(profile.CapturedCreatures) do
-			if record.Uid == uid then
-				exists = true
-				break
-			end
-		end
-		if not exists then
+		local index = recordIndex(profile.CapturedCreatures, uid)
+		if not index then
 			return
 		end
 		local slot = table.find(profile.SanctuarySlots, uid)
 		if slot then
 			table.remove(profile.SanctuarySlots, slot)
-		elseif #profile.SanctuarySlots < SanctuaryService.GetSlotCapacity(profile, benefits(player)) then
+		elseif SanctuaryService.HasArt(profile.CapturedCreatures[index].CreatureId) and #profile.SanctuarySlots < SanctuaryService.GetSlotCapacity(profile, benefits(player)) then
 			table.insert(profile.SanctuarySlots, uid)
 		else
-			(remoteFolder:WaitForChild("ActionFeedback") :: RemoteEvent):FireClient(player, { Message = "Seu Santuário está cheio. Desequipe uma criatura primeiro.", Kind = "Error" })
+			(remoteFolder:WaitForChild("ActionFeedback") :: RemoteEvent):FireClient(player, { Message = "Curral cheio ou arte indisponível. Confira o inventário.", Kind = "Error" })
 			return
 		end
 		SanctuaryService.Refresh(player)

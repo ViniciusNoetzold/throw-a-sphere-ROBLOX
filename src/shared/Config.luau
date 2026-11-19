@@ -3,6 +3,7 @@ local Math = require(script.Parent.CaptureMath)
 local Variants = require(script.Parent.ConfigMutacoes)
 local TrainingRules = require(script.Parent.ConfigTraining)
 local TrainingMath = require(script.Parent.TrainingMath)
+local GameplayMath = require(script.Parent.GameplayMath)
 return {
 	Orbs = require(script.Parent.ConfigOrbes),
 	Creatures = require(script.Parent.ConfigCriaturas),
@@ -18,7 +19,7 @@ return {
 		TrainingMath.AddXP(profile, 0, TrainingRules)
 	end,
 	Constants = {
-		MaxLevel = 100, BaseSanctuarySlots = 6, MaxOfflineSeconds = 28800,
+		MaxLevel = 100, BaseSanctuarySlots = GameplayMath.BaseSanctuarySlots, MaxOfflineSeconds = 28800,
 		DataStoreName = "ThrowASphere_v1", StudioPersistence = false,
 		AutoSaveSeconds = 60, SessionLeaseSeconds = 180,
 		InitialCoins = 150, InitialOrbs = 25, InitialThrowStrength = 10,

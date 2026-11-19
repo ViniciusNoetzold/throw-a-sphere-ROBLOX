@@ -142,6 +142,8 @@ assert(math.abs(Math.Power(.4,1.6)-1)<1e-9)
 assert(math.abs(Math.Power(1.6,1.6))<1e-9)
 assert(Math.Distance(100,20,25,1)>Math.Distance(100,20,25,0))
 assert(Math.Distance(35,1,10,.75)>Math.Distance(10,1,10,.75))
+assert(Math.RareBoost(599,1800,.8,1)>Math.RareBoost(299,1800,.8,1))
+assert(Math.RareBoost(299,1800,.8,1.25)>Math.RareBoost(299,1800,.8,1))
 local order={"PradariaSolar","FlorestaNeon","CanionVulcanico"}
 assert(Math.Zone(299.9,order,300)=="PradariaSolar" and Math.Zone(300,order,300)=="FlorestaNeon")
 local pool={A={Biome="PradariaSolar",Rarity="Comum"},B={Biome="PradariaSolar",Rarity="Rara"},C={Biome="FlorestaNeon",Rarity="Rara"}}
@@ -150,6 +152,18 @@ local _, weakOdds=Math.Species(pool,"PradariaSolar",weights,.99,0)
 local _, strongOdds=Math.Species(pool,"PradariaSolar",weights,.99,1)
 local _, diverseOdds=Math.Species(pool,"PradariaSolar",weights,.99,0,"A")
 assert(strongOdds>weakOdds and diverseOdds>weakOdds)
+local milestones={{Level=1,Strength=0},{Level=4,Strength=35},{Level=11,Strength=180}}
+assert(Math.Limit(1800,order,300,900,6,1200,milestones)==599)
+assert(Math.Limit(1800,order,300,900,11,179,milestones)==599)
+assert(Math.Limit(1800,order,300,900,11,180,milestones)==900)
+local artPools = Math.BuildPools(pool, order, {FlorestaNeon={"A","missing"} })
+assert(artPools.FlorestaNeon.Comum[1]=="A" and artPools.FlorestaNeon.Rara[1]=="C")
+local rareGroups = {Comum={"A"},Mitica={"B"}}
+local ultra = {Mitica=2500000}
+local exact = {NextNumber=function() return 0 end}
+local mythic, baseChance = Math.Encounter(rareGroups, ultra, exact, 1)
+local _, boostedChance = Math.Encounter(rareGroups, ultra, exact, 2)
+assert(mythic=="B" and baseChance==1/2500000 and boostedChance==2*baseChance)
 test("a strong throw enters the next biome before buying travel access",function()
  local id=prepare();advance(.4);assert(Flight.Launch(player,id));advance(8)
  assert(not profile.UnlockedBiomes.FlorestaNeon and results[1].Distance>=300 and results[1].CreatureId=="Glowshroom")

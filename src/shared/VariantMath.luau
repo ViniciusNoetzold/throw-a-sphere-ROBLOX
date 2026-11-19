@@ -1,14 +1,15 @@
 --!strict
 local Variants = {}
-function Variants.FromQuantile(items: {any}, luck: number, quantile: number): any
+function Variants.FromQuantile(items: {any}, luck: number, quantile: number): (any, number)
     local total = 0
     for _, item in items do total += item.Weight * (if item.Name == "Normal" then 1 else luck) end
     local point, accumulated = math.clamp(quantile, 0, 1 - 1e-12) * total, 0
-    for _, item in items do
-        accumulated += item.Weight * (if item.Name == "Normal" then 1 else luck)
-        if point < accumulated then return item end
+    for index, item in items do
+        local weight = item.Weight * (if item.Name == "Normal" then 1 else luck)
+        accumulated += weight
+        if point < accumulated or index == #items then return item, weight / total end
     end
-    return items[#items]
+    return nil, 0
 end
 function Variants.GetPersonalLuck(profile: any, benefits: any, now: number): number
     local multiplier = if benefits.DoubleLuck then 2 else 1

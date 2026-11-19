@@ -41,6 +41,9 @@ function FusionService.Fuse(player: Player, uids: any): (boolean, string)
     for _, record in profile.CapturedCreatures do if seen[record.Uid] then table.insert(selected, record) end end
     if #selected ~= required then return false, "Uma criatura selecionada não está no seu inventário." end
     local first = selected[1]
+    if context.AuthoredCreatures and not context.AuthoredCreatures[first.CreatureId] then
+        return false, "A arte desta criatura ainda está pendente."
+    end
     for _, record in selected do
         if record.CreatureId ~= first.CreatureId or record.Mutation ~= first.Mutation or record.Size ~= first.Size then return false, "Use a mesma espécie, mutação e tamanho." end
     end
@@ -90,6 +93,7 @@ function FusionService.FindAutomaticSelection(player: Player): {string}?
     local groups: {[string]: {string}} = {}
     local required = FusionService.GetRequiredCount(player)
     for _, record in profile.CapturedCreatures do
+        if context.AuthoredCreatures and not context.AuthoredCreatures[record.CreatureId] then continue end
         local definition = Config.Creatures[record.CreatureId]
         if definition and definition.Rarity == "Comum" and record.Mutation == "Normal" and not displayed[record.Uid] then
             local key = record.CreatureId .. ":" .. record.Mutation .. ":" .. record.Size

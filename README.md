@@ -4,6 +4,18 @@ Jogo Roblox de arremesso e captura de criaturas, com santuários que geram moeda
 
 ## Checkpoint para continuar em outro PC
 
+**19/11/2026, 15:50 — Brasília (UTC−3). Texturas, chance de raros e inventário do curral.** O arremesso usa exclusivamente as espécies com arte disponível. Os 23 modelos da equipe recebem texturas UV geradas das paletas originais do Blender. A revelação mostra absorção da silhueta, abertura da orbe e balançadas com efeitos conforme o resultado.
+
+**Progressão.** A distância aumenta a Chance de raros e a evolução de cada orbe acrescenta seu próprio multiplicador. A revelação mostra a chance da combinação de espécie, cor e tamanho. O nível e a força destravam trechos da pista. No nível 6, mesmo com força alta, o arremesso termina até a Floresta Neon. O Vazio Cósmico exige nível 50 e força 4.000.
+
+**Curral.** O jogador começa com 10 vagas e o excedente fica no Inventário. Adicionar melhores ordena pela renda individual. Guardar, substituir e vender são ações separadas. A venda pede confirmação e paga 60 segundos da renda individual. Capturas antigas sem arte ficam no inventário e mantêm o registro no save.
+
+**Validação e próximo trabalho.** Compilação Luau, testes com mocks e build Rojo aprovados. Em Play local, foram conferidos texturas, absorção, balançadas, limite no nível 6, curral cheio, seleção por renda, troca e venda. Ainda faltam testes de desempenho em dispositivos físicos, multiplayer com oito jogadores e DataStore publicado. [Relatório de validação](docs/reviews/2026-11-19-curral-raros-texturas.md).
+
+**No outro PC**, atualize o Git e gere `build/ThrowASphere-ComModelos.rbxlx` para testar o ciclo de captura. As malhas ficam no repositório privado e no build local gerado. [Como gerar a versão com arte](docs/CREATURE_ART.md).
+
+### Checkpoint anterior — mapa, pista e academia
+
 **19/11/2026, 15:05 — Brasília (UTC−3). Mapa, pista, orbes e academia revisados.** O hub, a praça de trocas e os biomas de visita ganharam uma base de terra e muros altos de peças com relevo. A pista tem asfalto em placas, acostamentos, placas de sinalização e enfeites próprios para cada bioma. As orbes têm modelos distintos conforme a evolução, com a mesma arte no menu, na mão, no voo e na revelação.
 
 A academia agora tem oito estágios. A primeira subida leva três repetições, a Barra Reforçada custa $120 e abre no nível 2, e cada evolução dá mais força, XP e uma repetição mais rápida. A barra mostra o XP atual e o necessário, e o menu compara os ganhos da máquina atual com a próxima. O progresso salvo mantém nível, força e máquina. O XP acumulado que já alcança uma nova meta passa adiante com o saldo.

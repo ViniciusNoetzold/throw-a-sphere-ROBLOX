@@ -36,6 +36,9 @@
         "EquipToSanctuary": {
           "$className": "RemoteEvent"
         },
+        "ManageCreature": {
+          "$className": "RemoteEvent"
+        },
         "TrainThrowPower": {
           "$className": "RemoteEvent"
         },

@@ -71,7 +71,9 @@ function View.RewardText(reward: any, level: number?): string
     if reward.Gems then table.insert(parts, "+" .. reward.Gems .. " gemas") end
     for id, count in reward.Orbs or {} do table.insert(parts, count .. "× " .. (if Config.Orbs[id] then Config.Orbs[id].Name else id)) end
     for id, count in reward.Consumables or {} do table.insert(parts, count .. "× " .. (names[id] or id)) end
-    if reward.Creature then table.insert(parts, "Voltmouse Dourada garantida") end
+    if reward.Creature and meshFolder:FindFirstChild(reward.Creature.Id) then
+        table.insert(parts, Config.Creatures[reward.Creature.Id].Name .. " • " .. reward.Creature.Mutation)
+    end
     if reward.WeeklyPets then table.insert(parts, "+1 companheiro semanal cosmético") end
     if reward.Titles then table.insert(parts, "Título Fiel") end
     return table.concat(parts, " • ")
@@ -314,7 +316,7 @@ local function renderBestiaryRewards(parent: GuiObject, state: any, actions: any
     for index, id in biomeOrder do
         local total, discovered = 0, 0
         for creatureId, definition in Config.Creatures do
-            if definition.Biome ~= id or (definition.RequiresArt and not meshFolder:FindFirstChild(creatureId)) then continue end
+            if definition.Biome ~= id or not meshFolder:FindFirstChild(creatureId) then continue end
             total += 1
             if state and (state.Bestiary or {})[creatureId] then discovered += 1 end
         end

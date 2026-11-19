@@ -1,6 +1,11 @@
 --!strict
 -- Pure benefit rules. Pass ownership is supplied by the server, never by a remote.
 local GameplayMath = {}
+GameplayMath.BaseSanctuarySlots = 10
+
+function GameplayMath.GetCreatureSalePrice(income: number): number
+	return math.max(1, math.floor(income * 60))
+end
 
 local function nonnegative(value: any, fallback: number?): number
 	return if type(value) == "number" and value == value and value < math.huge and value >= 0 then value else fallback or 0
@@ -18,7 +23,7 @@ end
 
 function GameplayMath.GetSlotCapacity(profile: any, benefits: any): number
 	local level = nonnegative(profile.Level, 1)
-	return math.min(24, 6 + (if level >= 5 then 1 else 0) + (if level >= 15 then 1 else 0)
+	return math.min(24, GameplayMath.BaseSanctuarySlots + (if level >= 5 then 1 else 0) + (if level >= 15 then 1 else 0)
 		+ math.floor(nonnegative(profile.ExtraSanctuarySlots)) + (if has(benefits, "GiantSanctuary") then 8 else 0)
 		+ (if has(benefits, "GroupMember") then 1 else 0))
 end

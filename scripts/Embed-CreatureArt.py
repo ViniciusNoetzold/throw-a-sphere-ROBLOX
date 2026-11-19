@@ -22,6 +22,9 @@ def read_mesh(path):
             type(channel) not in (int, float) or not 0 <= channel <= 1 for channel in palette
         ):
             raise ValueError(f"Invalid material palette: {path.name} {name}")
+    for name, scale in data.get("Scales", {}).items():
+        if name not in {"Grande", "Enorme", "Titanica"} or type(scale) not in (int, float) or not 1 <= scale <= 4:
+            raise ValueError(f"Invalid authored scale: {path.name} {name}")
     return json.dumps(data, separators=(",", ":"))
 
 

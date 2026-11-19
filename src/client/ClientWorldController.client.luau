@@ -1,6 +1,7 @@
 --!strict
--- Cosmetic layer for functional placeholder creatures. No imported model/animation IDs.
+-- Render the authored creatures on replicated encounter and podium anchors.
 local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Lighting = game:GetService("Lighting")
@@ -64,6 +65,8 @@ else
         observeWildFolder(child)
     end)
 end
+for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
+CollectionService:GetInstanceAddedSignal("PodiumCreature"):Connect(function(model) task.defer(observe, model) end)
 CreatureArt.Loaded:Connect(function(id: string)
     for model in tracked do
         if model:GetAttribute("CreatureId") == id then
@@ -90,6 +93,7 @@ task.spawn(function()
         if wild then
             for _, model in wild:GetChildren() do observe(model) end
         end
+        for _, model in CollectionService:GetTagged("PodiumCreature") do observe(model) end
         local hue = (Workspace:GetServerTimeNow() * 0.12) % 1
         for model, item in tracked do
             if not model.Parent then if item.Peak then item.Peak:Destroy() end; tracked[model] = nil; continue end

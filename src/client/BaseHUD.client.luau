@@ -353,6 +353,7 @@ end
 local function closePanel()
     currentPanel = nil
     session.RebirthConfirmed = false
+    session.SellCreature, session.ReplaceCreature = nil, nil
     gui:SetAttribute("ModalOpen", false)
     backdrop.Visible = false
     noticeVersion += 1

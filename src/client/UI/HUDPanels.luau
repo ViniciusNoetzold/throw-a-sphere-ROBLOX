@@ -149,7 +149,7 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
         local discovered = 0
         for _, definition in Config.Creatures do
             local own = state and state.Bestiary and state.Bestiary[definition.Id]
-            if definition.RequiresArt and not own and not meshFolder:FindFirstChild(definition.Id) then continue end
+            if not meshFolder:FindFirstChild(definition.Id) then continue end
             table.insert(ordered, definition)
             if own then discovered += 1 end
         end
@@ -174,40 +174,100 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
     if kind == "Criaturas" then
         local captures = if state then state.CapturedCreatures or {} else {}
         local slots = if state then state.SanctuarySlots or {} else {}
-        local capacity = if state then state.SlotCapacity or 6 else 6
-        hint(parent, string.format("Base %d/%d • Coleção %d/%d • %d vagas reservadas em comércio.", #slots, capacity, #captures, if state then state.InventoryCapacity or 500 else 500, if state then state.InventoryReservedSlots or 0 else 0))
-        local cost = state and state.Progression and state.Progression.NextSlotCost or 0
-        local buySlot = W.Button(parent, "BuySlot", if capacity >= 24 then "24 ESPAÇOS • CAPACIDADE MÁXIMA" else "LIBERAR +1 ESPAÇO POR $" .. Numbers.Format(cost), UDim2.fromOffset(4, 48), UDim2.new(1, -8, 0, 44), C.Gold, 12)
-        buySlot.Active, buySlot.Selectable = capacity < 24 and cost > 0, capacity < 24 and cost > 0
-        buySlot.Activated:Connect(function() actions.Send("BuySanctuarySlot") end)
-        local list = W.List(parent, "CreatureList", UDim2.fromOffset(0, 104), UDim2.new(1, 0, 1, -104))
-        if #captures == 0 then
-            local row = card(list, "EmptyCollection", 190, C.Green)
-            local icon = badge(row, C.Green, "Paw")
-            icon.Position = UDim2.new(0.5, -29, 0, 12)
-            local empty = W.Label(row, "Empty", "SUA COLEÇÃO COMEÇA AQUI\n\nVá até a faixa amarela e arremesse sua orbe. As primeiras capturas entram na base automaticamente.", UDim2.fromOffset(12, 76), UDim2.new(1, -24, 0, 102), 14, C.White)
-            empty.TextWrapped = true
-            empty.TextXAlignment = Enum.TextXAlignment.Center
-            return
+        local capacity = if state then state.SlotCapacity or GameplayMath.BaseSanctuarySlots else GameplayMath.BaseSanctuarySlots
+        local session = actions.Session
+        local tab = session.CreaturesTab or "Pen"
+        local replace = session.ReplaceCreature
+        Gameplay.Tabs(parent, {
+            {Id = "Pen", Name = "CURRAL " .. #slots .. "/" .. capacity},
+            {Id = "Inventory", Name = "INVENTÁRIO " .. math.max(0, #captures - #slots)},
+        }, tab, function(id)
+            session.CreaturesTab, session.ReplaceCreature, session.SellCreature = id, nil, nil
+            actions.Refresh()
+        end)
+        local collectionCount = #captures .. "/" .. (if state then state.InventoryCapacity or 500 else 500)
+        local reserved = if state then state.InventoryReservedSlots or 0 else 0
+        local summary = if replace then "Escolha qual criatura sai do curral." else "Coleção " .. collectionCount
+        if not replace and reserved > 0 then summary ..= " • " .. reserved .. " vagas reservadas em comércio" end
+        W.Label(parent, "Collection", summary, UDim2.fromOffset(8, 47), UDim2.new(1, -16, 0, 24), 12, C.Muted, true)
+        local top = 76
+        if tab == "Pen" then
+            if replace then
+                local cancel = W.Button(parent, "CancelReplacement", "CANCELAR TROCA", UDim2.fromOffset(4, top), UDim2.new(1, -8, 0, 41), C.Orange, 12)
+                cancel.Activated:Connect(function()
+                    session.CreaturesTab, session.ReplaceCreature = "Inventory", nil
+                    actions.Refresh()
+                end)
+            else
+                local best = W.Button(parent, "EquipBest", "ADICIONAR MELHORES", UDim2.fromOffset(4, top), UDim2.new(.51, -8, 0, 41), C.Green, 12)
+                best.Activated:Connect(function() actions.Send("ManageCreature", "Best") end)
+                local cost = state and state.Progression and state.Progression.NextSlotCost or 0
+                local buy = W.Button(parent, "BuySlot", if capacity >= 24 then "MÁX. 24 ESPAÇOS" else "+1 ESPAÇO · $" .. Numbers.Format(cost),
+                    UDim2.new(.51, 4, 0, top), UDim2.new(.49, -8, 0, 41), C.Gold, 11)
+                buy.Active, buy.Selectable = capacity < 24 and cost > 0, capacity < 24 and cost > 0
+                buy.Activated:Connect(function() if cost > 0 and capacity < 24 then actions.Send("BuySanctuarySlot") end end)
+            end
+            top += 48
         end
+        local list = W.List(parent, "CreatureList", UDim2.fromOffset(0, top), UDim2.new(1, 0, 1, -top))
         local equipped: {[string]: boolean} = {}
         for _, uid in slots do equipped[uid] = true end
-        for index, creature in captures do
-            local definition = Config.Creatures[creature.CreatureId]
-            local active = equipped[creature.Uid] == true
-            local accent = if definition then definition.BodyColor else C.Purple
-            local row = card(list, "Creature_" .. index, 126, accent)
-            row.LayoutOrder = index
-            badge(row, accent, if definition then ELEMENT_ICONS[definition.Element] or "Paw" else "Paw")
-            local name = W.Label(row, "Name", if definition then definition.Name else creature.CreatureId, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 24), 18)
-            name.TextTruncate = Enum.TextTruncate.AtEnd
-            local variant = W.Label(row, "Variant", creature.Mutation .. " • " .. creature.Size, UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 18), 11, C.Muted, true)
-            variant.TextTruncate = Enum.TextTruncate.AtEnd
-            W.Label(row, "Status", if active then "NO SANTUÁRIO" else "NA COLEÇÃO", UDim2.fromOffset(83, 55), UDim2.new(1, -95, 0, 17), 10, if active then C.Green else accent:Lerp(C.White, 0.45), true)
-            W.Label(row, "Income", "$" .. Numbers.Format(creature.IncomePerSec) .. "/s", UDim2.fromOffset(14, 87), UDim2.new(1, -138, 0, 24), 20, C.Green)
-            local toggle = W.Button(row, "ToggleSanctuary", if active then "RETIRAR" else "EQUIPAR", UDim2.new(1, -116, 0, 76), UDim2.fromOffset(102, 44), if active then C.Orange else C.Green, 12)
+        local displayed = 0
+        for _, creature in captures do
             local uid = creature.Uid
-            toggle.Activated:Connect(function() actions.EquipSanctuary(uid) end)
+            local active = equipped[uid] == true
+            if active ~= (tab == "Pen") then continue end
+            displayed += 1
+            local definition = Config.Creatures[creature.CreatureId]
+            local hasArt = meshFolder:FindFirstChild(creature.CreatureId) ~= nil
+            local accent = if definition then definition.BodyColor else C.Purple
+            local row = card(list, "Creature_" .. uid, 132, accent)
+            row.LayoutOrder = displayed
+            badge(row, accent, if definition then ELEMENT_ICONS[definition.Element] or "Paw" else "Paw")
+            local name = W.Label(row, "Name", if definition then definition.Name else creature.CreatureId, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 23), 17)
+            name.TextTruncate = Enum.TextTruncate.AtEnd
+            local mutation = if creature.Mutation == "ArcoIris" then "Shiny" else creature.Mutation
+            local size = if creature.Size == "Titanica" then "Titânica" else creature.Size
+            W.Label(row, "Variant", mutation .. " • " .. size .. (if hasArt then "" else " • ARTE PENDENTE"),
+                UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 18), 11, C.Muted, true).TextTruncate = Enum.TextTruncate.AtEnd
+            W.Label(row, "Income", "$" .. Numbers.Format(creature.IncomePerSec) .. "/s", UDim2.fromOffset(83, 54), UDim2.new(1, -95, 0, 21), 15, C.Green)
+            if active then
+                local move = W.Button(row, "PenAction", if replace then "SUBSTITUIR ESTA" else "GUARDAR", UDim2.new(.51, 0, 0, 80), UDim2.new(.49, -12, 0, 41), C.Orange, 11)
+                move.Activated:Connect(function()
+                    if replace then
+                        session.ReplaceCreature = nil
+                        actions.Send("ManageCreature", "Replace", replace, uid)
+                        actions.Refresh()
+                    else
+                        actions.EquipSanctuary(uid)
+                    end
+                end)
+            else
+                if hasArt then
+                    local equip = W.Button(row, "EquipCreature", if #slots < capacity then "PÔR NO CURRAL" else "SUBSTITUIR", UDim2.fromOffset(12, 80), UDim2.new(.5, -16, 0, 41), C.Green, 11)
+                    equip.Activated:Connect(function()
+                        if #slots < capacity then actions.EquipSanctuary(uid); return end
+                        session.CreaturesTab, session.ReplaceCreature, session.SellCreature = "Pen", uid, nil
+                        actions.Refresh()
+                    end)
+                end
+                local confirm = session.SellCreature == uid
+                local price = "$" .. Numbers.Format(GameplayMath.GetCreatureSalePrice(creature.IncomePerSec))
+                local sell = W.Button(row, "SellCreature", if confirm then "CONFIRMAR " .. price else "VENDER " .. price,
+                    UDim2.new(.5, 4, 0, 80), UDim2.new(.5, -16, 0, 41), if confirm then C.Pink else C.Orange, 11)
+                sell.Activated:Connect(function()
+                    if confirm then
+                        session.SellCreature = nil
+                        actions.Send("ManageCreature", "Sell", uid)
+                    else
+                        session.SellCreature = uid
+                    end
+                    actions.Refresh()
+                end)
+            end
+        end
+        if displayed == 0 then
+            hint(list, if tab == "Pen" then "As capturas ocupam as vagas do curral automaticamente." else "Criaturas guardadas e capturas excedentes ficam aqui.")
         end
         return
     end
@@ -298,7 +358,8 @@ function Panels.Render(parent: GuiObject, kind: string, state: any, actions: any
             model.Parent = preview
             W.Label(row, "Name", orb.Name, UDim2.fromOffset(83, 9), UDim2.new(1, -95, 0, 25), 17, if active then C.Gold else C.White)
             local status = if permanent or orb.IsPrismatic then "Uso livre" elseif count > 0 then "Bônus ×" .. Numbers.Format(count) else "Bloqueada"
-            W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power), UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 21), 12, C.Muted)
+            W.Label(row, "State", status .. " · Poder " .. Numbers.Format(orb.Power) .. " · Raros ×" .. Numbers.Format(orb.RareBoost, 2),
+                UDim2.fromOffset(83, 35), UDim2.new(1, -95, 0, 21), 11, C.Muted).TextTruncate = Enum.TextTruncate.AtEnd
             if nextTier then
                 local price, used = GameplayMath.GetOrbEvolutionPrice(orb.Price, fragments)
                 local ready = state and state.Coins >= price

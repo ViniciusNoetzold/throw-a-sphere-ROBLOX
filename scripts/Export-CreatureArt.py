@@ -90,6 +90,15 @@ def main():
         obj = make(name=creature_id)
         bpy.context.view_layer.update()
         data, studs = mesh_data(obj, HEIGHTS[creature_id])
+        config = module.get("CONFIG", {})
+        scales = config.get("scales", {})
+        normal_scale = scales.get("Normal", 1)
+        authored_sizes = {
+            "Grande": scales.get("Grande"),
+            "Enorme": scales.get("Gigante", config.get("huge_scale")),
+            "Titanica": scales.get("Colossal"),
+        }
+        data["Scales"] = {name: round(scale / normal_scale, 4) for name, scale in authored_sizes.items() if scale}
         bpy.ops.object.select_all(action="DESELECT")
         obj.select_set(True)
         bpy.ops.export_scene.gltf(filepath=str(glbs / f"{creature_id}.glb"), use_selection=True, export_format="GLB")

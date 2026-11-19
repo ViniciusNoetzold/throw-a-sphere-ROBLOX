@@ -23,6 +23,7 @@ function Boss.Start(eventId: string, creatureId: string, endsAt: number): boolea
     local layout = ctx.WorldConfig or require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("ConfigWorld"))
     local id = HttpService:GenerateGUID(false)
     local model = ctx.Spawn.Spawn(creatureId, layout.BossPosition, {BiomeId = "PradariaSolar", Kind = "Boss", BossId = id, EventId = eventId, ExpiresAt = endsAt, NoRespawn = true})
+    if not model then return false end
     active = {Id = id, EventId = eventId, CreatureId = creatureId, Model = model, Stability = settings.Stability, EndsAt = endsAt, Contributors = {}, Granted = {}, Defeated = false}
     local wild = if ctx.Spawn.Get then ctx.Spawn.Get(model) else nil
     active.Reward = {Mutation = if wild then wild.Mutation else "Normal", Size = if wild then wild.Size else "Normal", IncomePerSec = if wild then wild.IncomePerSec else definition.BaseIncomePerSec}

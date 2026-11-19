@@ -443,30 +443,27 @@ function WorldService.UpdateSanctuary(player: Player, profile: any)
 		local record = inventory[uid]
 		local definition = record and Config.Creatures[record.CreatureId]
 		if not definition or slot > capacity then continue end
+		if ctx and ctx.AuthoredCreatures and not ctx.AuthoredCreatures[record.CreatureId] then continue end
 		local column, row = (slot - 1) % 6, math.floor((slot - 1) / 6)
 		local home = platform.Position + Vector3.new((column - 2.5) * 5.8, 1.65, (row - 1.5) * 6.8 + 5)
 		local model = Instance.new("Model")
 		model.Name = record.CreatureId
 		model:SetAttribute("CaptureUID", uid)
 		model:SetAttribute("Mutation", record.Mutation)
+		model:SetAttribute("Size", record.Size)
 		for _, variant in Config.Sizes do
 			if variant.Name == record.Size then model:SetAttribute("ArtScale", variant.Scale); break end
 		end
 		model:SetAttribute("PenHome", home)
 		model:SetAttribute("WalkPhase", (slot * 2.399963) % (2 * math.pi))
-		local function shape(name: string, size: Vector3, offset: Vector3, color: Color3): Part
-			local piece = part(model, name, size, home + offset, color)
-			piece.Shape = Enum.PartType.Ball
+		local function anchor(name: string, offset: Vector3): Part
+			local piece = part(model, name, Vector3.one, home + offset, definition.BodyColor)
+			piece.Transparency = 1
 			piece.CanCollide, piece.CanTouch, piece.CanQuery = false, false, false
 			return piece
 		end
-		model.PrimaryPart = shape("Body", Vector3.new(2.6, 1.8, 2.5), Vector3.zero, definition.BodyColor)
-		local head = shape("Head", Vector3.new(1.75, 1.4, 1.55), Vector3.new(0, .6, -.9), definition.BodyColor:Lerp(Color3.new(1, 1, 1), .18))
-		for _, side in {-1, 1} do
-			shape("Eye", Vector3.new(.2, .24, .13), Vector3.new(side * .44, .76, -1.56), Color3.fromRGB(27, 25, 46))
-			shape("Ear", Vector3.new(.36, .7, .4), Vector3.new(side * .56, 1.34, -.8), definition.BodyColor)
-			shape(if side < 0 then "LeftFoot" else "RightFoot", Vector3.new(.67, .49, .85), Vector3.new(side * .62, -.72, -.45), definition.BodyColor)
-		end
+		model.PrimaryPart = anchor("Body", Vector3.zero)
+		local head = anchor("Head", Vector3.new(0, .6, -.9))
 		local caption = label(head, "+$" .. NumberFormatter.Format(record.IncomePerSec) .. "/s", Vector3.new(0, 1.55, 0))
 		caption.TextColor3 = Color3.fromRGB(151, 255, 113)
 		caption.TextSize = 16
